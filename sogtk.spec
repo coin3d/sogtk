@@ -114,13 +114,59 @@
   ((callback proc))
   (static #t))
 
+;; -- SoGtkTypedObject -----------------------------------------------------
+
+(def-cppclass SoGtkTypedObject ()
+  (header "<Inventor/Gtk/SoGtkTypedObject.h>")
+  (abstract #t))
+
+(def-cppmethod SoGtkTypedObject init
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkTypedObject getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkTypedObject getTypeId
+  SoType
+  ()
+  (virtual #t)
+  (abstract #t))
+
+(def-cppmethod SoGtkTypedObject isOfType
+  boolean
+  ((SoType type)))
+
 ;; -- SoGtkDevice ----------------------------------------------------------
 
-(def-cppclass SoGtkDevice ()
+(def-cppclass SoGtkDevice (SoGtkTypedObject)
   (header "<Inventor/Gtk/devices/SoGtkDevice.h>")
   (abstract #t))
 
 (def-cppdestr SoGtkDevice)
+
+(def-cppmethod SoGtkDevice initClasses
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkDevice initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkDevice getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkDevice getTypeId
+  SoType
+  ()
+  (virtual #t))
 
 (def-cppmethod SoGtkDevice enable
   none
@@ -167,6 +213,21 @@
 
 (def-cppdestr SoGtkMouse)
 
+(def-cppmethod SoGtkMouse initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkMouse getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkMouse getTypeId
+  SoType
+  ()
+  (virtual #t))
+
 (def-cppmethod SoGtkMouse enable
   none
   ((GtkWidget widget)
@@ -198,6 +259,21 @@
   ((int mask (= "SO_GTK_ALL_KEYBOARD_EVENTS") (mask SoGtkKeyboardEventMask))))
 
 (def-cppdestr SoGtkKeyboard)
+
+(def-cppmethod SoGtkKeyboard initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkKeyboard getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkKeyboard getTypeId
+  SoType
+  ()
+  (virtual #t))
 
 (def-cppmethod SoGtkKeyboard enable
   none
@@ -231,6 +307,21 @@
 
 (def-cppdestr SoGtkInputFocus)
 
+(def-cppmethod SoGtkInputFocus initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkInputFocus getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkInputFocus getTypeId
+  SoType
+  ()
+  (virtual #t))
+
 (def-cppmethod SoGtkInputFocus enable
   none
   ((GtkWidget widget)
@@ -263,6 +354,21 @@
   ((int mask (= "SoGtkSpaceball::ALL"))))
 
 (def-cppdestr SoGtkSpaceball)
+
+(def-cppmethod SoGtkSpaceball initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkSpaceball getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkSpaceball getTypeId
+  SoType
+  ()
+  (virtual #t))
 
 (def-cppmethod SoGtkSpaceball enable
   none
@@ -314,8 +420,29 @@
 
 ;; -- SoGtkComponent -------------------------------------------------------
 
-(def-cppclass SoGtkComponent ()
-  (header "<Inventor/Gtk/SoGtkComponent.h>"))
+(def-cppclass SoGtkComponent (SoGtkTypedObject)
+  (header "<Inventor/Gtk/SoGtkComponent.h>")
+  (abstract #t))
+
+(def-cppmethod SoGtkComponent initClasses
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkComponent initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkComponent getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkComponent getTypeId
+  SoType
+  ()
+  (virtual #t))
 
 (def-cppmethod SoGtkComponent show
   none
@@ -410,6 +537,21 @@
    SO_GL_OVERLAY
    SO_GL_STEREO))
 
+(def-cppmethod SoGtkGLWidget initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkGLWidget getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkGLWidget getTypeId
+  SoType
+  ()
+  (virtual #t))
+
 (def-cppmethod SoGtkGLWidget setBorder
   none
   ((boolean border)))
@@ -454,6 +596,23 @@
    (boolean mouse-input (= "TRUE"))
    (boolean keyboard-input (= "TRUE")))
   (scm-name "new-SoGtkRenderArea"))
+
+(def-destr SoGtkRenderArea)
+
+(def-cppmethod SoGtkRenderArea initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkRenderArea getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkRenderArea getTypeId
+  SoType
+  ()
+  (virtual #t))
 
 (def-cppmethod SoGtkRenderArea setSceneGraph
   none
@@ -691,6 +850,21 @@
   (BUFFER_SINGLE
    BUFFER_DOUBLE
    BUFFER_INTERACTIVE))
+
+(def-cppmethod SoGtkViewer initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkViewer getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkViewer getTypeId
+  SoType
+  ()
+  (virtual #t))
 
 (def-cppmethod SoGtkViewer setCamera
   none
@@ -967,6 +1141,21 @@
    BUILD_POPUP
    BUILD_ALL))
 
+(def-cppmethod SoGtkFullViewer initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkFullViewer getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkFullViewer getTypeId
+  SoType
+  ()
+  (virtual #t))
+
 (def-cppmethod SoGtkFullViewer setDecoration
   none
   ((boolean enable)))
@@ -1070,6 +1259,21 @@
 
 (def-cppdestr SoGtkExaminerViewer)
 
+(def-cppmethod SoGtkExaminerViewer initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkExaminerViewer getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkExaminerViewer getTypeId
+  SoType
+  ()
+  (virtual #t))
+
 (def-cppmethod SoGtkExaminerViewer setViewing
   none
   ((boolean enable))
@@ -1126,6 +1330,21 @@
 (def-cppclass SoGtkCustomViewer (SoGtkViewer)
   (header "<Inventor/Gtk/viewers/SoGtkCustomViewer.h>"))
 
+(def-cppmethod SoGtkCustomViewer initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkCustomViewer getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkCustomViewer getTypeId
+  SoType
+  ()
+  (virtual #t))
+
 (def-cppmethod SoGtkCustomViewer getMenuBar
   (GtkWidget)
   ())
@@ -1168,6 +1387,21 @@
 
 (def-cppdestr SoGtkRoster)
 
+(def-cppmethod SoGtkRoster initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkRoster getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkRoster getTypeId
+  SoType
+  ()
+  (virtual #t))
+
 ;; -- SoGtkGraphEditor -----------------------------------------------------
 
 (def-cppclass SoGtkGraphEditor (SoGtkComponent)
@@ -1181,6 +1415,21 @@
 
 (def-cppdestr SoGtkGraphEditor)
 
+(def-cppmethod SoGtkGraphEditor initClass
+  none
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkGraphEditor getClassTypeId
+  SoType
+  ()
+  (static #t))
+
+(def-cppmethod SoGtkGraphEditor getTypeId
+  SoType
+  ()
+  (virtual #t))
+
 (def-cppmethod SoGtkGraphEditor setSceneGraph
   none
   ((SoNode root)))
@@ -1189,4 +1438,4 @@
   (SoNode)
   ())
 
-;; -------------------------------------------------------------------------
+;; eof
