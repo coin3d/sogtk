@@ -1054,8 +1054,9 @@ Optional Packages:
   --with-opengl=DIR       OpenGL/Mesa installation directory
   --with-pthread=DIR      pthread installation directory
   --with-glu=DIR          use the OpenGL utility library [default=yes]
-  --with-inventor         use another Open Inventor than Coin [default=no]
-  --with-inventor=PATH    specify where Open Inventor resides
+  --with-inventor         use another Open Inventor than Coin [default=no],
+                          with InventorXt
+  --with-inventor=PATH    specify where Open Inventor and InventorXt resides
   --with-coin             enable use of Coin [default=yes]
   --with-coin=DIR         give prefix location of Coin
   --with-linux-joystick-device=DEV
@@ -3339,29 +3340,29 @@ if test "${with_msvcrt+set}" = set; then
     ;;
   multithread-static | mt | /mt | libcmt | libcmt\.lib )
     sim_ac_msvcrt=multithread-static
-    sim_ac_msvcrt_CFLAGS="/MT"
-    sim_ac_msvcrt_CXXFLAGS="/MT"
+    sim_ac_msvcrt_CFLAGS="/MT -D_MT -D_DLL"
+    sim_ac_msvcrt_CXXFLAGS="/MT -D_MT -D_DLL"
     sim_ac_msvcrt_LIBLDFLAGS="/LINK /NODEFAULTLIB:libc"
     sim_ac_msvcrt_LIBLIBS="-llibcmt"
     ;;
   multithread-static-debug | mtd | /mtd | libcmtd | libcmtd\.lib )
     sim_ac_msvcrt=multithread-static-debug
-    sim_ac_msvcrt_CFLAGS="/MTd"
-    sim_ac_msvcrt_CXXFLAGS="/MTd"
+    sim_ac_msvcrt_CFLAGS="/MTd -D_MT -D_DLL"
+    sim_ac_msvcrt_CXXFLAGS="/MTd -D_MT -D_DLL"
     sim_ac_msvcrt_LIBLDFLAGS="/NODEFAULTLIB:libc"
     sim_ac_msvcrt_LIBLIBS="-llibcmtd"
     ;;
   multithread-dynamic | md | /md | msvcrt | msvcrt\.lib )
     sim_ac_msvcrt=multithread-dynamic
-    sim_ac_msvcrt_CFLAGS=""
-    sim_ac_msvcrt_CXXFLAGS=""
+    sim_ac_msvcrt_CFLAGS="/MD -D_DLL"
+    sim_ac_msvcrt_CXXFLAGS="/MD -D_DLL"
     sim_ac_msvcrt_LIBLDFLAGS="/LINK /NODEFAULTLIB:libc"
     sim_ac_msvcrt_LIBLIBS="-lmsvcrt"
     ;;
   multithread-dynamic-debug | mdd | /mdd | msvcrtd | msvcrtd\.lib )
     sim_ac_msvcrt=multithread-dynamic-debug
-    sim_ac_msvcrt_CFLAGS="/MDd"
-    sim_ac_msvcrt_CXXFLAGS="/MDd"
+    sim_ac_msvcrt_CFLAGS="/MDd -D_DLL"
+    sim_ac_msvcrt_CXXFLAGS="/MDd -D_DLL"
     sim_ac_msvcrt_LIBLDFLAGS="/LINK /NODEFAULTLIB:libc"
     sim_ac_msvcrt_LIBLIBS="-lmsvcrtd"
     ;;
@@ -5229,7 +5230,7 @@ test "x$enable_libtool_lock" != xno && enable_libtool_lock=yes
 case $host in
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5232 "configure"' > conftest.$ac_ext
+  echo '#line 5233 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -5765,7 +5766,7 @@ chmod -w .
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -o out/conftest2.$ac_objext"
 compiler_c_o=no
-if { (eval echo configure:5768: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
+if { (eval echo configure:5769: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
   # The compiler can only warn and ignore the option if not recognized
   # So say no if there are warnings
   if test -s out/conftest.err; then
@@ -7558,7 +7559,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7561 "configure"
+#line 7562 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -7656,7 +7657,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7659 "configure"
+#line 7660 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10818,6 +10819,7 @@ if test x"$with_pthread" != xno; then
     sim_ac_pthread_cppflags="-I${with_pthread}/include"
     sim_ac_pthread_ldflags="-L${with_pthread}/lib"
   fi
+  sim_ac_pthread_cppflags="-D_REENTRANT ${sim_ac_pthread_cppflags}"
   sim_ac_pthread_libs="-lpthread"
 
   sim_ac_save_cppflags=$CPPFLAGS
