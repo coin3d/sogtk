@@ -1522,7 +1522,7 @@ SoGtkFullViewer::setZoomSliderPosition(float zoom)
 
   float f =
     (zoom - this->zoomRange[0]) / (this->zoomRange[1] - this->zoomRange[0]);
-  f = SbMax(0.0f, SbMin(f, 1.0f)) * ZOOMSLIDERRESOLUTION;
+  f = SoGtkMax(0.0f, SoGtkMin(f, 1.0f)) * ZOOMSLIDERRESOLUTION;
 
 //  this->zoomSlider->setValue(f);
 }
