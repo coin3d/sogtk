@@ -323,17 +323,6 @@ SoGtkPlaneViewer::createViewerButtons(GtkWidget * parent,
   }
 }
 
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-void
-SoGtkPlaneViewer::openViewerHelpCard(void)
-{
-  this->openHelpCard("SoGtkPlaneViewer.help");
-}
-
 // ************************************************************************
 
 void

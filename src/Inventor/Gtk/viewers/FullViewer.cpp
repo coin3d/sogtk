@@ -661,20 +661,13 @@ SoGtkFullViewer::getRenderAreaWidget(void) const
 
 // *************************************************************************
 
-/*!
-  Set a flag to indicate whether we're in viewing mode (where the
-  user can drag the model or scene around), or in interaction mode (where
-  all window events from mouse, keyboard, etc are sent to the scene graph).
-
-  Overloaded from parent class to correctly set the user interface
-  indicators on the current state, namely the upper right push buttons
-  indicating interact or view mode, the respective item on the popup menu
-  and to grey out the seek mode activation button while in interact mode.
-*/
-
+// Documented in superclass. Overridden to correctly set the user
+// interface indicators on the current state, namely the upper right
+// push buttons indicating interact or view mode, the respective item
+// on the popup menu and to grey out the seek mode activation button
+// while in interact mode.
 void
-SoGtkFullViewer::setViewing(
-  SbBool enable)
+SoGtkFullViewer::setViewing(SbBool enable)
 {
   if (enable == this->isViewing()) {
 #if SOGTK_DEBUG
@@ -1383,21 +1376,6 @@ SoGtkFullViewer::setRightWheelString(
   if (this->rightWheelLabel)
     gtk_label_set_text(GTK_LABEL(this->rightWheelLabel),
       this->rightWheelStr ? this->rightWheelStr : "");
-}
-
-// *************************************************************************
-
-/*!
-  Overload this method to provide functionality when the user clicks
-  the Help button.
-*/
-
-void
-SoGtkFullViewer::openViewerHelpCard(void)
-{
-  const char * classname = this->getClassName();
-  if (classname && strlen(classname) > 0)
-    SoGtkComponent::openHelpCard(classname);
 }
 
 // *************************************************************************
