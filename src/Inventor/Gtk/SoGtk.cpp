@@ -422,25 +422,12 @@ SoGtk::getWidgetSize(const GtkWidget * widget)
 
 // *************************************************************************
 
-/*!
-  This will pop up an error dialog. It's just a simple wrap-around for
-  the Gtk MessageBox::warning() call, provided for easier porting from
-  applications using the Open Inventor SoXt component classes.
-
-  If \a widget is \a NULL, the dialog will be modal for the whole
-  application (all windows will be blocked for input). If not,
-  only the window for the given \a widget will be blocked.
-
-  \a dialogTitle is the title of the dialog box. \a errorStr1 and
-  \a errorStr2 contains the text which will be shown in the dialog box.
-
-  There will only be a single "Ok" button for the user to press.
-*/
+// Documented in common/SoGuiCommon.cpp.in.
 void
 SoGtk::createSimpleErrorDialog(GtkWidget * widget,
-                               const char * dialogTitle,
-                               const char * errorStr1,
-                               const char * errorStr2)
+                               const char * title,
+                               const char * string1,
+                               const char * string2)
 {
   // FIXME: Gtk-1.2.x doesn't have a MessageBox implementation.  Gnome
   // and yet unreleased versions of Gtk however do.  So it might be
@@ -448,22 +435,24 @@ SoGtk::createSimpleErrorDialog(GtkWidget * widget,
   // code once Gtk has MessageBoxes (Gtk-2.0?). 200????? larsa.
 
 #if SOGTK_DEBUG
-  if (dialogTitle == NULL) {
+  if (title == NULL) {
     SoDebugError::postWarning("SoGtk::createSimpleErrorDialog",
-                              "Called with NULL dialogTitle pointer.");
+                              "Called with NULL title pointer.");
   }
-  if (errorStr1 == NULL) {
+  if (string1 == NULL) {
     SoDebugError::postWarning("SoGtk::createSimpleErrorDialog",
                               "Called with NULL error string pointer.");
   }
 #endif // SOGTK_DEBUG
-  SbString title(dialogTitle ? dialogTitle : "");
-  SbString errstr(errorStr1 ? errorStr1 : "");   
+  SbString t(title ? title : "");
+  SbString errstr(string1 ? string1 : "");   
 
-  GtkWidget *dialog = gtk_dialog_new ();
-  if (widget) // This behavior is strange
-    gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_title (GTK_WINDOW (dialog), title.getString());
+  GtkWidget * dialog = gtk_dialog_new();
+  if (widget) {
+    // This behavior is strange
+//      gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  }
+  gtk_window_set_title (GTK_WINDOW (dialog), t.getString());
   gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_MOUSE);
 
   GtkWidget *action_area = GTK_DIALOG (dialog)->action_area;
@@ -474,8 +463,8 @@ SoGtk::createSimpleErrorDialog(GtkWidget * widget,
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   gtk_box_pack_start (GTK_BOX(vbox), label, TRUE, TRUE, 10);
 
-  if (errorStr2) {
-    GtkWidget *label2 = gtk_label_new(errorStr2);
+  if (string2) {
+    GtkWidget *label2 = gtk_label_new(string2);
     gtk_label_set_line_wrap (GTK_LABEL (label2), TRUE);
     gtk_box_pack_start (GTK_BOX(vbox), label2, TRUE, TRUE, 10);
   }
