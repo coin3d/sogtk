@@ -21,7 +21,8 @@ libSoGtkWidgets_la_SOURCES = \
 	gtkthumbwheel.h \
 	gtkthumbwheel.cpp \
 	GtkNativePopupMenu.h \
-	GtkNativePopupMenu.cpp
+	GtkNativePopupMenu.cpp \
+	SoGtkViewerButtonP.h
 
 nodist_libSoGtkWidgets_la_SOURCES = \
 	$(SoGui_src_Inventor_Gui_widgets_BuiltFiles) \
