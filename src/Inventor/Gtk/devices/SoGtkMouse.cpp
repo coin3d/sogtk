@@ -239,6 +239,6 @@ SoGtkMouse::translateEvent(
 // *************************************************************************
 
 #if SOGTK_DEBUG
-static const char * getSoGtkMouseRCSId(void) { rcsid; }
+static const char * getSoGtkMouseRCSId(void) { return rcsid; }
 #endif // SOGTK_DEBUG
 
