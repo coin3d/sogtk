@@ -103,7 +103,6 @@ private:
   GtkWidget * parent;
   SbBool embedded;
   SbBool shelled;
-  SbBool realized;
   char * className;
   char * widgetName;
   char * captionText;

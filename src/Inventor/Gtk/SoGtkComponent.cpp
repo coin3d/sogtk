@@ -117,7 +117,6 @@ SoGtkComponent::SoGtkComponent(
 {
   this->parent = parent;
   this->shelled = FALSE;
-  this->realized = FALSE;
   this->widget = NULL;
   this->closeCB = NULL;
   this->closeCBdata = NULL;
@@ -357,7 +356,7 @@ SoGtkComponent::eventFilter( // virtual
 
   case GDK_CONFIGURE:
     // fprintf( stderr, "GDK_CONFIGURE\n" );
-    if ( this->realized ) {
+    if( GTK_WIDGET_REALIZED(this->baseWidget()) ){
       GdkEventConfigure * event = (GdkEventConfigure *) ev;
       SbVec2s size( event->width, event->height );
       this->sizeChanged( size );
@@ -397,8 +396,7 @@ gint
 SoGtkComponent::realizeHandler( // private
   GtkObject * object )
 {
-  assert( ! this->realized );
-  this->realized = TRUE;
+  assert( GTK_WIDGET_REALIZED(this->baseWidget()) );
   if ( this->storeSize != SbVec2s(-1, -1) ) {
     GtkRequisition req = { this->storeSize[0], this->storeSize[1] };
     gtk_widget_size_request( this->baseWidget(), &req );
@@ -476,7 +474,7 @@ SoGtkComponent::show( // virtual
     gtk_window_set_default_size( GTK_WINDOW(parent), this->storeSize[0], this->storeSize[1] );
 
   if ( this->shelled ) {
-    if ( ! this->realized ) {
+    if ( ! GTK_WIDGET_REALIZED(this->baseWidget()) ) {
       gtk_signal_connect( GTK_OBJECT(this->getParentWidget()), "event",
         GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
       gtk_widget_show( widget );
@@ -559,13 +557,29 @@ SoGtkComponent::isTopLevelShell(
 #if SOGTK_DEBUG
   if(!this->widget) {
     SoDebugError::postWarning("SoGtkComponent::isTopLevelShell",
-                              "Called while no QWidget has been set.");
+                              "Called while no GtkWidget has been set.");
     return FALSE;
   }
 #endif // SOGTK_DEBUG
 
-//  return this->widget->isTopLevel();
-  return TRUE;
+  if ( this->widget->parent == 0 )
+  {
+    // FIXME: Dunno if this can happen.
+    SoDebugError::postWarning("SoGtkComponent::isTopLevelShell",
+                                "No parent.");
+  }
+  else
+  {
+    if ( this->widget->parent == gtk_widget_get_toplevel(this->widget) )
+    {
+      return TRUE ;
+    }
+    else
+    {
+      return FALSE ;
+    }
+  }
+  return FALSE ;
 } // isTopLevelShell()
 
 // *************************************************************************
@@ -790,7 +804,7 @@ SoGtkComponent::setSize(
       gtk_widget_size_request( GTK_WIDGET(this->widget), &req );
     }
   }
-  if ( this->realized )
+  if ( this->widget && GTK_WIDGET_REALIZED(this->widget) ) 
     this->sizeChanged( size );
 
 //  SoDebugError::postInfo( "SoGtkComponent::setSize", "[exit]" );
@@ -831,7 +845,7 @@ void
 SoGtkComponent::openHelpCard(
   const char * card )
 {
-  // FIXME
+  SOGTK_STUB() ;
 } // openHelpCard()
 
 // *************************************************************************
@@ -860,7 +874,7 @@ SoGtkComponent::setWindowCloseCallback(
 
 /*!
   Finds and returns the \a SoGtkComponent corresponding to the given
-  \a QWidget, if any. If no SoGtkComponent is the "owner" of the widget,
+  \a GtkWidget, if any. If no SoGtkComponent is the "owner" of the widget,
   \a NULL will be returned.
 */
 
