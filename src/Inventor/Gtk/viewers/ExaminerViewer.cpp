@@ -271,20 +271,6 @@ SoGtkExaminerViewer::setCamera(// virtual
 // *************************************************************************
 
 /*!
-  Decide whether or not the mouse pointer cursor should be visible in the
-  rendering canvas.
-*/
-void
-SoGtkExaminerViewer::setCursorEnabled(// virtual
-  SbBool enable)
-{
-  inherited::setCursorEnabled(enable);
-  this->setCursorRepresentation(this->currentmode);
-} // setCursorEnabled
-
-// *************************************************************************
-
-/*!
   Overloaded to stop spin animation when wheel is being handled.
 */
 
