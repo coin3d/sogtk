@@ -1,12 +1,13 @@
-#!/bin/sh
-
+#! /bin/sh
+############################################################################
 # Regenerate all files which are constructed by the autoconf, automake
 # and libtool tool-chain. Note: only developers should need to use
 # this script.
-
-# Author: Morten Eriksen, <mortene@sim.no>. Loosely based on Ralph
-# Levien's script for Gnome.
-
+#
+# Authors:
+#   Lars J. Aas <larsa@sim.no>
+#   Morten Eriksen <mortene@sim.no>
+#
 
 directory=`echo "$0" | sed -e 's/[^\/]*$//g'`;
 cd $directory
@@ -15,11 +16,10 @@ if ! test -f ./autogen.sh; then
   exit 1
 fi
 
-GUI=Gtk
-PROJECT=So${GUI}
+PROJECT=viewer
 
-SUBPROJECTS="$MACRODIR src/Inventor/${GUI}/common"
-SUBPROJECTNAMES="$MACRODIR So${GUI}Common"
+SUBPROJECTS="$MACRODIR"
+SUBPROJECTNAMES="$MACRODIR"
 
 MACRODIR=conf-macros
 DIE=false

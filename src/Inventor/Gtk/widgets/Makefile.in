@@ -107,6 +107,8 @@ gui = @gui@
 install_sh = @install_sh@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
 
+############################################################################
+
 
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 

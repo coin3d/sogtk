@@ -1,3 +1,5 @@
+############################################################################
+## SoGtk/src/Inventor/Gtk/widgets/Makefile.am
 
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 

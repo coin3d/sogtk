@@ -1213,6 +1213,48 @@ fi
 ]) # SIM_AC_X11_READY()
 
 
+# **************************************************************************
+
+AC_DEFUN([SIM_AC_HAVE_LIBX11_IFELSE], [
+: ${sim_ac_have_libx11=false}
+AC_REQUIRE([AC_PATH_X])
+
+# prevent multiple runs
+$sim_ac_have_libx11 || {
+  if test x"$no_x" != xyes; then
+    sim_ac_libx11_cppflags=
+    sim_ac_libx11_ldflags=
+    test x"$x_includes" != x && sim_ac_libx11_cppflags="-I$x_includes"
+    test x"$x_libraries" != x && sim_ac_libx11_ldflags="-L$x_libraries"
+    sim_ac_libx11_libs="-lX11"
+
+    sim_ac_libx11_save_cppflags=$CPPFLAGS
+    sim_ac_libx11_save_ldflags=$LDFLAGS
+    sim_ac_libx11_save_libs=$LIBS
+
+    CPPFLAGS="$CPPFLAGS $sim_ac_libx11_cppflags"
+    LDFLAGS="$LDFLAGS $sim_ac_libx11_ldflags"
+    LIBS="$sim_ac_libx11_libs $LIBS"
+
+    AC_TRY_LINK(
+      [#include <X11/Xlib.h>],
+      [(void)XOpenDisplay(0L);],
+      [sim_ac_have_libx11=true])
+
+    CPPFLAGS=$sim_ac_libx11_save_cppflags
+    LDFLAGS=$sim_ac_libx11_save_ldflags
+    LIBS=$sim_ac_libx11_save_libs
+  fi
+}
+
+if $sim_ac_have_libx11; then
+  ifelse([$1], , :, [$1])
+else
+  ifelse([$2], , :, [$2])
+fi
+]) # SIM_AC_HAVE_LIBX11_IFELSE
+
+
 # Usage:
 #  SIM_AC_CHECK_OPENGL([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 #
@@ -1641,7 +1683,7 @@ fi
 
 AC_DEFUN([SIM_AC_HAVE_SOMOUSEBUTTONEVENT_BUTTONS],
 [AC_CACHE_CHECK(
-  [for SoMousebuttonEvent::BUTTON5 availability],
+  [for SoMouseButtonEvent::BUTTON5 availability],
   sim_cv_somousebuttonevent_buttons,
   [AC_TRY_COMPILE(
     [#include <Inventor/events/SoMouseButtonEvent.h>],

@@ -1,6 +1,10 @@
 NEWS
 ====
 
+2000-08-31 larsa:
+
+	* Changed public license from QPL to LGPL.
+
 2000-01-15 larsa:
 
 	* SoGtk implementation started - needed to have something useful /

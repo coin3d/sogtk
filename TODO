@@ -3,8 +3,3 @@ TODO
 
 * [larsa:20000201] clean up all the Qt-related comments in the source code.
 
-* [larsa:20000201] make GtkMiscClass the parent class of GtkThumbwheel instead
-    of plain GtkWidget (for the added padding and alignment functionality).
-
-* [larsa:20000201] change #ifndef/#define/#endif header-wrapper namespace.
-

@@ -17,30 +17,36 @@
  *
  **************************************************************************/
 
-//  $Id$
-
-#ifndef SOGTK_PLANEVIEWER_H
-#define SOGTK_PLANEVIEWER_H
-
-#include <Inventor/Gtk/viewers/SoGtkViewer.h>
+#if SOGTK_DEBUG
+static const char rcsid[] =
+  "$Id$";
+#endif // SOGTK_DEBUG
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkPlaneViewer : public SoGtkFullViewer {
-  typedef SoGtkFullViewer inherited;
+SoGtkPlaneViewer::SoGtkPlaneViewer( // public
+  GtkWidget * parent,
+  ... )
+{
+} // SoGtkPlaneViewer()
 
-public:
-  SoGtkPlaneViewer(GtkWidget * parent, ...);
-  ~SoGtkPlaneViewer(void);
+SoGtkPlaneViewer::SoGtkPlaneViewer( // protected
+  GtkWidget * parent,
+  ... )
+{
+} // SoGtkPlaneViewer()
 
-protected:
-  SoGtkPlaneViewer(GtkWidget * parent, ...);
+void
+SoGtkPlaneViewer::constructor( // private
+  const SbBool build )
+{
+} // constructor()
 
-private:
-  void constructor( const SbBool build );
-
-}; // class SoGtkFullViewer
+SoGtkPlaneViewer::~SoGtkPlaneViewer(
+  void )
+{
+} // ~SoGtkPlaneViewer()
 
 // *************************************************************************
 
-#endif // ! SOGTK_PLANEVIEWER_H
+

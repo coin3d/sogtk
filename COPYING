@@ -1,8 +1,8 @@
 COPYING
 =======
 
-See the file LICENSE.QPL for the Q Public License, which applies to all
-source files libSoGtk is built from.
+See the file LICENSE.LGPL for the GNU Lesser General Pulic License, which
+applies to all source files libSoGtk is built from.
 
 See the file LICENSE.GPL for the GNU General Public License, which applies
 to the autoconf/automake/libtool setup used during the build process.
