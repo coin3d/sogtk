@@ -142,7 +142,10 @@ ${DIE=false} && echo "" && echo "$me: faking the bootstrap process..." &&
 if $libtoolize; then
   echo "Running libtoolize..."
   ( $verbose && set -x;
-    libtoolize -c -f --automake
+    libtoolize --copy --force
+    cd cfg
+    test -f ltmain.sh.diff && patch -p0 < ltmain.sh.diff
+    test -f ltconfig.diff  && patch -p0 < ltconfig.diff
   )
 fi
 
