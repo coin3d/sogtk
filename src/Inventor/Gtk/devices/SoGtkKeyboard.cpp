@@ -163,7 +163,7 @@ SoGtkKeyboard::disable(
 static
 SoKeyboardEvent::Key
 getKeyForKeyCode(
-  guint keycode )
+  guint keycode, char & printable )
 {
   switch ( keycode ) {
   case GDK_Shift_L:        return SoKeyboardEvent::LEFT_SHIFT;
@@ -172,16 +172,49 @@ getKeyForKeyCode(
   case GDK_Control_R:      return SoKeyboardEvent::RIGHT_CONTROL;
   case GDK_Alt_L:          return SoKeyboardEvent::LEFT_ALT;
   case GDK_Alt_R:          return SoKeyboardEvent::RIGHT_ALT;
-  case GDK_0:              return SoKeyboardEvent::NUMBER_0;
-  case GDK_1:              return SoKeyboardEvent::NUMBER_1;
-  case GDK_2:              return SoKeyboardEvent::NUMBER_2;
-  case GDK_3:              return SoKeyboardEvent::NUMBER_3;
-  case GDK_4:              return SoKeyboardEvent::NUMBER_4;
-  case GDK_5:              return SoKeyboardEvent::NUMBER_5;
-  case GDK_6:              return SoKeyboardEvent::NUMBER_6;
-  case GDK_7:              return SoKeyboardEvent::NUMBER_7;
-  case GDK_8:              return SoKeyboardEvent::NUMBER_8;
-  case GDK_9:              return SoKeyboardEvent::NUMBER_9;
+  case GDK_0: 
+    printable = '0';
+    return SoKeyboardEvent::NUMBER_0;
+  case GDK_parenright:
+    printable = ')';
+    return SoKeyboardEvent::NUMBER_0;
+    
+  case GDK_exclam:
+    printable = '!';
+  case GDK_1: 
+    return SoKeyboardEvent::NUMBER_1;  
+  case GDK_at: 
+    printable = '@';
+  case GDK_2: 
+    return SoKeyboardEvent::NUMBER_2;
+  case GDK_numbersign:
+    printable = '#';
+  case GDK_3: 
+    return SoKeyboardEvent::NUMBER_3;
+  case GDK_dollar: 
+    printable = '$';
+  case GDK_4:
+    return SoKeyboardEvent::NUMBER_4;
+  case GDK_percent:
+    printable = '%';
+  case GDK_5: 
+    return SoKeyboardEvent::NUMBER_5;
+  case GDK_asciicircum: // ?
+    printable = '^';
+  case GDK_6: 
+    return SoKeyboardEvent::NUMBER_6;
+  case GDK_ampersand:
+    printable = '&';
+  case GDK_7: 
+    return SoKeyboardEvent::NUMBER_7;
+  case GDK_asterisk:
+    printable = '*';
+  case GDK_8: 
+    return SoKeyboardEvent::NUMBER_8;
+  case GDK_parenleft:
+    printable = '(';
+  case GDK_9: 
+    return SoKeyboardEvent::NUMBER_9;
 
   case GDK_a: case GDK_A:  return SoKeyboardEvent::A;
   case GDK_b: case GDK_B:  return SoKeyboardEvent::B;
@@ -281,18 +314,84 @@ getKeyForKeyCode(
   case GDK_Caps_Lock:      return SoKeyboardEvent::CAPS_LOCK;
   case GDK_Shift_Lock:     return SoKeyboardEvent::SHIFT_LOCK;
 
-  case GDK_space:          return SoKeyboardEvent::SPACE;
-  case GDK_apostrophe:     return SoKeyboardEvent::APOSTROPHE;
-  case GDK_comma:          return SoKeyboardEvent::COMMA;
-  case GDK_minus:          return SoKeyboardEvent::MINUS;
-  case GDK_period:         return SoKeyboardEvent::PERIOD;
-  case GDK_slash:          return SoKeyboardEvent::SLASH;
-  case GDK_semicolon:      return SoKeyboardEvent::SEMICOLON;
-  case GDK_equal:          return SoKeyboardEvent::EQUAL;
-  case GDK_bracketleft:    return SoKeyboardEvent::BRACKETLEFT;
-  case GDK_backslash:      return SoKeyboardEvent::BACKSLASH;
-  case GDK_bracketright:   return SoKeyboardEvent::BRACKETRIGHT;
-  case GDK_grave:          return SoKeyboardEvent::GRAVE;
+  case GDK_space: return SoKeyboardEvent::SPACE;
+
+  case GDK_apostrophe:
+    printable = '\'';
+    return SoKeyboardEvent::APOSTROPHE;
+  case GDK_quotedbl: 
+    printable = '\"';
+    return SoKeyboardEvent::APOSTROPHE;
+
+  case GDK_comma:
+    printable = ',';
+    return SoKeyboardEvent::COMMA;
+  case GDK_less: 
+    printable = '<';
+    return SoKeyboardEvent::COMMA;
+
+  case GDK_minus:
+    printable = '-';
+    return SoKeyboardEvent::MINUS;
+  case GDK_underscore:
+    printable = '_';
+    return SoKeyboardEvent::MINUS;
+
+  case GDK_period:
+    printable = '.';
+    return SoKeyboardEvent::PERIOD;
+  case GDK_greater:
+    printable = '>';
+    return SoKeyboardEvent::PERIOD;
+
+  case GDK_slash:
+    printable = '/';
+    return SoKeyboardEvent::SLASH;
+  case GDK_question:
+    printable = '?';
+    return SoKeyboardEvent::SLASH;
+
+  case GDK_semicolon:
+    printable = ';';
+    return SoKeyboardEvent::SEMICOLON;
+  case GDK_colon:
+    printable = ':';
+    return SoKeyboardEvent::SEMICOLON;
+
+  case GDK_equal:
+    printable = '=';
+    return SoKeyboardEvent::EQUAL;
+  case GDK_plus:
+    printable = '+';
+    return SoKeyboardEvent::EQUAL;
+
+  case GDK_bracketleft:
+    printable = '[';
+    return SoKeyboardEvent::BRACKETLEFT;
+  case GDK_braceleft:
+    printable = '{';
+    return SoKeyboardEvent::BRACKETLEFT;
+
+  case GDK_backslash:
+    printable = '\\';
+    return SoKeyboardEvent::BACKSLASH;
+  case GDK_bar:
+    printable = '|';
+    return SoKeyboardEvent::BACKSLASH;
+
+  case GDK_bracketright:
+    printable = ']';
+    return SoKeyboardEvent::BRACKETRIGHT;
+  case GDK_braceright:
+    printable = '}';
+    return SoKeyboardEvent::BRACKETRIGHT;
+    
+  case GDK_grave:
+    printable = '`';
+    return SoKeyboardEvent::GRAVE;
+  case GDK_asciitilde:
+    printable = '~';
+    return SoKeyboardEvent::GRAVE;
 
   default:
     break;
@@ -320,7 +419,9 @@ SoGtkKeyboard::translateEvent( // virtual
       this->kbdevent->setTime( stamp );
       const SbVec2s pos = SoGtkDevice::getLastEventPosition();
       SoGtkDevice::setEventPosition( this->kbdevent, pos[0], pos[1] );
-      this->kbdevent->setKey( getKeyForKeyCode( event->keyval ) );
+      char printable = 0;
+      this->kbdevent->setKey( getKeyForKeyCode( event->keyval, printable ) );
+      if (printable) this->kbdevent->setPrintableCharacter(printable);
       this->kbdevent->setState( SoButtonEvent::DOWN );
       this->kbdevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
       this->kbdevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
@@ -337,7 +438,9 @@ SoGtkKeyboard::translateEvent( // virtual
       this->kbdevent->setTime( stamp );
       const SbVec2s pos = SoGtkDevice::getLastEventPosition();
       SoGtkDevice::setEventPosition( this->kbdevent, pos[0], pos[1] );
-      this->kbdevent->setKey( getKeyForKeyCode( event->keyval ) );
+      char printable = 0;
+      this->kbdevent->setKey( getKeyForKeyCode( event->keyval, printable ) );
+      if (printable) this->kbdevent->setPrintableCharacter(printable);
       this->kbdevent->setState( SoButtonEvent::UP );
       this->kbdevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
       this->kbdevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
