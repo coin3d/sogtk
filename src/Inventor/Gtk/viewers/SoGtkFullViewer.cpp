@@ -919,6 +919,11 @@ SoGtkFullViewer::createViewerButtons( // virtual
   GtkWidget * parent,
   SbPList * buttonlist )
 {
+  GtkTooltips *tooltips = gtk_tooltips_new ();
+
+  GdkColormap *colormap = gtk_widget_get_colormap (parent);
+  GdkBitmap *mask ;
+
   int button = 0;
   const int buttons = sizeof(SoGtkFullViewerButtons) / sizeof(SoGtkViewerButton);
   while ( button < buttons ) {
@@ -928,7 +933,21 @@ SoGtkFullViewer::createViewerButtons( // virtual
     if ( button == 1 && this->isViewing() )
       gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(widget), TRUE );
 
+    gtk_tooltips_set_tip (tooltips, widget,
+      SoGtkFullViewerButtons[button].keyword, NULL);
+
+    GdkPixmap * gdk_pixmap = 
+      gdk_pixmap_colormap_create_from_xpm_d (NULL, colormap, 
+        &mask, NULL,
+        SoGtkFullViewerButtons[button].xpm_data);
+    GtkWidget * label = gtk_pixmap_new( gdk_pixmap, mask );
+
+    gdk_pixmap_unref (gdk_pixmap);
+    gdk_bitmap_unref (mask);
+
+#if 0
     GtkWidget * label = gtk_label_new( SoGtkFullViewerButtons[button].label );
+#endif
     gtk_widget_show( label );
     SoGtkFullViewerButtons[button].lwidget = label;
 
