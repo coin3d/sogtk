@@ -94,7 +94,7 @@ inline int _not_null( const void * arg ) { return (arg != NULL) ? 1 : 0; }
   GETTEXT support
 */
 
-#if ENABLE_NLS && defined(HAVE_GETTEXT)
+#if defined(ENABLE_NLS) && defined(HAVE_GETTEXT)
 #include <libintl.h>
 #define _(String) dgettext (PACKAGE, String)
 #define N_(String) (String)
