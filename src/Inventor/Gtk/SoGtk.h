@@ -82,8 +82,9 @@ protected:
   static void invokeComponentActionCallbacks(
     SoGtkComponent * component, SoGtkComponentAction action );
 
-  static void componentCreation( SoGtkComponent * component );
-  static void componentDestruction( SoGtkComponent * component );
+  static gint componentCreation( SoGtkComponent * component );
+  static gint componentDestruction( SoGtkComponent * component );
+  static gint componentChange( SoGtkComponent * component );
 
 private:
   static void sensorQueueChanged( void * cbdata );

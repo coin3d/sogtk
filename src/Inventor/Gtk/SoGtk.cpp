@@ -375,24 +375,22 @@ SoGtk::setWidgetSize(
   GtkWidget * const widget,
   const SbVec2s size )
 {
-#if SOGTK_DEBUG
   if ( widget == NULL ) {
+#if SOGTK_DEBUG
     SoDebugError::postWarning( "SoGtk::setWidgetSize",
                                "Called with NULL pointer." );
+#endif // SOGTK_DEBUG
     return;
   }
   if( (size[0] <= 0) || (size[1] <= 0) ) {
+#if SOGTK_DEBUG
     SoDebugError::postWarning( "SoGtk::setWidgetSize",
                                "Called with invalid dimension(s): (%d, %d).",
                                size[0], size[1]);
+#endif // SOGTK_DEBUG
     return;
   }
-#endif // SOGTK_DEBUG
-
-  GtkRequisition req = {
-    size[0], size[1]
-  };
-
+  GtkRequisition req = { size[0], size[1] };
   gtk_widget_size_request( GTK_WIDGET(widget), &req );
 } // setWidgetSize()
 
@@ -417,7 +415,7 @@ SoGtk::getWidgetSize(
     return SbVec2s(0, 0);
   }
 #endif // SOGTK_DEBUG
-
+  SOGTK_STUB();
   return SbVec2s( 0, 0 ); // gtk_widget_width( widget ), gtk_widget_height( widget ) );
 } // getWidgetSize()
 
@@ -515,7 +513,7 @@ SoGtk::invokeComponentActionCallbacks( // static, protected
 
 // *************************************************************************
 
-void
+gint
 SoGtk::componentCreation( // static, protected
   SoGtkComponent * component )
 {
@@ -523,9 +521,10 @@ SoGtk::componentCreation( // static, protected
     SoGtk::components = new SbPList;
   SoGtk::components->append( (void *) component );
   SoGtk::invokeComponentActionCallbacks( component, CREATION );
+  return FALSE;
 } // componentCreation()
 
-void
+gint
 SoGtk::componentDestruction( // static, protected
   SoGtkComponent * component )
 {
@@ -534,7 +533,16 @@ SoGtk::componentDestruction( // static, protected
   assert( idx != -1 );
   SoGtk::invokeComponentActionCallbacks( component, DESTRUCTION );
   SoGtk::components->remove( idx );
+  return FALSE;
 } // componentDestruction()
+
+gint
+SoGtk::componentChange( // static, protected
+  SoGtkComponent * component )
+{
+  SoGtk::invokeComponentActionCallbacks( component, CHANGE );
+  return FALSE;
+} // componentChange()
 
 // *************************************************************************
 
