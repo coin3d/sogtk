@@ -165,8 +165,9 @@ void
 SoGtkPlaneViewer::constructor(// private
   const SbBool build)
 {
+  this->commonConstructor(); // set up generic stuff
+
   this->pimpl = new SoGtkPlaneViewerP(this);
-  this->common = new SoAnyPlaneViewer(this);
 
   this->addVisibilityChangeCallback(SoGtkPlaneViewerP::visibilityCB, this);
 
@@ -192,7 +193,6 @@ SoGtkPlaneViewer::constructor(// private
 SoGtkPlaneViewer::~SoGtkPlaneViewer(
   void)
 {
-  delete this->common;
   delete this->pimpl;
 } // ~SoGtkPlaneViewer()
 
@@ -242,7 +242,7 @@ SoGtkPlaneViewer::setCursorEnabled(// virtual
   SbBool enable)
 {
   inherited::setCursorEnabled(enable);
-  this->setCursorRepresentation(this->common->mode);
+  this->setCursorRepresentation(this->mode);
 } // setCursorEnabled()
 
 // *************************************************************************
@@ -312,7 +312,7 @@ void
 SoGtkPlaneViewer::bottomWheelMotion(// virtual, protected
   float value)
 {
-  common->translateX(value - this->getBottomWheelValue());
+  this->translateX(value - this->getBottomWheelValue());
   inherited::bottomWheelMotion(value);
 } // bottomWheelMotion()
 
@@ -324,7 +324,7 @@ void
 SoGtkPlaneViewer::leftWheelMotion(// virtual, protected
   float value)
 {
-  common->translateY(value - this->getLeftWheelValue());
+  this->translateY(value - this->getLeftWheelValue());
   inherited::leftWheelMotion(value);
 } // leftWheelMotion()
 
@@ -336,7 +336,7 @@ void
 SoGtkPlaneViewer::rightWheelMotion(// virtual, protected
   float value)
 {
-  common->zoom(this->getRightWheelValue() - value);
+  this->zoom(this->getRightWheelValue() - value);
   inherited::rightWheelMotion(value);
 } // rightWheelMotion()
 
@@ -350,7 +350,7 @@ SbBool
 SoGtkPlaneViewer::processSoEvent(// virtual, protected
   const SoEvent * const event)
 {
-  if (common->processSoEvent(event))
+  if (this->processGenericSoEvent(event))
     return TRUE;
 
   return inherited::processSoEvent(event);
@@ -381,7 +381,7 @@ SoGtkPlaneViewer::setSeekMode(// virtual, protected
 {
   inherited::setSeekMode(enable);
 #if 0
-  this->common->setMode(on ?
+  this->setMode(on ?
     SoAnyPlaneViewer::SEEK_WAIT_MODE :
     SoAnyPlaneViewer::EXAMINE);
 #endif
@@ -618,7 +618,7 @@ SoGtkPlaneViewerP::xbuttonCB(
   assert(closure != NULL);
   SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
 
-  viewer->common->viewPlaneX();
+  viewer->viewPlaneX();
 } // ybuttonCB()
 
 /*
@@ -633,7 +633,7 @@ SoGtkPlaneViewerP::ybuttonCB(
   assert(closure != NULL);
   SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
 
-  viewer->common->viewPlaneY();
+  viewer->viewPlaneY();
 } // ybuttonCB()
 
 /*
@@ -648,7 +648,7 @@ SoGtkPlaneViewerP::zbuttonCB(
   assert(closure != NULL);
   SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
 
-  viewer->common->viewPlaneZ();
+  viewer->viewPlaneZ();
 } // zbuttonCB()
 
 /*
