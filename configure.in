@@ -59,12 +59,15 @@ AC_SUBST(LT_AGE)
 
 VERSION=$SOGTK_VERSION
 
-#  Not in use yet, should eventually use the same technique as in
-#  include/Inventor/SbBasic.h.in.
-#  AC_DEFINE_UNQUOTED(SOGTK_MAJOR_VERSION, $SOGTK_MAJOR_VERSION)
-#  AC_DEFINE_UNQUOTED(SOGTK_MINOR_VERSION, $SOGTK_MINOR_VERSION)
-#  AC_DEFINE_UNQUOTED(SOGTK_MICRO_VERSION, $SOGTK_MICRO_VERSION)
-#  AC_DEFINE_UNQUOTED(SOGTK_VERSION, "$SOGTK_VERSION")
+# The following are set up in Inventor/Gtk/SoGtkBasic.h
+AC_DEFINE_UNQUOTED([SOGTK_MAJOR_VERSION], [$SOGTK_MAJOR_VERSION],
+  [The major version number for SoGtk])
+AC_DEFINE_UNQUOTED([SOGTK_MINOR_VERSION], [$SOGTK_MINOR_VERSION],
+  [The minor version number for SoGtk])
+AC_DEFINE_UNQUOTED([SOGTK_MICRO_VERSION], [$SOGTK_MICRO_VERSION],
+  [The micro version number for SoGtk])
+AC_DEFINE_UNQUOTED([SOGTK_VERSION], ["$SOGTK_VERSION"],
+  [The version string for SoGtk])
 
 # **************************************************************************
 
@@ -81,7 +84,7 @@ AC_LANG_CPLUSPLUS
 # **************************************************************************
 # Miscellaneous options and initializations.
 
-AM_INIT_AUTOMAKE(libSoGtk, $VERSION)
+AM_INIT_AUTOMAKE(SoGtk, $VERSION)
 
 #  File to cram results from the configure tests into.
 AM_CONFIG_HEADER(config.h)
@@ -171,7 +174,7 @@ if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
   ], [
     AC_MSG_ERROR([couldn't compile and link against Open Inventor])
   ])
-  sim_ac_brand_inventor="SGI/TGS Inventor"
+  SIM_AC_CONFIGURATION_SETTING([Open Inventor brand], [SGI/TGS Inventor])
 else
   SIM_AC_HAVE_COIN_IFELSE([
     CPPFLAGS="$CPPFLAGS $sim_ac_coin_cppflags"
@@ -183,7 +186,7 @@ else
   ], [
     AC_MSG_ERROR([couldn't compile and link against Coin])
   ])
-  sim_ac_brand_inventor=Coin
+  SIM_AC_CONFIGURATION_SETTING([Open Inventor brand], [Coin])
 fi
 
 # **************************************************************************
@@ -265,6 +268,8 @@ fi
 
 SIM_AC_COMPILE_DEBUG([
   CPPFLAGS="$CPPFLAGS -DSOGTK_DEBUG=1"
+#   SIM_AC_CONFIGURATION_WARNING(
+#     [debug compilation causes slower and larger executabled])
 ], [
   CPPFLAGS="$CPPFLAGS -DSOGTK_DEBUG=0"
 ])
@@ -283,6 +288,12 @@ SIM_COMPILER_WARNINGS
 AM_CONDITIONAL(BUILD_TESTS, test "x${with_test_code+set}" = "xset")
 
 SIM_AC_SOGUI_STATIC_DEFAULTS
+
+if $sim_ac_static_defaults; then
+  SIM_AC_CONFIGURATION_SETTING([Static Materials], [Yes])
+else
+  SIM_AC_CONFIGURATION_SETTING([Static Materials], [No])
+fi
 
 # **************************************************************************
 # Gettext support
@@ -380,11 +391,11 @@ SOGTK_DOC_MAN=`echo $want_man | tr a-z A-Z`
 AC_SUBST(SOGTK_DOC_HTML)
 AC_SUBST(SOGTK_DOC_MAN)
 
-sogtk_dox_build_dir=`pwd`
-sogtk_dox_src_dir=`cd $srcdir; pwd`
+sogtk_build_dir=`pwd`
+sogtk_src_dir=`cd $srcdir; pwd`
 
-AC_SUBST(sogtk_dox_src_dir)
-AC_SUBST(sogtk_dox_build_dir)
+AC_SUBST(sogtk_src_dir)
+AC_SUBST(sogtk_build_dir)
 
 if test x"$want_html" != xno -o x"$want_man" != xno; then
   SIM_AC_DOXYGEN_TOOL(,
@@ -401,6 +412,8 @@ if test x"$want_html" != xno -o x"$want_man" != xno; then
   fi
   AC_SUBST(sim_ac_perl_exe)
 fi
+
+SIM_AC_CONFIGURATION_SETTING([Install Prefix], [$prefix])
 
 # **************************************************************************
 # List all makefiles configure must automatically generate.
@@ -423,14 +436,8 @@ AC_OUTPUT([
 	chmod a+x sogtk-config
 ])
 
-sim_ac_sogui_static_defaults=No
-$sim_ac_static_defaults && sim_ac_sogui_static_defaults=Yes
+SIM_AC_CONFIGURATION_SUMMARY
 
-echo ""
-echo "So$Gui configuration:"
-echo "  Open Inventor:     $sim_ac_brand_inventor"
-echo "  Static Materials:  $sim_ac_sogui_static_defaults"
-echo "  Install Prefix:    $prefix"
 echo ""
 echo "Now, run 'make install' to build and install So$Gui."
 echo ""
