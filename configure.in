@@ -92,10 +92,6 @@ AC_DEFINE_UNQUOTED([SOGTK_VERSION], ["$SOGTK_VERSION"],
   [The version string for SoGtk])
 
 # **************************************************************************
-
-AC_CANONICAL_SYSTEM
-
-# **************************************************************************
 # Locate compilers and set C++ as the default compiler to run in tests.
 
 AC_PROG_CC
