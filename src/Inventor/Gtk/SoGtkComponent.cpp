@@ -272,8 +272,6 @@ SoGtkComponent::setBaseWidget(
   this->widget = widget;
 
   if ( this->widget ) {
-    gtk_signal_connect( GTK_OBJECT(this->widget), "event",
-      GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
     gtk_signal_connect( GTK_OBJECT(this->widget), "realize",
       GTK_SIGNAL_FUNC(SoGtkComponent::realizeHandlerCB), (gpointer) this );
   }
@@ -473,8 +471,6 @@ SoGtkComponent::show( // virtual
 
   if ( this->shelled ) {
     if ( ! GTK_WIDGET_REALIZED(this->baseWidget()) ) {
-      gtk_signal_connect( GTK_OBJECT(this->getParentWidget()), "event",
-        GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
       gtk_widget_show( widget );
     }
     gtk_widget_show( parent );

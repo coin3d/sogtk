@@ -173,9 +173,6 @@ SoGtkGLWidget::buildWidget(
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "expose_event",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLDraw), (void *) this );
 
-  gtk_signal_connect( GTK_OBJECT(this->glWidget), "event",
-    GTK_SIGNAL_FUNC(SoGtkGLWidget::eventHandler), (void *) this );
-
   this->container = gtk_frame_new(0);
   gtk_frame_set_shadow_type (GTK_FRAME (this->container), GTK_SHADOW_IN);
   gtk_container_set_border_width( GTK_CONTAINER(this->container),
