@@ -31,6 +31,7 @@ struct SoGtkViewerButton;
 
 class SOGTK_DLL_EXPORT SoGtkPlaneViewer : public SoGtkFullViewer {
   SOGTK_OBJECT_HEADER(SoGtkPlaneViewer, SoGtkFullViewer);
+  friend class SoAnyPlaneViewer;
 
 public:
   SoGtkPlaneViewer(
