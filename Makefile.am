@@ -58,13 +58,13 @@ DISTCLEANFILES = \
 	po/Makefile
 
 EXTRA_DIST = \
-	so@gui@.m4 \
 	build/Makefile.am \
 	build/Makefile.in \
 	build/README \
 	build/geniwz.pl \
 	build/sogtk.doxygen.in \
 	build/sogtk.spec.in \
+	cfg/m4/sogtk.m4 \
 	po/ChangeLog \
 	po/Makefile.in.in \
 	po/POTFILES.in \
@@ -81,7 +81,7 @@ bin_SCRIPTS = so@gui@-config
 m4datadir = $(datadir)/aclocal
 # Don't replace "gtk" with "@gui@" here, as it will pøkk up
 # for ``make dist''.
-dist_m4data_DATA = sogtk.m4
+dist_m4data_DATA = cfg/m4/sogtk.m4
 
 cfgdatadir = $(datadir)/Coin/conf
 cfgdata_DATA = so@gui@-@CONFIG@.cfg
