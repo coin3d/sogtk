@@ -17,28 +17,37 @@
  *
  **************************************************************************/
 
+#if SOGTK_DEBUG
 static const char rcsid[] =
   "$Id$";
+#endif // SOGTK_DEBUG
 
-/*!
-  \class SoGtkSpaceball SoGtkSpaceball.h Inventor/Gtk/devices/SoGtkSpaceball.h
-  \brief The SoGtkSpaceball class ...
-  \ingroup gtkdevices
-
-  FIXME: write class doc
-*/
-
-
-/*!
-  TODO:
-  - not implemented yet! no spaceball available
-  - idea: maybe we could make device classes for other available cheap
-  PC equipment? wheel mice, joysticks, ....
-*/
+#include <assert.h>
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkSpaceball.h>
 
+/*!
+  \class SoGtkSpaceball SoGtkSpaceball.h Inventor/Gtk/devices/SoGtkSpaceball.h
+  \brief The SoGtkSpaceball class ...
+  \ingroup sogtkdevices
+
+  FIXME: write class doc
+*/
+
+/*¡
+  TODO:
+  - not implemented yet! no spaceball available
+  - idea: maybe we could make device classes for other available cheap
+  PC equipment? wheel mice, joysticks, ....
+  - implement XInput support
+*/
+
+// *************************************************************************
+
+SOGTK_TYPED_OBJECT_SOURCE(SoGtkSpaceball,SoGtkDevice);
+
+// *************************************************************************
 
 /*!
   \enum SoGtkSpaceball::Mask
@@ -61,10 +70,12 @@ static const char rcsid[] =
   FIXME: write documentation for enum definition
 */
 
+// *************************************************************************
 
 /*!
   Constructor.
 */
+
 SoGtkSpaceball::SoGtkSpaceball(SoGtkSpaceball::Mask mask)
 {
   this->mask = mask;
@@ -76,6 +87,7 @@ SoGtkSpaceball::SoGtkSpaceball(SoGtkSpaceball::Mask mask)
 /*!
   Destructor.
 */
+
 SoGtkSpaceball::~SoGtkSpaceball()
 {
 }
@@ -83,6 +95,7 @@ SoGtkSpaceball::~SoGtkSpaceball()
 /*!
   FIXME: write function documentation
 */
+
 void
 SoGtkSpaceball::enable(GtkWidget * /*w*/, SoGtkEventHandler /*f*/, void * /*data*/)
 {

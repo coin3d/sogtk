@@ -31,8 +31,8 @@
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkInputFocus : public SoGtkDevice
-{
+class SOGTK_DLL_EXPORT SoGtkInputFocus : public SoGtkDevice {
+  SOGTK_TYPED_OBJECT_HEADER(SoGtkInputFocus);
   typedef SoGtkDevice inherited;
 
 public:

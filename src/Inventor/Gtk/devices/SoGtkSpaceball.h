@@ -26,8 +26,8 @@
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkSpaceball : public SoGtkDevice
-{
+class SOGTK_DLL_EXPORT SoGtkSpaceball : public SoGtkDevice {
+  SOGTK_TYPED_OBJECT_HEADER(SoGtkSpaceball);
   typedef SoGtkDevice inherited;
 
 public:

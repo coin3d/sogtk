@@ -17,19 +17,27 @@
  *
  **************************************************************************/
 
+#if SOGTK_DEBUG
 static const char rcsid[] =
   "$Id$";
+#endif // SOGTK_DEBUG
+
+#include <assert.h>
+
+#include <sogtkdefs.h>
+#include <Inventor/Gtk/devices/SoGtkInputFocus.h>
 
 /*!
   \class SoGtkInputFocus SoGtkInputFocus.h Inventor/Gtk/devices/SoGtkInputFocus.h
   \brief The SoGtkInputFocus class ...
-  \ingroup gtkdevices
+  \ingroup sogtkdevices
 
   FIXME: write class doc
 */
 
-#include <sogtkdefs.h>
-#include <Inventor/Gtk/devices/SoGtkInputFocus.h>
+// *************************************************************************
+
+SOGTK_TYPED_OBJECT_SOURCE(SoGtkInputFocus,SoGtkDevice);
 
 // *************************************************************************
 
@@ -96,3 +104,8 @@ SoGtkInputFocus::translateEvent(
 } // translateEvent()
 
 // *************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkInputFocusRCSId(void) { return rcsid; }
+#endif // SOGTK_DEBUG
+

@@ -30,8 +30,8 @@ class SoKeyboardEvent;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkKeyboard : public SoGtkDevice
-{
+class SOGTK_DLL_EXPORT SoGtkKeyboard : public SoGtkDevice {
+  SOGTK_TYPED_OBJECT_HEADER(SoGtkKeyboard);
   typedef SoGtkDevice inherited;
 
 public:

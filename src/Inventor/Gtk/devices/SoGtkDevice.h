@@ -23,14 +23,15 @@
 #define SOGTK_DEVICE_H
 
 /*!
-  \defgroup gtkdevices Gtk Device Classes
- */
+  \defgroup sogtkdevices SoGtk Device Classes
+*/
 
 #include <gtk/gtk.h>
 
 #include <Inventor/SbLinear.h>
 
 #include <Inventor/Gtk/SoGtkBasic.h>
+#include <Inventor/Gtk/SoGtkTypedObject.h>
 
 class SoEvent;
 
@@ -38,9 +39,12 @@ typedef int sogtkEventMask;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkDevice
-{
+class SOGTK_DLL_EXPORT SoGtkDevice : public SoGtkTypedObject {
+  SOGTK_TYPED_ABSTRACT_OBJECT_HEADER(SoGtkDevice);
+
 public:
+  static void initClasses(void);
+
   typedef void SoGtkEventHandler( GtkWidget *, void *, GdkEvent *, bool * );
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func,
@@ -58,7 +62,7 @@ protected:
   static SbVec2s getLastEventPosition(void);
 
 private:
-  static SbVec2s lastEventPos;
+  static SbVec2s lastEventPosition;
   SbVec2s widgetSize;
 
 }; // class SoGtkDevice

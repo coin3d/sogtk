@@ -17,16 +17,12 @@
  *
  **************************************************************************/
 
+#if SOGTK_DEBUG
 static const char rcsid[] =
   "$Id$";
+#endif // SOGTK_DEBUG
 
-/*!
-  \class SoGtkDevice SoGtkDevice.h Inventor/Gtk/devices/SoGtkDevice.h
-  \brief The SoGtkDevice class ...
-  \ingroup gtkdevices
-
-  FIXME: write class doc
-*/
+#include <assert.h>
 
 #include <Inventor/errors/SoDebugError.h>
 
@@ -34,6 +30,44 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
+#include <Inventor/Gtk/devices/SoGtkInputFocus.h>
+#include <Inventor/Gtk/devices/SoGtkKeyboard.h>
+#include <Inventor/Gtk/devices/SoGtkMouse.h>
+#include <Inventor/Gtk/devices/SoGtkSpaceball.h>
+
+/*!
+  \class SoGtkDevice SoGtkDevice.h Inventor/Gtk/devices/SoGtkDevice.h
+  \brief The SoGtkDevice class ...
+  \ingroup sogtkdevices
+
+  FIXME: write class doc
+*/
+
+// *************************************************************************
+
+SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(SoGtkDevice, SoGtkTypedObject);
+
+// *************************************************************************
+
+void
+SoGtkDevice::initClasses( // static
+  void )
+{
+  SoGtkDevice::initClass();
+  SoGtkInputFocus::initClass();
+  SoGtkMouse::initClass();
+  SoGtkKeyboard::initClass();
+  SoGtkSpaceball::initClass();
+} // initClasses()
+
+// *************************************************************************
+
+/*!
+  \var SbVec2s SoGtkDevice::lastEventPosition
+  FIXME: write doc
+*/
+
+SbVec2s SoGtkDevice::lastEventPosition; // static
 
 // *************************************************************************
 
@@ -63,26 +97,16 @@ static const char rcsid[] =
 // *************************************************************************
 
 /*!
-  \var SbVec2s SoGtkDevice::lastEventPos
-  FIXME: write doc
-*/
-
-SbVec2s SoGtkDevice::lastEventPos;
-
-// *************************************************************************
-
-/*!
   FIXME: write function documentation
 */
 
+// FIXME: perhaps make virtual?
 void
 SoGtkDevice::setWindowSize(
   const SbVec2s size )
 {
   this->widgetSize = size;
 } // setWindowSize()
-
-// *************************************************************************
 
 /*!
   FIXME: write function documentation
@@ -107,6 +131,7 @@ SoGtkDevice::setEventPosition(
   int x,
   int y ) const
 {
+  this->lastEventPosition = SbVec2s( x, y );
   event->setPosition( SbVec2s( x, this->widgetSize[1] - y - 1 ) );
 } // setEventPosition()
 
@@ -117,10 +142,15 @@ SoGtkDevice::setEventPosition(
 */
 
 SbVec2s
-SoGtkDevice::getLastEventPosition(
+SoGtkDevice::getLastEventPosition( // static
   void )
 {
-  return SoGtkDevice::lastEventPos;
+  return SoGtkDevice::lastEventPosition;
 } // getLastEventPosition()
 
 // *************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkDeviceRCSId(void) { return rcsid; }
+#endif // SOGTK_DEBUG
+

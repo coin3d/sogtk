@@ -22,14 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-/*!
-  \class SoGtkMouse SoGtkMouse.h Inventor/Gtk/devices/SoGtkMouse.h
-  \brief The SoGtkMouse class ...
-  \ingroup gtkdevices
-
-  FIXME: write class doc
-*/
-
 #include <assert.h>
 
 #include <gdk/gdktypes.h>
@@ -45,6 +37,18 @@ static const char rcsid[] =
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif // HAVE_CONFIG_H
+
+/*!
+  \class SoGtkMouse SoGtkMouse.h Inventor/Gtk/devices/SoGtkMouse.h
+  \brief The SoGtkMouse class ...
+  \ingroup sogtkdevices
+
+  FIXME: write class doc
+*/
+
+// *************************************************************************
+
+SOGTK_TYPED_OBJECT_SOURCE(SoGtkMouse, SoGtkDevice);
 
 // *************************************************************************
 
