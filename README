@@ -1,0 +1,27 @@
+README
+======
+
+SoGtk is a library with GUI components for Open Inventor using GTK+,
+developed for Coin, SIM's Open Inventor implementation.  You will find
+Coin where you found SoGtk, at <URL:http://www.coin3d.org/coin.html>.
+
+To build SoGtk, you need the following libraries:
+
+  - GTK+ <URL:http://www.gtk.org/>.
+  - The GtkGLArea widget <URL:http://www.student.oulu.fi/~jlof/gtkglarea/>.
+  - An Open Inventor library (e.g. Coin).
+
+The current state of affairs is that the SoGtk component hierarchy is
+developed down to (and only to) the SoGtkRenderArea component at this
+point in time - to be picked up again at a later date.  With the
+SoGtkRenderArea implemented, GTK+ users will be able to start using Coin
+with GTK+ (in the Open Inventor way), and if needed implement the viewers
+they need themselves by looking at the implementation of the SoQt and
+SoBe libraries.  Those libraries will have a higher priority than SoGtk
+until they are completed.
+
+Although you can contact the author directly, please use the coin-discuss
+mailing-list for SoGtk-related questions.  Information on the coin mailing-
+lists can be found on the support page at http://www.coin3d.org/coin.html
+
+  Lars J

@@ -1,0 +1,6 @@
+TODO
+====
+
+* [20000117:larsa] consider implementing our own GL widget for GTK+ to avoid
+  the somewhat inconvenient extra library dependency for GtkGLArea.
+

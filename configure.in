@@ -1,0 +1,230 @@
+dnl  This can be any file in the package.
+AC_INIT(src/Inventor/Gtk/SoGtk.h)
+
+dnl  Locate C++ compiler and set C++ as the default compiler to run
+dnl  in tests.
+
+AC_PROG_CXX
+AC_LANG_CPLUSPLUS
+
+if test "x$GXX" != "xyes"; then
+  AC_MSG_WARN(You are not using the GNU compiler -- other compilers are not well supported at the moment)
+fi
+
+dnl *******************************************************************
+dnl * Library version control.
+dnl *******************************************************************
+
+dnl  Making releases:
+dnl    SOGTK_MICRO_VERSION += 1;
+dnl    SOGTK_INTERFACE_AGE += 1;
+dnl    SOGTK_BINARY_AGE += 1;
+dnl  if any functions have been added, set SOGTK_INTERFACE_AGE to 0.
+dnl  if backwards compatibility has been broken,
+dnl  set SOGTK_BINARY_AGE _and_ SOGTK_INTERFACE_AGE to 0.
+dnl 
+SOGTK_MAJOR_VERSION=0
+SOGTK_MINOR_VERSION=8
+SOGTK_MICRO_VERSION=0
+SOGTK_INTERFACE_AGE=0
+SOGTK_BINARY_AGE=0
+SOGTK_VERSION=$SOGTK_MAJOR_VERSION.$SOGTK_MINOR_VERSION.$SOGTK_MICRO_VERSION
+
+AC_SUBST(SOGTK_MAJOR_VERSION)
+AC_SUBST(SOGTK_MINOR_VERSION)
+AC_SUBST(SOGTK_MICRO_VERSION)
+AC_SUBST(SOGTK_VERSION)
+AC_SUBST(SOGTK_INTERFACE_AGE)
+AC_SUBST(SOGTK_BINARY_AGE)
+
+dnl  libtool versioning
+LT_RELEASE=$SOGTK_MAJOR_VERSION.$SOGTK_MINOR_VERSION
+LT_CURRENT=`expr $SOGTK_MICRO_VERSION - $SOGTK_INTERFACE_AGE`
+LT_REVISION=$SOGTK_INTERFACE_AGE
+LT_AGE=`expr $SOGTK_BINARY_AGE - $SOGTK_INTERFACE_AGE`
+AC_SUBST(LT_RELEASE)
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+
+VERSION=$SOGTK_VERSION
+
+dnl  Not in use yet, should eventually use the same technique as in
+dnl  include/Inventor/SbBasic.h.in.
+dnl  AC_DEFINE_UNQUOTED(SOGTK_MAJOR_VERSION, $SOGTK_MAJOR_VERSION)
+dnl  AC_DEFINE_UNQUOTED(SOGTK_MINOR_VERSION, $SOGTK_MINOR_VERSION)
+dnl  AC_DEFINE_UNQUOTED(SOGTK_MICRO_VERSION, $SOGTK_MICRO_VERSION)
+dnl  AC_DEFINE_UNQUOTED(SOGTK_VERSION, "$SOGTK_VERSION")
+
+dnl *******************************************************************
+dnl * Miscellaneous options and initializations.
+dnl *******************************************************************
+
+AM_INIT_AUTOMAKE(libSoGtk, $VERSION)
+
+dnl  File to cram results from the configure tests into.
+AM_CONFIG_HEADER(config.h)
+
+dnl  Default to not building a static library.
+dnl  Can be overridden by the user with --enable-static.
+AM_DISABLE_STATIC
+
+dnl  Turn off default maintainer make-rules -- use ./autogen.sh instead.
+AM_MAINTAINER_MODE
+
+dnl  Initialize libtool
+AC_PROG_LIBTOOL
+
+
+dnl  These are used for constructing the sogtk-config file.
+SOGTK_EXTRA_CPPFLAGS=
+SOGTK_EXTRA_LDFLAGS=
+SOGTK_EXTRA_LIBS=
+AC_SUBST(SOGTK_EXTRA_CPPFLAGS)
+AC_SUBST(SOGTK_EXTRA_LDFLAGS)
+AC_SUBST(SOGTK_EXTRA_LIBS)
+
+
+dnl AC_PATH_XTRA
+dnl if test "x$no_x" = "xyes"; then
+dnl   AC_MSG_ERROR([X11 libraries couldn't be found! (use --x-includes and --x-libraries to locate them)])
+dnl fi
+
+dnl ************************************************************************
+
+if test x"$with_inventor" = xyes; then
+
+  SIM_CHECK_DL([
+    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_dl_cppflags"
+    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_dl_ldflags"
+    SOGTK_EXTRA_LIBS="$sim_ac_dl_libs $SOGTK_EXTRA_LIBS"
+  ])
+
+  SIM_CHECK_X11([
+    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_x11_cppflags"
+    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_x11_ldflags"
+    SOGTK_EXTRA_LIBS="$sim_ac_x11_libs $SOGTK_EXTRA_LIBS"
+  ])
+
+  if test x"$sim_ac_x11_avail" = xyes; then
+    SIM_CHECK_X11SHMEM([
+      SOGTK_EXTRA_LIBS="$sim_ac_x11shmem_libs $SOGTK_EXTRA_LIBS"
+    ])
+    SIM_CHECK_X11MU([
+      SOGTK_EXTRA_LIBS="$sim_ac_x11mu_libs $SOGTK_EXTRA_LIBS"
+    ])
+  fi
+
+  SIM_CHECK_OPENGL([
+    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gl_cppflags"
+    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gl_ldflags"
+    SOGTK_EXTRA_LIBS="$sim_ac_gl_libs $SOGTK_EXTRA_LIBS"
+  ],AC_MSG_ERROR(needs an OpenGL-compatible development system installation))
+
+  SIM_CHECK_INVENTOR([
+    SOGTK_EXTRA_CPPFLAGS="$sim_ac_oiv_cppflags $SOGTK_EXTRA_CPPFLAGS"
+    SOGTK_EXTRA_LDFLAGS="$sim_ac_oiv_ldflags $SOGTK_EXTRA_LDFLAGS"
+    SOGTK_EXTRA_LIBS="$sim_ac_oiv_libs $SOGTK_EXTRA_LIBS"
+  ],AC_MSG_ERROR(couldn't compile and link against Open Inventor))
+
+else
+
+  SIM_CHECK_COIN([
+    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_coin_cppflags"
+    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_coin_ldflags"
+    SOGTK_EXTRA_LIBS="$sim_ac_coin_libs $SOGTK_EXTRA_LIBS"
+  ],AC_MSG_ERROR(couldn't compile and link against Coin))
+
+fi
+
+
+dnl * Set up necessary stuff to use Open Inventor or Coin.
+
+dnl Check for GTK+
+AM_PATH_GTK(1.2.6,,
+  AC_MSG_ERROR(Test for GTK+ failed.  See the file 'INSTALL' for help.))
+
+dnl Check for GtkGLArea
+AM_PATH_GTKGL(,
+  AC_MSG_ERROR(Test for GtkGLArea failed.  See the file 'INSTALL' for help.))
+
+dnl SIM_CHECK_GTK([
+dnl   SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gtk_cppflags"
+dnl   SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gtk_ldflags"
+dnl   SOGTK_EXTRA_LIBS="$sim_ac_gtk_libs $SOGTK_EXTRA_LIBS"
+dnl ],AC_MSG_ERROR(can't compile and link against GTK+ development kit))
+
+dnl SIM_CHECK_GTKGL([
+dnl   SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gtkgl_cppflags"
+dnl   SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gtkgl_ldflags"
+dnl   SOGTK_EXTRA_LIBS="$sim_ac_gtkgl_libs $SOGTK_EXTRA_LIBS"
+dnl ],AC_MSG_ERROR(can't compile and link against the GtkGLArea extension library))
+
+dnl *******************************************************************
+dnl * Compiler control.
+dnl *******************************************************************
+
+SIM_COMPILE_DEBUG
+if test $enable_debug = yes; then
+  CXXFLAGS="$CXXFLAGS -DSOGTK_DEBUG=1"
+else
+  CXXFLAGS="$CXXFLAGS -DSOGTK_DEBUG=0"
+fi
+
+SIM_DEBUGSYMBOLS
+SIM_RTTI_SUPPORT
+SIM_EXCEPTION_HANDLING
+SIM_PROFILING_SUPPORT
+SIM_COMPILER_WARNINGS
+
+dnl *******************************************************************
+dnl * do we want to compile the example programs?
+dnl *******************************************************************
+
+EXAMPLEMAKEFILES="
+	examples/Makefile
+	examples/test/Makefile
+"
+
+AC_ARG_WITH(examples,
+  [  --with-examples         compile SoGtk example programs [default=yes]],
+  [case "${withval}" in
+    yes) want_examples=yes ;;
+    no)  want_examples=no ;;
+    *) AC_MSG_ERROR(bad value \"${withval}\" for --with-examples) ;;
+  esac],
+  [want_examples=yes])
+
+if test "x$want_examples" = "xno"; then
+  EXAMPLEMAKEFILES=""
+fi
+
+AM_CONDITIONAL(BUILD_EXAMPLES, test "x$want_examples" = "xyes")
+
+dnl *******************************************************************
+dnl * List all makefiles configure must automatically generate.
+dnl *******************************************************************
+dnl * while running autogen, $EXAMPLEMAKEFILES must be substituted for
+dnl * makefile generation
+
+test -d src || mkdir src
+test -d src/Inventor || mkdir src/Inventor
+test -d src/Inventor/Gtk || mkdir src/Inventor/Gtk
+
+AC_OUTPUT([
+	sogtk-config
+	Makefile
+	src/Inventor/Gtk/Makefile
+	src/Inventor/Gtk/common/Makefile
+	src/Inventor/Gtk/devices/Makefile
+	src/Inventor/Gtk/viewers/Makefile
+	src/Inventor/Gtk/widgets/Makefile
+	examples/Makefile
+	examples/widgets/Makefile
+	examples/viewers/Makefile
+],[
+	chmod a+x sogtk-config
+])
+
+dnl 	${EXAMPLEMAKEFILES}
+
