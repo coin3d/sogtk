@@ -37,6 +37,7 @@ static const char rcsid[] =
 #include <Inventor/Gtk/SoGtkCursors.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
+#include <Inventor/Gtk/viewers/SoAnyExaminerViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
 
 // Icon graphic for the camera button.
@@ -441,141 +442,29 @@ SoGtkExaminerViewer::openViewerHelpCard(void)
 }
 
 // *************************************************************************
+
+SbBool
+SoGtkExaminerViewer::processSoEvent( // virtual
+  const SoEvent * const event )
+{
+  if ( common->processSoEvent(event) ) return TRUE;
+  return inherited::processSoEvent(event);
+} // processSoEvent()
+
 /*!
   Overloaded from parent class to take care of any model interaction
   events.
 */
 
 void
-SoGtkExaminerViewer::processEvent(
+SoGtkExaminerViewer::processEvent( // virtual
   GdkEvent * event )
 {
-  // Upon first event detected, make sure the cursor is set correctly.
-//  if (!this->defaultCursor) this->setCursorRepresentation(this->currentmode);
-  // Let parent class take care of any events which are common for
-  // all viewer classes.
-  if (this->processCommonEvents(event)) return;
-
-  GtkWidget * canvas = this->getRenderAreaWidget();
-  SbVec2s canvassize = this->getGlxSize();
-/*
-  SbVec2s mousepos(canvas->mapFromGlobal(QCursor::pos()).x(),
-                   canvas->mapFromGlobal(QCursor::pos()).y());
-  // Convert from Qt coordinate system to OpenGL coordinate system.
-  mousepos[1] = canvassize[1] - mousepos[1];
-  SbVec2f norm_mousepos(mousepos[0]/float(canvassize[0]),
-                        mousepos[1]/float(canvassize[1]));
-
-  // Convert dblclick events to press events to get the "correct"
-  // sequence of two press+release pairs under Qt 1.xx and Qt 2.00 at
-  // least. (FIXME: is this a Qt bug? Report sent to the Trolls
-  // 19991001 mortene.)
-#if QT_VERSION < 200
-  int eventtype = event->type();
-#else // Qt 2.0
-  GdkEvent::Type eventtype = event->type();
-#endif // Qt 2.0
-  eventtype = (eventtype == Event_MouseButtonDblClick ?
-               Event_MouseButtonPress : eventtype);
-
-  switch (eventtype) {
-  case Event_MouseButtonPress:
-    {
-      QMouseEvent * be = (QMouseEvent *)event;
-      if (be->button() != LeftButton && be->button() != MidButton) break;
-
-      this->interactiveCountInc();
-
-#if 0 // debug
-      SoDebugError::postInfo("SoGtkExaminerViewer::processEvent",
-                             "mb press, nesting count: %d",
-                             this->getInteractiveCount());
-#endif // debug
-
-      if (this->currentmode == WAITING_FOR_SEEK) {
-        this->seekToPoint(mousepos);
-      }
-      else {
-        this->setModeFromState(be->state() | be->button());
-        if (this->isAnimating()) this->stopAnimating();
-      }
-    }
-    break;
-
-  case Event_MouseButtonRelease:
-    {
-      QMouseEvent * be = (QMouseEvent *)event;
-      if (be->button() != LeftButton && be->button() != MidButton) break;
-
-      if (this->currentmode == DRAGGING &&
-          this->animatingallowed &&
-          this->spindetecttimer &&
-          this->spindetecttimer->isActive()) {
-        this->spindetecttimer->stop();
-        this->spinanimating = TRUE;
-        this->timertrigger->schedule();
-        this->interactiveCountInc();
-      }
-
-      // FIXME: This sometimes makes the interactivecount < 0, as
-      // reported by pederb. Find out why. 19991110 mortene.
-      this->interactiveCountDec();
-
-#if 0 // debug
-      SoDebugError::postInfo("SoGtkExaminerViewer::processEvent",
-                             "mb release, nesting count: %d",
-                             this->getInteractiveCount());
-#endif // debug
-      this->setModeFromState(be->state() & ~be->button());
-    }
-    break;
-
-  case Event_MouseMove:
-    {
-      switch (this->currentmode) {
-      case DRAGGING:
-        if (!this->spindetecttimer) this->spindetecttimer = new QTimer;
-        this->spindetecttimer->start(0, TRUE);
-        this->spin(norm_mousepos);
-        break;
-
-      case PANNING:
-        this->pan(norm_mousepos);
-        break;
-
-      case ZOOMING:
-        this->zoomByCursor(norm_mousepos);
-        break;
-
-      default: // include default to avoid compiler warnings.
-        break;
-      }
-    }
-    break;
-
-  case Event_KeyPress:
-  case Event_KeyRelease:
-    {
-      QKeyEvent * ke = (QKeyEvent *)event;
-
-      if (ke->key() == Key_Control) {
-        if (ke->type() == Event_KeyPress)
-          this->setModeFromState(ke->state() | ControlButton);
-        else
-          this->setModeFromState(ke->state() & ~ControlButton);
-      }
-    }
-    break;
-
-  default: // include default to avoid compiler warnings.
-    break;
-  }
-
-  this->lastmouseposition = norm_mousepos;
-*/
-}
+  inherited::processEvent(event);
+} // processEvent()
 
 // *************************************************************************
+
 /*!
   Overload this method to make sure any animations are stopped before
   we go into seek mode.
@@ -597,16 +486,23 @@ SoGtkExaminerViewer::setSeekMode(SbBool on)
 }
 
 // *************************************************************************
+
 /*!
   Overload this method to be able to draw the axis cross if selected
   in the preferences sheet.
 */
+
 void
-SoGtkExaminerViewer::actualRedraw(void)
+SoGtkExaminerViewer::actualRedraw(
+  void )
 {
+  common->actualRedraw();
   inherited::actualRedraw();
-  if (common->isFeedbackVisible()) common->drawAxisCross();
-}
+  if (common->isFeedbackVisible())
+    common->drawAxisCross();
+  if (common->isAnimating())
+    this->scheduleRedraw();
+} // actualRedraw()
 
 // *************************************************************************
 /*!

@@ -25,7 +25,6 @@
 #include <Inventor/SbLinear.h>
 
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
-#include <Inventor/Gtk/viewers/SoAnyExaminerViewer.h>
 
 class SbSphereSheetProjector;
 class SoTimerSensor;
@@ -33,6 +32,8 @@ class SoSeparator;
 class SoSwitch;
 class SoTranslation;
 class SoScale;
+
+class SoAnyExaminerViewer;
 
 // *************************************************************************
 
@@ -75,6 +76,7 @@ protected:
 
   virtual void openViewerHelpCard(void);
 
+  virtual SbBool processSoEvent(const SoEvent * const event);
   virtual void processEvent(GdkEvent * anyevent);
   virtual void setSeekMode(SbBool on);
   virtual void actualRedraw(void);

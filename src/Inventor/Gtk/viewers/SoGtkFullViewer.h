@@ -92,6 +92,7 @@ protected:
   void setPopupMenuString( const char * title );
   GtkWidget * buildFunctionsSubmenu( GtkWidget * popup );
   GtkWidget * buildDrawStyleSubmenu( GtkWidget * popup );
+  void openPopupMenu(const SbVec2s position);
 
   virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
   void setPrefSheetString( const char * title );
@@ -113,6 +114,7 @@ protected:
   void setBottomWheelString( const char * name );
   void setRightWheelString( const char * name );
 
+  virtual SbBool processSoEvent(const SoEvent * const event);
   virtual void openViewerHelpCard(void);
 
   SoAnyPopupMenu * prefmenu;

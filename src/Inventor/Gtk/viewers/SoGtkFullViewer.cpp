@@ -1115,6 +1115,17 @@ SoGtkFullViewer::buildDrawStyleSubmenu(
   return NULL;
 }
 
+/*!
+  FIXME: write doc
+*/
+
+void
+SoGtkFullViewer::openPopupMenu(
+  const SbVec2s position )
+{
+  SOGTK_STUB();
+}
+
 // *************************************************************************
 
 /*!
@@ -2758,5 +2769,15 @@ SoGtkFullViewer::drawstyleActivated(
   int )
 {
 }
+
+// *************************************************************************
+
+SbBool
+SoGtkFullViewer::processSoEvent(
+  const SoEvent * const event )
+{
+  if ( common->processSoEvent(event) ) return TRUE;
+  return inherited::processSoEvent(event);
+} // processSoEvent()
 
 // *************************************************************************
