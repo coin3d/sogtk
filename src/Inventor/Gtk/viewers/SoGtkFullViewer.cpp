@@ -232,11 +232,13 @@ SoGtkFullViewer::SoGtkFullViewer(
 
   this->setClassName( "SoGtkFullViewer" );
 
+//  this->setSize( SbVec2s( 500, 390 ) );
+
   if ( buildNow )
     this->setBaseWidget( this->buildWidget( this->getParentWidget() ) );
 
   // why isn't this working?
-  this->setSize( SbVec2s( 500, 390 ) );
+//  this->setSize( SbVec2s( 500, 390 ) );
 
 } // SoGtkFullViewer()
 
@@ -710,12 +712,13 @@ GtkWidget *
 SoGtkFullViewer::buildWidget(
   GtkWidget * parent )
 {
-  GtkWidget * root = gtk_vbox_new( FALSE, TRUE ); 
-  GtkWidget * croot = gtk_hbox_new( FALSE, TRUE ); 
+  GtkWidget * root = gtk_vbox_new( FALSE, 0 ); 
+  GtkWidget * croot = gtk_hbox_new( FALSE, 0 ); 
   g_return_val_if_fail( root != NULL, NULL );
   g_return_val_if_fail( croot != NULL, NULL );
 
   this->canvas = inherited::buildWidget( croot );
+
 
   this->viewerWidget = croot;
   this->canvasParent = parent;
@@ -747,6 +750,7 @@ SoGtkFullViewer::buildWidget(
   if ( this->menuEnabled )
     this->buildPopupMenu();
 
+  this->setSize( SbVec2s( 500, 390 ) );
   this->viewerWidget = root;
   return this->viewerWidget;
 } // buildWidget()
