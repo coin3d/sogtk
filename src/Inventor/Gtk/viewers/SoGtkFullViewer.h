@@ -241,10 +241,8 @@ private:
 
   void interactbuttonClicked(void);
   static void interactbuttonClickedCB( GtkWidget *, gpointer );
-  static void interactbuttonClickedRCB( GtkWidget *, gpointer );
   void viewbuttonClicked(void);
   static void viewbuttonClickedCB( GtkWidget *, gpointer );
-  static void viewbuttonClickedRCB( GtkWidget *, gpointer );
 
   void helpbuttonClicked(void);
   static void helpbuttonClickedCB( GtkWidget *, gpointer );
