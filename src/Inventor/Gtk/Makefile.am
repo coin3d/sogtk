@@ -22,7 +22,9 @@ DISTCLEANFILES = \
 libSoGtk@SUFFIX@_la_SOURCES = \
 	SoGtk.cpp \
 	SoGtkComponent.cpp \
+	SoGtkComponentP.h \
 	SoGtkGLWidget.cpp \
+	SoGtkGLWidgetP.h \
 	SoGtkGraphEditor.h \
 	SoGtkGraphEditor.cpp \
 	SoGtkRoster.h \

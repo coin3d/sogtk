@@ -32,6 +32,7 @@
 
 #include <Inventor/Gtk/SoGtk.h>
 #include <Inventor/Gtk/SoGtkComponent.h>
+#include <Inventor/Gtk/SoGtkComponentP.h>
 #include <Inventor/Gtk/SoGtkCursor.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
@@ -49,58 +50,11 @@
 
 // *************************************************************************
 
-// "Hidden" class for storing private data (to avoid cluttering up the
-// header file, and to make it easier to keep ABI compatibility upon
-// changes.)
-class SoGtkComponentP {
-public:
-  SoGtkComponentP(SoGtkComponent * owner);
-  ~SoGtkComponentP(void);
-
-  static gint realizeHandlerCB(GtkObject * object, gpointer closure);
-  static GdkCursor * getNativeCursor(GtkWidget * w,
-                                     const SoGtkCursor::CustomCursor * cc);
-
-  GtkWidget * widget;
-  GtkWidget * parent;
-  SbBool embedded;
-  SbBool fullscreen;
-  SbBool shelled;
-  char * className;
-  char * widgetName;
-  char * captionText;
-  char * iconText;
-  SoGtkComponentCB * closeCB;
-  void * closeCBdata;
-  SbPList * visibilityChangeCBs;
-  SbVec2s storeSize;
-
-  static GdkCursor * arrowcursor;
-  static GdkCursor * crosscursor;
-  static GdkCursor * uparrowcursor;
-
-  struct NonFull {
-    gint x, y, w, h;
-  };
-  NonFull nonfull;
-
-  // List of all SoGtkComponent instances. Needed for the
-  // SoGtkComponent::getComponent() function.
-  static SbPList * soGtkCompList;
-
-private:
-  SoGtkComponent * owner;
-  static SbDict * cursordict;
-};
-
 GdkCursor * SoGtkComponentP::arrowcursor = NULL;
 GdkCursor * SoGtkComponentP::crosscursor = NULL;
 GdkCursor * SoGtkComponentP::uparrowcursor = NULL;
 SbDict * SoGtkComponentP::cursordict = NULL;
 SbPList * SoGtkComponentP::soGtkCompList = NULL;
-
-#define PUBLIC(ptr) (ptr->owner)
-#define PRIVATE(ptr) (ptr->pimpl)
 
 // *************************************************************************
 
@@ -801,9 +755,8 @@ SoGtkComponent::afterRealizeHook(void)
 */
 
 SoGtkComponentP::SoGtkComponentP(SoGtkComponent * owner)
+  : SoGuiComponentP(owner)
 {
-  this->owner = owner;
-
   this->widget = NULL;
   this->parent = NULL;
   this->embedded = FALSE;
@@ -822,7 +775,7 @@ SoGtkComponentP::SoGtkComponentP(SoGtkComponent * owner)
 
   if (!SoGtkComponentP::soGtkCompList)
     SoGtkComponentP::soGtkCompList = new SbPList;
-  SoGtkComponentP::soGtkCompList->append((void *) this->owner);
+  SoGtkComponentP::soGtkCompList->append((void *) owner);
 }
 
 /*
