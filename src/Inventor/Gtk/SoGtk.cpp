@@ -685,16 +685,3 @@ SoGtk::getComponents(
     componentlist.append(SoGtk::components->get(i));
   return numComponents;
 } // getComponents()
-
-// *************************************************************************
-
-// Documented in SoWin.cpp, along with doc for the callback function
-// typedef and the enums.
-//
-// FIXME: find a way to collect the documentation of the public API
-// for all common So[Win|Qt|Gtk|Xt|Mac] classes. 20011014 mortene.
-SoGtk::FatalErrorCB *
-SoGtk::setFatalErrorHandler(SoGtk::FatalErrorCB * cb, void * userdata)
-{
-  return SoAny::si()->setFatalErrorHandler(cb, userdata);
-}

@@ -239,6 +239,7 @@ WARN_FORMAT           = "$file:$line: $text"
 INPUT                 = \
 	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkBasic.h \
 	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/SoGtk.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkCommon.cpp \
 	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtk.h \
 	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkObject.cpp \
 	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkObject.h \
