@@ -148,6 +148,23 @@ public:
   static void rightwheelPressedCB(GtkWidget *, gpointer);
   static void rightwheelMovedCB(GtkWidget *, gpointer);
   static void rightwheelReleasedCB(GtkWidget *, gpointer);
+
+  // menu selections
+  void selectedPrefs(void);
+  void selectedViewing(void);
+  void selectedDecoration(void);
+  void selectedHeadlight(void);
+  void copyviewSelected(void);
+  void pasteviewSelected(void);
+
+  // button selections
+  void interactbuttonClicked(void);
+  void viewbuttonClicked(void);
+  void helpbuttonClicked(void);
+  void homebuttonClicked(void);
+  void sethomebuttonClicked(void);
+  void viewallbuttonClicked(void);
+  void seekbuttonClicked(void);
 };
 
 // ************************************************************************

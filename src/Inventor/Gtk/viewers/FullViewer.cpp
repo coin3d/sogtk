@@ -266,7 +266,7 @@ SoGtkFullViewerP::SoGtkFullViewerButtons[] = {
     (GtkSignalFunc) SoGtkFullViewerP::seekbuttonClickedCB,
     seek_xpm
   }
-}; // SoGtkFullViewerButtons[]
+};
 
 // *************************************************************************
 
@@ -869,14 +869,14 @@ SoGtkFullViewer::createViewerButtons(GtkWidget * parent,
       gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(widget),FALSE);
       viewing_group = gtk_radio_button_group(GTK_RADIO_BUTTON(widget));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),
-        this->isViewing() ? FALSE : TRUE);
+                                   this->isViewing() ? FALSE : TRUE);
       break ;
     case EXAMINE_BUTTON:
       PRIVATE(this)->viewbutton = widget = gtk_radio_button_new(viewing_group);
       gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(widget),FALSE);
       viewing_group = gtk_radio_button_group(GTK_RADIO_BUTTON(widget));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),
-        this->isViewing() ? TRUE : FALSE);
+                                   this->isViewing() ? TRUE : FALSE);
       break ;
     case SEEK_BUTTON:
       PRIVATE(this)->seekbutton = widget = gtk_button_new();
@@ -889,8 +889,8 @@ SoGtkFullViewer::createViewerButtons(GtkWidget * parent,
 
     GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
     gtk_tooltips_set_tip (tooltips, widget,
-      _(SoGtkFullViewerP::SoGtkFullViewerButtons[button].keyword),
-      (const gchar *) NULL);
+                          _(SoGtkFullViewerP::SoGtkFullViewerButtons[button].keyword),
+                          (const gchar *) NULL);
 
     GdkPixmap * gdk_pixmap =
       gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) NULL, colormap,
@@ -907,8 +907,8 @@ SoGtkFullViewer::createViewerButtons(GtkWidget * parent,
     gtk_container_add(GTK_CONTAINER(widget), GTK_WIDGET(label));
     if ((void *) SoGtkFullViewerP::SoGtkFullViewerButtons[button].pressed != NULL) {
       gtk_signal_connect(GTK_OBJECT(widget), "pressed",
-        GTK_SIGNAL_FUNC(SoGtkFullViewerP::SoGtkFullViewerButtons[button].pressed),
-        (gpointer) this);
+                         GTK_SIGNAL_FUNC(SoGtkFullViewerP::SoGtkFullViewerButtons[button].pressed),
+                         (gpointer) this);
     }
     buttonlist->append(widget);
   }
@@ -1029,158 +1029,105 @@ SoGtkFullViewer::setRightWheelString(const char * const string)
 // *************************************************************************
 // menu selections
 
-/*!
-  \internal
-*/
-
 void
-SoGtkFullViewer::selectedViewing(void)
+SoGtkFullViewerP::selectedViewing(void)
 {
-  this->setViewing(this->isViewing() ? FALSE : TRUE);
+  PUBLIC(this)->setViewing(PUBLIC(this)->isViewing() ? FALSE : TRUE);
 }
 
-/*!
-  \internal
-*/
-
 void
-SoGtkFullViewer::selectedDecoration(void)
+SoGtkFullViewerP::selectedDecoration(void)
 {
-  this->setDecoration(this->isDecoration() ? FALSE : TRUE);
+  PUBLIC(this)->setDecoration(PUBLIC(this)->isDecoration() ? FALSE : TRUE);
 }
 
-/*!
-  \internal
-*/
-
 void
-SoGtkFullViewer::selectedHeadlight(void)
+SoGtkFullViewerP::selectedHeadlight(void)
 {
-  this->setHeadlight(this->isHeadlight() ? FALSE : TRUE);
+  PUBLIC(this)->setHeadlight(PUBLIC(this)->isHeadlight() ? FALSE : TRUE);
 }
 
-/*!
-  \internal
-*/
-
 void
-SoGtkFullViewer::copyviewSelected(void)
+SoGtkFullViewerP::copyviewSelected(void)
 {
-  this->copyView(SbTime::getTimeOfDay());
+  PUBLIC(this)->copyView(SbTime::getTimeOfDay());
 }
 
-/*!
-  \internal
-*/
-
 void
-SoGtkFullViewer::pasteviewSelected(void)
+SoGtkFullViewerP::pasteviewSelected(void)
 {
-  this->pasteView(SbTime::getTimeOfDay());
+  PUBLIC(this)->pasteView(SbTime::getTimeOfDay());
 }
 
-/*!
-  \internal
-  SoGtk Slot.
-*/
-
+// SoGtk Slot.
 void
-SoGtkFullViewer::selectedPrefs(void)
+SoGtkFullViewerP::selectedPrefs(void)
 {
-  if (! PRIVATE(this)->prefwindow) {
-    PRIVATE(this)->prefwindow = PRIVATE(this)->makePreferencesWindow();
+  if (!this->prefwindow) {
+    this->prefwindow = this->makePreferencesWindow();
   }
-  if (PRIVATE(this)->prefwindow) {
-    gtk_widget_show(PRIVATE(this)->prefwindow);
+  if (this->prefwindow) {
+    gtk_widget_show(this->prefwindow);
   }
 }
 
 // *************************************************************************
 // button selections
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewer::interactbuttonClicked(void)
+SoGtkFullViewerP::interactbuttonClicked(void)
 {
-  if (! this->isViewing()) {
-    GtkWidget * button = PRIVATE(this)->interactbutton ;
+  if (!PUBLIC(this)->isViewing()) {
+    GtkWidget * button = this->interactbutton ;
     gtk_signal_handler_block_by_data(GTK_OBJECT(button), (gpointer) this);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(button), (gpointer) this);
     return;
   }
-  this->setViewing(FALSE);
+  PUBLIC(this)->setViewing(FALSE);
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewer::viewbuttonClicked(void)
+SoGtkFullViewerP::viewbuttonClicked(void)
 {
-
-  if (this->isViewing()) {
-    GtkWidget * button = PRIVATE(this)->viewbutton;
+  if (PUBLIC(this)->isViewing()) {
+    GtkWidget * button = this->viewbutton;
     gtk_signal_handler_block_by_data(GTK_OBJECT(button), (gpointer) this);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(button), (gpointer) this);
     return;
   }
-  this->setViewing(TRUE);
+  PUBLIC(this)->setViewing(TRUE);
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewer::helpbuttonClicked(void)
+SoGtkFullViewerP::helpbuttonClicked(void)
 {
-  this->openViewerHelpCard();
+  PUBLIC(this)->openViewerHelpCard();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewer::homebuttonClicked(void)
+SoGtkFullViewerP::homebuttonClicked(void)
 {
-  this->resetToHomePosition();
+  PUBLIC(this)->resetToHomePosition();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewer::sethomebuttonClicked(void)
+SoGtkFullViewerP::sethomebuttonClicked(void)
 {
-  this->saveHomePosition();
+  PUBLIC(this)->saveHomePosition();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewer::viewallbuttonClicked(void)
+SoGtkFullViewerP::viewallbuttonClicked(void)
 {
-  this->viewAll();
+  PUBLIC(this)->viewAll();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewer::seekbuttonClicked(void)
+SoGtkFullViewerP::seekbuttonClicked(void)
 {
-  this->setSeekMode(this->isSeekMode() ? FALSE : TRUE);
+  PUBLIC(this)->setSeekMode(PUBLIC(this)->isSeekMode() ? FALSE : TRUE);
 }
 
 // *************************************************************************
@@ -1269,6 +1216,11 @@ SoGtkFullViewerP::layoutAppButtons(GtkWidget * form)
 void
 SoGtkFullViewer::createPrefSheet(void)
 {
+  // FIXME: this is really not the way to do it, the prefsheet should
+  // actually be constructed from the subclass(es) by piecing it
+  // together from other virtual createPref*() methods. SoXt does the
+  // right thing, look there for reference.  20020529 mortene.
+
   PRIVATE(this)->prefwindow = PRIVATE(this)->makePreferencesWindow();
 }
 
@@ -2253,13 +2205,8 @@ SoGtkFullViewerP::stereoToggled(GtkToggleButton *toggle_button,
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::interactbuttonClickedCB(GtkWidget *w,
-                                          gpointer closure)
+SoGtkFullViewerP::interactbuttonClickedCB(GtkWidget *w, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
@@ -2268,13 +2215,8 @@ SoGtkFullViewerP::interactbuttonClickedCB(GtkWidget *w,
     viewer->setViewing(FALSE);
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::viewbuttonClickedCB(GtkWidget * w,
-                                      gpointer closure)
+SoGtkFullViewerP::viewbuttonClickedCB(GtkWidget * w, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
@@ -2282,93 +2224,58 @@ SoGtkFullViewerP::viewbuttonClickedCB(GtkWidget * w,
     viewer->setViewing(TRUE);
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::helpbuttonClickedCB(GtkWidget *,
-                                      gpointer closure)
+SoGtkFullViewerP::helpbuttonClickedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
-  viewer->helpbuttonClicked();
+  PRIVATE(viewer)->helpbuttonClicked();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::homebuttonClickedCB(GtkWidget *,
-                                      gpointer closure)
+SoGtkFullViewerP::homebuttonClickedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
-  viewer->homebuttonClicked();
+  PRIVATE(viewer)->homebuttonClicked();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::sethomebuttonClickedCB(GtkWidget *,
-                                         gpointer closure)
+SoGtkFullViewerP::sethomebuttonClickedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
-  viewer->sethomebuttonClicked();
+  PRIVATE(viewer)->sethomebuttonClicked();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::viewallbuttonClickedCB(GtkWidget *,
-                                         gpointer closure)
+SoGtkFullViewerP::viewallbuttonClickedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
-  viewer->viewallbuttonClicked();
+  PRIVATE(viewer)->viewallbuttonClicked();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::seekbuttonClickedCB(GtkWidget *,
-                                      gpointer closure)
+SoGtkFullViewerP::seekbuttonClickedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
-  viewer->seekbuttonClicked();
+  PRIVATE(viewer)->seekbuttonClicked();
 }
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::leftwheelPressedCB(GtkWidget *,
-                                     gpointer closure)
+SoGtkFullViewerP::leftwheelPressedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->leftWheelStart();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::leftwheelMovedCB(GtkWidget * wheel,
-                                   gpointer closure)
+SoGtkFullViewerP::leftwheelMovedCB(GtkWidget * wheel, gpointer closure)
 {
   assert(closure != NULL);
   gfloat value = gtk_thumbwheel_get_value(GTK_THUMBWHEEL(wheel));
@@ -2376,39 +2283,24 @@ SoGtkFullViewerP::leftwheelMovedCB(GtkWidget * wheel,
   viewer->leftWheelMotion(value);
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::leftwheelReleasedCB(GtkWidget *,
-                                      gpointer closure)
+SoGtkFullViewerP::leftwheelReleasedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->leftWheelFinish();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::bottomwheelPressedCB(GtkWidget *,
-                                       gpointer closure)
+SoGtkFullViewerP::bottomwheelPressedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->bottomWheelStart();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::bottomwheelMovedCB(GtkWidget * wheel,
-                                     gpointer closure)
+SoGtkFullViewerP::bottomwheelMovedCB(GtkWidget * wheel, gpointer closure)
 {
   assert(closure != NULL);
   gfloat value = gtk_thumbwheel_get_value(GTK_THUMBWHEEL(wheel));
@@ -2416,39 +2308,24 @@ SoGtkFullViewerP::bottomwheelMovedCB(GtkWidget * wheel,
   viewer->bottomWheelMotion(value);
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::bottomwheelReleasedCB(GtkWidget *,
-                                        gpointer closure)
+SoGtkFullViewerP::bottomwheelReleasedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->bottomWheelFinish();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::rightwheelPressedCB(GtkWidget *,
-                                      gpointer closure)
+SoGtkFullViewerP::rightwheelPressedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->rightWheelStart();
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::rightwheelMovedCB(GtkWidget * wheel,
-                                    gpointer closure)
+SoGtkFullViewerP::rightwheelMovedCB(GtkWidget * wheel, gpointer closure)
 {
   assert(closure != NULL);
   gfloat value = gtk_thumbwheel_get_value(GTK_THUMBWHEEL(wheel));
@@ -2456,13 +2333,8 @@ SoGtkFullViewerP::rightwheelMovedCB(GtkWidget * wheel,
   viewer->rightWheelMotion(value);
 }
 
-/*!
-  FIXME: write doc
-*/
-
 void
-SoGtkFullViewerP::rightwheelReleasedCB(GtkWidget *,
-                                       gpointer closure)
+SoGtkFullViewerP::rightwheelReleasedCB(GtkWidget *, gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
