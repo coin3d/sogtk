@@ -186,26 +186,35 @@ dnl * Set up necessary stuff to use Open Inventor or Coin.
 
 dnl Check for GTK+
 AC_LANG_SAVE
-AC_LANG_C
-AM_PATH_GTK(1.2.6,,
-  AC_MSG_ERROR(Test for GTK+ failed.  See the file 'INSTALL' for help.))
-
-dnl Check for GtkGLArea
-AM_PATH_GTKGL(,
-  AC_MSG_ERROR(Test for GtkGLArea failed.  See the file 'INSTALL' for help.))
+AC_LANG_C  dnl Ugly gtk.m4 check macro doesn't work with C++ compilers.
+AM_PATH_GTK(1.2.6,
+  [SOGTK_EXTRA_CPPFLAGS="$GTK_CFLAGS $SOGTK_EXTRA_CPPFLAGS"
+   CPPFLAGS="$GTK_CFLAGS $CPPFLAGS"
+   SOGTK_EXTRA_LIBS="$GTK_LIBS $SOGTK_EXTRA_LIBS"
+   LDFLAGS="$GTK_LIBS $LDFLAGS"],
+  AC_MSG_ERROR(Test for Gtk+ failed.))
 AC_LANG_RESTORE
 
-dnl SIM_CHECK_GTK([
-dnl   SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gtk_cppflags"
-dnl   SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gtk_ldflags"
-dnl   SOGTK_EXTRA_LIBS="$sim_ac_gtk_libs $SOGTK_EXTRA_LIBS"
-dnl ],AC_MSG_ERROR(can't compile and link against GTK+ development kit))
+dnl Check for GtkGLArea
 
-dnl SIM_CHECK_GTKGL([
-dnl   SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gtkgl_cppflags"
-dnl   SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gtkgl_ldflags"
-dnl   SOGTK_EXTRA_LIBS="$sim_ac_gtkgl_libs $SOGTK_EXTRA_LIBS"
-dnl ],AC_MSG_ERROR(can't compile and link against the GtkGLArea extension library))
+dnl Avoid the crappy gtkgl.m4 macro.
+dnl AM_PATH_GTKGL(, AC_MSG_ERROR(Test for GtkGLArea failed.  See the file 'INSTALL' for help.))
+
+LIBS="-lgtkgl $LIBS"
+
+AC_CACHE_CHECK([whether the GtkGLArea widget is available],
+  sim_cv_lib_gtkgl,
+  [AC_TRY_LINK([#include <gtkgl/gtkglarea.h>],
+               [gtk_gl_area_new(0L);],
+               sim_cv_lib_gtkgl=yes,
+               sim_cv_lib_gtkgl=no)])
+
+if test x"$sim_cv_lib_gtkgl" != xyes; then
+  AC_MSG_ERROR(Test for GtkGLArea extensions widget failed.)
+else
+  SOGTK_EXTRA_LIBS="-lgtkgl $SOGTK_EXTRA_LIBS"
+fi
+
 
 dnl *******************************************************************
 dnl * Compiler control.
@@ -294,6 +303,8 @@ AC_OUTPUT([
 	test-code/Makefile
 	test-code/widgets/Makefile
 	examples/Makefile
+	examples/nodes/Makefile
+	examples/nodes/selection.cpp
 	examples/components/Makefile
 	examples/components/renderarea.cpp
 	examples/components/examinerviewer.cpp

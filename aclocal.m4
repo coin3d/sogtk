@@ -1394,19 +1394,20 @@ fi
 
 dnl ************************************************************************
 dnl Usage:
-dnl   SIM_PARSE_MODIFIER_LIST( MODIFIER-LIST-STRING, MODIFIER-VARIABLES, 
+dnl   SIM_AC_PARSE_MODIFIER_LIST( MODIFIER-LIST-STRING, MODIFIER-VARIABLES, 
 dnl       MODIFIER-LIST, opt ACTION-ON-SUCCESS, opt ACTION-ON-FAILURE )
 dnl
 dnl Description:
 dnl   This macro makes it easy to let macros have a MODIFIER-LIST argument
-dnl   which makes the macro more flexible and lets the macro caller configure
-dnl   some of the macro beaviour from the calling place.
+dnl   which can add some flexibility to the macro by letting the developer
+dnl   configure some of the macro beaviour from the invocation in the
+dnl   configure.in file.
 dnl
-dnl   Everything is done on the m4-level, which means things are handled at
-dnl   autoconf-run-time, not configure-run-time.  This lets you discover
+dnl   Everything is handled on the m4-level, which means things are handled
+dnl   at autoconf-run-time, not configure-run-time.  This lets you discover
 dnl   problems at an earlier stage, which is nice.  It also lets you insert
-dnl   the modifier values into e.g. the help strings, something you can't
-dnl   do with a shell variable.
+dnl   the modifier values into e.g. help strings, something you can't do
+dnl   on the shell level.
 dnl
 dnl   MODIFIER-LIST-STRING is the string of modifiers used in the
 dnl   macro invocation.
@@ -1435,107 +1436,96 @@ dnl Sample Usage:
 dnl   [to come later]
 dnl
 dnl Authors:
-dnl   Lars J. Aas <larsa@sim.no>
+dnl   Lars J. Aas <larsa@sim.no> (idea, design, coding)
+dnl   Akim Demaille <akim@epita.fr> (hints, tips, corrections)
 dnl
 dnl TODO:
-dnl * [larsa:20000222] warn on creating modifiers for unknown variables
+dnl * [larsa:20000222] more warnings on potential problems
 dnl
 
-define([$IM_STRING_COMPACT],[dnl
-patsubst(patsubst([$1],[[
+AC_DEFUN([SIM_AC_PML_WARNING],
+[errprint([SIM_PARSE_MODIFIER_LIST: $1
+  (file "]__file__[", line ]__line__[)
+])])
+
+AC_DEFUN([SIM_AC_PML_STRING_COMPACT],
+[patsubst(patsubst([[$1]],[[
 	 ]+],[ ]),[^ \| $],[])])
 
-define([$IM_STRING_WORDCOUNT_COMPACT],[dnl
-builtin([eval],(1+len(patsubst([$1],[[^ ]+],[_])))/2)])
+AC_DEFUN([SIM_AC_PML_STRING_WORDCOUNT_COMPACT],
+[m4_eval((1+len(patsubst([[$1]],[[^ ]+],[_])))/2)])
 
-define([$IM_STRING_WORDCOUNT],[dnl
-indir([$IM_STRING_WORDCOUNT_COMPACT],indir([$IM_STRING_COMPACT],[$1]))])
+AC_DEFUN([SIM_AC_PML_STRING_WORDCOUNT],
+[SIM_AC_PML_STRING_WORDCOUNT_COMPACT([SIM_AC_PML_STRING_COMPACT([$1])])])
 
-define([$IM_DEFINE_VARIABLE],[dnl
-dnl errprint([define( $1, $2 )
-dnl ])dnl
-define([$1],[$2])
-])
+AC_DEFUN([SIM_AC_PML_DEFINE_VARIABLE],
+[define([$1],[$2])])
 
-define([$IM_DEFINE_VARIABLES],[dnl
-ifelse(indir([$IM_STRING_WORDCOUNT_COMPACT],[$1]),
-       2,
-       [patsubst([$1],[^\([^ ]+\) \([^ ]+\)],
-                 [indir([$IM_DEFINE_VARIABLE],[\1],[\2])])],
-       [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \(.*\)],
-                 [indir([$IM_DEFINE_VARIABLE],[\1],[\2])indir([$IM_DEFINE_VARIABLES],[\3])])])dnl
-])
+AC_DEFUN([SIM_AC_PML_DEFINE_VARIABLES],
+[ifelse(SIM_AC_PML_STRING_WORDCOUNT_COMPACT([$1]), 2,
+        [patsubst([$1],[^\([^ ]+\) \([^ ]+\)],
+                  [SIM_AC_PML_DEFINE_VARIABLE([\1],[\2])])],
+        [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \(.*\)],
+                  [SIM_AC_PML_DEFINE_VARIABLE([\1],[\2])SIM_AC_PML_DEFINE_VARIABLES([\3])])])])
 
-define([$IM_PUSHDEF_MODIFIER],[dnl
-dnl errprint([modifier( $1, $2, $3 )
-dnl ])dnl
-ifelse(defn([$2]),
-       [],
-       [errprint([SIM_PARSE_MODIFIER_LIST: invalid variable (arg 3): "$2"
-])],
-       [pushdef([$1],[define([$2],[$3])])])dnl
-])
+AC_DEFUN([SIM_AC_PML_PUSHDEF_MODIFIER],
+[ifelse(defn([$2]), [],
+        [SIM_AC_PML_ERROR([invalid variable (arg 3): "$2"])],
+        [pushdef([$1],[define([$2],[$3])])])])
 
-dnl [pushdef([$1],[define([$2],[$3])])]
+AC_DEFUN([SIM_AC_PML_PUSHDEF_MODIFIERS],
+[ifelse(SIM_AC_PML_STRING_WORDCOUNT_COMPACT([$1]), 3,
+        [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \([^ ]+\)],
+                  [SIM_AC_PML_PUSHDEF_MODIFIER([\1],[\2],[\3])])],
+        [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \([^ ]+\) \(.*\)],
+                  [SIM_AC_PML_PUSHDEF_MODIFIER([\1],[\2],[\3])SIM_AC_PML_PUSHDEF_MODIFIERS([\4])])])])
 
-define([$IM_PUSHDEF_MODIFIERS],[dnl
-ifelse(indir([$IM_STRING_WORDCOUNT_COMPACT],[$1]),
-       3,
-       [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \([^ ]+\)],
-                 [indir([$IM_PUSHDEF_MODIFIER],[\1],[\2],[\3])])],
-       [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \([^ ]+\) \(.*\)],
-                 [indir([$IM_PUSHDEF_MODIFIER],[\1],[\2],[\3])indir([$IM_PUSHDEF_MODIFIERS],[\4])])dnl
-])dnl
-])
+AC_DEFUN([SIM_AC_PML_POPDEF_MODIFIER],
+[popdef([$1])])
 
-define([$IM_POPDEF_MODIFIER],[dnl
-dnl errprint([popdef( $1 )
-dnl ])rnl
-popdef([$1])dnl
-])
+AC_DEFUN([SIM_AC_PML_POPDEF_MODIFIERS],
+[ifelse(SIM_AC_PML_STRING_WORDCOUNT_COMPACT([$1]), 3,
+        [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \([^ ]+\)],
+                  [SIM_AC_PML_POPDEF_MODIFIER([\1])])],
+        [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \([^ ]+\) \(.*\)],
+                  [SIM_AC_PML_POPDEF_MODIFIER([\1])SIM_AC_PML_POPDEF_MODIFIERS([\4])])])])
 
-define([$IM_POPDEF_MODIFIERS],[dnl
-ifelse(indir([$IM_STRING_WORDCOUNT_COMPACT],[$1]),
-       3,
-       [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \([^ ]+\)],
-                 [indir([$IM_POPDEF_MODIFIER],[\1])])],
-       [patsubst([$1],[^\([^ ]+\) \([^ ]+\) \([^ ]+\) \(.*\)],
-                 [indir([$IM_POPDEF_MODIFIER],[\1])indir([$IM_POPDEF_MODIFIERS],[\4])])])dnl
-])
+AC_DEFUN([SIM_AC_PML_PARSE_MODIFIER_LIST],
+[pushdef([wordcount],SIM_AC_PML_STRING_WORDCOUNT([$2]))]dnl
+[ifelse(m4_eval(((wordcount % 2) == 0) && (wordcount > 0)), 1,
+        [],
+        [SIM_AC_PML_WARNING([invalid word count (arg 2): "]SIM_AC_PML_STRING_COMPACT([$2])")])]dnl
+[popdef([wordcount])]dnl
+[SIM_AC_PML_DEFINE_VARIABLES([$2])]dnl
+[pushdef([wordcount],SIM_AC_PML_STRING_WORDCOUNT([$3]))]dnl
+[ifelse(m4_eval(((wordcount % 3) == 0) && (wordcount > 0)), 1,
+        [],
+        [SIM_AC_PML_WARNING([invalid word count (arg 3): "$3"])])]dnl
+[popdef([wordcount])]dnl
+[SIM_AC_PML_PUSHDEF_MODIFIERS([$3])]dnl
+[ifelse(SIM_AC_PML_STRING_COMPACT([$1]), [],
+        [ifelse([$4], , [], [$4])],
+        [ifelse([$5], ,
+                [SIM_AC_PML_WARNING([modifier(s) parse error: "]SIM_AC_PML_STRING_COMPACT([$1])")],
+                [$5])])]dnl
+[SIM_AC_PML_POPDEF_MODIFIERS([$3])])
 
-define([$IM_PARSE_MODIFIER_LIST],[dnl
-pushdef([wordcount],builtin([eval],(indir([$IM_STRING_WORDCOUNT],[$2]))))dnl
-ifelse(builtin([eval], (wordcount % 2) == 0 && wordcount > 0),
-       1,
-       [],
-       [errprint([SIM_PARSE_MODIFIER_LIST: invalid word count (arg 2): "]indir([$IM_STRING_COMPACT],[$2])["
-])])dnl
-popdef([wordcount])dnl
-indir([$IM_DEFINE_VARIABLES],[$2])dnl
-pushdef([wordcount],builtin([eval],(indir([$IM_STRING_WORDCOUNT],[$3]))))dnl
-ifelse(builtin([eval], (wordcount % 3) == 0 && wordcount > 0),
-       1,
-       [],
-       [errprint([SIM_PARSE_MODIFIER_LIST: invalid word count (arg 3): "$3"
-])])dnl
-popdef([wordcount])dnl
-indir([$IM_PUSHDEF_MODIFIERS],[$3])dnl
-ifelse(indir([$IM_STRING_COMPACT],[$1]),
-       [],
-       [ifelse($4, , , $4)],
-       [ifelse($5, , [errprint([SIM_PARSE_MODIFIER_LIST: modifier(s) parse error: ]"indir([$IM_STRING_COMPACT],[$1])"[
-])], $5)])dnl
-indir([$IM_POPDEF_MODIFIERS],[$3])dnl
-])
+AC_DEFUN([SIM_AC_PARSE_MODIFIER_LIST],
+[SIM_AC_PML_PARSE_MODIFIER_LIST(
+        SIM_AC_PML_STRING_COMPACT([$1]),
+        SIM_AC_PML_STRING_COMPACT([$2]),
+        SIM_AC_PML_STRING_COMPACT([$3]),
+        [$4],
+        [$5])])
 
-AC_DEFUN([SIM_PARSE_MODIFIER_LIST],[dnl
-indir([$IM_PARSE_MODIFIER_LIST],
-      indir([$IM_STRING_COMPACT],[$1]),
-      indir([$IM_STRING_COMPACT],[$2]),
-      indir([$IM_STRING_COMPACT],[$3]),
-      [$4],
-      [$5])dnl
-])
+dnl * to be deleted after migrating dependant macros to ac_sim_...
+AC_DEFUN([SIM_PARSE_MODIFIER_LIST],
+[SIM_AC_PML_PARSE_MODIFIER_LIST(
+        SIM_AC_PML_STRING_COMPACT([$1]),
+        SIM_AC_PML_STRING_COMPACT([$2]),
+        SIM_AC_PML_STRING_COMPACT([$3]),
+        [$4],
+        [$5])])
 
 
 # Configure paths for GTK+
@@ -1732,122 +1722,6 @@ main ()
   AC_SUBST(GTK_LIBS)
   rm -f conf.gtktest
 ])
-
-# configure paths for GtkGLArea
-#¤Janne Löf 1999-17-2
-
-
-# AM_PATH_GTKGL([ACTION-IF-FOUND [,ACTION-IF-NOT-FOUND]])
-AC_DEFUN(AM_PATH_GTKGL,
-[
-AC_REQUIRE([AM_PATH_GTK])
-AC_PROVIDE([AM_PATH_GTKGL])
-
-AC_ARG_WITH(gl-prefix,    [  --with-gl-prefix=PFX   Prefix where OpenGL or Mesa is installed],
- gl_prefix="$withval",
- gl_prefix="")
-
-AC_ARG_WITH(gtkgl-prefix, [  --with-gtkgl-prefix=PFX Prefix where GtkGLArea is installed],
- gtkgl_prefix="$withval",
- gtkgl_prefix="")
-
-
-
-if test x$gl_prefix != x ; then
- GL_CFLAGS="-I$gl_prefix/include"
- GL_LDOPTS="-L$gl_prefix/lib"
-else
- GL_CFLAGS=""
- GL_LDOPTS=""
-fi
-
-saved_LIBS="$LIBS"
-saved_CFLAGS="$CFLAGS"
-
-# test for plain OpenGL
-AC_MSG_CHECKING([GL])
-LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGLU -lGL"
-AC_TRY_LINK([#include <GL/gl.h>], [glBegin(GL_POLYGON);], have_GL=yes, have_GL=no)
-AC_MSG_RESULT($have_GL)
-
-if test x$have_GL = xyes; then
-
- GL_LIBS="-lGLU -lGL"
-
-else
-
- # test for Mesa
- AC_MSG_CHECKING([Mesa])
- LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGLU -lMesaGL"
- AC_TRY_LINK( [char glBegin();] ,[glBegin(GL_POLYGON);], have_Mesa=yes, have_Mesa=no)
- AC_MSG_RESULT($have_Mesa)
-
- if test x$have_Mesa = xyes; then
-
-  GL_LIBS="-lMesaGLU -lMesaGL"
-
- else
-
-  # test for Mesa with threads
-  AC_MSG_CHECKING([Mesa with pthreads])
-  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGLU -lMesaGL -lpthread"
-  AC_TRY_LINK([#include <GL/gl.h>], [glBegin(GL_POLYGON);], have_Mesa_pthread=yes, have_Mesa_pthread=no)
-  AC_MSG_RESULT($have_Mesa_pthread)
-
-  if test x$have_Mesa_pthread = xyes; then
-    
-    GL_LIBS="-lMesaGLU -lMesaGL -lpthread"
-
-  else
-
-   #all failed
-   LIBS="$saved_LIBS"
-   CFLAGS="$saved_CFLAGS"
-   GTKGL_LIBS=""
-   GTKGL_CFLAGS=""
-   ifelse([$2], , :, [$2])
-
-  fi
- fi
-fi
-
-
-if test x$gtkgl_prefix != x; then
- GTKGL_CFLAGS="-I$gtkgl_prefix/include"
- GTKGL_LDOPTS="-L$gtkgl_prefix/lib"
-else
- GTKGL_CFLAGS=""
- GTKGL_LDOPTS=""
-fi
-
-AC_MSG_CHECKING([GtkGLArea])
-LIBS="$save_LIBS -lgtkgl $GTK_LIBS $GL_LDOPTS $GL_LIBS $GTKGL_LDOPTS"
-AC_TRY_LINK([#include <gtkgl/gtkglarea.h>], [gtk_gl_area_new(0L);], have_gtkgl=yes, have_gtkgl=no)
-AC_MSG_RESULT($have_gtkgl)
-
-if test x$have_gtkgl = xyes; then
-
- LIBS="$saved_LIBS"
- CFLAGS="$saved_CFLAGS"
- GTKGL_CFLAGS="$GTKGL_CFLAGS $GL_CFLAGS"
- GTKGL_LIBS="$GTKGL_LDOPTS -lgtkgl $GL_LDOPTS $GL_LIBS"
- ifelse([$1], , :, [$1])
-
-else
-
- LIBS="$saved_LIBS"
- CFLAGS="$saved_CFLAGS"
- GTKGL_LIBS=""
- GTKGL_CFLAGS=""
- ifelse([$2], , :, [$2])
-
-fi
-
-AC_SUBST(GTKGL_CFLAGS)
-AC_SUBST(GTKGL_LIBS)
-
-])
-
 
 dnl ************************************************************************
 dnl Usage:
