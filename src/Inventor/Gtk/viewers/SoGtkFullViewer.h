@@ -255,6 +255,16 @@ private:
   void seekbuttonClicked(void);
   static void seekbuttonClickedCB( GtkWidget *, gpointer );
 
+  static void leftwheelPressedCB( GtkWidget *, gpointer );
+  static void leftwheelMovedCB( GtkWidget *, gpointer );
+  static void leftwheelReleasedCB( GtkWidget *, gpointer );
+  static void bottomwheelPressedCB( GtkWidget *, gpointer );
+  static void bottomwheelMovedCB( GtkWidget *, gpointer );
+  static void bottomwheelReleasedCB( GtkWidget *, gpointer );
+  static void rightwheelPressedCB( GtkWidget *, gpointer );
+  static void rightwheelMovedCB( GtkWidget *, gpointer );
+  static void rightwheelReleasedCB( GtkWidget *, gpointer );
+
 private:
   SoAnyFullViewer * const common;
 

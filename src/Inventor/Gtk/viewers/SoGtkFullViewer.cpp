@@ -684,7 +684,14 @@ SoGtkFullViewer::buildLeftTrim(
 
   this->leftWheel = gtk_thumbwheel_new( 1 );
   g_return_val_if_fail( this->leftWheel != NULL, NULL );
-//  gtk_misc_set_padding( GTK_MISC(this->leftWheel), 2, 0 );
+  gtk_misc_set_padding( GTK_MISC(this->leftWheel), 2, 2 );
+
+  gtk_signal_connect( GTK_OBJECT(this->leftWheel), "attached",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelPressedCB), (gpointer) this );
+  gtk_signal_connect( GTK_OBJECT(this->leftWheel), "value_changed",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelMovedCB), (gpointer) this );
+  gtk_signal_connect( GTK_OBJECT(this->leftWheel), "released",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelReleasedCB), (gpointer) this );
 
   gtk_box_pack_end( GTK_BOX(trim), GTK_WIDGET(this->leftWheel), FALSE, FALSE, TRUE );
   gtk_widget_show( GTK_WIDGET(this->leftWheel) );
@@ -721,7 +728,14 @@ SoGtkFullViewer::buildBottomTrim(
 
   this->bottomWheel = gtk_thumbwheel_new( 0 );
   g_return_val_if_fail( this->bottomWheel != NULL, NULL );
-//  gtk_misc_set_padding( GTK_MISC(this->bottomWheel), 0, 2 );
+  gtk_misc_set_padding( GTK_MISC(this->bottomWheel), 2, 2 );
+
+  gtk_signal_connect( GTK_OBJECT(this->bottomWheel), "attached",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::bottomwheelPressedCB), (gpointer) this );
+  gtk_signal_connect( GTK_OBJECT(this->bottomWheel), "value_changed",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::bottomwheelMovedCB), (gpointer) this );
+  gtk_signal_connect( GTK_OBJECT(this->bottomWheel), "released",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::bottomwheelReleasedCB), (gpointer) this );
 
   gtk_box_pack_start( GTK_BOX(trim), GTK_WIDGET(this->leftWheelLabel), FALSE, TRUE, FALSE );
   gtk_box_pack_start( GTK_BOX(trim), GTK_WIDGET(this->bottomWheelLabel), FALSE, TRUE, FALSE );
@@ -757,7 +771,14 @@ SoGtkFullViewer::buildRightTrim(
 
   this->rightWheel = gtk_thumbwheel_new( 1 );
   g_return_val_if_fail( this->rightWheel != NULL, NULL );
-//  gtk_misc_set_padding( GTK_MISC(this->rightWheel), 2, 0 );
+  gtk_misc_set_padding( GTK_MISC(this->rightWheel), 2, 2 );
+
+  gtk_signal_connect( GTK_OBJECT(this->rightWheel), "attached",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::rightwheelPressedCB), (gpointer) this );
+  gtk_signal_connect( GTK_OBJECT(this->rightWheel), "value_changed",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::rightwheelMovedCB), (gpointer) this );
+  gtk_signal_connect( GTK_OBJECT(this->rightWheel), "released",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::rightwheelReleasedCB), (gpointer) this );
 
   gtk_box_pack_start( GTK_BOX(trim), GTK_WIDGET(buttons), FALSE, TRUE, TRUE );
   gtk_box_pack_end( GTK_BOX(trim), GTK_WIDGET(this->rightWheel), FALSE, TRUE, TRUE );
@@ -1006,13 +1027,11 @@ SoGtkFullViewer::setPrefSheetString(
 */
 
 void
-SoGtkFullViewer::leftWheelStart(
+SoGtkFullViewer::leftWheelStart( // virtual
   void )
 {
   this->interactiveCountInc();
-}
-
-// *************************************************************************
+} // leftWheelStart()
 
 /*!
   Called repeatedly as the user drags the thumbwheel in the left frame.
@@ -1024,13 +1043,11 @@ SoGtkFullViewer::leftWheelStart(
 */
 
 void
-SoGtkFullViewer::leftWheelMotion(
+SoGtkFullViewer::leftWheelMotion( // virtual
   float value )
 {
   this->leftWheelVal = value;
-}
-
-// *************************************************************************
+} // leftWheelMotion()
 
 /*!
   Called as the user let go of the thumbwheel in the left frame after
@@ -1042,13 +1059,11 @@ SoGtkFullViewer::leftWheelMotion(
 */
 
 void
-SoGtkFullViewer::leftWheelFinish(
+SoGtkFullViewer::leftWheelFinish( // virtual
   void )
 {
   this->interactiveCountDec();
-}
-
-// *************************************************************************
+} // leftWheelFinish()
 
 /*!
   Get current value of the left thumbwheel.
@@ -1061,7 +1076,7 @@ SoGtkFullViewer::getLeftWheelValue(
   void ) const
 {
   return this->leftWheelVal;
-}
+} // getLeftWheelValue()
 
 // *************************************************************************
 
@@ -1075,13 +1090,11 @@ SoGtkFullViewer::getLeftWheelValue(
 */
 
 void
-SoGtkFullViewer::bottomWheelStart(
+SoGtkFullViewer::bottomWheelStart( // virtual
   void )
 {
   this->interactiveCountInc();
-}
-
-// *************************************************************************
+} // bottomWheelStart()
 
 /*!
   Called repeatedly as the user drags the thumbwheel in the bottom frame.
@@ -1093,13 +1106,11 @@ SoGtkFullViewer::bottomWheelStart(
 */
 
 void
-SoGtkFullViewer::bottomWheelMotion(
+SoGtkFullViewer::bottomWheelMotion( // virtual
   float value )
 {
   this->bottomWheelVal = value;
-}
-
-// *************************************************************************
+} // bottomWheelMotion()
 
 /*!
   Called as the user let go of the thumbwheel in the bottom frame after
@@ -1111,13 +1122,11 @@ SoGtkFullViewer::bottomWheelMotion(
 */
 
 void
-SoGtkFullViewer::bottomWheelFinish(
+SoGtkFullViewer::bottomWheelFinish( // virtual
   void )
 {
   this->interactiveCountDec();
-}
-
-// *************************************************************************
+} // bottomWheelFinish()
 
 /*!
   Get current value of the bottom thumbwheel.
@@ -1130,7 +1139,7 @@ SoGtkFullViewer::getBottomWheelValue(
   void ) const
 {
   return this->bottomWheelVal;
-}
+} // getBottomWheelValue()
 
 // *************************************************************************
 
@@ -1144,13 +1153,11 @@ SoGtkFullViewer::getBottomWheelValue(
 */
 
 void
-SoGtkFullViewer::rightWheelStart(
+SoGtkFullViewer::rightWheelStart( // virtual
   void )
 {
   this->interactiveCountInc();
-}
-
-// *************************************************************************
+} // rightWheelStart()
 
 /*!
   Called repeatedly as the user drags the thumbwheel in the right frame.
@@ -1162,13 +1169,11 @@ SoGtkFullViewer::rightWheelStart(
 */
 
 void
-SoGtkFullViewer::rightWheelMotion(
+SoGtkFullViewer::rightWheelMotion( // virtual
   float value )
 {
   this->rightWheelVal = value;
-}
-
-// *************************************************************************
+} // rightWheelMotion()
 
 /*!
   Called as the user let go of the thumbwheel in the right frame after
@@ -1180,13 +1185,11 @@ SoGtkFullViewer::rightWheelMotion(
 */
 
 void
-SoGtkFullViewer::rightWheelFinish(
+SoGtkFullViewer::rightWheelFinish( // virtual
   void )
 {
   this->interactiveCountDec();
-}
-
-// *************************************************************************
+} // rightWheelFinish()
 
 /*!
   Get current value of the right thumbwheel.
@@ -1199,20 +1202,7 @@ SoGtkFullViewer::getRightWheelValue(
   void ) const
 {
   return this->rightWheelVal;
-}
-
-// *************************************************************************
-// These are all private slots for catching Qt events.
-
-void SoGtkFullViewer::leftWheelPressed(void) { this->leftWheelStart(); }
-void SoGtkFullViewer::leftWheelChanged(float v) { this->leftWheelMotion(v); }
-void SoGtkFullViewer::leftWheelReleased(void) { this->leftWheelFinish(); }
-void SoGtkFullViewer::bottomWheelPressed(void) { this->bottomWheelStart(); }
-void SoGtkFullViewer::bottomWheelChanged(float v) { this->bottomWheelMotion(v);}
-void SoGtkFullViewer::bottomWheelReleased(void) { this->bottomWheelFinish(); }
-void SoGtkFullViewer::rightWheelPressed(void) { this->rightWheelStart(); }
-void SoGtkFullViewer::rightWheelChanged(float v) { this->rightWheelMotion(v); }
-void SoGtkFullViewer::rightWheelReleased(void) { this->rightWheelFinish(); }
+} // getRightWheelValue()
 
 // *************************************************************************
 
@@ -2257,6 +2247,128 @@ SoGtkFullViewer::seekbuttonClickedCB( // static
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
   viewer->seekbuttonClicked();
 }
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkFullViewer::leftwheelPressedCB( // static
+  GtkWidget *,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->leftWheelStart();
+} // leftwheelPressedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::leftwheelMovedCB( // static
+  GtkWidget * wheel,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  gfloat value = gtk_thumbwheel_get_value( GTK_THUMBWHEEL(wheel) );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->leftWheelMotion( value );
+} // leftWheelMovedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::leftwheelReleasedCB( // static
+  GtkWidget *,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->leftWheelFinish();
+} // leftwheelReleasedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::bottomwheelPressedCB( // static
+  GtkWidget *,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->bottomWheelStart();
+} // bottomwheelPressedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::bottomwheelMovedCB( // static
+  GtkWidget * wheel,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  gfloat value = gtk_thumbwheel_get_value( GTK_THUMBWHEEL(wheel) );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->bottomWheelMotion( value );
+} // bottomWheelMovedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::bottomwheelReleasedCB( // static
+  GtkWidget *,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->bottomWheelFinish();
+} // bottomwheelReleasedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::rightwheelPressedCB( // static
+  GtkWidget *,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->rightWheelStart();
+} // rightwheelPressedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::rightwheelMovedCB( // static
+  GtkWidget * wheel,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  gfloat value = gtk_thumbwheel_get_value( GTK_THUMBWHEEL(wheel) );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->rightWheelMotion( value );
+} // rightWheelMovedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::rightwheelReleasedCB( // static
+  GtkWidget *,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+  viewer->rightWheelFinish();
+} // rightwheelReleasedCB()
 
 // *************************************************************************
 
