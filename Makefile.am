@@ -61,7 +61,6 @@ EXTRA_DIST = \
 	build/Makefile.am \
 	build/Makefile.in \
 	build/README \
-	build/geniwz.pl \
 	build/sogtk.doxygen.in \
 	build/sogtk.spec.in \
 	cfg/m4/sogtk.m4 \
