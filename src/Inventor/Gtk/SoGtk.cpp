@@ -103,11 +103,9 @@ SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
   Open Inventor SoXt component classes.  It just adds dummy \a argc and
   \a argv arguments and calls the SoGtk::init() method below.
 */
-
 GtkWidget *
-SoGtk::init(
-  const char * const appName,
-  const char * const className)
+SoGtk::init(const char * const appName,
+            const char * const className)
 {
   if (appName != NULL) {
     char buf[1025];
@@ -115,11 +113,12 @@ SoGtk::init(
     char * array[2] = { buf, (char *) NULL };
     int argc = 1;
     return SoGtk::init(argc, array, appName, className);
-  } else {
+  }
+  else {
     int argc = 0;
     return SoGtk::init(argc, (char **) NULL, appName, className);
   }
-} // init()
+}
 
 // *************************************************************************
 
@@ -128,109 +127,93 @@ SoGtk::init(
   Assumes you are creating your own QApplication and main widget.
   \a topLevelWidget should be your application's main widget.
 */
-
 void
-SoGtk::init(
-  GtkWidget * const topLevelWidget)
+SoGtk::init(GtkWidget * const topLevelWidget)
 {
-#if SOGTK_DEBUG
   if (SoGtk::mainWidget != NULL) {
+#if SOGTK_DEBUG
     SoDebugError::postWarning("SoGtk::init",
-                               "This method should be called only once.");
+                              "This method should be called only once.");
+#endif // SOGTK_DEBUG
     return;
   }
-#endif // SOGTK_DEBUG
 
   SoDB::init();
   SoNodeKit::init();
   SoInteraction::init();
   SoGtkObject::init();
 
-  SoDB::getSensorManager()->setChangedCallback(
-    SoGtk::sensorQueueChanged, NULL);
+  SoDB::getSensorManager()->setChangedCallback(SoGtk::sensorQueueChanged,
+                                               NULL);
   SoGtk::mainWidget = topLevelWidget;
 #if defined(ENABLE_NLS)
   char *txt = bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
-} // init()
+}
 
 // documented in common/SoGuiObject.cpp.in
 void
-SoGtkObject::init(// static
-  void)
+SoGtkObject::init(void)
 {
   SoGtkObject::initClass();
   SoGtkDevice::initClasses();
   SoGtkComponent::initClasses();
-} // init()
+}
 
 // *************************************************************************
 
 /*!
-  Initializes the SoGtk component toolkit library, as well as the Open Inventor
-  library.
+  Initializes the SoGtk component toolkit library, as well as the Open
+  Inventor library.
 
-  Calls \a SoDB::init(), \a SoNodeKit::init() and \a SoInteraction::init(), and
-  creates a QApplication and constructs and returns a  main widget for
-  you
+  Calls \a SoDB::init(), \a SoNodeKit::init() and \a
+  SoInteraction::init(), and creates a QApplication and constructs and
+  returns a main widget for you
 
   \sa getApplication()
 */
-
 GtkWidget *
-SoGtk::init(
-  int & argc,
-  char ** argv,
-  const char * const appName,
-  const char * const className)
+SoGtk::init(int & argc, char ** argv,
+            const char * const appName, const char * const className)
 {
-#if SOGTK_DEBUG
   if (SoGtk::mainWidget) {
+#if SOGTK_DEBUG
     SoDebugError::postWarning("SoGtk::init",
                                "This method should be called only once.");
+#endif // SOGTK_DEBUG
     return SoGtk::mainWidget;
   }
-#endif // SOGTK_DEBUG
 
   gtk_init(&argc, &argv);
 
   GtkWidget * mainwin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   SoGtk::init(mainwin);
 
-#if 0 // debug
-  SoDebugError::postInfo("SoGtk::init", "setCaption('%s')", appName);
-#endif // debug
+  if (appName) { gtk_window_set_title(GTK_WINDOW(mainwin), appName); }
 
-  if (appName)
-    gtk_window_set_title(GTK_WINDOW(mainwin), appName);
-
-//  SoGtk::appobject->setMainWidget(SoGtk::mainWidget);
   return SoGtk::mainWidget;
-} // init()
+}
 
 // *************************************************************************
 
 gint
-SoGtk::timerSensorCB(// static, private
-  gpointer data)
+SoGtk::timerSensorCB(gpointer data)
 {
   SoDB::getSensorManager()->processTimerQueue();
   SoGtk::sensorQueueChanged(NULL);
   return FALSE; // FIXME: wild guess.. 20000319 mortene.
-} // timerSensorCB()
+}
 
 gint
-SoGtk::idleSensorCB(// static, private
-  gpointer data)
+SoGtk::idleSensorCB(gpointer data)
 {
   SoDB::getSensorManager()->processDelayQueue(TRUE);
   SoGtk::sensorQueueChanged(NULL);
   return FALSE; // FIXME: wild guess.. 20000319 mortene.
-} // idleSensorCB()
+}
 
 gint
-SoGtk::delaySensorCB(// static, private
-  gpointer data)
+SoGtk::delaySensorCB(gpointer data)
 {
   SoDB::getSensorManager()->processDelayQueue(FALSE);
   SoGtk::sensorQueueChanged(NULL);
@@ -243,15 +226,12 @@ SoGtk::delaySensorCB(// static, private
   \internal
 
   This function gets called whenever something has happened to any of
-  the sensor queues. It starts or reschedules a timer which will trigger
-  when a sensor is ripe for plucking.
+  the sensor queues. It starts or reschedules a timer which will
+  trigger when a sensor is ripe for plucking.
 */
-
 void
-SoGtk::sensorQueueChanged(
-  void *)
+SoGtk::sensorQueueChanged(void *)
 {
-//  SoDebugError::postInfo("SoGtk::sensorQueueChanged", "[invoked]");
   SoSensorManager * sm = SoDB::getSensorManager();
 
   // FIXME: the timer stuff below (and the timer callback functions
@@ -282,7 +262,7 @@ SoGtk::sensorQueueChanged(
     delayid = gtk_timeout_add(SoDB::getDelaySensorTimeout().getMsecValue(), SoGtk::delaySensorCB, NULL);
   }
 
-} // sensorQueueChanged()
+}
 
 // *************************************************************************
 
@@ -312,30 +292,28 @@ SoGtk::clean(
 // *************************************************************************
 
 /*!
-  This is the event dispatch loop. It doesn't return until
-  \a QApplication::quit() or \a QApplication::exit() is called (which
-  is also done automatically by Gtk whenever the user closes an application's
-  main widget).
+  This is the event dispatch loop. It doesn't return until \a
+  QApplication::quit() or \a QApplication::exit() is called (which is
+  also done automatically by Gtk whenever the user closes an
+  application's main widget).
 */
-
 void
-SoGtk::mainLoop(
-  void)
+SoGtk::mainLoop(void)
 {
   // We need to process immediate sensors _before_ any events are
-  // processed. This is done by installing a global eventFilter here...
+  // processed. This is done by installing a global eventFilter
+  // here...
   gtk_main();
 }
 
 /*!
-  This method should tell the main loop to quit.
+  This method tells the GTK+ main processing loop to exit, which will
+  give control back to the application again.
 */
-
 void
-SoGtk::exitMainLoop(
-  void)
+SoGtk::exitMainLoop(void)
 {
-  SOGTK_STUB();
+  gtk_main_quit();
 }
 
 // *************************************************************************
@@ -347,29 +325,25 @@ SoGtk::exitMainLoop(
 
   \sa getShellWidget()
 */
-
 GtkWidget *
-SoGtk::getTopLevelWidget(
-  void)
+SoGtk::getTopLevelWidget(void)
 {
   return SoGtk::mainWidget;
-} // getTopLevelWidget()
+}
 
 // *************************************************************************
 
 /*!
-  Returns a pointer to the GtkWidget which is the top level widget for the
-  given GtkWidget \a w. This is just a convenience function provided for
-  easier porting of Open Inventor applications based on SoXt components,
-  as you can do the same thing by calling the GtkWidget::topLevelWidget()
-  method directly on \a w.
+  Returns a pointer to the GtkWidget which is the top level widget for
+  the given GtkWidget \a w. This is just a convenience function
+  provided for easier porting of Open Inventor applications based on
+  SoXt components, as you can do the same thing by calling the
+  GtkWidget::topLevelWidget() method directly on \a w.
 
   \sa getTopLevelWidget()
 */
-
 GtkWidget *
-SoGtk::getShellWidget(
-  const GtkWidget * const widget)
+SoGtk::getShellWidget(const GtkWidget * const widget)
 {
 #if SOGTK_DEBUG
   if (widget == NULL) {
@@ -380,11 +354,8 @@ SoGtk::getShellWidget(
 #endif // SOGTK_DEBUG
 
   GtkWidget *w = gtk_widget_get_toplevel(GTK_WIDGET(widget));
-  if (GTK_WIDGET_TOPLEVEL(w))
-    return w;
-  return (GtkWidget*) 0;
-  
-} // getShellWidget()
+  return GTK_WIDGET_TOPLEVEL(w) ? w : (GtkWidget *)0;
+}
 
 // *************************************************************************
 
@@ -395,47 +366,41 @@ SoGtk::getShellWidget(
 
   \sa hide()
 */
-
 void
-SoGtk::show(
-  GtkWidget * const widget)
+SoGtk::show(GtkWidget * const widget)
 {
   assert(widget != NULL);
   gtk_widget_show(widget);
-} // show()
+}
 
 // *************************************************************************
 
 /*!
   This method is provided for easier porting/compatibility with the
-  Open Inventor SoXt component classes. It will call gtk_widget_hide() on the
-  provided \a widget pointer.
+  Open Inventor SoXt component classes. It will call gtk_widget_hide()
+  on the provided \a widget pointer.
 
   \sa show()
 */
-
 void
-SoGtk::hide(
-  GtkWidget * const widget)
+SoGtk::hide(GtkWidget * const widget)
 {
   assert(widget != NULL);
   gtk_widget_hide(widget);
-} // hide()
+}
 
 // *************************************************************************
 
 /*!
-  This method is provided for easier porting of applications based on the
-  Open Inventor SoXt component classes. It will call gtk_widget_set_usize
-  on the provided \a w widget pointer.
+  This method is provided for easier porting of applications based on
+  the Open Inventor SoXt component classes. It will call
+  gtk_widget_set_usize on the provided \a w widget pointer.
 
   \sa getWidgetSize()
 */
-
 void
-SoGtk::setWidgetSize(
-  GtkWidget * const widget,
-  const SbVec2s size)
+SoGtk::setWidgetSize(GtkWidget * const widget,
+                     const SbVec2s size)
 {
   if (widget == NULL) {
 #if SOGTK_DEBUG
@@ -454,7 +419,7 @@ SoGtk::setWidgetSize(
   }
   GtkRequisition req = { size[0], size[1] };
   gtk_widget_size_request(GTK_WIDGET(widget), &req);
-} // setWidgetSize()
+}
 
 // *************************************************************************
 
@@ -465,10 +430,8 @@ SoGtk::setWidgetSize(
 
   \sa setWidgetSize()
 */
-
 SbVec2s
-SoGtk::getWidgetSize(
-  const GtkWidget * const widget)
+SoGtk::getWidgetSize(const GtkWidget * const widget)
 {
 #if SOGTK_DEBUG
   if (widget == NULL) {
@@ -478,7 +441,7 @@ SoGtk::getWidgetSize(
   }
 #endif // SOGTK_DEBUG
   return SbVec2s(widget->allocation.width, widget->allocation.height);
-} // getWidgetSize()
+}
 
 // *************************************************************************
 
@@ -496,21 +459,17 @@ SoGtk::getWidgetSize(
 
   There will only be a single "Ok" button for the user to press.
 */
-
-/*
-   FIXME: Gtk-1.2.x doesn't have a MessageBox implementation.
-   Gnome and yet unreleased versions of Gtk however do. 
-   So it might be worth considering either to switch to Gnome or 
-   to change this code once Gtk has MessageBoxes (Gtk-2.0?).
-*/
-
 void
-SoGtk::createSimpleErrorDialog(
-  GtkWidget * const widget,
-  const char * const dialogTitle,
-  const char * const errorStr1,
-  const char * const errorStr2)
+SoGtk::createSimpleErrorDialog(GtkWidget * const widget,
+                               const char * const dialogTitle,
+                               const char * const errorStr1,
+                               const char * const errorStr2)
 {
+  // FIXME: Gtk-1.2.x doesn't have a MessageBox implementation.  Gnome
+  // and yet unreleased versions of Gtk however do.  So it might be
+  // worth considering either to switch to Gnome or to change this
+  // code once Gtk has MessageBoxes (Gtk-2.0?). 200????? larsa.
+
 #if SOGTK_DEBUG
   if (dialogTitle == NULL) {
     SoDebugError::postWarning("SoGtk::createSimpleErrorDialog",
@@ -538,8 +497,7 @@ SoGtk::createSimpleErrorDialog(
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   gtk_box_pack_start (GTK_BOX(vbox), label, TRUE, TRUE, 10);
 
-  if (errorStr2)
-  {
+  if (errorStr2) {
     GtkWidget *label2 = gtk_label_new(errorStr2);
     gtk_label_set_line_wrap (GTK_LABEL (label2), TRUE);
     gtk_box_pack_start (GTK_BOX(vbox), label2, TRUE, TRUE, 10);
@@ -550,11 +508,11 @@ SoGtk::createSimpleErrorDialog(
   gtk_box_pack_start (GTK_BOX (action_area), okbutton, FALSE, FALSE, 2);
 
   gtk_signal_connect_object (GTK_OBJECT (okbutton), "clicked",
-    GTK_SIGNAL_FUNC (gtk_widget_destroy),
-    GTK_OBJECT(dialog));
+                             GTK_SIGNAL_FUNC (gtk_widget_destroy),
+                             GTK_OBJECT(dialog));
 
   gtk_widget_show_all (dialog);
-} // createSimpleErrorDialog()
+}
 
 // *************************************************************************
 
@@ -566,11 +524,9 @@ struct ActionCallbackInfo {
 /*!
   FIXME: write doc
 */
-
 void
-SoGtk::addComponentActionCallback(// static
-  SoGtkComponentActionCallback * callback,
-  void * closure)
+SoGtk::addComponentActionCallback(SoGtkComponentActionCallback * callback,
+                                  void * closure)
 {
   if (! SoGtk::component_callbacks)
     SoGtk::component_callbacks = new SbPList;
@@ -578,20 +534,18 @@ SoGtk::addComponentActionCallback(// static
   info->callback = callback;
   info->closure = closure;
   SoGtk::component_callbacks->append(info);
-} // addComponentActionCallback()
+}
 
 /*!
   FIXME: write doc
 */
-
 void
-SoGtk::removeComponentActionCallback(// static
-  SoGtkComponentActionCallback * callback,
-  void * closure)
+SoGtk::removeComponentActionCallback(SoGtkComponentActionCallback * callback,
+                                     void * closure)
 {
   if (! SoGtk::component_callbacks) {
     SoDebugError::post("SoGtk::removeComponentActionCallback",
-      "no such callback!");
+                       "no such callback!");
     return;
   }
   const int numCallbacks = SoGtk::component_callbacks->getLength();
@@ -604,50 +558,45 @@ SoGtk::removeComponentActionCallback(// static
     }
   }
   SoDebugError::post("SoGtk::removeComponentActionCallback",
-    "no such callback!");
-} // removeComponentActionCallback()
+                     "no such callback!");
+}
 
 /*!
   FIXME: write doc
 */
-
 void
-SoGtk::invokeComponentActionCallbacks(// static, protected
-  SoGtkComponent * component,
-  SoGtkComponentAction action)
+SoGtk::invokeComponentActionCallbacks(SoGtkComponent * component,
+                                      SoGtkComponentAction action)
 {
   if (! SoGtk::component_callbacks) return;
   const int numCallbacks = SoGtk::component_callbacks->getLength();
   for (int i = 0; i < numCallbacks; i++) {
-    ActionCallbackInfo * info = (ActionCallbackInfo *) SoGtk::component_callbacks->get(i);
+    ActionCallbackInfo * info = (ActionCallbackInfo *)
+      SoGtk::component_callbacks->get(i);
     info->callback(component, action, info->closure);
   }
-} // SoGtk::invokeComponentActionCallbacks()
+}
 
 // *************************************************************************
 
 /*!
   FIXME: write doc
 */
-
 gint
-SoGtk::componentCreation(// static, protected
-  SoGtkComponent * component)
+SoGtk::componentCreation(SoGtkComponent * component)
 {
   if (! SoGtk::components)
     SoGtk::components = new SbPList;
   SoGtk::components->append((void *) component);
   SoGtk::invokeComponentActionCallbacks(component, CREATION);
   return FALSE;
-} // componentCreation()
+}
 
 /*!
   FIXME: write doc
 */
-
 gint
-SoGtk::componentDestruction(// static, protected
-  SoGtkComponent * component)
+SoGtk::componentDestruction(SoGtkComponent * component)
 {
   assert(SoGtk::components);
   int idx = SoGtk::components->find(component);
@@ -655,34 +604,30 @@ SoGtk::componentDestruction(// static, protected
   SoGtk::invokeComponentActionCallbacks(component, DESTRUCTION);
   SoGtk::components->remove(idx);
   return FALSE;
-} // componentDestruction()
+}
 
 /*!
   FIXME: write doc
 */
-
 gint
-SoGtk::componentChange(// static, protected
-  SoGtkComponent * component)
+SoGtk::componentChange(SoGtkComponent * component)
 {
   SoGtk::invokeComponentActionCallbacks(component, CHANGE);
   return FALSE;
-} // componentChange()
+}
 
 // *************************************************************************
 
 /*!
-  Returns the number of components, and appends all the component pointers
-  to \a componentlist.
+  Returns the number of components, and appends all the component
+  pointers to \a componentlist.
 */
-
 int
-SoGtk::getComponents(
-  SbPList & componentlist)
+SoGtk::getComponents(SbPList & componentlist)
 {
   if (! SoGtk::components) return 0;
   const int numComponents = SoGtk::components->getLength();
   for (int i = 0; i < numComponents; i++)
     componentlist.append(SoGtk::components->get(i));
   return numComponents;
-} // getComponents()
+}
