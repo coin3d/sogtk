@@ -22,6 +22,10 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkSpaceball.h>
 

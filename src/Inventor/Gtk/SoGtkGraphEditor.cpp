@@ -22,6 +22,10 @@ static const char rcsid[] =
   "$Id$";
 #endif
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <gtk/gtk.h>
 
 #include <Inventor/SoOutput.h>
@@ -31,6 +35,8 @@ static const char rcsid[] =
 #include <Inventor/fields/SoField.h>
 #include <Inventor/nodes/SoNode.h>
 #include <Inventor/actions/SoWriteAction.h>
+
+#include <sogtkdefs.h>
 
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
 

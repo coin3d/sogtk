@@ -22,8 +22,11 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#include <Inventor/errors/SoDebugError.h>
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
 
+#include <Inventor/errors/SoDebugError.h>
 #include <Inventor/events/SoEvent.h>
 
 #include <sogtkdefs.h>

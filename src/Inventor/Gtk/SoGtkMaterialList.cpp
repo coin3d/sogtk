@@ -22,10 +22,16 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <Inventor/SoDB.h>
 #include <Inventor/SoInput.h>
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/nodes/SoMaterial.h>
+
+#include <sogtkdefs.h>
 
 #include <Inventor/Gtk/SoAnyMaterialList.h>
 #include <Inventor/Gtk/SoGtkMaterialList.h>

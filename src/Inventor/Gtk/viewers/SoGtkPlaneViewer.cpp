@@ -22,12 +22,17 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
 
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 #include <Inventor/Gtk/viewers/SoAnyPlaneViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkPlaneViewer.h>

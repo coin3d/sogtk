@@ -22,10 +22,16 @@ static const char rcsid[] =
   "$Id$";
 #endif
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <gtk/gtkvbox.h>
 
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/SoType.h>
+
+#include <sogtkdefs.h>
 
 #include <Inventor/Gtk/SoGtkComponent.h>
 #include <Inventor/Gtk/SoGtkRoster.h>
