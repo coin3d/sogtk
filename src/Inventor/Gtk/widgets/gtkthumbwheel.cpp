@@ -83,7 +83,7 @@ enum {
 static GtkWidgetClass * parent_class = NULL;
 static guint thumbwheel_signals[NUM_SIGNALS] = { 0 };
 
-static const guint GTK_THUMBWHEEL_DEFAULT_WIDTH = 26;
+static const guint GTK_THUMBWHEEL_DEFAULT_WIDTH = 24;
 static const guint GTK_THUMBWHEEL_DEFAULT_LENGTH = 90;
 
 enum {
@@ -204,7 +204,7 @@ gtk_thumbwheel_new(
 {
   GtkThumbWheel * thumbwheel =
     GTK_THUMBWHEEL(gtk_type_new( gtk_thumbwheel_get_type() ));
-  thumbwheel->vertical = (vertical) ? 1 : 0;
+  thumbwheel->vertical = (vertical != FALSE) ? 1 : 0;
   return GTK_WIDGET(thumbwheel);
 } // gtk_thumbwheel_new()
 
@@ -325,8 +325,8 @@ gtk_thumbwheel_expose(
   g_return_val_if_fail( GTK_IS_THUMBWHEEL(widget), FALSE );
   g_return_val_if_fail( event != NULL, FALSE );
 
-/*  if ( event->count > 0 )
-    return FALSE; */
+  if ( event->count > 0 )
+    return FALSE;
 
   GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
 
@@ -366,25 +366,49 @@ gtk_thumbwheel_expose(
     widget->allocation.width - 2, 2,
     widget->allocation.width - 2, widget->allocation.height - 1 );
 
-  gdk_draw_line( widget->window,
-    widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-    5, 9, 5, widget->allocation.height - 10 );
-  gdk_draw_line( widget->window,
-    widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-    5, 9, widget->allocation.width - 6, 9 );
-  gdk_draw_line( widget->window,
-    widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-    widget->allocation.width - 6, 9,
-    widget->allocation.width - 6, widget->allocation.height - 10 );
-  gdk_draw_line( widget->window,
-    widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-    5, widget->allocation.height - 10,
-    widget->allocation.width - 6, widget->allocation.height - 10 );
+  if ( thumbwheel->vertical != 0 ) {
+    gdk_draw_line( widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+      5, 9, 5, widget->allocation.height - 10 );
+    gdk_draw_line( widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+      5, 9, widget->allocation.width - 6, 9 );
+    gdk_draw_line( widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+      widget->allocation.width - 6, 9,
+      widget->allocation.width - 6, widget->allocation.height - 10 );
+    gdk_draw_line( widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+      5, widget->allocation.height - 10,
+      widget->allocation.width - 6, widget->allocation.height - 10 );
+  } else {
+    gdk_draw_line( widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+      9, 5,
+      9, widget->allocation.height - 6 );
+    gdk_draw_line( widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+      9, 5,
+      widget->allocation.width - 10, 5 );
+    gdk_draw_line( widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+      widget->allocation.width - 10, 5,
+      widget->allocation.width - 10, widget->allocation.height - 6 );
+    gdk_draw_line( widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+      9, widget->allocation.height - 6,
+      widget->allocation.width - 10, widget->allocation.height - 6 );
+  }
 
   static guchar bitmap[90*26*4*4]; // just "enough" for now
 
-  ((ThumbWheel *)thumbwheel->wheel)->SetWheelSize(
-    widget->allocation.height - 20, widget->allocation.width - 12 );
+  if ( thumbwheel->vertical != 0 ) {
+    ((ThumbWheel *)thumbwheel->wheel)->SetWheelSize(
+      widget->allocation.height - 20, widget->allocation.width - 12 );
+  } else {
+    ((ThumbWheel *)thumbwheel->wheel)->SetWheelSize(
+      widget->allocation.width - 20, widget->allocation.height - 12 );
+  }
 
   int img = ((ThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
     thumbwheel->tempvalue, ThumbWheel::ENABLED );
@@ -392,12 +416,19 @@ gtk_thumbwheel_expose(
   ((ThumbWheel *)thumbwheel->wheel)->SetGraphicsByteOrder( ThumbWheel::ABGR );
   ((ThumbWheel *)thumbwheel->wheel)->SetColor( 0, 150, 200 );
   ((ThumbWheel *)thumbwheel->wheel)->DrawBitmap( img, (void *) bitmap,
-    (thumbwheel->vertical ? ThumbWheel::VERTICAL : ThumbWheel::HORIZONTAL) );
+    (thumbwheel->vertical != 0) ? ThumbWheel::VERTICAL : ThumbWheel::HORIZONTAL );
 
-  gdk_draw_rgb_32_image(
-    widget->window, widget->style->fg_gc[ GTK_WIDGET_STATE(widget) ],
-    6, 10, widget->allocation.width - 12, widget->allocation.height - 20,
-    GDK_RGB_DITHER_NONE, bitmap, (widget->allocation.width - 12) * 4 );
+  if ( thumbwheel->vertical != 0 ) {
+    gdk_draw_rgb_32_image(
+      widget->window, widget->style->fg_gc[ GTK_WIDGET_STATE(widget) ],
+      6, 10, widget->allocation.width - 12, widget->allocation.height - 20,
+      GDK_RGB_DITHER_NONE, bitmap, (widget->allocation.width - 12) * 4 );
+  } else {
+    gdk_draw_rgb_32_image(
+      widget->window, widget->style->fg_gc[ GTK_WIDGET_STATE(widget) ],
+      10, 6, widget->allocation.width - 20, widget->allocation.height - 12,
+      GDK_RGB_DITHER_NONE, bitmap, (widget->allocation.width - 20) * 4 );
+  }
 
   return FALSE;
 } // gtk_thumbwheel_expose()
@@ -419,12 +450,13 @@ gtk_thumbwheel_button_press(
   if ( thumbwheel->state != THUMBWHEEL_IDLE )
     return FALSE;
 
-  thumbwheel->downpos = (gint) event->y;
 
   fprintf( stderr, "> press\n" );
 
-  if ( thumbwheel->vertical ) {
+  if ( thumbwheel->vertical != 0 ) {
+    thumbwheel->downpos = (gint) event->y;
   } else {
+    thumbwheel->downpos = (gint) event->x;
   }
 
   thumbwheel->state = THUMBWHEEL_DRAGGING;
@@ -480,9 +512,11 @@ gtk_thumbwheel_motion(
   GdkModifierType mods;
   gdk_window_get_pointer( widget->window, &x, &y, &mods );
 
+  gint position = ( thumbwheel->vertical != FALSE ) ? y : x;
+
   thumbwheel->tempvalue =
     ((ThumbWheel *)thumbwheel->wheel)->CalculateValue( thumbwheel->value,
-      thumbwheel->downpos, y - thumbwheel->downpos );
+      thumbwheel->downpos, position - thumbwheel->downpos );
 
   static int bmp = -1;
   int img = ((ThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
