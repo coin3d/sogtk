@@ -140,6 +140,9 @@ SoGtkComponent::SoGtkComponent(
   } else {
     this->embedded = TRUE;
   }
+  gtk_signal_connect( GTK_OBJECT(this->parent), "event",
+    GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
+
   gtk_idle_add( (GtkFunction) SoGtk::componentCreation, (gpointer) this );
 } // SoGtkComponent()
 
@@ -344,6 +347,10 @@ SoGtkComponent::eventFilter( // virtual
   // fprintf( stderr, "widget: %p  ", widget );
 
   switch ( ev->type ) {
+  case GDK_KEY_PRESS:
+  case GDK_KEY_RELEASE:
+    return FALSE;
+
   case GDK_CONFIGURE:
     // fprintf( stderr, "GDK_CONFIGURE\n" );
     if ( this->realized ) {
@@ -372,8 +379,8 @@ SoGtkComponent::eventHandler( // static, private
   gpointer closure )
 {
   assert( closure != NULL );
-  // SoDebugError::postInfo( "SoGtkComponent::eventHandler",
-  //   "[invoked (event %d)]", event->type );
+//  SoDebugError::postInfo( "SoGtkComponent::eventHandler",
+//    "[invoked (event %d)]", event->type );
   SoGtkComponent * const component = (SoGtkComponent *) closure;
   component->eventFilter( object, event );
   return FALSE;

@@ -174,9 +174,11 @@ SoGtkGLWidget::eventFilter(
   GdkEvent * ev )
 {
   if ( inherited::eventFilter( obj, ev ) ) return TRUE;
-  // SoDebugError::postInfo( "SoGtkGLWidget::eventFilter", "[invoked]" );
-  if ( ! GTK_IS_WIDGET(obj) || GTK_WIDGET(obj) != this->glWidget )
+  if ( ! GTK_IS_WIDGET(obj) )
     return FALSE;
+  // SoDebugError::postInfo( "SoGtkGLWidget::eventFilter", "[invoked]" );
+  // if ( ! GTK_IS_WIDGET(obj) || GTK_WIDGET(obj) != this->glWidget )
+  //    return FALSE;
   this->processEvent( ev );
   return TRUE;
 } // eventFilter()
