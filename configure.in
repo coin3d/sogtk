@@ -126,6 +126,8 @@ AC_SUBST(SOGTK_EXTRA_CPPFLAGS)
 AC_SUBST(SOGTK_EXTRA_LDFLAGS)
 AC_SUBST(SOGTK_EXTRA_LIBS)
 
+SIM_EXPAND_DIR_VARS
+
 # **************************************************************************
 
 if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
@@ -168,12 +170,12 @@ if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
   ])
 
   SIM_AC_HAVE_INVENTOR_IFELSE([
-    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_oiv_cppflags"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_oiv_ldflags"
-    SOGTK_EXTRA_LIBS="$sim_ac_oiv_image_libs $SOGTK_EXTRA_LIBS"
-    CPPFLAGS="$CPPFLAGS $sim_ac_oiv_cppflags"
-    LDFLAGS="$LDFLAGS $sim_ac_oiv_ldflags"
-    LIBS="$sim_ac_oiv_libs $LIBS"
+    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_inventor_cppflags"
+    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_inventor_ldflags"
+    SOGTK_EXTRA_LIBS="$sim_ac_inventor_libs $SOGTK_EXTRA_LIBS"
+    CPPFLAGS="$CPPFLAGS $sim_ac_inventor_cppflags"
+    LDFLAGS="$LDFLAGS $sim_ac_inventor_ldflags"
+    LIBS="$sim_ac_inventor_libs $LIBS"
   ], [
     AC_MSG_ERROR([couldn't compile and link against Open Inventor])
   ])
@@ -324,6 +326,7 @@ AC_OUTPUT([
 	src/Inventor/Gtk/widgets/Makefile
 	test-code/Makefile
 	test-code/components/Makefile
+	test-code/widgets/Makefile
 ],[
 	chmod a+x sogtk-config
 ])
