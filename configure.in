@@ -113,6 +113,7 @@ AM_DISABLE_STATIC
 
 #  Turn off default maintainer make-rules -- use ./autogen.sh instead.
 AM_MAINTAINER_MODE
+SIM_AM_CHANGES_ONLY
 
 #  Initialize libtool
 AC_PROG_LIBTOOL
