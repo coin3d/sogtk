@@ -25,6 +25,10 @@ static const char rcsid[] =
 #include <gdk/gdktypes.h>
 #include <gdk/gdkkeysyms.h>
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
 #if SOGTK_DEBUG
 #include <Inventor/errors/SoDebugError.h>
 #endif // SOGTK_DEBUG
@@ -32,10 +36,6 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkKeyboard.h>
-
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif // HAVE_CONFIG_H
 
 // *************************************************************************
 
