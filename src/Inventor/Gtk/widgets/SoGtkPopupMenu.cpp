@@ -22,6 +22,8 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
+#include <assert.h>
+
 #include <gtk/gtkmenu.h>
 #include <gtk/gtkcheckmenuitem.h>
 #include <gtk/gtkhseparator.h>

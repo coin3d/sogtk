@@ -20,6 +20,8 @@
 static const char rcsid[] =
   "$Id$";
 
+#include <assert.h>
+
 #include <gtk/gtk.h>
 
 #include <Inventor/SoDB.h>
