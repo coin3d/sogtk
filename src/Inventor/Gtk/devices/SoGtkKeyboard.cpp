@@ -106,11 +106,13 @@ SoGtkKeyboard::~SoGtkKeyboard(
 
 void
 SoGtkKeyboard::enable(
-  GtkWidget *, // w,
-  SoGtkEventHandler *, // f,
-  void * ) // data )
+  GtkWidget * widget,
+  SoGtkEventHandler *func,
+  gpointer closure )
 {
-  // TODO: implement
+  if ( func )
+    gtk_signal_connect(GTK_OBJECT(widget), "event",
+      GTK_SIGNAL_FUNC(func), closure );
 } // enable()
 
 /*!
@@ -119,11 +121,13 @@ SoGtkKeyboard::enable(
 
 void
 SoGtkKeyboard::disable(
-  GtkWidget *, // w,
-  SoGtkEventHandler *, // f,
-  void * ) // data )
+  GtkWidget * widget,
+  SoGtkEventHandler * func,
+  gpointer closure)
 {
-  // TODO: implement
+  if ( func )
+    gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
+      GTK_SIGNAL_FUNC(func), closure );
 } // disable()
 
 // *************************************************************************

@@ -43,8 +43,8 @@ public:
   SoGtkKeyboard( const int eventbits = SoGtkKeyboard::ALL_EVENTS );
   virtual ~SoGtkKeyboard(void);
 
-  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
-  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
+  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
+  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
 
   virtual const SoEvent * translateEvent( GdkEvent * event );
 

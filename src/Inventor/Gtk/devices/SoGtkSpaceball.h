@@ -40,8 +40,8 @@ public:
   SoGtkSpaceball( const int eventbits = SoGtkSpaceball::ALL_EVENTS );
   virtual ~SoGtkSpaceball(void);
 
-  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
-  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
+  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
+  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
 
   virtual const SoEvent * translateEvent( GdkEvent * event );
 
