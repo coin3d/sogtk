@@ -938,6 +938,19 @@ SoGtkComponent::setFullScreen(const SbBool onoff)
   if (onoff == PRIVATE(this)->fullscreen) { return TRUE; }
 
   GtkWidget * w = SoGtk::getTopLevelWidget();
+
+  // FIXME: this looks a /little/ fishy -- should investigate what
+  // gtk_widget_realize() actually does. Does the widget automatically
+  // pop up on the display if this is done, for instance? If so, that
+  // might not be the expected behavior for the application
+  // programmer.
+  //
+  // See:
+  // <URL:http://developer.gnome.org/doc/GGAD/z57.html#SEC-REALIZINGSHOWING>
+  // <URL:http://developer.gnome.org/doc/GGAD/faqs.html>
+  //   [When do I need to call gtk_widget_realize() vs. gtk_widget_show()?]
+  //
+  // 20020108 mortene.
   if (!GTK_WIDGET_REALIZED(GTK_WIDGET(w))) {
     gtk_widget_realize(GTK_WIDGET(w));
   }
@@ -949,7 +962,8 @@ SoGtkComponent::setFullScreen(const SbBool onoff)
     { 
       // FIXME: does this work as expected if setFullScreen() is
       // called before the window has been realized?
-      // Investigate. 20020107 mortene.
+      // Investigate. (Note that the window is explicitly realized 10
+      // lines up.) 20020107 mortene.
       gdk_window_get_root_origin(gdk_window,
                                  &PRIVATE(this)->nonfull.x,
                                  &PRIVATE(this)->nonfull.y);
