@@ -96,9 +96,21 @@ AM_DISABLE_STATIC
 #  Turn off default maintainer make-rules -- use ./autogen.sh instead.
 AM_MAINTAINER_MODE
 
+# IRIX has 'ar' problems with libtool 1.3.5
+case "$host_os" in
+  irix*)
+    if test x"${AR+set}" != x"set"; then
+      AR="CC -ar"
+      AR_FLAGS=
+      export AR AR_FLAGS
+    fi
+    echo "overriding the libtool '\$AR' setting with 'CC -ar'"
+    ;;
+  *) ;;
+esac
+
 #  Initialize libtool
 AC_PROG_LIBTOOL
-AC_LIBTOOL_CXX
 
 #  These are used for constructing the sogtk-config file.
 SOGTK_EXTRA_CPPFLAGS=

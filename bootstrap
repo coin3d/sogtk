@@ -64,7 +64,7 @@ SUBPROJECTNAMES="SoGtkMacros SoGtkData"
 
 AUTOCONF_VER=2.49c     # Autoconf from CVS
 AUTOMAKE_VER=1.4[abc]  # Automake from CVS
-LIBTOOL_VER=1.4a
+LIBTOOL_VER=1.3.5
 GETTEXT_VER=0.10.35
 
 echo "Checking the installed configuration tools..."
@@ -181,9 +181,9 @@ echo "Running gettextize..."
 
 # generate configure script
 echo "Running autoconf..."
-( $verbose && set -x;
+( ( $verbose && set -x;
   autoconf
-)
+) 3>&1 1>&2 2>&3 | grep -v 'AR_FLAGS' ) 3>&1 1>&2 2>&3
 
 # generate config.h.in template
 echo "Running autoheader..."
@@ -196,3 +196,4 @@ echo "Running automake..."
 ( ( $verbose && set -x;
   automake $AUTOMAKE_ADD
 ) 3>&1 1>&2 2>&3 | grep -v 'directory should not' ) 3>&1 1>&2 2>&3
+
