@@ -1,6 +1,6 @@
 ############################################################################
 
-INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
+INCLUDES = -I$(top_srcdir)/src
 LIBS = 
 
 noinst_LTLIBRARIES = libSoGtkViewers.la

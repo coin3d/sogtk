@@ -1,7 +1,7 @@
 ############################################################################
 ## SoGtk/src/Inventor/Gtk/widgets/Makefile.am
 
-INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
+INCLUDES = -I$(top_srcdir)/src
 
 BUILT_SOURCES = \
 	SoAnyThumbWheel.h \

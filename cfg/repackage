@@ -31,7 +31,6 @@ autofiles=`find $local_hierarchy -maxdepth 1 -type f -a \
   -o -name config.sub \
   -o -name depcomp \
   -o -name install-sh \
-  -o -name ltconfig \
   -o -name ltmain.sh \
   -o -name missing \
   -o -name mkinstalldirs \

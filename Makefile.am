@@ -13,12 +13,18 @@ else
 TESTDIR =
 endif
 
+if BUILD_INTL
+INTLDIRS = po intl
+else
+INTLDIRS =
+endif
+
 ############################################################################
 
-SUBDIRS = . data src/Inventor/Gtk po intl $(TESTDIR)
+SUBDIRS = . data src/Inventor/Gtk $(INTLDIRS) $(TESTDIR)
 
 BUILT_SOURCES = \
-	sogtkdefs.h \
+	src/sogtkdefs.h \
 	src/Inventor/Gtk/SoAny.h \
 	src/Inventor/Gtk/SoAny.cpp \
 	src/Inventor/Gtk/SoGtkBasic.h \
@@ -31,6 +37,7 @@ BUILT_SOURCES = \
 	src/Inventor/Gtk/SoAnyMaterialList.h \
 	src/Inventor/Gtk/SoAnyMaterialList.cpp \
 	src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp \
+	src/Inventor/Gtk/common/gl.h \
 	src/Inventor/Gtk/devices/spwinput.h \
 	src/Inventor/Gtk/devices/spwinput_x11.cpp \
 	src/Inventor/Gtk/viewers/SoGtkViewer.h \
@@ -54,10 +61,13 @@ BUILT_SOURCES = \
 
 bin_SCRIPTS = so@gui@-config
 
-EXTRA_DIST = cfg/m4/so@gui@.m4
+EXTRA_DIST = \
+	so@gui@.m4 \
+	src/Inventor/Gtk/common/soguidefs.h.in \
+	src/Inventor/Gtk/common/gl.h.in
 
 m4datadir = $(datadir)/aclocal
-m4data_DATA = cfg/m4/so@gui@.m4
+m4data_DATA = so@gui@.m4
 
 Makefile: $(BUILT_SOURCES)
 
@@ -65,8 +75,8 @@ Makefile: $(BUILT_SOURCES)
 
 built-sources: $(BUILT_SOURCES)
 
-sogtkdefs.h: $(top_srcdir)/sogtkdefs.h.in
-	@./config.status --file=$@:sogtkdefs.h.in
+src/sogtkdefs.h: $(srcdir)/src/Inventor/Gtk/common/soguidefs.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/soguidefs.h.in
 
 src/Inventor/Gtk/SoGtkBasic.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
@@ -108,6 +118,13 @@ src/Inventor/Gtk/SoAnyMaterialList.cpp: \
 src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp: \
   $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
+
+src/Inventor/Gtk/common/gl.h: $(srcdir)/src/Inventor/Gtk/common/gl.h.in
+	@if test -d src/Inventor/Gtk/common; then :; else \
+	  echo " mkdir src/Inventor/Gtk/common"; \
+	  mkdir src/Inventor/Gtk/common; \
+	fi
+	@./config.status --file=$@:src/Inventor/Gtk/common/gl.h.in
 
 src/Inventor/Gtk/devices/spwinput.h: \
   $(srcdir)/src/Inventor/Gtk/common/spwinput.h.in

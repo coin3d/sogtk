@@ -85,7 +85,7 @@ AC_LANG_CPLUSPLUS
 AM_INIT_AUTOMAKE(SoGtk, $VERSION)
 
 #  File to cram results from the configure tests into.
-AM_CONFIG_HEADER(config.h)
+AM_CONFIG_HEADER(src/config.h)
 
 #  Default to not building a static library.
 #  Can be overridden by the user with --enable-static.
@@ -171,11 +171,16 @@ if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
 
   SIM_AC_CHECK_OPENGL([
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gl_cppflags"
+    SOGTK_EXTRA_CFLAGS="$SOGTK_EXTRA_CFLAGS $sim_ac_gl_cflags"
+    SOGTK_EXTRA_CXXFLAGS="$SOGTK_EXTRA_CXXFLAGS $sim_ac_gl_cxxflags"
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gl_ldflags"
     SOGTK_EXTRA_LIBS="$sim_ac_gl_libs $SOGTK_EXTRA_LIBS"
-  ], [
-    AC_MSG_ERROR([need OpenGL-compatible development system installation])
-  ])
+    CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
+    CFLAGS="$CFLAGS $sim_ac_gl_cflags"
+    CXXFLAGS="$CXXFLAGS $sim_ac_gl_cxxflags"
+    LDFLAGS="$LDFLAGS $sim_ac_gl_ldflags"
+    LIBS="$sim_ac_gl_libs $LIBS"
+  ], [AC_MSG_ERROR([need OpenGL-compatible development system installation])])
 
   SIM_AC_CHECK_GLU([
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_glu_cppflags"
@@ -331,6 +336,8 @@ fi
 AC_DEFINE_UNQUOTED([PACKAGE_LOCALE_DIR],
     ["${package_locale_dir}"],
     [Location the locale data will get installed to.])
+
+AM_CONDITIONAL([BUILD_INTL], test x"$GMSGFMT" = x"")
 
 # **************************************************************************
 # Submodules that must be configured.
