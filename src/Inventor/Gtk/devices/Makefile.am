@@ -1,3 +1,4 @@
+# **************************************************************************
 ## Process this file with automake to generate Makefile.in.
 
 noinst_LTLIBRARIES = libSoGtkDevices.la
@@ -8,26 +9,44 @@ LIBS =
 
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 
-## All source files used when building this submodule, including all
-## headers.
+BUILT_SOURCES = \
+	spwinput_x11.cpp \
+	spwinput.h
+
+# **************************************************************************
 
 libSoGtkDevices_la_SOURCES = \
-	SoGtkDevice.cpp \
 	SoGtkDevice.h \
-	SoGtkInputFocus.cpp \
+	SoGtkDevice.cpp \
 	SoGtkInputFocus.h \
-	SoGtkKeyboard.cpp \
+	SoGtkInputFocus.cpp \
 	SoGtkKeyboard.h \
-	SoGtkMouse.cpp \
+	SoGtkKeyboard.cpp \
 	SoGtkMouse.h \
-	SoGtkSpaceball.cpp \
-	SoGtkSpaceball.h
+	SoGtkMouse.cpp \
+	SoGtkSpaceball.h \
+	SoGtkSpaceball.cpp
+#	spwinput.h \
+#	spwinput_x11.cpp
+
+# **************************************************************************
 
 libSoGtkdevicesincdir = $(includedir)/Inventor/Gtk/devices
+
 libSoGtkdevicesinc_HEADERS = \
 	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkDevice.h \
 	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkInputFocus.h \
 	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkKeyboard.h \
 	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkMouse.h \
 	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkSpaceball.h
+
+# **************************************************************************
+
+spwinput.h: $(top_srcdir)/src/Inventor/Gtk/common/spwinput.h.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/devices/spwinput.h )
+
+spwinput_x11.cpp: $(top_srcdir)/src/Inventor/Gtk/common/spwinput_x11.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/devices/spwinput_x11.cpp )
 
