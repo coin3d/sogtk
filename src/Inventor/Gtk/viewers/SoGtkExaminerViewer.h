@@ -107,17 +107,6 @@ protected:
 private:
   void constructor( const SbBool build );
 
-  enum ViewerMode {
-    INTERACT,
-    EXAMINE, DRAGGING,
-    WAITING_FOR_SEEK,
-    ZOOMING,
-    WAITING_FOR_PAN, PANNING
-  };
-
-  ViewerMode currentMode;
-
-  void setMode( const ViewerMode mode );
   void setModeFromState( const unsigned int state );
 
   struct {
@@ -126,7 +115,7 @@ private:
   } pixmaps;
 
 
-  void setCursorRepresentation( const ViewerMode mode );
+  void setCursorRepresentation( int mode );
 
   GtkWidget * cameraToggleButton;
   GtkWidget * feedbackLabel1;
