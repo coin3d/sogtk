@@ -67,10 +67,10 @@ protected:
   SoGtkFullViewer(
     GtkWidget * parent,
     const char * name,
-    SbBool buildInsideParent,
+    SbBool embed,
     BuildFlag flag,
     Type type,
-    SbBool buildNow );
+    SbBool build );
   ~SoGtkFullViewer(void);
 
   virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
@@ -151,6 +151,8 @@ private:
   GtkWidget * makeStereoPreferences( GtkWidget * parent );
   
   GtkWidget * viewerWidget, * canvasParent, * canvas;
+  GtkWidget * interactbutton, * viewbutton, * seekbutton;
+
   SbBool decorations;
 
   SbString menuTitle;

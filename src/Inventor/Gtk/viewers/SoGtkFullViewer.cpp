@@ -214,7 +214,7 @@ SoGtkFullViewer::SoGtkFullViewerButtons[] = {
 /*!
   Constructor. See parent class for explanation of arguments.
 
-  Subclasses will probably usually call with the \c buildNow flag
+  Subclasses will probably usually call with the \c build flag
   set to \c FALSE to be able to do delayed building of the OpenGL
   canvas after other setup tasks has been performed.
 */
@@ -542,19 +542,7 @@ SoGtkFullViewer::setViewing(
 
   inherited::setViewing( enable );
 
-  GtkWidget * interact_button = findButton( "interact" );
-  GtkWidget * view_button = findButton( "view" );
-  if ( interact_button && view_button ) {
-    gtk_signal_handler_block_by_data( GTK_OBJECT(interact_button), (gpointer) this );
-    gtk_signal_handler_block_by_data( GTK_OBJECT(view_button), (gpointer) this );
-    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(interact_button), enable ? FALSE : TRUE );
-    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(view_button), enable ? TRUE : FALSE );
-    gtk_signal_handler_unblock_by_data( GTK_OBJECT(interact_button), (gpointer) this );
-    gtk_signal_handler_unblock_by_data( GTK_OBJECT(view_button), (gpointer) this );
-  }
-
-//  GtkWidget * seek_button = findButton( "seek" );
-//  VIEWERBUTTON(SEEK_BUTTON)->setEnabled(enable);
+  gtk_widget_set_sensitive(this->seekbutton, enable ? TRUE : FALSE);
 } // setViewing()
 
 // *************************************************************************
@@ -881,13 +869,33 @@ SoGtkFullViewer::createViewerButtons( // virtual
   GdkColormap *colormap = gtk_widget_get_colormap (parent);
   GdkBitmap *mask ;
 
-  const int buttons = sizeof(SoGtkFullViewerButtons) / sizeof(SoGtkViewerButton);
-  for ( int button = 0; button < buttons; button++ ) {
-    GtkWidget * widget = GTK_WIDGET(button < 2 ? gtk_toggle_button_new() : gtk_button_new());
-    if ( button == 0 && ! this->isViewing() )
-      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(widget), TRUE );
-    if ( button == 1 && this->isViewing() )
-      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(widget), TRUE );
+  GSList *viewing_group = NULL ;
+  const size_t buttons = sizeof(SoGtkFullViewerButtons) / sizeof(SoGtkViewerButton);
+  for ( size_t button = 0; button < buttons; button++ ) {
+    GtkWidget * widget = (GtkWidget*) 0 ;
+    switch (button) {
+    case INTERACT_BUTTON:
+      this->interactbutton = widget = gtk_radio_button_new(viewing_group);
+      gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(widget),FALSE);
+      viewing_group = gtk_radio_button_group(GTK_RADIO_BUTTON(widget));
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),
+        this->isViewing() ? FALSE : TRUE );
+      break ;
+    case EXAMINE_BUTTON:
+      this->viewbutton = widget = gtk_radio_button_new(viewing_group);
+      gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(widget),FALSE);
+      viewing_group = gtk_radio_button_group(GTK_RADIO_BUTTON(widget));
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),
+        this->isViewing() ? TRUE : FALSE );
+      break ;
+    case SEEK_BUTTON:
+      this->seekbutton = widget = gtk_button_new();
+      gtk_widget_set_sensitive(widget,this->isViewing() ? TRUE : FALSE);
+      break ;
+    default:
+      widget = gtk_button_new();
+      break ;
+    }
 
     gtk_tooltips_set_tip (tooltips, widget,
       this->buttons[button].keyword, (const gchar *) NULL);
@@ -909,10 +917,6 @@ SoGtkFullViewer::createViewerButtons( // virtual
       gtk_signal_connect( GTK_OBJECT(widget), "pressed",
         GTK_SIGNAL_FUNC(this->buttons[button].pressed),
         (gpointer) this );
-      if ( button < 2 )
-        gtk_signal_connect( GTK_OBJECT(widget), "released",
-          GTK_SIGNAL_FUNC(this->buttons[button].pressed),
-          (gpointer) this );
     }
     this->buttons[button].bwidget = widget;
     buttonlist->append( widget );
@@ -2487,12 +2491,14 @@ SoGtkFullViewer::interactbuttonClicked(
 
 void
 SoGtkFullViewer::interactbuttonClickedCB( // static
-  GtkWidget *,
+  GtkWidget *w,
   gpointer closure )
 {
   assert( closure != NULL );
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
-  viewer->interactbuttonClicked();
+
+  if (viewer->isViewing())
+    viewer->setViewing(FALSE);
 } // interactbuttonClickedCB()
 
 // *************************************************************************
@@ -2504,6 +2510,7 @@ void
 SoGtkFullViewer::viewbuttonClicked(
   void )
 {
+
   if ( this->isViewing() ) {
     GtkWidget * button = findButton( "view" );
     gtk_signal_handler_block_by_data( GTK_OBJECT(button), (gpointer) this );
@@ -2524,7 +2531,8 @@ SoGtkFullViewer::viewbuttonClickedCB( // static
 {
   assert( closure != NULL );
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
-  viewer->viewbuttonClicked();
+  if ( !viewer->isViewing()) 
+    viewer->setViewing(TRUE);
 } // viewbuttonClickedCB()
 
 // *************************************************************************
