@@ -26,6 +26,8 @@
 #include <Inventor/SbName.h>
 #include <Inventor/SoType.h>
 
+#include <Inventor/Gtk/SoGtkBasic.h>
+
 // *************************************************************************
 
 class SoGtkTypedObject {
@@ -43,11 +45,17 @@ public:
 
 // *************************************************************************
 
+// The getTypeId() method should be abstract for abstract objects, but doing
+// that would cause custom components derived from abstract components to
+// have to include the typed object header / source, which could be a
+// problem if the custom component wasn't written for Coin in the first
+// place.
+
 #define SOGTK_TYPED_ABSTRACT_OBJECT_HEADER(classname)                      \
 public:                                                                    \
   static void initClass(void);                                             \
   static SoType getClassTypeId(void);                                      \
-  virtual SoType getTypeId(void) const = 0;                                \
+  virtual SoType getTypeId(void) const /* = 0 */;                          \
 private:                                                                   \
   static SoType classTypeId
 
@@ -68,6 +76,9 @@ void classname::initClass(void) {                                          \
                        	SO__QUOTE(classname) );                            \
 }                                                                          \
 SoType classname::getClassTypeId(void) {                                   \
+  return classname::classTypeId;                                           \
+}                                                                          \
+SoType classname::getTypeId(void) const {                                  \
   return classname::classTypeId;                                           \
 }                                                                          \
 SoType classname::classTypeId
@@ -92,4 +103,4 @@ SoType classname::classTypeId
 
 // *************************************************************************
 
-#endif /* ! SOGTK_TYPEDOBJECT_H */
+#endif // ! SOGTK_TYPEDOBJECT_H
