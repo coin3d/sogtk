@@ -22,6 +22,10 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
+#include <gtk/gtkmenu.h>
+#include <gtk/gtkcheckmenuitem.h>
+#include <gtk/gtkhseparator.h>
+
 #include <Inventor/errors/SoDebugError.h>
 
 #include <sogtkdefs.h>
@@ -284,11 +288,32 @@ SoGtkPopupMenu::GetMenuItemEnabled(
 */
 
 void
-SoGtkPopupMenu::SetMenuItemMarked(
+SoGtkPopupMenu::_setMenuItemMarked(
   int itemid,
   SbBool marked )
 {
-  //SOGTK_STUB();
+#if SOGTK_DEBUG && 0
+  SoDebugError::postInfo( "SoGtkPopupMenu::SetMenuItemMarked", "item %d to %s",
+    itemid, marked ? "true" : "false" );
+#endif // SOGTK_DEBUG && 0
+  ItemRecord * item = getItemRecord( itemid );
+  if ( ! item ) {
+    SoDebugError::postInfo( "SoGtkPopupMenu::SetMenuItemMarked",
+      "no such item (%d).", itemid );
+    return;
+  }
+  if ( item->item ) {
+    gtk_signal_handler_block_by_data( GTK_OBJECT(item->item), (gpointer) item );
+    if ( marked )
+      gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(item->item), TRUE );
+    else
+      gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(item->item), FALSE );
+    gtk_signal_handler_unblock_by_data( GTK_OBJECT(item->item), (gpointer) item );
+  }
+  if ( marked )
+    item->flags |= ITEM_MARKED;
+  else
+    item->flags &= ~ITEM_MARKED;
 } // SetMenuItemMarked()
 
 /*!
@@ -298,7 +323,14 @@ SbBool
 SoGtkPopupMenu::GetMenuItemMarked(
   int itemid )
 {
-  SOGTK_STUB();
+  ItemRecord * item = getItemRecord( itemid );
+  if ( ! item ) {
+    SoDebugError::postInfo( "SoGtkPopupMenu::SetMenuItemMarked",
+      "no such item (%d).", itemid );
+    return FALSE;
+  }
+  if ( item->flags & ITEM_MARKED )
+    return TRUE;
   return FALSE;
 } // GetMenuItemMarked()
 
@@ -563,7 +595,10 @@ void
 SoGtkPopupMenu::createSeparator( // private
   ItemRecord * item )
 {
-  item->item = GTK_WIDGET(gtk_menu_item_new_with_label( "----------" ));
+  item->item = GTK_WIDGET(gtk_menu_item_new());
+  GtkWidget * separator = GTK_WIDGET(gtk_hseparator_new());
+  gtk_container_add( GTK_CONTAINER(item->item), GTK_WIDGET(separator) );
+  gtk_widget_show(separator);
 } // createSeparator()
 
 /*!
@@ -573,10 +608,14 @@ void
 SoGtkPopupMenu::createMenuItem( // private
   ItemRecord * item )
 {
-  item->item = GTK_WIDGET(gtk_menu_item_new_with_label( item->title ));
+  item->item = GTK_WIDGET(gtk_check_menu_item_new_with_label(item->title));
+  if ( item->flags & ITEM_MARKED )
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(item->item), TRUE );
   gtk_signal_connect( GTK_OBJECT(item->item), "activate",
     GTK_SIGNAL_FUNC(SoGtkPopupMenu::selectionCB), (gpointer) item );
 } // createMenuItem()
+
+// *************************************************************************
 
 /*!
 */
@@ -732,7 +771,7 @@ SoGtkPopupMenu::selection(
   int itemid )
 {
   this->InvokeMenuSelection( itemid );
-}
+} // selection()
 
 void
 SoGtkPopupMenu::selectionCB( // static
@@ -741,7 +780,7 @@ SoGtkPopupMenu::selectionCB( // static
 {
   ItemRecord * item = (ItemRecord *) closure;
   item->context->selection( item->itemid );
-} // selection()
+} // selectionCB()
 
 // *************************************************************************
 

@@ -46,7 +46,8 @@ public:
   virtual char * GetMenuItemTitle( int itemid );
   virtual void SetMenuItemEnabled( int itemid, SbBool enabled );
   virtual SbBool GetMenuItemEnabled( int itemid );
-  virtual void SetMenuItemMarked( int itemid, SbBool marked );
+
+  virtual void _setMenuItemMarked( int itemid, SbBool marked );
   virtual SbBool GetMenuItemMarked( int itemid );
 
   virtual void AddMenu( int menuid, int submenuid, int pos = -1 );
