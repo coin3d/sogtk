@@ -47,6 +47,7 @@ static const char rcsid[] =
 #include <Inventor/Gtk/SoGtkMaterialList.h>
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
 #include <Inventor/Gtk/SoGtkRoster.h>
+#include <Inventor/Gtk/SoGtkCursor.h>
 
 // *************************************************************************
 
@@ -80,6 +81,7 @@ public:
   void * closeCBdata;
   SbPList * visibilityChangeCBs;
   SbVec2s storeSize;
+  SoGtkCursor cursor;
 
 private:
   SoGtkComponent * pub;
@@ -981,6 +983,25 @@ SbBool
 SoGtkComponent::isFullScreen(void) const
 {
   return THIS->fullscreen;
+}
+
+/*!
+  Sets the cursor for this component.
+*/
+void 
+SoGtkComponent::setCursor(const SoGtkCursor & cursor)
+{
+  PRIVATE(this)->cursor = cursor;
+  SOGTK_STUB();
+}
+
+/*!
+  Returns the current cursor for this component.
+*/
+const SoGtkCursor &
+SoGtkComponent::getCursor(void) const
+{
+  return PRIVATE(this)->cursor;
 }
 
 // *************************************************************************

@@ -26,7 +26,7 @@ static const char rcsid[] =
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#include <Inventor/@Gui@/common/gl.h>
+#include <Inventor/Gtk/common/gl.h>
 
 #include <gtkgl/gtkglarea.h>
 #include <gdk/gdk.h>
