@@ -205,15 +205,6 @@ SoGtkPlaneViewer::~SoGtkPlaneViewer()
   FIXME: write doc
 */
 void
-SoGtkPlaneViewer::setViewing(SbBool enable)
-{
-  inherited::setViewing(enable);
-}
-
-/*!
-  FIXME: write doc
-*/
-void
 SoGtkPlaneViewer::setCamera(SoCamera * newCamera)
 {
   if (newCamera) {
