@@ -17,6 +17,10 @@
  *
  **************************************************************************/
 
+// Class documentation in common/SoGuiGLWidgetCommon.cpp.in.
+
+// *************************************************************************
+
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif // HAVE_CONFIG_H
@@ -36,30 +40,6 @@
 
 // *************************************************************************
 
-/*!
-  \class SoGtkGLWidget SoGtkGLWidget.h Inventor/Gtk/SoGtkGLWidget.h
-  \brief The SoGtkGLWidget class contains an OpenGL canvas.
-  \ingroup components
-*/
-
-// *************************************************************************
-
-/*!
-  \fn virtual void SoGtkGLWidget::redraw(void)
-  This method will be called when we need a redraw. It must be overloaded in
-  non-abstract subclasses.
-*/
-
-/*!
-  \var SbBool SoGtkGLWidget::waitForExpose
-  FIXME: write doc
-*/
-
-/*!
-  \fn GtkWidget * SoGtkGLWidget::getGLWidget(void) const
-  FIXME: write doc
-*/
-
 static const int SO_BORDER_THICKNESS = 2;
 
 // *************************************************************************
@@ -68,10 +48,7 @@ SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkGLWidget);
 
 // *************************************************************************
 
-/*!
-  FIXME: write function documentation
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SoGtkGLWidget::SoGtkGLWidget(GtkWidget * const parent,
                              const char * const name,
                              const SbBool embed,
@@ -108,10 +85,7 @@ SoGtkGLWidget::SoGtkGLWidget(GtkWidget * const parent,
   this->setBaseWidget(glwidget);
 }
 
-/*!
-  The destructor.
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SoGtkGLWidget::~SoGtkGLWidget()
 {
   if (PRIVATE(this)->glWidget) SoAny::si()->unregisterGLContext((void*) this);
@@ -226,12 +200,7 @@ SoGtkGLWidgetP::eventHandler(GtkWidget * object,
 
 // *************************************************************************
 
-/*!
-  Specify that there should be a border around the OpenGL canvas (or not).
-
-  \sa isBorder()
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::setBorder(const SbBool enable)
 {
@@ -239,12 +208,7 @@ SoGtkGLWidget::setBorder(const SbBool enable)
   // update canvas if it is created
 }
 
-/*!
-  Returns whether or not there's a border around the OpenGL canvas.
-
-  \sa setBorder()
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool
 SoGtkGLWidget::isBorder(void) const
 {
@@ -270,13 +234,7 @@ SoGtkGLWidget::isOverlayRender(void) const
 
 // *************************************************************************
 
-/*!
-  Switch between single and double buffer mode for the OpenGL canvas.
-  The default is to use a single buffer canvas.
-
-  \sa isDoubleBuffer()
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::setDoubleBuffer(const SbBool enable)
 {
@@ -308,15 +266,9 @@ SoGtkGLWidget::setDoubleBuffer(const SbBool enable)
   }
 }
 
-/*!
-  Returns the status of the buffer mode.
-
-  \sa setDoubleBuffer()
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool
-SoGtkGLWidget::isDoubleBuffer(
-  void) const
+SoGtkGLWidget::isDoubleBuffer(void) const
 {
   /*
     if (PRIVATE(this)->glWidget)
@@ -328,20 +280,14 @@ SoGtkGLWidget::isDoubleBuffer(
 
 // *************************************************************************
 
-/*!
-  FIXME: write function documentation
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::setDrawToFrontBufferEnable(const SbBool enable)
 {
   PRIVATE(this)->drawFrontBuff = enable;
 }
 
-/*!
-  FIXME: write function documentation
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool
 SoGtkGLWidget::isDrawToFrontBufferEnable(void) const
 {
@@ -350,10 +296,7 @@ SoGtkGLWidget::isDrawToFrontBufferEnable(void) const
 
 // *************************************************************************
 
-/*!  
-  Enables/disables the OpenGL accumulation buffer. Not implemented
-  yet for this toolkit.  
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void 
 SoGtkGLWidget::setAccumulationBuffer(const SbBool enable)
 {
@@ -361,19 +304,14 @@ SoGtkGLWidget::setAccumulationBuffer(const SbBool enable)
   SOGTK_STUB();
 }
 
-/*!
-  Returns whether the OpenGL accumulation buffer is enabled.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool 
 SoGtkGLWidget::getAccumulationBuffer(void) const
 {
   return FALSE;
 }
 
-/*!
-  Enables/disables the OpenGL stencil buffer. Not implemented yet
-  for this toolkit.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void 
 SoGtkGLWidget::setStencilBuffer(const SbBool enable)
 {
@@ -381,29 +319,21 @@ SoGtkGLWidget::setStencilBuffer(const SbBool enable)
   SOGTK_STUB();
 }
 
-/*!
-  Returns whether the OpenGL stencil buffer is enabled.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool 
 SoGtkGLWidget::getStencilBuffer(void) const
 {
   return FALSE;
 }
 
-/*!
-  Enables or disables quad buffer stereo.
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void 
 SoGtkGLWidget::setQuadBufferStereo(const SbBool enable)
 {
   // FIXME: do proper implementation. 20001123 mortene.
 }
 
-/*!
-  Returns \c TRUE if quad buffer stereo is enabled for this widget.
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool 
 SoGtkGLWidget::isQuadBufferStereo(void) const
 {
@@ -413,32 +343,24 @@ SoGtkGLWidget::isQuadBufferStereo(void) const
 
 // *************************************************************************
 
-/*!
-  This method is currently just stubbed.
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 GtkWidget *
 SoGtkGLWidget::getNormalWidget(void) const
 {
   return this->getGLWidget();
 }
 
-/*!
-  This method is currently just stubbed.
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 GtkWidget *
 SoGtkGLWidget::getOverlayWidget(void) const
 {
+  SOWIN_STUB();
   return (GtkWidget *) NULL;
 }
 
 // *************************************************************************
 
-/*!
-  Sets the size of the GL canvas.
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::setGLSize(const SbVec2s size)
 {
@@ -451,9 +373,7 @@ SoGtkGLWidget::setGLSize(const SbVec2s size)
   gtk_widget_size_request(GTK_WIDGET(PRIVATE(this)->container), &req);
 }
 
-/*!
-  Return the dimensions of the OpenGL canvas.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbVec2s
 SoGtkGLWidget::getGLSize(void) const
 {
@@ -463,9 +383,7 @@ SoGtkGLWidget::getGLSize(void) const
                   PRIVATE(this)->glWidget->allocation.height);
 }
 
-/*!
-  Return the aspect ratio of the OpenGL canvas.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 float
 SoGtkGLWidget::getGLAspectRatio(void) const
 {
@@ -475,29 +393,9 @@ SoGtkGLWidget::getGLAspectRatio(void) const
     (float) PRIVATE(this)->glWidget->allocation.height;
 }
 
-/*!
-  \fn void SoGtkGLWidget::setGlxSize(const SbVec2s size)
-  This method has been renamed to the more appropriate setGLSize
-  \sa setGLSize
-*/
-
-/*!
-  \fn SbVec2s SoGtkGLWidget::getGlxSize(void) const
-  This method has been renamed to the more appropriate getGLSize
-  \sa getGLSize
-*/
-
-/*!
-  \fn float SoGtkGLWidget::getGlxAspectRatio(void) const
-  This method has been renamed to the more appropriate getGLAspectRatio
-  \sa getGLAspectRatio
-*/
-
 // *************************************************************************
 
-/*!
-  Returns a pointer to the GtkGLArea widget.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 GtkWidget *
 SoGtkGLWidget::getGLWidget(void) const
 {
@@ -514,13 +412,7 @@ SoGtkGLWidget::sizeChanged(const SbVec2s & size)
 
 // *************************************************************************
 
-/*!
-  This is the method which gets called whenever the OpenGL widget
-  changes in any way. Should be overloaded in subclasses.
-
-  \sa sizeChanged()
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::widgetChanged(GtkWidget * widget)
 {
@@ -528,14 +420,7 @@ SoGtkGLWidget::widgetChanged(GtkWidget * widget)
 
 // *************************************************************************
 
-/*!
-  Any events from the native window system that goes to the OpenGL
-  canvas gets piped through this method.
-
-  It is overloaded in the subclasses to catch user interaction with
-  the render canvas in the viewers, aswell as forwarding relevant
-  events to the scenegraph.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::processEvent(GdkEvent * event)
 {
@@ -599,9 +484,7 @@ SoGtkGLWidgetP::sGLDraw(GtkWidget * widget,
 
 // *************************************************************************
 
-/*!
-  This method invokes makecurrent on the GL appropriate context.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::glLockNormal(void)
 {
@@ -609,36 +492,25 @@ SoGtkGLWidget::glLockNormal(void)
     gtk_gl_area_make_current(GTK_GL_AREA(PRIVATE(this)->glWidget));
 }
 
-/*!
-  This method unlocks the locked GL context.
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::glUnlockNormal(void)
 {
 }
 
-/*!
-  This method invokes makecurrent on the GL appropriate context.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::glLockOverlay(void)
 {
 }
 
-/*!
-  This method unlocks the locked GL context.
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::glUnlockOverlay(void)
 {
 }
 
-/*!
-  FIXME: write doc
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::glSwapBuffers(void)
 {
@@ -646,10 +518,7 @@ SoGtkGLWidget::glSwapBuffers(void)
     gtk_gl_area_swapbuffers(GTK_GL_AREA(PRIVATE(this)->glWidget));
 }
 
-/*!
-  FIXME: write doc
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void
 SoGtkGLWidget::glFlushBuffer(void)
 {
@@ -658,37 +527,28 @@ SoGtkGLWidget::glFlushBuffer(void)
 
 // *************************************************************************
 
-/*!
-  Redraws overlay scene graph. Default method is empty.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void 
 SoGtkGLWidget::redrawOverlay(void)
 {
   // should be empty
 }
 
-/*!
-  Should return TRUE if an overlay GL drawing area exists.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool 
 SoGtkGLWidget::hasOverlayGLArea(void) const 
 {
   return this->getOverlayWidget() != NULL;
 }
 
-/*!
-  Should return TRUE if a normal GL drawing area exists.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool 
 SoGtkGLWidget::hasNormalGLArea(void) const 
 {
   return this->getNormalWidget() != NULL;
 }
 
-/*!
-  Will be called when GL widget should initialize graphic, after
-  the widget has been created. Default method enabled GL_DEPTH_TEST.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void 
 SoGtkGLWidget::initGraphic(void)
 {
@@ -700,43 +560,27 @@ SoGtkGLWidget::initGraphic(void)
   this->glUnlockNormal();
 }
 
-/*!
-  Will be called after the overlay widget has been created, and subclasses
-  should overload this to initialize overlay stuff.
-
-  Default method does nothing.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 void 
 SoGtkGLWidget::initOverlayGraphic(void)
 {
 }
 
-/*!
-  Will be called whenever scene graph needs to be redrawn().
-  If this method return FALSE, redraw() will be called immediately.
-  
-  Default method simply returns FALSE. Overload this method to
-  schedule a redraw and return TRUE if you're trying to do The Right
-  Thing.  
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool 
 SoGtkGLWidget::glScheduleRedraw(void)
 {
   return FALSE;
 }
 
-/*!
-  Should return TRUE if we're in RGB mode.
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 SbBool 
 SoGtkGLWidget::isRGBMode(void)
 {
   return TRUE; // FIXME
 }
 
-/*!
-  FIXME: doc
-*/
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 unsigned long
 SoGtkGLWidget::getOverlayTransparentPixel(void)
 {
