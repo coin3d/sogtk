@@ -50,6 +50,19 @@ extern "C" {
 
 /* ********************************************************************** */
 
+typedef enum
+{
+  GTK_THUMBWHEEL_BOUNDARY_CLAMP,
+  GTK_THUMBWHEEL_BOUNDARY_MODULATE, 
+  GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE
+} GtkThumbWheelBoundaryType;
+ 
+typedef enum
+{
+  GTK_THUMBWHEEL_MOTION_UNIFORM,
+  GTK_THUMBWHEEL_MOTION_AUTHENTIC
+} GtkThumbWheelMotionType;
+ 
 typedef struct _GtkThumbWheel       GtkThumbWheel;
 typedef struct _GtkThumbWheelClass  GtkThumbWheelClass;
 
@@ -92,11 +105,17 @@ gfloat       gtk_thumbwheel_get_value         (GtkThumbWheel * thumbwheel);
 void         gtk_thumbwheel_enable            (GtkThumbWheel * thumbwheel);
 void         gtk_thumbwheel_disable           (GtkThumbWheel * thumbwheel);
 
-/*
-void         gtk_thumbwheel_set_motion_method (GtkThumbWheel * thumbwheel);
-void         gtk_thumbwheel_set_range_boundary_handling
-                                              (GtkThumbWheel * thumbwheel);
-*/
+void         gtk_thumbwheel_set_range_boundary_handling(
+  GtkThumbWheel * thumbwheel,
+  GtkThumbWheelBoundaryType handling);
+GtkThumbWheelBoundaryType  gtk_thumbwheel_get_range_boundary_handling(
+  GtkThumbWheel * thumbwheel );
+
+void         gtk_thumbwheel_set_motion_method(
+  GtkThumbWheel * thumbwheel,
+  GtkThumbWheelMotionType     handling);
+GtkThumbWheelMotionType  gtk_thumbwheel_get_motion_method(
+  GtkThumbWheel * thumbwheel );
 
 /* ********************************************************************** */
 

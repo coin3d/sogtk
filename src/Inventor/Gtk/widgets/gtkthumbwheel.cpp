@@ -51,15 +51,16 @@ static const char rcsid[] =
 // *************************************************************************
 
 extern "C" {
-gint gtk_thumbwheel_motion_notify( GtkWidget * widget, GdkEventMotion * event );
-gint gtk_thumbwheel_button_release( GtkWidget * widget, GdkEventButton * event );
-gint gtk_thumbwheel_button_press( GtkWidget * widget, GdkEventButton * event );
-gint gtk_thumbwheel_expose( GtkWidget * widget, GdkEventExpose * event );
-void gtk_thumbwheel_size_allocate( GtkWidget * widget, GtkAllocation * allocation );
-void gtk_thumbwheel_realize( GtkWidget * widget );
-void gtk_thumbwheel_destroy( GtkObject * object );
-void gtk_thumbwheel_init( GtkThumbWheel * thumbwheel );
-void gtk_thumbwheel_class_init( GtkThumbWheelClass * cclass );
+static gint gtk_thumbwheel_motion_notify( GtkWidget * widget, GdkEventMotion * event );
+static gint gtk_thumbwheel_button_release( GtkWidget * widget, GdkEventButton * event );
+static gint gtk_thumbwheel_button_press( GtkWidget * widget, GdkEventButton * event );
+static gint gtk_thumbwheel_expose( GtkWidget * widget, GdkEventExpose * event );
+static void gtk_thumbwheel_size_allocate( GtkWidget * widget, GtkAllocation * allocation );
+static void gtk_thumbwheel_realize( GtkWidget * widget );
+static void gtk_thumbwheel_destroy( GtkObject * object );
+static void gtk_thumbwheel_init( GtkThumbWheel * thumbwheel );
+static void gtk_thumbwheel_class_init( GtkThumbWheelClass * cclass );
+static void gtk_thumbwheel_value_changed (GtkThumbWheel        *thumbwheel);
 
 static void gtk_thumbwheel_paint( GtkWidget * widget, GdkRectangle * area );
 }; /* extern "C" */
@@ -150,8 +151,7 @@ gtk_thumbwheel_class_init(
       object_class->type,
       GTK_SIGNAL_OFFSET( GtkThumbWheelClass, attached ),
       gtk_signal_default_marshaller,
-      GTK_TYPE_NONE,
-      0 );
+      GTK_TYPE_NONE, 0 );
 
   thumbwheel_signals[ VALUE_CHANGED ] =
     gtk_signal_new( "value_changed",
@@ -159,9 +159,7 @@ gtk_thumbwheel_class_init(
       object_class->type,
       GTK_SIGNAL_OFFSET( GtkThumbWheelClass, value_changed ),
       gtk_signal_default_marshaller,
-      GTK_TYPE_NONE,
-      1,
-      GTK_TYPE_FLOAT );
+      GTK_TYPE_NONE, 0 );
 
   thumbwheel_signals[ RELEASED ] =
     gtk_signal_new( "released",
@@ -169,8 +167,7 @@ gtk_thumbwheel_class_init(
       object_class->type,
       GTK_SIGNAL_OFFSET( GtkThumbWheelClass, released ),
       gtk_signal_default_marshaller,
-      GTK_TYPE_NONE,
-      0 );
+      GTK_TYPE_NONE, 0 );
 
   gtk_object_class_add_signals( object_class, thumbwheel_signals, NUM_SIGNALS );
 
@@ -325,7 +322,7 @@ gtk_thumbwheel_realize(
      (void *) thumbwheel->bitmap, 
      (thumbwheel->vertical != 0) ?
         SoAnyThumbWheel::VERTICAL : SoAnyThumbWheel::HORIZONTAL);
-}				// gtk_thumbwheel_realize()
+} // gtk_thumbwheel_realize()
 
 // *************************************************************************
 
@@ -507,8 +504,9 @@ gtk_thumbwheel_motion_notify(
       thumbwheel->img = img ;
 
       gtk_thumbwheel_paint (GTK_WIDGET (thumbwheel), NULL );
-      gtk_signal_emit (GTK_OBJECT (widget), thumbwheel_signals[VALUE_CHANGED]);
     }
+
+    gtk_thumbwheel_value_changed( thumbwheel );
 
     return TRUE ;
   }
@@ -519,12 +517,34 @@ gtk_thumbwheel_motion_notify(
 // *************************************************************************
 
 void
-gtk_thumbwheel_set_value(
-  GtkThumbWheel * thumbwheel,
-  gfloat value )
+gtk_thumbwheel_set_value (GtkThumbWheel        *thumbwheel,
+                          gfloat                value)
 {
-  thumbwheel->value = value;
+  g_return_if_fail (thumbwheel != NULL);
+  g_return_if_fail (GTK_IS_THUMBWHEEL (thumbwheel));
+
+  value = ((SoAnyThumbWheel*) thumbwheel->wheel) ->calculateValue( value, 0, 0 );
+
+  if (thumbwheel->state == THUMBWHEEL_DRAGGING )
+    {
+      thumbwheel->tempvalue = value;
+    }
+  else
+    {
+      thumbwheel->value = value;
+    }
 } // gtk_thumbwheel_set_value()
+
+void
+gtk_thumbwheel_value_changed (GtkThumbWheel        *thumbwheel)
+{
+  g_return_if_fail (thumbwheel != NULL);
+  g_return_if_fail (GTK_IS_THUMBWHEEL (thumbwheel));
+
+  gtk_signal_emit (GTK_OBJECT (thumbwheel),
+    thumbwheel_signals[VALUE_CHANGED], 0 );
+}
+ 
 
 // *************************************************************************
 
@@ -559,19 +579,113 @@ gtk_thumbwheel_disable(
 
 void
 gtk_thumbwheel_set_motion_method(
-  GtkThumbWheel * thumbwheel )
+  GtkThumbWheel 	* thumbwheel,
+  GtkThumbWheelMotionType	method )
 {
-  /* FIXME: implement */
+  SoAnyThumbWheel *any_thumbwheel ;
+
+  g_return_if_fail (thumbwheel != NULL);
+  g_return_if_fail (GTK_IS_THUMBWHEEL (thumbwheel));
+
+  any_thumbwheel = (SoAnyThumbWheel*) thumbwheel->wheel ;
+
+  switch ( method )
+  {
+    case GTK_THUMBWHEEL_MOTION_UNIFORM:
+      any_thumbwheel->setMovement( SoAnyThumbWheel::UNIFORM );
+      break ;
+    case GTK_THUMBWHEEL_MOTION_AUTHENTIC:
+      any_thumbwheel->setMovement( SoAnyThumbWheel::AUTHENTIC );
+      break ;
+    default:
+      g_assert( 0 && "impossible" );
+  }
 } // gtk_thumbwheel_set_motion_method()
+
+GtkThumbWheelMotionType
+gtk_thumbwheel_get_motion_method(
+  GtkThumbWheel 			* thumbwheel )
+{
+  SoAnyThumbWheel *any_thumbwheel ;
+  GtkThumbWheelMotionType	method = GTK_THUMBWHEEL_MOTION_UNIFORM;
+
+  g_return_val_if_fail (thumbwheel != NULL, method);
+  g_return_val_if_fail (GTK_IS_THUMBWHEEL (thumbwheel), method);
+
+  any_thumbwheel = (SoAnyThumbWheel*) thumbwheel->wheel ;
+
+  switch ( any_thumbwheel->getMovement() ) {
+  case SoAnyThumbWheel::UNIFORM:
+    method = GTK_THUMBWHEEL_MOTION_UNIFORM;
+    break ;
+  case SoAnyThumbWheel::AUTHENTIC:
+    method = GTK_THUMBWHEEL_MOTION_AUTHENTIC;
+    break ;
+  default :
+    g_assert( 0 && "impossible" );
+  }
+  return method ;
+}
 
 // *************************************************************************
 
 void
 gtk_thumbwheel_set_range_boundary_handling(
-  GtkThumbWheel * thumbwheel )
+  GtkThumbWheel 			* thumbwheel,
+  GtkThumbWheelBoundaryType	handling )
 {
-  /* FIXME: implement */
+  SoAnyThumbWheel *any_thumbwheel ;
+
+  g_return_if_fail (thumbwheel != NULL);
+  g_return_if_fail (GTK_IS_THUMBWHEEL (thumbwheel));
+
+  any_thumbwheel = (SoAnyThumbWheel*) thumbwheel->wheel ;
+
+  switch ( handling )
+  {
+    case GTK_THUMBWHEEL_BOUNDARY_CLAMP:
+      any_thumbwheel->setBoundaryHandling( SoAnyThumbWheel::CLAMP );
+      break ;
+    case GTK_THUMBWHEEL_BOUNDARY_MODULATE:
+      any_thumbwheel->setBoundaryHandling( SoAnyThumbWheel::MODULATE );
+      break ;
+    case GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE:
+      any_thumbwheel->setBoundaryHandling( SoAnyThumbWheel::ACCUMULATE );
+      break ;
+    default:
+      g_assert( 0 && "impossible" );
+  }
 } // gtk_thumbwheel_set_range_boundary_handling()
+
+GtkThumbWheelBoundaryType
+gtk_thumbwheel_get_range_boundary_handling(
+  GtkThumbWheel 			* thumbwheel )
+{
+  GtkThumbWheelBoundaryType handling = 
+    GTK_THUMBWHEEL_BOUNDARY_CLAMP ;
+  SoAnyThumbWheel *any_thumbwheel ;
+
+  g_return_val_if_fail (thumbwheel != NULL, handling);
+  g_return_val_if_fail (GTK_IS_THUMBWHEEL (thumbwheel), handling );
+
+  any_thumbwheel = (SoAnyThumbWheel*) thumbwheel->wheel ;
+
+  switch ( any_thumbwheel->getBoundaryHandling() ) {
+  case SoAnyThumbWheel::CLAMP:
+    handling = GTK_THUMBWHEEL_BOUNDARY_CLAMP;
+    break ;
+  case SoAnyThumbWheel::MODULATE:
+    handling = GTK_THUMBWHEEL_BOUNDARY_MODULATE;
+    break ;
+  case SoAnyThumbWheel::ACCUMULATE:
+    handling = GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE;
+    break ;
+  default:
+    g_assert( 0 && "impossible" );
+  }
+
+  return handling ;
+}
 
 // *************************************************************************
 
