@@ -17,11 +17,6 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
-
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -357,22 +352,6 @@ SoGtkPlaneViewer::processEvent(// virtual, protected
 } // processEvent()
 
 /*!
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewer::setSeekMode(// virtual, protected
-  SbBool enable)
-{
-  inherited::setSeekMode(enable);
-#if 0
-  this->setMode(on ?
-    SoGtkPlaneViewer::SEEK_WAIT_MODE :
-    SoGtkPlaneViewer::EXAMINE);
-#endif
-} // setSeekMode()
-
-/*!
   Overload this method to be able to draw the rotation graphics in rotation
   mode.
 */
@@ -668,12 +647,8 @@ void
 SoGtkPlaneViewer::createPrefSheet(void)
 {
   // FIXME: not yet implemented. 20020113 mortene.
+  SOGTK_STUB();
 //    inherited::createPrefSheet();
 }
 
 // ************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkPlaneViewerRCSId(void) { return rcsid; }
-#endif // SOGTK_DEBUG
-
