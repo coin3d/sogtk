@@ -6384,6 +6384,8 @@ ac_config_files="$ac_config_files
 	src/Inventor/Gtk/devices/Makefile
 	src/Inventor/Gtk/viewers/Makefile
 	src/Inventor/Gtk/widgets/Makefile
+	test-code/Makefile
+	test-code/components/Makefile
 "
 ac_config_commands="$ac_config_commands default"
 trap '' 1 2 15
@@ -6603,6 +6605,8 @@ Try \`$me --help' for more information."; exit 1 ;;
   'src/Inventor/Gtk/devices/Makefile' ) CONFIG_FILES="$CONFIG_FILES src/Inventor/Gtk/devices/Makefile" ;;
   'src/Inventor/Gtk/viewers/Makefile' ) CONFIG_FILES="$CONFIG_FILES src/Inventor/Gtk/viewers/Makefile" ;;
   'src/Inventor/Gtk/widgets/Makefile' ) CONFIG_FILES="$CONFIG_FILES src/Inventor/Gtk/widgets/Makefile" ;;
+  'test-code/Makefile' ) CONFIG_FILES="$CONFIG_FILES test-code/Makefile" ;;
+  'test-code/components/Makefile' ) CONFIG_FILES="$CONFIG_FILES test-code/components/Makefile" ;;
   'default-1' ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
   'default-2' ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-2" ;;
   'default' ) CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;

@@ -12,12 +12,14 @@ lib_LTLIBRARIES = libSoGtk.la
 
 libSoGtk_la_SOURCES = \
 	$(BUILT_SOURCES) \
-	SoGtk.cpp \
 	SoGtk.h \
-	SoGtkComponent.cpp \
+	SoGtk.cpp \
 	SoGtkComponent.h \
+	SoGtkComponent.cpp \
+	SoGtkGLWidget.h \
 	SoGtkGLWidget.cpp \
-	SoGtkGLWidget.h
+	SoGtkGraphEditor.h \
+	SoGtkGraphEditor.cpp
 
 libSoGtk_la_LIBADD = \
         devices/libSoGtkDevices.la \
@@ -30,7 +32,8 @@ libSoGtkinc_HEADERS = \
 	SoGtk.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
-	SoGtkRenderArea.h
+	SoGtkRenderArea.h \
+	SoGtkGraphEditor.h
 
 ############################################################################
 

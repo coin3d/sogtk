@@ -318,6 +318,8 @@ AC_OUTPUT([
 	src/Inventor/Gtk/devices/Makefile
 	src/Inventor/Gtk/viewers/Makefile
 	src/Inventor/Gtk/widgets/Makefile
+	test-code/Makefile
+	test-code/components/Makefile
 ],[
 	chmod a+x sogtk-config
 ])
