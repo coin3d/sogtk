@@ -1232,9 +1232,12 @@ SoGtkFullViewer::pasteviewSelected(void)
 void
 SoGtkFullViewer::selectedPrefs(void)
 {
-  if (! PRIVATE(this)->prefwindow)
+  if (! PRIVATE(this)->prefwindow) {
     PRIVATE(this)->prefwindow = PRIVATE(this)->makePreferencesWindow();
-  gtk_widget_show(PRIVATE(this)->prefwindow);
+  }
+  if (PRIVATE(this)->prefwindow) {
+    gtk_widget_show(PRIVATE(this)->prefwindow);
+  }
 }
 
 // *************************************************************************
@@ -1418,6 +1421,16 @@ SoGtkFullViewerP::layoutAppButtons(
 }
 
 // *************************************************************************
+
+// Documented in common/viewers/SoGuiFullViewer.cpp.in.
+void
+SoGtkFullViewer::createPrefSheet(void)
+{
+  PRIVATE(this)->prefwindow = PRIVATE(this)->makePreferencesWindow();
+}
+
+// *************************************************************************
+
 
 /*!
   Create preferences sheet.

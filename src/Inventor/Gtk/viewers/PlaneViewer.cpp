@@ -325,12 +325,12 @@ SoGtkPlaneViewer::createViewerButtons(GtkWidget * parent,
 
 // ************************************************************************
 
+// Documented in superclass.
 void
 SoGtkPlaneViewer::createPrefSheet(void)
 {
-  // FIXME: not yet implemented. 20020113 mortene.
   SOGTK_STUB();
-//    inherited::createPrefSheet();
+  inherited::createPrefSheet();
 }
 
 // ************************************************************************
