@@ -55,6 +55,7 @@ SUBPROJECTNAMES="SoGtkMacros SoGtkData"
 AUTOCONF_VER=2.49[bc] # Autoconf from CVS or latest snapshot
 AUTOMAKE_VER=1.4a     # Automake from CVS
 LIBTOOL_VER=1.3.5
+GETTEXT_VER=0.10.35
 
 echo "Checking the installed configuration tools..."
 
@@ -92,6 +93,15 @@ END
     DIE=true
 fi
 
+if test -z "`gettextize --version | grep \" $GETTEXT_VER\" 2> /dev/null`"; then
+  cat <<END
+
+  You must have gettextize version $GETTEXT_VER installed to
+  generate gettext support files for $PROJECT.
+END
+    DIE=true
+fi
+
 set $SUBPROJECTNAMES
 num=1
 for project in $SUBPROJECTS; do
@@ -118,6 +128,28 @@ done
 ${DIE=false} && echo "" && echo >&2 "$me: aborting..." && exit 1
 
 # **************************************************************************
+
+# generate gettext support
+echo "Running gettextize..."
+( ( $verbose && set -x;
+  gettextize -f -c 1>&3 && \
+  cp po/Makefile.in.in po/Makefile.in.in~ && \
+  sed \
+      -e 's%MKINSTALLDIRS =.*%MKINSTALLDIRS = @MKINSTALLDIRS@%' \
+      -e 's%--add-comments %%' \
+      -e 's%--files-from%-C --files-from%' \
+      -e '/^VPATH/ a \
+\
+top_builddir = ..' \
+      -e 's%-r "\$(MKINSTALLDIRS%-r "$(top_builddir)/$(MKINSTALLDIRS%' \
+      -e 's%^\([ 	]*\)\$(MKINSTALLDIRS%\1$(top_builddir)/$(MKINSTALLDIRS%' \
+	< po/Makefile.in.in > po/Makefile.in.in~ && \
+  mv po/Makefile.in.in~ po/Makefile.in.in
+) 3>&1 1>&2 2>&3 | \
+  grep -v 'adding the necessary$' | \
+  grep -v 'progtest.m4 from$' | \
+  grep -v '^the directory ' \
+) 3>&1 1>&2 2>&3
 
 # generate aclocal.m4
 echo "Running aclocal..."

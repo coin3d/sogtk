@@ -1,0 +1,471 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2000-12-12 16:01+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+
+#: src/Inventor/Gtk/SoGtkComponent.cpp:323
+msgid "<unknown>"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkComponent.cpp:756
+msgid "Gtk Component"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkComponent.cpp:769
+msgid "Gtk Comp"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGLWidget.cpp:93
+msgid "OpenGL is not available on your display!"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:237
+msgid "[not implemented]"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:248
+msgid "No scene to save."
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:253
+msgid "Error opening 'scene.iv' for writing."
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:260
+msgid "Scene saved in 'scene.iv'."
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:303
+msgid "File"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:308
+msgid "Save"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:313
+msgid "Close"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:491
+#: src/Inventor/Gtk/SoGtkGraphEditor.cpp:502
+msgid "Graph Editor"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkMaterialList.cpp:108
+msgid "Materials"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkMaterialList.cpp:209
+msgid "invalid menu item"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkMaterialList.cpp:296
+#: src/Inventor/Gtk/SoGtkMaterialList.cpp:304
+msgid "Material List"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkRoster.cpp:178
+msgid "Create"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkRoster.cpp:234
+msgid "Title"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkRoster.cpp:234
+msgid "Class"
+msgstr ""
+
+#: src/Inventor/Gtk/SoGtkRoster.cpp:349 src/Inventor/Gtk/SoGtkRoster.cpp:360
+msgid "Roster"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:87
+msgid "Functions"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:89
+msgid "Draw Styles"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:91
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1838
+msgid "Stereo Viewing"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:93
+msgid "Viewing"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:95
+msgid "Decorations"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:97
+msgid "Headlight"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:99
+msgid "Preferences..."
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:111
+msgid "Help"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:113
+msgid "Home"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:115
+msgid "Set Home"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:117
+msgid "View All"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:119
+msgid "Seek"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:121
+msgid "Copy View"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:123
+msgid "Paste View"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:135
+msgid "Still Drawstyle"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:138
+msgid "as is"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:140
+msgid "hidden line"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:142
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:175
+msgid "no texture"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:144
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:177
+msgid "low resolution"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:146
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:179
+msgid "wireframe"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:148
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:184
+msgid "points"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:150
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:189
+msgid "bounding box (no depth)"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:170
+msgid "Animating Drawstyle"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:173
+msgid "same as still"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:182
+msgid "low res wireframe (no depth)"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:187
+msgid "low res points (no depth)"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:211
+msgid "Transparency Type"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:214
+msgid "screen door"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:216
+msgid "add"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:218
+msgid "delayed add"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:221
+msgid "sorted object add"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:223
+msgid "blend"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:225
+msgid "delayed blend"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:230
+msgid "sorted object blend"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:258
+msgid "Off"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:259
+msgid "Red/Cyan"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:260
+msgid "Quad buffer"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:272
+msgid "Render Buffer Type"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:275
+msgid "single"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:277
+msgid "double"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in:279
+msgid "interactive"
+msgstr ""
+
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1341
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1355
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1370
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1384
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1399
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1413
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1428
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1442
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1457
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1471
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1484
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1499
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1513
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1527
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1542
+#: src/Inventor/Gtk/common/SoGuiViewer.cpp.in:1556
+msgid "not implemented yet"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:145
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:506
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:517
+msgid "Examiner Viewer"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:146
+msgid "Examiner Viewer Preference Sheet"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:148
+msgid "Rotx"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:149
+msgid "Roty"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:150
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:300
+msgid "Dolly"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:300
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:135
+msgid "Zoom"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:408
+msgid "Enable spin animation"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:418
+msgid "Show point of rotation axes"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:432
+msgid "axes size"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:461
+msgid "pixels"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:169
+msgid "interact"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:175
+msgid "view"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:181
+msgid "help"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:187
+msgid "home"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:193
+msgid "set_home"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:199
+msgid "view_all"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:205
+msgid "seek"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:253
+msgid "Motion Y"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:254
+msgid "Motion X"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:255
+msgid "Motion Z"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:264
+msgid "Viewer Preference Sheet"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:269
+msgid "Viewer Menu"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1447
+msgid "Seek animation time:"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1463
+msgid "seconds"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1471
+msgid "Seek to:"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1478
+msgid "point"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1485
+msgid "object"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1524
+msgid "Seek distance:"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1553
+msgid "percentage"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1560
+msgid "absolute"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1601
+msgid "Camera Zoom:"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1624
+msgid "Zoom slider ranges from:"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1637
+msgid "to:"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1748
+msgid "Auto clipping planes"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1759
+msgid "near plane:"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:1780
+msgid "far plane:"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp:2460
+msgid "Stereo Viewing can't be set on this machine."
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:61
+msgid "x"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:67
+msgid "y"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:73
+msgid "z"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:79
+msgid "camera"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:133
+msgid "Translate Y"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:134
+msgid "Translate X"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:224
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:235
+msgid "Plane Viewer"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:445
+msgid "unknown button"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:456
+msgid "unsupported button"
+msgstr ""

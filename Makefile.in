@@ -68,19 +68,32 @@ AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AS = @AS@
 AWK = @AWK@
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 COMPONENTHEADER = @COMPONENTHEADER@
 CPP = @CPP@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
+DATADIRNAME = @DATADIRNAME@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 EVENT = @EVENT@
+GENCAT = @GENCAT@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
+GT_NO = @GT_NO@
+GT_YES = @GT_YES@
 GUI = @GUI@
 Gui = @Gui@
+INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
+INSTOBJEXT = @INSTOBJEXT@
+INTLDEPS = @INTLDEPS@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LT_AGE = @LT_AGE@
@@ -89,8 +102,12 @@ LT_RELEASE = @LT_RELEASE@
 LT_REVISION = @LT_REVISION@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
 OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
+POFILES = @POFILES@
+POSUB = @POSUB@
 RANLIB = @RANLIB@
 SOGTK_BINARY_AGE = @SOGTK_BINARY_AGE@
 SOGTK_EXTRA_CPPFLAGS = @SOGTK_EXTRA_CPPFLAGS@
@@ -101,10 +118,13 @@ SOGTK_MAJOR_VERSION = @SOGTK_MAJOR_VERSION@
 SOGTK_MICRO_VERSION = @SOGTK_MICRO_VERSION@
 SOGTK_MINOR_VERSION = @SOGTK_MINOR_VERSION@
 SOGTK_VERSION = @SOGTK_VERSION@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
 gui = @gui@
 install_sh = @install_sh@
+l = @l@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
 
 ############################################################################
@@ -114,7 +134,7 @@ ACLOCAL_AMFLAGS = -I cfg/m4
 @BUILD_TESTS_TRUE@TESTDIR = @BUILD_TESTS_TRUE@test-code
 @BUILD_TESTS_FALSE@TESTDIR = 
 
-SUBDIRS = . data src/Inventor/Gtk $(TESTDIR)
+SUBDIRS = . data src/Inventor/Gtk po $(TESTDIR)
 
 bin_SCRIPTS = sogtk-config
 
@@ -157,8 +177,8 @@ SCRIPTS =  $(bin_SCRIPTS)
 DIST_SOURCES = 
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  README $(noinst_HEADERS) ./stamp-h.in AUTHORS COPYING \
-ChangeLog INSTALL Makefile.am Makefile.in NEWS TODO aclocal.m4 \
+DIST_COMMON =  README $(noinst_HEADERS) ./stamp-h.in ABOUT-NLS AUTHORS \
+COPYING ChangeLog INSTALL Makefile.am Makefile.in NEWS TODO aclocal.m4 \
 cfg/config.guess cfg/config.sub cfg/install-sh cfg/ltconfig \
 cfg/ltmain.sh cfg/missing cfg/mkinstalldirs config.h.in configure \
 configure.in sogtk-config.in
@@ -167,7 +187,7 @@ configure.in sogtk-config.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-DIST_SUBDIRS =  . data src/Inventor/Gtk test-code
+DIST_SUBDIRS =  . data src/Inventor/Gtk po test-code
 all: all-redirect
 .SUFFIXES:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
@@ -194,14 +214,15 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ configure.in  \
 		cfg/m4/compiler_capabilities.m4 cfg/m4/cvschanges.m4 \
 		cfg/m4/dime.m4 cfg/m4/doxygen_detection.m4 \
 		cfg/m4/expand_dir_vars.m4 cfg/m4/general.m4 \
-		cfg/m4/guile.m4 cfg/m4/iso8601.m4 cfg/m4/linux_api.m4 \
+		cfg/m4/gettext.m4 cfg/m4/guile.m4 cfg/m4/iso8601.m4 \
+		cfg/m4/lcmessage.m4 cfg/m4/linux_api.m4 \
 		cfg/m4/macro_quoting.m4 cfg/m4/misc_compiler.m4 \
 		cfg/m4/modifierlist.m4 cfg/m4/msvccc.m4 \
 		cfg/m4/network.m4 cfg/m4/path_conversion.m4 \
-		cfg/m4/profit.m4 cfg/m4/simage.m4 cfg/m4/sobe.m4 \
-		cfg/m4/sockets.m4 cfg/m4/sogtk.m4 cfg/m4/sogui.m4 \
-		cfg/m4/soqt.m4 cfg/m4/sowin.m4 cfg/m4/soxt.m4 \
-		cfg/m4/uniqify.m4
+		cfg/m4/profit.m4 cfg/m4/progtest.m4 cfg/m4/simage.m4 \
+		cfg/m4/sobe.m4 cfg/m4/sockets.m4 cfg/m4/sogtk.m4 \
+		cfg/m4/sogui.m4 cfg/m4/soqt.m4 cfg/m4/sowin.m4 \
+		cfg/m4/soxt.m4 cfg/m4/uniqify.m4
 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 
 config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)

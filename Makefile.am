@@ -13,7 +13,7 @@ else
 TESTDIR =
 endif
 
-SUBDIRS = . data src/Inventor/Gtk $(TESTDIR)
+SUBDIRS = . data src/Inventor/Gtk po $(TESTDIR)
 
 bin_SCRIPTS = sogtk-config
 

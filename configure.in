@@ -295,6 +295,22 @@ SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
 SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
 
 # **************************************************************************
+# Gettext support
+
+## Add the languages which your application supports here.
+ALL_LINGUAS="de no"
+SIM_GNU_GETTEXT 
+## Set PACKAGE_LOCALE_DIR in config.h.
+if test x"${prefix}" = x"NONE"; then  
+  package_local_dir="${ac_default_prefix}/${DATADIRNAME}/locale";
+else
+  package_locale_dir="${prefix}/${DATADIRNAME}/locale";
+fi
+AC_DEFINE_UNQUOTED([PACKAGE_LOCALE_DIR],
+    ["${package_locale_dir}"],
+    [Location the locale data will get installed to.])
+
+# **************************************************************************
 # Submodules that must be configured.
 
 AC_CONFIG_SUBDIRS(data)
@@ -309,6 +325,7 @@ AC_OUTPUT([
 	src/Inventor/Gtk/devices/Makefile
 	src/Inventor/Gtk/viewers/Makefile
 	src/Inventor/Gtk/widgets/Makefile
+	po/Makefile.in
 	test-code/Makefile
 	test-code/components/Makefile
 	test-code/widgets/Makefile
