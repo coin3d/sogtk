@@ -1,8 +1,3 @@
-ABOUT-NLS
-Makefile.in
-aclocal.m4
-config.h.in
-configure
 stamp-h.in
 stuff
 autom4te.cache
