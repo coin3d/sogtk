@@ -63,7 +63,7 @@ public:
   int getFeedbackSize(void) const;
 
   virtual void setViewing( SbBool enable );
-  virtual void setCamera( SoCamera * const camera );
+  virtual void setCamera( SoCamera * newCamera );
   virtual void setCursorEnabled( SbBool enable );
   
 protected:
@@ -90,30 +90,26 @@ protected:
   virtual void bottomWheelMotion( float value );
   virtual void rightWheelMotion( float value );
 
-  virtual void openViewerHelpCard(void);
+  virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
+  virtual void createViewerButtons( GtkWidget * parent, SbPList * buttonlist );
 
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
 
-  virtual void createViewerButtons( GtkWidget * parent, SbPList * buttonlist );
-  void camerabuttonClicked(void);
-  static void camerabuttonClickedCB( GtkWidget *, gpointer );
 
-  virtual void createPrefSheet(void);
-
-  virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
-
+  virtual void openViewerHelpCard(void);
 private:
+  static SoGtkViewerButton SoGtkExaminerViewerButtons[];
+  GdkPixmap * orthopixmap, * perspectivepixmap;
+  GdkBitmap * orthomask, * perspectivemask;
+
   void constructor( const SbBool build );
 
-  struct {
-    GtkWidget * orthogonal;
-    GtkWidget * perspective;
-  } pixmaps;
-
-
   void setCursorRepresentation( int mode );
+  GdkCursor * pancursor, * rotatecursor;
+  GdkCursor * defaultcursor, * zoomcursor;
+  GdkCursor * arrowcursor, * crosscursor ;
 
   GtkWidget * cameratogglebutton;
   GtkWidget * feedbacklabel1;
@@ -143,7 +139,9 @@ private: // slots:
     GtkWidget		*w,
     gpointer		closure );
   // Button row.
-  void cameratoggleClicked(void);
+  static void camerabuttonCB( 
+    GtkWidget 		*w, 
+    gpointer 		closure );
 
 private:
   SoAnyExaminerViewer * const common;

@@ -39,26 +39,19 @@ static const char rcsid[] =
 #include <Inventor/Gtk/SoGtkCursors.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
+#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 #include <Inventor/Gtk/viewers/SoAnyExaminerViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
 
 #include <Inventor/Gtk/common/pixmaps/ortho.xpm>
 #include <Inventor/Gtk/common/pixmaps/perspective.xpm>
 
-///////// FIXME start //////////////////////////////////////////////////
-// Do something clever about this Qt layout assistant code.. (the code
-// for expandSize() is inside SoGtkFullViewer.cpp). 990222 mortene.
-enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
-
-// extern void expandSize(QSize & result, const QSize & addend,
-//                        LayoutOrientation o);
-///////// FIXME end ////////////////////////////////////////////////////
-
 // *************************************************************************
 
 /*!
   \class SoGtkExaminerViewer Inventor/Gtk/viewers/SoGtkExaminerViewer.h
-  \brief The SoGtkExaminerViewer class is a full-fledged model viewer with functionality for rotation, pan, zoom, etc.
+  \brief The SoGtkExaminerViewer class is a full-fledged model viewer with
+    functionality for rotation, pan, zoom, etc.
   \ingroup components viewers
 
   TODO: more doc
@@ -75,6 +68,24 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
 SOGTK_OBJECT_SOURCE(SoGtkExaminerViewer);
 
 // *************************************************************************
+
+enum {
+  CAMERA_BUTTON = 0,
+
+  FIRST_BUTTON = 0,
+  LAST_BUTTON = CAMERA_BUTTON
+};
+
+// *************************************************************************
+
+struct SoGtkViewerButton
+SoGtkExaminerViewer::SoGtkExaminerViewerButtons[] = {
+  { // camera type button
+    N_("camera"), "C",   
+    (GtkSignalFunc) SoGtkExaminerViewer::camerabuttonCB,
+    perspective_xpm
+  }
+}; // SoGtkExaminerViewerButtons[]
 
 /*!
   Constructor. See parent class for explanation of arguments.
@@ -122,14 +133,11 @@ void
 SoGtkExaminerViewer::constructor( // private
   const SbBool build )
 {
-  // FIXME: use a smaller sphere than the default one to have a larger
-  // area close to the borders that gives us "z-axis rotation"?
-  // 990425 mortene.
-
 //  this->defaultcursor = NULL;
-//  this->rotateCursor = NULL;
-//  this->panCursor = NULL;
-//  this->zoomCursor = NULL;
+//  this->rotatecursor = NULL;
+//  this->pancursor = NULL;
+//  this->zoomcursor = NULL;
+
 
 //  this->pixmaps.orthogonal = new QPixmap((const char **)ortho_xpm);
 //  this->pixmaps.perspective = new QPixmap((const char **)perspective_xpm);
@@ -147,8 +155,7 @@ SoGtkExaminerViewer::constructor( // private
   this->setRightWheelString( _( "Dolly" ) );
 
   if ( ! build ) return;
-  GtkWidget * parent = this->getParentWidget();
-  GtkWidget * viewer = this->buildWidget( parent );
+  GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
   this->setBaseWidget( viewer );
 } // constructor()
 
@@ -160,10 +167,10 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer(
   void )
 {
   // Cursors.
-//  delete this->zoomCursor;
-//  delete this->panCursor;
-//  delete this->rotateCursor;
-//  delete this->defaultCursor;
+//  delete this->zoomcursor;
+//  delete this->pancursor;
+//  delete this->rotatecursor;
+//  delete this->defaultcursor;
 
   // Button pixmaps.
 //  delete this->pixmaps.orthogonal;
@@ -295,10 +302,10 @@ SoGtkExaminerViewer::getFeedbackSize(
 
 void
 SoGtkExaminerViewer::setCamera( // virtual
-  SoCamera * const camera )
+  SoCamera * newCamera )
 {
-  if ( camera ) {
-    const SoType camtype( camera->getTypeId() );
+  if ( newCamera ) {
+    const SoType camtype( newCamera->getTypeId() );
     const SbBool orthotype =
       camtype.isDerivedFrom( SoOrthographicCamera::getClassTypeId() );
 
@@ -308,7 +315,7 @@ SoGtkExaminerViewer::setCamera( // virtual
 //        *(this->pixmaps.orthogonal) : *(this->pixmaps.perspective) );
 //    }
   }
-  inherited::setCamera( camera );
+  inherited::setCamera( newCamera );
 } // setCamera()
 
 // *************************************************************************
@@ -618,10 +625,10 @@ void
 SoGtkExaminerViewer::setCursorRepresentation(
   int mode )
 {
-/*
-  GtkWidget * w = this->getRenderAreaWidget();
+  GtkWidget * w = this->getGLWidget();
   assert(w);
 
+/*
   if (!this->defaultcursor) {
     this->defaultcursor = new QCursor(w->cursor());
 
@@ -824,43 +831,20 @@ SoGtkExaminerViewer::feedbackSizeChanged(
 }
 
 // *************************************************************************
-/*!
-  \internal
-  Pref sheet slot.
-*/
-
-void
-SoGtkExaminerViewer::cameratoggleClicked()
-{
-  if ( this->getCamera() ) this->toggleCameraType();
-} // cameratoggleClicked()
-
-// *************************************************************************
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkExaminerViewer::camerabuttonClicked(
-  void )
-{
-  SOGTK_STUB();
-} // camerabuttonClicked()
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkExaminerViewer::camerabuttonClickedCB(
+SoGtkExaminerViewer::camerabuttonCB(
   GtkWidget *,
   gpointer closure )
 {
   assert( closure != NULL );
   SoGtkExaminerViewer * viewer = (SoGtkExaminerViewer *) closure;
-  viewer->camerabuttonClicked();
-} // camerabuttonClickedCB()
+  if ( viewer->getCamera() ) viewer->toggleCameraType();
+} // camerabuttonCB()
 
 // *************************************************************************
 
@@ -875,16 +859,6 @@ SoGtkExaminerViewer::afterRealizeHook( // virtual
   this->setCursorRepresentation( this->common->currentmode );
   inherited::afterRealizeHook();
 } // afterRealizeHook()
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkExaminerViewer::createPrefSheet( // virtual
-  void )
-{
-} // createPrefSheet()
 
 // *************************************************************************
 
