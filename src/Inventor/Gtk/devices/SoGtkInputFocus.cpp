@@ -25,6 +25,8 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkInputFocus.h>
 
+// *************************************************************************
+
 /*!
   \class SoGtkInputFocus SoGtkInputFocus.h Inventor/Gtk/devices/SoGtkInputFocus.h
   \brief The SoGtkInputFocus class ...

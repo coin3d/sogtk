@@ -33,6 +33,8 @@ static const char rcsid[] =
 #include <Inventor/Gtk/devices/SoGtkMouse.h>
 #include <Inventor/Gtk/devices/SoGtkSpaceball.h>
 
+// *************************************************************************
+
 /*!
   \class SoGtkDevice SoGtkDevice.h Inventor/Gtk/devices/SoGtkDevice.h
   \brief The SoGtkDevice class ...

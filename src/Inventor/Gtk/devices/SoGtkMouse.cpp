@@ -36,6 +36,8 @@ static const char rcsid[] =
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
+// *************************************************************************
+
 /*!
   \class SoGtkMouse SoGtkMouse.h Inventor/Gtk/devices/SoGtkMouse.h
   \brief The SoGtkMouse class ...

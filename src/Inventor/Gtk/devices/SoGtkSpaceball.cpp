@@ -25,6 +25,8 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkSpaceball.h>
 
+// *************************************************************************
+
 /*!
   \class SoGtkSpaceball SoGtkSpaceball.h Inventor/Gtk/devices/SoGtkSpaceball.h
   \brief The SoGtkSpaceball class ...

@@ -30,7 +30,6 @@
 
 #include <Inventor/SbLinear.h>
 
-#include <Inventor/Gtk/SoGtkBasic.h>
 #include <Inventor/Gtk/SoGtkObject.h>
 
 class SoEvent;
