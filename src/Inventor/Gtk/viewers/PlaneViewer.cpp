@@ -254,16 +254,6 @@ SoGtkPlaneViewer::processEvent(GdkEvent * event)
   inherited::processEvent(event);
 }
 
-/*!
-  Overload this method to be able to draw the rotation graphics in rotation
-  mode.
-*/
-void
-SoGtkPlaneViewer::actualRedraw(void)
-{
-  inherited::actualRedraw();
-}
-
 // *************************************************************************
 
 /*!
