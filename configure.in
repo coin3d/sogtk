@@ -3,6 +3,7 @@
 # $Id$
 
 AC_INIT(src/Inventor/Gtk/SoGtk.h)
+AC_CONFIG_AUX_DIR(cfg)
 
 # **************************************************************************
 # Check the CVS repository setup
@@ -154,7 +155,9 @@ fi
 
 # Check for the availability of this node (it is used in the hidden
 # line rendering), which is not part of older Inventor implementations.
-SIM_AC_HAVE_SOPOLYGONOFFSET
+
+SIM_AC_HAVE_SOPOLYGONOFFSET()
+
 SIM_AC_HAVE_SOMOUSEBUTTONEVENT_BUTTONS
 
 ### Check for GTK+ #####################################################
@@ -234,14 +237,20 @@ AM_CONDITIONAL(BUILD_TESTS, test "x${with_test_code+set}" = "xset")
 # **************************************************************************
 # Variable substitutions for using libSoGtk in the generic code.
 
-. ${srcdir}/libconfigvars.sh
+GUI=GTK
+Gui=Gtk
+gui=gtk
+WIDGET="GtkWidget *"
+# WINWIDGET="GtkWidget *"
+EVENT="GdkEvent *"
+COMPONENTHEADER=""
 
 AC_SUBST(GUI)
 AC_SUBST(Gui)
 AC_SUBST(gui)
 AC_SUBST(EVENT)
 AC_SUBST(WIDGET)
-AC_SUBST(WINWIDGET)
+# AC_SUBST(WINWIDGET)
 AC_SUBST(COMPONENTHEADER)
 
 # **************************************************************************

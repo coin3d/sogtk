@@ -1,5 +1,5 @@
 #! /bin/sh
-############################################################################
+# **************************************************************************
 # Regenerate all files which are constructed by the autoconf, automake
 # and libtool tool-chain. Note: only developers should need to use
 # this script.
@@ -11,113 +11,111 @@
 
 directory=`echo "$0" | sed -e 's/[^\/]*$//g'`;
 cd $directory
-if ! test -f ./autogen.sh; then
+if test ! -f ./autogen.sh; then
   echo "unexpected problem with your shell - bailing out"
   exit 1
 fi
-DIE=false
 
 PROJECT=SoGtk
 
-MACRODIR=conf-macros
+MACRODIR=cfg/m4
 
 SUBPROJECTS="$MACRODIR"
-SUBPROJECTNAMES="$MACRODIR"
+SUBPROJECTNAMES="SoGtkMacros"
 
 AUTOMAKE_ADD=
 if test "$1" = "--clean"; then
-  rm -f aclocal.m4 \
-	config.guess \
-	config.h.in \
-	config.sub \
-	configure \
-	depcomp \
-	install-sh \
-	ltconfig \
-	ltmain.sh \
-	missing \
-	mkinstalldirs \
-	stamp-h*
-  find . -name Makefile.in -print | \
-        egrep -v '^\./(examples|ivexamples)/' | xargs rm
+  rm -f config.h.in configure stamp-h*
+  find . -name Makefile.in -print | xargs rm
   exit
 elif test "$1" = "--add"; then
-  AUTOMAKE_ADD="--add-missing --gnu --copy"
+  AUTOMAKE_ADD=""
 fi
 
 echo "Checking the installed configuration tools..."
 
-AUTOCONF_VER=2.49a
+AUTOCONF_VER=2.49b
 AUTOMAKE_VER=1.4a
 LIBTOOL_VER=1.3.5
 
 if test -z "`autoconf --version | grep \" $AUTOCONF_VER\" 2> /dev/null`"; then
-    echo
-    echo "You must have autoconf version $AUTOCONF_VER installed to"
-    echo "generate configure information and Makefiles for $PROJECT."
-    echo ""
+  cat <<END
+
+  You must have autoconf version $AUTOCONF_VER installed to
+  generate configure information and Makefiles for $PROJECT.
+END
     DIE=true
 fi
 
 if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
-    echo
-    echo "You must have automake version $AUTOMAKE_VER installed to"
-    echo "generate configure information and Makefiles for $PROJECT."
-    echo ""
-    echo "The Automake version we are using is a development version"
-    echo "\"frozen\" from the CVS repository at 2000-01-13. You can get"
-    echo "it here:"
-    echo ""
-    echo "   ftp://ftp.sim.no/pub/coin/automake-1.4a-coin.tar.gz"
-    echo ""
+  cat <<END
+
+  You must have automake version $AUTOMAKE_VER installed to
+  generate configure information and Makefiles for $PROJECT.
+
+  The Automake version we are using is a development version
+  "frozen" from the CVS repository at 2000-01-13. You can get
+  it here:"
+
+     ftp://ftp.sim.no/pub/coin/automake-1.4a-coin.tar.gz
+END
     DIE=true
 fi
 
 if test -z "`libtool --version | grep \" $LIBTOOL_VER \" 2> /dev/null`"; then
-    echo
-    echo "You must have libtool version $LIBTOOL_VER installed to"
-    echo "generate configure information and Makefiles for $PROJECT."
-    echo ""
-    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.3.5.tar.gz"
-    echo ""
+  cat <<END
+
+  You must have libtool version $LIBTOOL_VER installed to
+  generate configure information and Makefiles for $PROJECT.
+
+  Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.3.5.tar.gz
+END
     DIE=true
 fi
-
 
 set $SUBPROJECTNAMES
 num=1
 for project in $SUBPROJECTS; do
   test -d $project || {
-    echo
-    echo "Could not find subdirectory '$project'."
-    echo "It was probably added after you initially fetched $PROJECT."
-    echo "To add the missing module, run 'cvs co $1' from the $PROJECT"
-    echo "base directory."
-    echo ""
-    echo "To do a completely fresh cvs checkout of the whole $PROJECT module,"
-    echo "(if all else fails), remove $PROJECT and run:"
-    echo "  cvs -z3 -d :pserver:cvs@cvs.sim.no:/export/cvsroot co -P $PROJECT"
-    echo ""
+    cat <<END
+
+  Could not find subdirectory '$project'.
+  It was probably added after you initially fetched $PROJECT.
+  To add the missing module, run 'cvs co $1' from the $PROJECT
+  base directory.
+
+  To do a completely fresh cvs checkout of the whole $PROJECT module,
+  (if all else fails), remove $PROJECT and run:
+
+    cvs -z3 -d :pserver:cvs@cvs.sim.no:/export/cvsroot co -P $PROJECT
+END
     DIE=true
   }
   num=`expr $num + 1`
   shift
 done
 
-$DIE && exit 1
+# abnormal exit?
+${DIE=false} && echo "" && exit 1
 
-echo "Running aclocal (generating aclocal.m4)..."
-aclocal -I $MACRODIR
+# generate cfg/aclocal.m4
+echo "Running aclocal..."
+aclocal -I $MACRODIR --output=cfg/aclocal.m4
 
-echo "Running autoheader (generating config.h.in)..."
-autoheader
+# generate config.h.in
+echo "Running autoheader..."
+autoheader -l cfg
 
-echo "Running automake (generating the Makefile.in files)..."
+# generate Makefile.in templates
+echo "Running automake..."
 echo "[ignore any \"directory should not contain '/'\" warning]"
-automake $AUTOMAKE_ADD
+cp cfg/aclocal.m4 .
+automake
+rm aclocal.m4
 
-echo "Running autoconf (generating ./configure and the Makefile files)..."
-autoconf
+# generate configure
+echo "Running autoconf..."
+autoconf -l cfg
 
-echo "Done: Now run './configure' and 'make install' to build $PROJECT."
+echo "Done."
 

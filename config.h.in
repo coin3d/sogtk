@@ -1,5 +1,4 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader.  */
-#undef HAVE_SOPOLYGONOFFSET
 
 /* Define if you have the `bsd' library (-lbsd). */
 #undef HAVE_LIBBSD
@@ -27,6 +26,9 @@
 
 /* Define to enable use of SoMouseButtonEvent::BUTTON5 */
 #undef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
+
+/* Define to enable use of the SoPolygonOffset node */
+#undef HAVE_SOPOLYGONOFFSET
 
 /* Name of package */
 #undef PACKAGE
