@@ -1,3 +1,4 @@
+############################################################################
 
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 LIBS = 
@@ -13,6 +14,8 @@ BUILT_SOURCES = \
 	SoAnyExaminerViewer.h \
 	SoAnyPlaneViewer.cpp \
 	SoAnyPlaneViewer.h \
+	SoAnyConstrainedViewer.cpp \
+	SoAnyConstrainedViewer.h \
 	SoAnyFlyViewer.cpp \
 	SoAnyFlyViewer.h \
 	SoAnyWalkViewer.cpp \
@@ -86,6 +89,16 @@ SoAnyPlaneViewer.cpp: \
 	@( cd $(top_builddir);
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp )
 
+SoAnyConstrainedViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyConstrainedViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.h )
+
+SoAnyConstrainedViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyConstrainedViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.cpp )
+
 SoAnyFlyViewer.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.h.in
 	@( cd $(top_builddir); \
@@ -105,3 +118,5 @@ SoAnyWalkViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyWalkViewer.cpp.in
 	@( cd $(top_builddir);
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyWalkViewer.cpp )
+
+############################################################################
