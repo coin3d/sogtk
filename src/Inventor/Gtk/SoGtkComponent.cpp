@@ -971,13 +971,18 @@ SoGtkComponentP::realizeHandlerCB( // static
 // *************************************************************************
 
 /*!
-  Toggle full screen mode for this component.
+  Toggle full screen mode for this component, if possible.
+
+  Returns \c FALSE if attempt at making the component cover the
+  complete screen failed. This might happen if the toolkit doesn't
+  support it or the component is not a toplevel window.
 */
-void 
-SoGtkComponent::goFullScreen(const SbBool onoff)
+SbBool
+SoGtkComponent::setFullScreen(const SbBool onoff)
 {
   if (onoff == THIS->fullscreen) return;
   SOGTK_STUB();
+  return FALSE;
 }
 
 /*!
