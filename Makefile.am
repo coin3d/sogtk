@@ -1,3 +1,9 @@
+############################################################################
+## SoGtk/Makefile.am
+## $Id$
+
+############################################################################
+# Automake conditional stuff
 
 if BUILD_TESTS
 TESTDIR = test-code
@@ -54,9 +60,9 @@ sogtkdefs.h: $(top_srcdir)/sogtkdefs.h.in
 
 src/Inventor/Gtk/SoGtkBasic.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
-	@CONFIG_HEADERS=$@:SoGtkBasic.h.in CONFIG_FILES=$(top_srcdir)/SoGtkBasic.h.in:src/Inventor/Gtk/common/SoGuiBasic.h.in ./config.status
-	@echo "removing $(top_srcdir)/SoGtkBasic.h.in (temporary file)"
-	@rm $(top_srcdir)/SoGtkBasic.h.in
+	@CONFIG_FILES=-:src/Inventor/Gtk/common/SoGuiBasic.h.in \
+	CONFIG_HEADERS= ./config.status | \
+	CONFIG_FILES= CONFIG_HEADERS=$@:- ./config.status
 
 src/Inventor/Gtk/SoGtkRenderArea.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in

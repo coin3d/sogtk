@@ -99,6 +99,11 @@ WIDGET = @WIDGET@
 install_sh = @install_sh@
 sim_ac_conf_cmd = @sim_ac_conf_cmd@
 
+############################################################################
+
+############################################################################
+# Automake conditional stuff
+
 @BUILD_TESTS_TRUE@TESTDIR = @BUILD_TESTS_TRUE@test-code
 @BUILD_TESTS_FALSE@TESTDIR = 
 @BUILD_EXAMPLES_TRUE@EXAMPLEDIR = @BUILD_EXAMPLES_TRUE@examples
@@ -500,9 +505,9 @@ sogtkdefs.h: $(top_srcdir)/sogtkdefs.h.in
 
 src/Inventor/Gtk/SoGtkBasic.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
-	@CONFIG_HEADERS=$@:SoGtkBasic.h.in CONFIG_FILES=$(top_srcdir)/SoGtkBasic.h.in:src/Inventor/Gtk/common/SoGuiBasic.h.in ./config.status
-	@echo "removing $(top_srcdir)/SoGtkBasic.h.in (temporary file)"
-	@rm $(top_srcdir)/SoGtkBasic.h.in
+	@CONFIG_FILES=-:src/Inventor/Gtk/common/SoGuiBasic.h.in \
+	CONFIG_HEADERS= ./config.status | \
+	CONFIG_FILES= CONFIG_HEADERS=$@:- ./config.status
 
 src/Inventor/Gtk/SoGtkRenderArea.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in
