@@ -140,19 +140,21 @@ SoGtkExaminerViewer::constructor(
 //  this->pixmaps.perspective = new QPixmap((const char **)perspective_xpm);
 //  assert(this->poxmaps.orthogonal->size() == this->pixmaps.perspective->size());
 
-//  this->spinDetectTimer = NULL;
-
   this->setClassName("SoGtkExaminerViewer");
 
-  this->addVisibilityChangeCallback(SoGtkExaminerViewer::visibilityCB, this);
+  this->addVisibilityChangeCallback( SoGtkExaminerViewer::visibilityCB, this );
 
-  this->setPopupMenuString("Examiner Viewer");
-  this->setPrefSheetString("Examiner Viewer Preference Sheet");
-  this->setLeftWheelString("Rotx");
-  this->setBottomWheelString("Roty");
+  this->setPopupMenuString( "Examiner Viewer" );
+  this->setPrefSheetString( "Examiner Viewer Preference Sheet" );
 
-  if ( buildNow )
-    this->setBaseWidget( this->buildWidget( this->getParentWidget() ) );
+  this->setLeftWheelString( "Rotx" );
+  this->setBottomWheelString( "Roty" );
+  this->setRightWheelString( "Dolly" );
+
+  if ( buildNow ) {
+    GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
+    this->setBaseWidget( viewer );
+  }
 }
 
 // *************************************************************************
@@ -476,7 +478,6 @@ void
 SoGtkExaminerViewer::setSeekMode( // virtual
   SbBool enable )
 {
-  SoDebugError::postInfo( "SoGtkExaminerViewer::setSeekMode", "[invoked]" );
 #if SOGTK_DEBUG
   if ( enable == this->isSeekMode() ) {
     SoDebugError::postWarning( "SoGtkExaminerViewer::setSeekMode",
