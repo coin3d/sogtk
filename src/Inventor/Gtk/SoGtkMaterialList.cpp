@@ -26,6 +26,8 @@ static const char rcsid[] =
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include <Inventor/SoDB.h>
 #include <Inventor/SoInput.h>
 #include <Inventor/errors/SoDebugError.h>

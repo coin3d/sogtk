@@ -27,6 +27,7 @@ static const char rcsid[] =
 #endif // HAVE_CONFIG_H
 
 #include <stdio.h>
+#include <string.h>
 
 #if SOGTK_DEBUG
 #include <Inventor/errors/SoDebugError.h>
