@@ -22,6 +22,7 @@ static const char rcsid[] =
 
 #include <gdk/gdk.h>
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
 
 // *************************************************************************

@@ -22,6 +22,7 @@
 #include <gtk/gtkmain.h>
 #include <gtk/gtksignal.h>
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/widgets/SoAnyThumbWheel.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 

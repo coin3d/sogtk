@@ -36,7 +36,7 @@ class SoScale;
 
 // *************************************************************************
 
-class SoGtkExaminerViewer : public SoGtkFullViewer {
+class SOGTK_DLL_EXPORT SoGtkExaminerViewer : public SoGtkFullViewer {
   typedef SoGtkFullViewer inherited;
   friend class SoAnyExaminerViewer;
 

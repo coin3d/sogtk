@@ -28,6 +28,7 @@ static const char rcsid[] =
 
 #include <Inventor/errors/SoDebugError.h>
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
 
 // *************************************************************************

@@ -38,7 +38,7 @@ enum glModes {
 
 // *************************************************************************
 
-class SoGtkGLWidget : public SoGtkComponent
+class SOGTK_DLL_EXPORT SoGtkGLWidget : public SoGtkComponent
 {
   typedef SoGtkComponent inherited;
 

@@ -29,7 +29,7 @@ class SoAnyPopupMenu;
 
 // *************************************************************************
 
-class SoGtkFullViewer : public SoGtkViewer {
+class SOGTK_DLL_EXPORT SoGtkFullViewer : public SoGtkViewer {
   typedef SoGtkViewer inherited;
   friend class SoAnyFullViewer;
 

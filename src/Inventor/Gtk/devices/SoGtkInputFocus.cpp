@@ -28,6 +28,7 @@ static const char rcsid[] =
   FIXME: write class doc
 */
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkInputFocus.h>
 
 // *************************************************************************

@@ -26,7 +26,7 @@
 
 // *************************************************************************
 
-class SoGtkPlaneViewer : public SoGtkFullViewer {
+class SOGTK_DLL_EXPORT SoGtkPlaneViewer : public SoGtkFullViewer {
   typedef SoGtkFullViewer inherited;
 
 public:

@@ -30,6 +30,7 @@ static const char rcsid[] =
 
 #include <Inventor/events/SoEvent.h>
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 
 // *************************************************************************

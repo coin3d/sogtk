@@ -33,6 +33,7 @@ static const char rcsid[] =
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/events/SoLocation2Event.h>
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkMouse.h>
 
 

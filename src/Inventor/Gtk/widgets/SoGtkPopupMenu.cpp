@@ -1,4 +1,5 @@
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkBasic.h>
 #include <Inventor/Gtk/widgets/SoGtkPopupMenu.h>
 

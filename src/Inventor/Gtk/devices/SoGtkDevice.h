@@ -30,13 +30,15 @@
 
 #include <Inventor/SbLinear.h>
 
+#include <Inventor/Gtk/SoGtkBasic.h>
+
 class SoEvent;
 
 typedef int sogtkEventMask;
 
 // *************************************************************************
 
-class SoGtkDevice
+class SOGTK_DLL_EXPORT SoGtkDevice
 {
 public:
   typedef void SoGtkEventHandler( GtkWidget *, void *, GdkEvent *, bool * );

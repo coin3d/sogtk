@@ -28,13 +28,15 @@ static const char rcsid[] =
   FIXME: write class doc
 */
 
+#include <assert.h>
+
 #if SOGTK_DEBUG
 #include <Inventor/errors/SoDebugError.h>
 #endif // SOGTK_DEBUG
 #include <Inventor/events/SoKeyboardEvent.h>
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkKeyboard.h>
-#include <assert.h>
 
 /*
 // FIXME: get rid of this before 1.0 release (convert everything to Qt

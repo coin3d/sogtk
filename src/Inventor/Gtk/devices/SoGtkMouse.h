@@ -29,7 +29,7 @@ class SoLocation2Event;
 
 // *************************************************************************
 
-class SoGtkMouse : public SoGtkDevice
+class SOGTK_DLL_EXPORT SoGtkMouse : public SoGtkDevice
 {
   typedef SoGtkDevice inherited;
 

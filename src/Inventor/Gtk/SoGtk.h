@@ -24,16 +24,18 @@
 
 #include <math.h>
 
+#include <gtk/gtk.h>
+
 #include <Inventor/SbBasic.h>
 #include <Inventor/SbLinear.h>
 
-#include <gtk/gtk.h>
+#include <Inventor/Gtk/SoGtkBasic.h>
 
 class SoSensor;
 
 // *************************************************************************
 
-class SoGtk
+class SOGTK_DLL_EXPORT SoGtk
 {
 
 public:

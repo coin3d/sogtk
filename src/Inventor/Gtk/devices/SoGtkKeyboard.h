@@ -35,7 +35,7 @@ class SoKeyboardEvent;
 
 // *************************************************************************
 
-class SoGtkKeyboard : public SoGtkDevice
+class SOGTK_DLL_EXPORT SoGtkKeyboard : public SoGtkDevice
 {
   typedef SoGtkDevice inherited;
 

@@ -36,6 +36,7 @@ static const char rcsid[] =
   PC equipment? wheel mice, joysticks, ....
 */
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkSpaceball.h>
 
 

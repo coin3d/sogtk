@@ -22,11 +22,13 @@
 #ifndef SOGTK_COMPONENT_H
 #define SOGTK_COMPONENT_H
 
+#include <gtk/gtk.h>
+
 #include <Inventor/SbLinear.h>
 #include <Inventor/SbString.h>
 #include <Inventor/SoLists.h>
 
-#include <gtk/gtk.h>
+#include <Inventor/Gtk/SoGtkBasic.h>
 
 class SoGtkComponent;
 
@@ -35,7 +37,7 @@ typedef void SoGtkComponentVisibilityCB( void * userData, SbBool visibleFlag );
 
 // *************************************************************************
 
-class SoGtkComponent
+class SOGTK_DLL_EXPORT SoGtkComponent
 {
 public:
   virtual ~SoGtkComponent(void);

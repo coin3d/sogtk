@@ -26,7 +26,7 @@
 
 // *************************************************************************
 
-class SoGtkSpaceball : public SoGtkDevice
+class SOGTK_DLL_EXPORT SoGtkSpaceball : public SoGtkDevice
 {
   typedef SoGtkDevice inherited;
 

@@ -1,11 +1,12 @@
 #ifndef SOGTK_POPUPMENU_H
 #define SOGTK_POPUPMENU_H
 
+#include <Inventor/Gtk/SoGtkBasic.h>
 #include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
 
 // *************************************************************************
 
-class SoGtkPopupMenu : public SoAnyPopupMenu {
+class SOGTK_DLL_EXPORT SoGtkPopupMenu : public SoAnyPopupMenu {
 public:
   SoGtkPopupMenu(void);
   ~SoGtkPopupMenu(void);

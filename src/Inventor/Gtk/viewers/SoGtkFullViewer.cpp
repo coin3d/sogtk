@@ -31,6 +31,7 @@ static const char rcsid[] =
 #include <Inventor/nodes/SoOrthographicCamera.h>
 #include <Inventor/errors/SoDebugError.h>
 
+#include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtk.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 #include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
