@@ -997,7 +997,7 @@ SoGtkComponent::setComponentCursor(const SoGtkCursor & cursor)
   Set cursor for a native widget in the underlying toolkit.
 */
 void
-SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoQtCursor & cursor)
+SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
 {
   SOGTK_STUB();
 }
