@@ -22,10 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gdk/gdktypes.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -37,14 +33,18 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkKeyboard.h>
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+// *************************************************************************
+
 /*!
   \class SoGtkKeyboard Inventor/Gtk/devices/SoGtkKeyboard.h
   \brief The SoGtkKeyboard class translates GdkEventKey events into
   SoKeyboardEvent events.
   \ingroup sogtkdevices
 */
-
-// *************************************************************************
 
 SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
 
@@ -211,7 +211,11 @@ getKeyForKeyCode(
   case GDK_Pause:          return SoKeyboardEvent::PAUSE;
   case GDK_Scroll_Lock:    return SoKeyboardEvent::SCROLL_LOCK;
   case GDK_Escape:         return SoKeyboardEvent::ESCAPE;
+#ifdef HAVE_SOKEYBOARDEVENT_DELETE
   case GDK_Delete:         return SoKeyboardEvent::DELETE;
+#else
+  case GDK_Delete:         return SoKeyboardEvent::KEY_DELETE;
+#endif
   case GDK_Print:          return SoKeyboardEvent::PRINT;
   case GDK_Insert:         return SoKeyboardEvent::INSERT;
   case GDK_Num_Lock:       return SoKeyboardEvent::NUM_LOCK;
