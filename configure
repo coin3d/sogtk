@@ -12289,7 +12289,7 @@ fi
 # Gettext support
 
 ## Add the languages which your application supports here.
-ALL_LINGUAS="de no"
+ALL_LINGUAS="de" # "no" tmp disabled. 20011209 mortene.
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}ranlib", so it can be a program name with args.
 set dummy ${ac_tool_prefix}ranlib; ac_word=$2

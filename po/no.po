@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-10-19 18:25+0200\n"
+"POT-Creation-Date: 2001-12-09 13:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,27 +14,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: ENCODING\n"
 
-#: src/Inventor/Gtk/SoGtkComponent.cpp:333
+#: src/Inventor/Gtk/SoGtkComponent.cpp:343
 msgid "<unknown>"
 msgstr ""
 
-#: src/Inventor/Gtk/SoGtkComponent.cpp:727
+#: src/Inventor/Gtk/SoGtkComponent.cpp:737
 msgid "SoGtk Component"
 msgstr ""
 
-#: src/Inventor/Gtk/SoGtkComponent.cpp:740
+#: src/Inventor/Gtk/SoGtkComponent.cpp:750
 msgid "Component"
 msgstr ""
 
-#: src/Inventor/Gtk/SoGtkComponent.cpp:822
+#: src/Inventor/Gtk/SoGtkComponent.cpp:832
 msgid "Not Implemented"
 msgstr ""
 
-#: src/Inventor/Gtk/SoGtkComponent.cpp:823
+#: src/Inventor/Gtk/SoGtkComponent.cpp:833
 msgid "The help card system has not been implemented yet."
 msgstr ""
 
-#: src/Inventor/Gtk/SoGtkGLWidget.cpp:158
+#: src/Inventor/Gtk/SoGtkGLWidget.cpp:155
 msgid "OpenGL is not available on your display!"
 msgstr ""
 
@@ -71,16 +71,16 @@ msgstr ""
 msgid "Graph Editor"
 msgstr ""
 
-#: src/Inventor/Gtk/SoGtkMaterialList.cpp:110
+#: src/Inventor/Gtk/SoGtkMaterialList.cpp:111
 msgid "Materials"
 msgstr ""
 
-#: src/Inventor/Gtk/SoGtkMaterialList.cpp:211
+#: src/Inventor/Gtk/SoGtkMaterialList.cpp:212
 msgid "invalid menu item"
 msgstr ""
 
-#: src/Inventor/Gtk/SoGtkMaterialList.cpp:298
-#: src/Inventor/Gtk/SoGtkMaterialList.cpp:306
+#: src/Inventor/Gtk/SoGtkMaterialList.cpp:299
+#: src/Inventor/Gtk/SoGtkMaterialList.cpp:307
 msgid "Material List"
 msgstr ""
 
@@ -290,90 +290,90 @@ msgstr ""
 msgid "interactive"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:127
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:121
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:123
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:117
 msgid "camera"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:186
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:609
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:620
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:182
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:603
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:614
 msgid "Examiner Viewer"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:187
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:183
 msgid "Examiner Viewer Preference Sheet"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:189
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:185
 msgid "Rotx"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:190
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:186
 msgid "Roty"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:191
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:342
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:125
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:229
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:132
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:187
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:337
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:124
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:225
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:131
 msgid "Dolly"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:342
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:184
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:229
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:337
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:180
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:225
 msgid "Zoom"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:452
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:446
 msgid "Enable spin animation"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:462
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:456
 msgid "Show point of rotation axes"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:476
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:470
 msgid "axes size"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:505
+#: src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp:499
 msgid "pixels"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:120
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:228
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:242
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:119
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:227
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:241
 msgid "Fly Viewer"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:121
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:120
 msgid "Fly Viewer Preference Sheet"
+msgstr ""
+
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:122
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:129
+msgid "Tilt"
 msgstr ""
 
 #: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:123
 #: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:130
-msgid "Tilt"
-msgstr ""
-
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:124
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:131
 msgid "Rotate"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:352
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:351
 msgid "Flying speed:"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:355
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:386
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:354
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:385
 msgid "increase"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:358
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:389
+#: src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp:357
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:388
 msgid "decrease"
 msgstr ""
 
@@ -481,51 +481,51 @@ msgstr ""
 msgid "Stereo Viewing can't be set on this machine."
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:106
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:102
 msgid "x"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:111
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:107
 msgid "y"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:116
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:112
 msgid "z"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:179
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:294
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:306
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:175
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:289
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:301
 msgid "Plane Viewer"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:180
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:176
 msgid "Plane Viewer Preference Sheet"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:182
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:178
 msgid "Translate Y"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:183
+#: src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp:179
 msgid "Translate X"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:127
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:210
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:224
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:238
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:126
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:209
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:223
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:237
 msgid "Walk Viewer"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:128
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:127
 msgid "Walk Viewer Preference Sheet"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:334
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:333
 msgid "H"
 msgstr ""
 
-#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:383
+#: src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp:382
 msgid "Walking speed:"
 msgstr ""
