@@ -1,6 +1,8 @@
 TODO
 ====
 
-* [20000117:larsa] consider implementing our own GL widget for GTK+ to avoid
+* [larsa:20000201] change #ifndef/#define/#endif header-wrapper namespace
+
+* [larsa:20000117] consider implementing our own GL widget for GTK+ to avoid
   the somewhat inconvenient extra library dependency for GtkGLArea.
 
