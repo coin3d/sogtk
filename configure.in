@@ -138,7 +138,7 @@ AC_SUBST(SOGTK_EXTRA_LIBS)
 
 if test x"$with_inventor" = xyes; then
 
-  SIM_CHECK_DL([
+  SIM_AC_CHECK_DL([
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_dl_cppflags"
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_dl_ldflags"
     SOGTK_EXTRA_LIBS="$sim_ac_dl_libs $SOGTK_EXTRA_LIBS"
