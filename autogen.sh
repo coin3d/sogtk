@@ -15,14 +15,14 @@ if ! test -f ./autogen.sh; then
   echo "unexpected problem with your shell - bailing out"
   exit 1
 fi
+DIE=false
 
-PROJECT=viewer
+PROJECT=SoGtk
+
+MACRODIR=conf-macros
 
 SUBPROJECTS="$MACRODIR"
 SUBPROJECTNAMES="$MACRODIR"
-
-MACRODIR=conf-macros
-DIE=false
 
 AUTOMAKE_ADD=
 if test "$1" = "--clean"; then

@@ -138,7 +138,7 @@ BUILT_SOURCES = \
 	src/Inventor/Gtk/widgets/SoAnyPopupMenu.cpp
 
 
-EXTRA_DIST = conf-macros/sogtk.m4 conf-macros/modifierlist.m4
+EXTRA_DIST = conf-macros/sogtk.m4
 
 noinst_HEADERS = $(BUILT_SOURCES)
 subdir = .
