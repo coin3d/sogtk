@@ -169,20 +169,20 @@ private:
 
   SbPList * viewerButtons;
 
-  GtkWidget * prefWindow;
-  SbString prefWindowTitle;
+  GtkWidget * prefwindow;
+  SbString prefwindowtitle;
 
-  GtkWidget * zoomSlider;
-  GtkWidget * zoomField, * zoomRangeFrom, * zoomRangeTo;
-  SbVec2f zoomRange;
+  GtkWidget * zoomslider;
+  GtkWidget * zoomfield, * zoomrangefrom, * zoomrangeto;
+  SbVec2f zoomrange;
 
   void setCameraZoom( const float zoom );
   float getCameraZoom(void);
   void setZoomSliderPosition( float zoom );
   void setZoomFieldString( float zoom );
 
-  GtkWidget * seekDistanceWheel;
-  GtkWidget * seekDistanceField;
+  GtkWidget * seekdistancewheel;
+  GtkWidget * seekdistancefield;
 
   GtkWidget * nearClippingLabel, * farClippingLabel;
   GtkWidget * nearClippingWheel, * farClippingWheel;
@@ -202,7 +202,7 @@ private: //  slots:
   void bottomWheelChanged( float value );
   void bottomWheelReleased(void);
 
-/*
+#if 0
   // Button row.
   void interactbuttonToggled(SbBool);
   void viewbuttonToggled(SbBool);
@@ -217,25 +217,50 @@ private: //  slots:
   void selectedPrefs();
 
   // Pref sheet.
+#endif
+  static void preferencesDestroyed(
+    GtkObject           *object, 
+    gpointer            closure);
+
   //  seek settings
-  void seekAnimationTimeChanged(const char *);
-  void seekAnimationTimeChanged(const QString &);
-  void seekDetailToggled(int id);
-  void seekDistanceWheelChanged(float);
-  void seekDistanceEdit();
-  void seekDistanceTypeToggle(int id);
+  static void seekAnimationTimeChanged(
+    GtkEditable     	*editable,
+    gpointer         	closure);
+  static void seekDetailToggled(
+    GtkToggleButton	*button,
+    gpointer		closure );
+  static void seekDistanceWheelChanged(
+    GtkWidget		*wheel,
+    gpointer		closure );
+  static void seekDistanceEdit(
+    GtkEditable     	*editable,
+    gpointer         	closure);
+  static void seekDistanceTypeToggle(
+    GtkToggleButton* button,
+    gpointer		closure );
+
   //  zoom settings
-  void zoomSliderMoved(int val);
-  void zoomFieldChanged();
-  void zoomRangeChanged1();
-  void zoomRangeChanged2();
+  static void zoomSliderMoved(
+    GtkAdjustment *adjustment,
+    gpointer closure);
+  static void zoomFieldChanged(
+    GtkEditable     	*editable,
+    gpointer         	closure);
+  static void zoomRangeChanged1(
+    GtkEditable     	*editable,
+    gpointer         	closure);
+  static void zoomRangeChanged2(
+    GtkEditable     	*editable,
+    gpointer         	closure);
+
+#if 0
   //  clipping settings
   void clippingToggled(SbBool flag);
   void nearclippingwheelMoved(float val);
   void farclippingwheelMoved(float val);
   void nearclipEditPressed();
   void farclipEditPressed();
-*/
+#endif
 
   // Generic slots.
   void increaseInteractiveCount(void);
