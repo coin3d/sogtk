@@ -56,6 +56,8 @@ if $sim_ac_try_msvc; then
   fi
 fi
 
+AM_CONDITIONAL(BUILD_WITH_MSVC, $BUILD_WITH_MSVC)
+
 # **************************************************************************
 # Library versioning
 
