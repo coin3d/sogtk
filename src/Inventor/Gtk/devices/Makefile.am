@@ -23,10 +23,7 @@ libSoGtkDevices_la_SOURCES = \
 	SoGtkSpaceball.cpp \
 	SoGtkSpaceball.h
 
-## Installation information.
-
 libSoGtkdevicesincdir = $(includedir)/Inventor/Gtk/devices
-
 libSoGtkdevicesinc_HEADERS = \
 	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkDevice.h \
 	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkInputFocus.h \
