@@ -53,8 +53,8 @@ static const char rcsid[] =
   used on top of Open Inventor from SGI and TGS.  The API is based on the
   InventorXt API originally from SGI.
 
-  The corresponding documentation for Coin is
-  located at http://www.coin3d.org/coin-docs/
+  The corresponding documentation for Coin is located at
+  http://doc.coin3d.org/Coin/
 */
 
 /*!
