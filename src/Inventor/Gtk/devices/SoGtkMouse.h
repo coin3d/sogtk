@@ -33,16 +33,15 @@ class SOGTK_DLL_EXPORT SoGtkMouse : public SoGtkDevice {
   SOGTK_OBJECT_HEADER(SoGtkMouse, SoGtkDevice);
 
 public:
-  enum SoGtkMouseEventMask {
-    ButtonPressMask         = 0x01,
-    ButtonReleaseMask       = 0x02,
-    PointerMotionMask       = 0x04,
-    ButtonMotionMask        = 0x08,
-
-    SO_GTK_ALL_MOUSE_EVENTS = 0x0f
+  enum Events {
+    BUTTON_PRESS         = 0x01,
+    BUTTON_RELEASE       = 0x02,
+    POINTER_MOTION       = 0x04,
+    BUTTON_MOTION        = 0x08,
+    ALL_EVENTS           = 0x0f
   };
 
-  SoGtkMouse( SoGtkMouseEventMask mask = SO_GTK_ALL_MOUSE_EVENTS );
+  SoGtkMouse( const Events events = SoGtkMouse::ALL_EVENTS );
   virtual ~SoGtkMouse(void);
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
@@ -51,7 +50,7 @@ public:
   virtual const SoEvent * translateEvent( GdkEvent * event );
 
 private:
-  SoGtkMouseEventMask events;
+  Events events;
   SoMouseButtonEvent * buttonevent;
   SoLocation2Event * locationevent;
 

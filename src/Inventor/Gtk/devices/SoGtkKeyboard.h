@@ -34,13 +34,13 @@ class SOGTK_DLL_EXPORT SoGtkKeyboard : public SoGtkDevice {
   SOGTK_OBJECT_HEADER(SoGtkKeyboard, SoGtkDevice);
 
 public:
-  enum SoGtkKeyboardEventMask {
-    KeyPressMask               = 0x01,
-    KeyReleaseMask             = 0x02,
-    SO_GTK_ALL_KEYBOARD_EVENTS = 0x03
+  enum Events {
+    KEY_PRESS   = 0x01,
+    KEY_RELEASE = 0x02,
+    ALL_EVENTS  = 0x03
   };
 
-  SoGtkKeyboard( SoGtkKeyboardEventMask mask = SO_GTK_ALL_KEYBOARD_EVENTS );
+  SoGtkKeyboard( const Events events = SoGtkKeyboard::ALL_EVENTS );
   virtual ~SoGtkKeyboard(void);
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
@@ -49,7 +49,7 @@ public:
   virtual const SoEvent * translateEvent( GdkEvent * event );
 
 private:
-  sogtkEventMask events;
+  Events events;
   SoKeyboardEvent * kbdevent;
 
 }; // class SoGtkKeyboard

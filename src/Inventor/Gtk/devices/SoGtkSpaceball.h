@@ -30,14 +30,14 @@ class SOGTK_DLL_EXPORT SoGtkSpaceball : public SoGtkDevice {
   SOGTK_OBJECT_HEADER(SoGtkSpaceball, SoGtkDevice);
 
 public:
-  enum Mask {
-    MOTION = 0x01,
-    PRESS = 0x02,
-    RELEASE = 0x04,
-    ALL = 0x07
+  enum Events {
+    MOTION          = 0x01,
+    BUTTON_PRESS    = 0x02,
+    BUTTON_RELEASE  = 0x04,
+    ALL_EVENTS      = 0x07
   };
 
-  SoGtkSpaceball( Mask mask = SoGtkSpaceball::ALL );
+  SoGtkSpaceball( const Events events = SoGtkSpaceball::ALL_EVENTS );
   virtual ~SoGtkSpaceball(void);
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
@@ -56,9 +56,9 @@ public:
   SbBool isFocusToWindow(void) const;
 
 private:
+  Events events;
   float rotationscale, translationscale;
   SbBool focustowindow;
-  Mask mask;
 
 }; // class SoGtkSpaceball
 

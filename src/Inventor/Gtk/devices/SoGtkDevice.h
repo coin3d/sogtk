@@ -34,8 +34,6 @@
 
 class SoEvent;
 
-typedef int sogtkEventMask;
-
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkDevice : public SoGtkObject {

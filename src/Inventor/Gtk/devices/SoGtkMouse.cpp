@@ -57,23 +57,23 @@ SOGTK_OBJECT_SOURCE(SoGtkMouse);
   FIXME: write documentation for enum
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::ButtonPressMask
+  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::BUTTON_PRESS
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::ButtonReleaseMask
+  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::BUTTON_RELEASE
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::PointerMotionMask
+  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::POINTER_MOTION
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::ButtonMotionMask
+  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::BUTTON_MOTION
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::SO_GTK_ALL_MOUSE_EVENTS
+  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::ALL_EVENTS
   FIXME: write documentation for enum definition
 */
 
@@ -84,9 +84,9 @@ SOGTK_OBJECT_SOURCE(SoGtkMouse);
 */
 
 SoGtkMouse::SoGtkMouse(
-  SoGtkMouseEventMask eventmask )
+  const Events events )
 {
-  this->events = eventmask;
+  this->events = events;
   this->buttonevent = new SoMouseButtonEvent;
   this->locationevent = new SoLocation2Event;
 } // SoGtkMouse()
@@ -182,7 +182,7 @@ SoGtkMouse::translateEvent(
   case GDK_BUTTON_RELEASE:
     do {
       GdkEventButton * event = (GdkEventButton *) ev;
-      this->buttonevent->setState( SoButtonEvent::UP);
+      this->buttonevent->setState( SoButtonEvent::UP );
       this->buttonevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
       this->buttonevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
       this->buttonevent->setAltDown( (event->state & GDK_MOD1_MASK) ? TRUE : FALSE );

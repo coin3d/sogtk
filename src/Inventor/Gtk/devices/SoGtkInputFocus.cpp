@@ -46,9 +46,9 @@ SOGTK_OBJECT_SOURCE(SoGtkInputFocus);
 */
 
 SoGtkInputFocus::SoGtkInputFocus(
-  sogtkEventMask mask )
+  const Events events )
 {
-  this->mask = mask;
+  this->events = events;
 } // SoGtkInputFocus()
 
 // *************************************************************************

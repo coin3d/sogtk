@@ -58,15 +58,15 @@ SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkSpaceball::Mask SoGtkSpaceball::PRESS
+  \var SoGtkSpaceball::Mask SoGtkSpaceball::BUTTON_PRESS
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkSpaceball::Mask SoGtkSpaceball::RELEASE
+  \var SoGtkSpaceball::Mask SoGtkSpaceball::BUTTON_RELEASE
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkSpaceball::Mask SoGtkSpaceball::ALL
+  \var SoGtkSpaceball::Mask SoGtkSpaceball::ALL_EVENTS
   FIXME: write documentation for enum definition
 */
 
@@ -76,11 +76,12 @@ SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
   Constructor.
 */
 
-SoGtkSpaceball::SoGtkSpaceball(SoGtkSpaceball::Mask mask)
+SoGtkSpaceball::SoGtkSpaceball(
+  const Events events )
 {
-  this->mask = mask;
-  this->rotationscale = .006f;
-  this->translationscale = .006f;
+  this->events = events;
+  this->rotationscale = 0.006f;
+  this->translationscale = 0.006f;
   this->focustowindow = FALSE;
 }
 
@@ -184,3 +185,4 @@ SoGtkSpaceball::isFocusToWindow(void) const
 {
   return this->focustowindow;
 }
+

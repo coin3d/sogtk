@@ -24,18 +24,19 @@
 
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 
-#define sogtkEnterWindowMask 0x01
-#define sogtkLeaveWindowMask 0x02
-
-#define SO_GTK_ALL_FOCUS_EVENTS (sogtkEnterWindowMask | sogtkLeaveWindowMask)
-
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkInputFocus : public SoGtkDevice {
   SOGTK_OBJECT_HEADER(SoGtkInputFocus, SoGtkDevice);
 
 public:
-  SoGtkInputFocus( sogtkEventMask mask = SO_GTK_ALL_FOCUS_EVENTS );
+  enum Events {
+    ENTER_WINDOW = 0x01,
+    LEAVE_WINDOW = 0x02,
+    ALL_EVENTS   = 0x03
+  };
+
+  SoGtkInputFocus( const Events events = SoGtkInputFocus::ALL_EVENTS );
   virtual ~SoGtkInputFocus(void);
 
   virtual void enable( GtkWidget * w, SoGtkEventHandler * func, void * data );
@@ -44,7 +45,7 @@ public:
   virtual const SoEvent * translateEvent( GdkEvent * event );
 
 private:
-  sogtkEventMask mask;
+  Events events;
 
 }; // class SoGtkInputFocus
 

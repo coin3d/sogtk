@@ -51,9 +51,9 @@ SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
 */
 
 SoGtkKeyboard::SoGtkKeyboard(
-  SoGtkKeyboardEventMask mask )
+  const Events events )
 {
-  this->events = mask;
+  this->events = events;
   this->kbdevent = new SoKeyboardEvent;
 } // SoGtkKeyboard()
 
@@ -246,7 +246,7 @@ SoGtkKeyboard::translateEvent( // virtual
 {
   switch ( ev->type ) {
   case GDK_KEY_PRESS:
-    if ( this->events & KeyPressMask ) {
+    if ( this->events & KEY_PRESS ) {
       const GdkEventKey * const event = (GdkEventKey *) ev;
       SbTime stamp;
       stamp.setMsecValue( event->time );
@@ -263,7 +263,7 @@ SoGtkKeyboard::translateEvent( // virtual
     break;
 
   case GDK_KEY_RELEASE:
-    if ( this->events & KeyReleaseMask ) {
+    if ( this->events & KEY_RELEASE ) {
       const GdkEventKey * const event = (GdkEventKey *) ev;
       SbTime stamp;
       stamp.setMsecValue( event->time );
