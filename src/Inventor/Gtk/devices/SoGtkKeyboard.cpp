@@ -36,6 +36,7 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkKeyboard.h>
+#include <Inventor/Gtk/devices/SoGtkInputFocus.h>
 
 // *************************************************************************
 
@@ -111,6 +112,9 @@ EnterHandler(GtkWidget *widget,
              GdkEventCrossing *event,
              gpointer user_data)
 {
+  // Compell CAN_FOCUS on the (gtkglarea) widget. G.Barrand.
+  if (!GTK_WIDGET_CAN_FOCUS(widget)) 
+    GTK_OBJECT_SET_FLAGS(widget,GTK_CAN_FOCUS);
   if (!GTK_WIDGET_HAS_FOCUS(widget))
     gtk_widget_grab_focus(widget);
   return FALSE;
@@ -141,6 +145,14 @@ SoGtkKeyboard::enable(
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_RELEASE_MASK);
     }
   }
+  // When entering the window, we want to have
+  // the keyboard focus. G.Barrand.
+  if (this->eventmask & SoGtkInputFocus::ENTER_WINDOW)
+    {
+      gtk_signal_connect(GTK_OBJECT(widget), "enter_notify_event",
+			 GTK_SIGNAL_FUNC(EnterHandler), closure);
+      gtk_widget_add_events(GTK_WIDGET(widget),GDK_ENTER_NOTIFY_MASK);
+    }
 } // enable()
 
 /*!
