@@ -989,7 +989,7 @@ SoGtkComponent::isFullScreen(void) const
   Sets the cursor for this component.
 */
 void 
-SoGtkComponent::setCursor(const SoGtkCursor & cursor)
+SoGtkComponent::setComponentCursor(const SoGtkCursor & cursor)
 {
   PRIVATE(this)->cursor = cursor;
   SOGTK_STUB();
@@ -999,7 +999,7 @@ SoGtkComponent::setCursor(const SoGtkCursor & cursor)
   Returns the current cursor for this component.
 */
 const SoGtkCursor &
-SoGtkComponent::getCursor(void) const
+SoGtkComponent::getComponentCursor(void) const
 {
   return PRIVATE(this)->cursor;
 }
