@@ -51,7 +51,7 @@ protected:
   SoGtkGraphEditor( GtkWidget * const parent, const char * const name,
     const SbBool embed, const int parts, const SbBool build );
 
-  virtual GtkWidget * buildWidget( GtkWidget * parent );
+  GtkWidget * buildWidget( GtkWidget * parent );
   virtual GtkWidget * buildMenuBarWidget( GtkWidget * parent );
   virtual GtkWidget * buildGraphEditorWidget( GtkWidget * parent );
   virtual GtkWidget * buildStatusBarWidget( GtkWidget * parent );
