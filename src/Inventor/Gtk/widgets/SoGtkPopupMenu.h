@@ -63,9 +63,14 @@ protected:
   MenuRecord * createMenuRecord( char * name );
   ItemRecord * createItemRecord( char * name );
 
+  void traverseBuild( GtkWidget * parent, MenuRecord * menu, int indent );
+  GtkWidget * build( GtkWidget * parent );
+
 private:
   SbPList * menus;
   SbPList * items;
+  GtkWidget * popup;
+  SbBool dirty;
 
 }; // class SoGtkPopupMenu
 

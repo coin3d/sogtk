@@ -33,18 +33,22 @@ static const char rcsid[] =
 
 struct MenuRecord {
   int menuid;
+  int pos;
   char * name;
   char * title;
-//  QPopupMenu * menu;
-//  QPopupMenu * parent;
+  GtkWidget * item;
+  GtkWidget * menu;
+  MenuRecord * parent;
 }; // struct MenuRecord
 
 struct ItemRecord {
   int itemid;
   int flags;
+  int pos;
   char * name;
   char * title;
-//  QPopupMenu * parent;
+  GtkWidget * item;
+  MenuRecord * parent;
 }; // struct ItemRecord
 
 #define ITEM_MARKED       0x0001
@@ -62,6 +66,8 @@ SoGtkPopupMenu::SoGtkPopupMenu(
 {
   this->items = new SbPList;
   this->menus = new SbPList;
+  this->dirty = TRUE;
+  this->popup = (GtkWidget *) NULL;
 } // SoGtkPopupMenu()
 
 /*!
@@ -75,12 +81,16 @@ SoGtkPopupMenu::~SoGtkPopupMenu(
   const int numitems = this->items->getLength();
   for ( i = 0; i < numitems; i++ ) {
     ItemRecord * rec = (ItemRecord *) (*this->items)[i];
+    delete [] rec->name;
+    delete [] rec->title;
     delete rec;
   }
   delete this->items;
   const int nummenus = this->menus->getLength();
   for ( i = 0; i < nummenus; i++ ) {
     MenuRecord * rec = (MenuRecord *) (*this->menus)[i];
+    delete [] rec->name;
+    delete [] rec->title;
     delete rec;
   }
   delete this->menus;
@@ -277,7 +287,7 @@ SoGtkPopupMenu::SetMenuItemMarked(
   int itemid,
   SbBool marked )
 {
-  SOGTK_STUB();
+  //SOGTK_STUB();
 } // SetMenuItemMarked()
 
 /*!
@@ -311,14 +321,40 @@ SoGtkPopupMenu::AddMenu(
 #endif // SOGTK_DEBUG
     return;
   }
-/*
-  if ( pos == -1 )
-    super->menu->insertItem( QString( sub->title ), sub->menu, sub->menuid );
-  else
-    super->menu->insertItem( QString( sub->title ),
-                             sub->menu, sub->menuid, pos );
-  sub->parent = super->menu;
-*/
+  if ( pos == -1 ) {
+    int max = 0;
+    int i;
+    const int numItems = this->items->getLength();
+    for ( i = 0; i < numItems; i++ ) {
+      ItemRecord * rec = (ItemRecord *) (*this->items)[i];
+      if ( rec->parent == super && rec->pos >= max )
+        max = rec->pos + 1;
+    }
+    const int numMenus = this->menus->getLength();
+    for ( i = 0; i < numMenus; i++ ) {
+      MenuRecord * rec = (MenuRecord *) (*this->menus)[i];
+      if ( rec->parent == super && rec->pos >= max )
+        max = rec->pos + 1;
+    }
+    sub->pos = max;
+    sub->parent = super;
+  } else {
+    int i;
+    const int numItems = this->items->getLength();
+    for ( i = 0; i < numItems; i++ ) {
+      ItemRecord * rec = (ItemRecord *) (*this->items)[i];
+      if ( rec->parent == super && rec->pos >= pos )
+        rec->pos = rec->pos + 1;
+    }
+    const int numMenus = this->menus->getLength();
+    for ( i = 0; i < numMenus; i++ ) {
+      MenuRecord * rec = (MenuRecord *) (*this->menus)[i];
+      if ( rec->parent == super && rec->pos >= pos )
+        rec->pos = rec->pos + 1;
+    }
+    sub->pos = pos;
+    sub->parent = super;
+  }
 } // AddMenu()
 
 /*!
@@ -339,15 +375,40 @@ SoGtkPopupMenu::AddMenuItem(
 #endif // SOGTK_DEBUG
     return;
   }
-/*
-  if ( pos == -1 )
-    menu->menu->insertItem( QString( item->title ), item->itemid );
-  else
-    menu->menu->insertItem( QString( item->title ), item->itemid, pos );
-  item->parent = menu->menu;
-  if ( item->flags & ITEM_MARKED )
-    item->parent->setItemChecked( item->itemid, true );
-*/
+  if ( pos == -1 ) {
+    int max = 0;
+    int i;
+    const int numItems = this->items->getLength();
+    for ( i = 0; i < numItems; i++ ) {
+      ItemRecord * rec = (ItemRecord *) (*this->items)[i];
+      if ( rec->parent == menu && rec->pos >= max )
+        max = rec->pos + 1;
+    }
+    const int numMenus = this->menus->getLength();
+    for ( i = 0; i < numMenus; i++ ) {
+      MenuRecord * rec = (MenuRecord *) (*this->menus)[i];
+      if ( rec->parent == menu && rec->pos >= max )
+        max = rec->pos + 1;
+    }
+    item->pos = max;
+    item->parent = menu;
+  } else {
+    int i;
+    const int numItems = this->items->getLength();
+    for ( i = 0; i < numItems; i++ ) {
+      ItemRecord * rec = (ItemRecord *) (*this->items)[i];
+      if ( rec->parent == menu && rec->pos >= pos )
+        rec->pos = rec->pos + 1;
+    }
+    const int numMenus = this->menus->getLength();
+    for ( i = 0; i < numMenus; i++ ) {
+      MenuRecord * rec = (MenuRecord *) (*this->menus)[i];
+      if ( rec->parent == menu && rec->pos >= pos )
+        rec->pos = rec->pos + 1;
+    }
+    item->pos = pos;
+    item->parent = menu;
+  }
 } // AddMenuItem()
 
 /*!
@@ -366,12 +427,43 @@ SoGtkPopupMenu::AddSeparator(
 #endif // SOGTK_DEBUG
     return;
   }
-  ItemRecord * rec = createItemRecord( "separator" );
-/*
-  menu->menu->insertSeparator( pos );
-*/
-  rec->flags |= ITEM_SEPARATOR;
-  this->items->append( rec );
+  ItemRecord * sep = createItemRecord( "separator" );
+  sep->flags |= ITEM_SEPARATOR;
+  if ( pos == -1 ) {
+    int max = 0;
+    int i;
+    const int numItems = this->items->getLength();
+    for ( i = 0; i < numItems; i++ ) {
+      ItemRecord * rec = (ItemRecord *) (*this->items)[i];
+      if ( rec->parent == menu && rec->pos >= max )
+        max = rec->pos + 1;
+    }
+    const int numMenus = this->menus->getLength();
+    for ( i = 0; i < numMenus; i++ ) {
+      MenuRecord * rec = (MenuRecord *) (*this->menus)[i];
+      if ( rec->parent == menu && rec->pos >= max )
+        max = rec->pos + 1;
+    }
+    sep->pos = max;
+    sep->parent = menu;
+  } else {
+    int i;
+    const int numItems = this->items->getLength();
+    for ( i = 0; i < numItems; i++ ) {
+      ItemRecord * rec = (ItemRecord *) (*this->items)[i];
+      if ( rec->parent == menu && rec->pos >= pos )
+        rec->pos = rec->pos + 1;
+    }
+    const int numMenus = this->menus->getLength();
+    for ( i = 0; i < numMenus; i++ ) {
+      MenuRecord * rec = (MenuRecord *) (*this->menus)[i];
+      if ( rec->parent == menu && rec->pos >= pos )
+        rec->pos = rec->pos + 1;
+    }
+    sep->pos = pos;
+    sep->parent = menu;
+  }
+  this->items->append( sep );
 } // AddSeparator()
 
 /*!
@@ -443,11 +535,101 @@ SoGtkPopupMenu::PopUp(
   int x,
   int y )
 {
-  MenuRecord * rec = this->getMenuRecord( 0 );
-/*
-  rec->menu->popup( x, y );
-*/
+  MenuRecord * root = this->getMenuRecord( 0 );
+  if ( ! root ) {
+#if SOGTK_DEBUG
+    SoDebugError::postInfo( "SoGtkPopupMenu::PopUp", "no root menu" );
+#endif // SOGTK_DEBUG
+    return;
+  }
+
+  if ( this->dirty ) {
+    if ( this->popup != (GtkWidget *) NULL ) {
+      // destroy existing menu
+    }
+    this->popup = this->build( inside );
+  }
+  this->dirty = FALSE;
+  gtk_menu_popup( GTK_MENU(this->popup), NULL, NULL, NULL, NULL, 2, 0 );
 } // PopUp()
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkPopupMenu::traverseBuild(
+  GtkWidget * parent,
+  MenuRecord * menu,
+  int indent )
+{
+  char pre[24];
+  int i, j;
+  for ( i = 0; i < indent; i++ ) pre[i] = ' ';
+  pre[i] = '\0';
+  j = 0;
+  MenuRecord * sub;
+  ItemRecord * item;
+  do {
+    sub = (MenuRecord *) NULL;
+    item = (ItemRecord *) NULL;
+    const int numMenus = this->menus->getLength();
+    for ( i = 0; i < numMenus; i++ ) {
+      sub = (MenuRecord *) (*this->menus)[i];
+      if ( sub->pos == j && sub->parent == menu ) {
+//        fprintf( stderr, "%s%s {\n", pre, sub->name );
+        assert( menu->title != NULL );
+        menu->item = GTK_WIDGET(gtk_menu_item_new_with_label( sub->title ));
+        gtk_container_add( GTK_CONTAINER(parent), GTK_WIDGET(menu->item) );
+        gtk_widget_show( GTK_WIDGET(menu->item) );
+        GtkWidget * submenu = GTK_WIDGET(gtk_menu_new());
+        this->traverseBuild( submenu, sub, indent + 2 );
+        gtk_menu_item_set_submenu( GTK_MENU_ITEM(menu->item), GTK_WIDGET(submenu) );
+//        fprintf( stderr, "%s}\n", pre );
+        break;
+      } else {
+        sub = (MenuRecord *) NULL;
+      }
+    }
+    if ( sub == NULL ) {
+      const int numItems = this->items->getLength();
+      for ( i = 0; i < numItems; i++ ) {
+        item = (ItemRecord *) (*this->items)[i];
+        if ( item->pos == j && item->parent == menu ) {
+//          fprintf( stderr, "%s%s\n", pre, item->name );
+          if ( item->flags & ITEM_SEPARATOR ) {
+            item->item = GTK_WIDGET(gtk_menu_item_new_with_label( "----------" ));
+          } else {
+            item->item = GTK_WIDGET(gtk_menu_item_new_with_label( item->title ));
+          }
+          gtk_container_add( GTK_CONTAINER(parent), GTK_WIDGET(item->item) );
+          gtk_widget_show( GTK_WIDGET(item->item) );
+          break;
+        } else {
+          item = (ItemRecord *) NULL;
+        }
+      }
+    }
+    j++;
+  } while ( sub != NULL || item != NULL );
+} // traverseBuild()
+
+/*!
+*/
+
+GtkWidget *
+SoGtkPopupMenu::build(
+  GtkWidget * )
+{
+  MenuRecord * root = this->getMenuRecord( 0 );
+  assert( root != NULL );
+  GtkWidget * popup = GTK_WIDGET(gtk_menu_new());
+//  fprintf( stderr, "%s {\n", root->name );
+  this->traverseBuild( popup, root, 2 );
+//  fprintf( stderr, "}\n" );
+  return popup;
+} // build()
 
 // *************************************************************************
 
@@ -492,9 +674,12 @@ SoGtkPopupMenu::createMenuRecord(
 {
   MenuRecord * rec = new MenuRecord;
   rec->menuid = -1;
+  rec->pos = -1;
   rec->name = strcpy( new char [strlen(name)+1], name );
   rec->title = strcpy( new char [strlen(name)+1], name );
-//  rec->parent = NULL;
+  rec->menu = NULL;
+  rec->item = NULL;
+  rec->parent = NULL;
   return rec;
 } // createMenuRecord()
 
@@ -508,9 +693,11 @@ SoGtkPopupMenu::createItemRecord(
   ItemRecord * rec = new ItemRecord;
   rec->itemid = -1;
   rec->flags = 0;
+  rec->pos = -1;
   rec->name = strcpy( new char [strlen(name)+1], name );
   rec->title = strcpy( new char [strlen(name)+1], name );
-//  rec->parent = NULL;
+  rec->item = NULL;
+  rec->parent = NULL;
   return rec;
 } // createItemRecord()
 
