@@ -1,28 +1,63 @@
 
-noinst_LTLIBRARIES = libSoGtkViewers.la
-
+INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 LIBS = 
 
-INCLUDES = -I$(top_srcdir)/src
+noinst_LTLIBRARIES = libSoGtkViewers.la
 
 libSoGtkViewers_la_SOURCES = \
-	SoGtkViewer.cpp \
-	SoGtkViewer.h \
+	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
+	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
+	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp \
+	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.h \
+	SoGtkViewerExtra.cpp \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
+	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp \
+	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.h \
 	SoGtkExaminerViewer.cpp \
 	SoGtkExaminerViewer.h
+#	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp \
+#	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.h \
 #	SoGtkPlaneViewer.cpp \
 #	SoGtkPlaneViewer.h
 
 libSoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
 
 libSoGtkViewersinc_HEADERS = \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
+	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
 	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
 	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
 #	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
 
+############################################################################
+
+SoGtkViewer.h: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyViewer.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.h )
+
+SoGtkViewer.cpp: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyViewer.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.cpp )
+
+############################################################################
+
+SoAnyFullViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp
+	source='$^' object='$@' libtool=yes \
+	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
+	$(CXXDEPMODE) $(depcomp) \
+	$(LTCXXCOMPILE) -c -o $@ $^
+
+SoAnyExaminerViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp
+	source='$^' object='$@' libtool=yes \
+	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
+	$(CXXDEPMODE) $(depcomp) \
+	$(LTCXXCOMPILE) -c -o $@ $^
+
+SoAnyPlaneViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp
+	source='$^' object='$@' libtool=yes \
+	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
+	$(CXXDEPMODE) $(depcomp) \
+	$(LTCXXCOMPILE) -c -o $@ $^
+
+############################################################################
 ## FIXME: this is a temporary workaround for a bug in Automake. The
 ## bug is fixed in the latest Automake CVS, but not in any "official"
 ## release (?). Last checked with Automake 1.4a. 19990912 mortene.

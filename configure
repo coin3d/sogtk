@@ -4223,15 +4223,16 @@ GUI=Gtk
 lGUI=gtk
 uGUI=GTK
 WIDGET="GtkWidget *"
-
+WINWIDGET="GtkWidget *"
+EVENT="GdkEvent *"
+COMPONENTHEADER=""
 
 
 
 
 
 # Pass to examples/configure
-#export GUI lGUI uGUI WIDGET EVENT COMPONENTHEADER
-export GUI lGUI uGUI WIDGET
+export GUI lGUI uGUI WIDGET EVENT COMPONENTHEADER
 
 # Pass to examples/configure
 HAVE_RENDERAREA=true
@@ -4239,7 +4240,8 @@ HAVE_EXAMINERVIEWER=true
 HAVE_PLANEVIEWER=false
 HAVE_WALKVIEWER=false
 HAVE_FLYVIEWER=false
-export HAVE_RENDERAREA HAVE_EXAMINERVIEWER HAVE_PLANEVIEWER HAVE_WALKVIEWER HAVE_FLYVIEWER
+export HAVE_RENDERAREA HAVE_EXAMINERVIEWER HAVE_PLANEVIEWER \
+       HAVE_WALKVIEWER HAVE_FLYVIEWER
 
 
 
@@ -4250,7 +4252,6 @@ EXTRA_LIBS=$SOGTK_EXTRA_LIBS
 export EXTRA_CPPFLAGS EXTRA_LDFLAGS EXTRA_LIBS
 
 subdirs="examples"
-
 
 
 
@@ -4342,9 +4343,9 @@ cat >$CONFIG_STATUS <<EOF
 # Files that config.status was made for.
 config_files="\\
     sogtk-config Makefile src/Inventor/Gtk/Makefile
-    src/Inventor/Gtk/common/Makefile src/Inventor/Gtk/devices/Makefile
-    src/Inventor/Gtk/viewers/Makefile src/Inventor/Gtk/widgets/Makefile
-    test-code/Makefile test-code/widgets/Makefile"
+    src/Inventor/Gtk/devices/Makefile src/Inventor/Gtk/viewers/Makefile
+    src/Inventor/Gtk/widgets/Makefile test-code/Makefile
+    test-code/widgets/Makefile"
 config_headers="\\
     config.h"
 
@@ -4391,7 +4392,6 @@ do
   'sogtk-config' ) CONFIG_FILES="\$CONFIG_FILES sogtk-config" ;;
   'Makefile' ) CONFIG_FILES="\$CONFIG_FILES Makefile" ;;
   'src/Inventor/Gtk/Makefile' ) CONFIG_FILES="\$CONFIG_FILES src/Inventor/Gtk/Makefile" ;;
-  'src/Inventor/Gtk/common/Makefile' ) CONFIG_FILES="\$CONFIG_FILES src/Inventor/Gtk/common/Makefile" ;;
   'src/Inventor/Gtk/devices/Makefile' ) CONFIG_FILES="\$CONFIG_FILES src/Inventor/Gtk/devices/Makefile" ;;
   'src/Inventor/Gtk/viewers/Makefile' ) CONFIG_FILES="\$CONFIG_FILES src/Inventor/Gtk/viewers/Makefile" ;;
   'src/Inventor/Gtk/widgets/Makefile' ) CONFIG_FILES="\$CONFIG_FILES src/Inventor/Gtk/widgets/Makefile" ;;
@@ -4522,6 +4522,9 @@ s%@GUI@%$GUI%;t t
 s%@lGUI@%$lGUI%;t t
 s%@uGUI@%$uGUI%;t t
 s%@WIDGET@%$WIDGET%;t t
+s%@WINWIDGET@%$WINWIDGET%;t t
+s%@EVENT@%$EVENT%;t t
+s%@COMPONENTHEADER@%$COMPONENTHEADER%;t t
 s%@subdirs@%$subdirs%;t t
 CEOF
 
@@ -4942,5 +4945,7 @@ if test "$no_recursion" != yes; then
 fi
 
 
+echo ""
 echo "Now, run 'make install' to build and install SoGtk."
+echo ""
 

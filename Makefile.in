@@ -66,6 +66,7 @@ AMTAR = @AMTAR@
 AS = @AS@
 AWK = @AWK@
 CC = @CC@
+COMPONENTHEADER = @COMPONENTHEADER@
 CPP = @CPP@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
@@ -106,6 +107,15 @@ sim_ac_conf_cmd = @sim_ac_conf_cmd@
 @BUILD_EXAMPLES_FALSE@EXAMPLEDIR = 
 
 SUBDIRS = src/Inventor/Gtk $(TESTDIR) $(EXAMPLEDIR)
+
+BUILT_SOURCES = \
+	src/Inventor/Gtk/SoGtkRenderArea.h \
+	src/Inventor/Gtk/SoGtkRenderArea.cpp \
+	src/Inventor/Gtk/viewers/SoGtkViewer.h \
+	src/Inventor/Gtk/viewers/SoGtkViewer.cpp
+
+
+EXTRA_DIST = conf-macros/sogtk.m4 conf-macros/modifierlist.m4
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -317,6 +327,7 @@ dist-all: distdir
 distdir: $(DISTFILES)
 	-chmod -R a+w $(distdir) > /dev/null 2>&1; rm -rf $(distdir)
 	mkdir $(distdir)
+	$(mkinstalldirs) $(distdir)/conf-macros
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
@@ -376,6 +387,7 @@ distclean-generic:
 
 maintainer-clean-generic:
 	-rm -f Makefile.in
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-hdr mostlyclean-tags mostlyclean-generic
 
 mostlyclean: mostlyclean-recursive
@@ -413,6 +425,26 @@ installdirs-am installdirs mostlyclean-generic distclean-generic \
 clean-generic maintainer-clean-generic clean mostlyclean distclean \
 maintainer-clean
 
+
+############################################################################
+
+src/Inventor/Gtk/SoGtkRenderArea.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyRenderArea.h.in
+	@CONFIG_HEADERS= CONFIG_FILES=$@:src/Inventor/Gtk/common/SoAnyRenderArea.h.in ./config.status
+
+src/Inventor/Gtk/SoGtkRenderArea.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyRenderArea.cpp.in
+	@CONFIG_HEADERS= CONFIG_FILES=$@:src/Inventor/Gtk/common/SoAnyRenderArea.cpp.in ./config.status
+
+src/Inventor/Gtk/viewers/SoGtkViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyViewer.h.in
+	@CONFIG_HEADERS= CONFIG_FILES=$@:src/Inventor/Gtk/common/SoAnyViewer.h.in ./config.status
+
+src/Inventor/Gtk/viewers/SoGtkViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyViewer.cpp.in
+	@CONFIG_HEADERS= CONFIG_FILES=$@:src/Inventor/Gtk/common/SoAnyViewer.cpp.in ./config.status
+
+############################################################################
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

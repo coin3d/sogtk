@@ -66,6 +66,7 @@ AMTAR = @AMTAR@
 AS = @AS@
 AWK = @AWK@
 CC = @CC@
+COMPONENTHEADER = @COMPONENTHEADER@
 CPP = @CPP@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
@@ -101,9 +102,9 @@ install_sh = @install_sh@
 sim_ac_conf_cmd = @sim_ac_conf_cmd@
 
 
-SUBDIRS = common devices widgets viewers
+SUBDIRS = devices viewers widgets
 
-INCLUDES = -I$(top_srcdir)/src
+INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 
 lib_LTLIBRARIES = libSoGtk.la
 
@@ -114,12 +115,12 @@ libSoGtk_la_SOURCES = \
 	SoGtkComponent.h \
 	SoGtkGLWidget.cpp \
 	SoGtkGLWidget.h \
-	SoGtkRenderArea.cpp \
-	SoGtkRenderArea.h
+	$(top_builddir)/src/Inventor/Gtk/SoGtkRenderArea.cpp \
+	$(top_builddir)/src/Inventor/Gtk/SoGtkRenderArea.h \
+	SoGtkRenderAreaExtra.cpp
 
 
 libSoGtk_la_LIBADD = \
-        common/libSoCommon.la \
         devices/libSoGtkDevices.la \
 	viewers/libSoGtkViewers.la \
         widgets/libSoGtkWidgets.la
@@ -140,11 +141,10 @@ X_LIBS = @X_LIBS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtk_la_LDFLAGS = 
-libSoGtk_la_DEPENDENCIES =  common/libSoCommon.la \
-devices/libSoGtkDevices.la viewers/libSoGtkViewers.la \
-widgets/libSoGtkWidgets.la
+libSoGtk_la_DEPENDENCIES =  devices/libSoGtkDevices.la \
+viewers/libSoGtkViewers.la widgets/libSoGtkWidgets.la
 am_libSoGtk_la_OBJECTS =  SoGtk.lo SoGtkComponent.lo SoGtkGLWidget.lo \
-SoGtkRenderArea.lo
+SoGtkRenderArea.lo SoGtkRenderAreaExtra.lo
 libSoGtk_la_OBJECTS =  $(am_libSoGtk_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -165,7 +165,8 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 GZIP_ENV = --best
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/SoGtk.Plo $(DEPDIR)/SoGtkComponent.Plo \
-$(DEPDIR)/SoGtkGLWidget.Plo $(DEPDIR)/SoGtkRenderArea.Plo
+$(DEPDIR)/SoGtkGLWidget.Plo $(DEPDIR)/SoGtkRenderArea.Plo \
+$(DEPDIR)/SoGtkRenderAreaExtra.Plo
 SOURCES = $(libSoGtk_la_SOURCES)
 OBJECTS = $(am_libSoGtk_la_OBJECTS)
 
@@ -225,6 +226,7 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
+SoGtkRenderArea.lo: $(top_builddir)/src/Inventor/Gtk/SoGtkRenderArea.cpp
 
 libSoGtk.la: $(libSoGtk_la_OBJECTS) $(libSoGtk_la_DEPENDENCIES)
 	$(CXXLINK) -rpath $(libdir) $(libSoGtk_la_LDFLAGS) $(libSoGtk_la_OBJECTS) $(libSoGtk_la_LIBADD) $(LIBS)
@@ -347,6 +349,7 @@ distdir: $(DISTFILES)
 @AMDEP@include $(DEPDIR)/SoGtkComponent.Plo
 @AMDEP@include $(DEPDIR)/SoGtkGLWidget.Plo
 @AMDEP@include $(DEPDIR)/SoGtkRenderArea.Plo
+@AMDEP@include $(DEPDIR)/SoGtkRenderAreaExtra.Plo
 
 mostlyclean-depend:
 
@@ -456,6 +459,16 @@ all-redirect all-am all install-strip installdirs-am installdirs \
 mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
+
+############################################################################
+
+SoGtkRenderArea.h: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyRenderArea.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkRenderArea.h )
+
+SoGtkRenderArea.cpp: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyRenderArea.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkRenderArea.cpp )
+
+############################################################################
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

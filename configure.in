@@ -257,15 +257,16 @@ GUI=Gtk
 lGUI=gtk
 uGUI=GTK
 WIDGET="GtkWidget *"
+WINWIDGET="GtkWidget *"
+EVENT="GdkEvent *"
+COMPONENTHEADER=""
 
-AC_SUBST(GUI)
-AC_SUBST(lGUI)
-AC_SUBST(uGUI)
-AC_SUBST(WIDGET)
+AC_SUBST(GUI)AC_SUBST(lGUI)AC_SUBST(uGUI)
+AC_SUBST(WIDGET)AC_SUBST(WINWIDGET)AC_SUBST(EVENT)
+AC_SUBST(COMPONENTHEADER)
 
 # Pass to examples/configure
-#export GUI lGUI uGUI WIDGET EVENT COMPONENTHEADER
-export GUI lGUI uGUI WIDGET
+export GUI lGUI uGUI WIDGET EVENT COMPONENTHEADER
 
 # Pass to examples/configure
 HAVE_RENDERAREA=true
@@ -273,7 +274,8 @@ HAVE_EXAMINERVIEWER=true
 HAVE_PLANEVIEWER=false
 HAVE_WALKVIEWER=false
 HAVE_FLYVIEWER=false
-export HAVE_RENDERAREA HAVE_EXAMINERVIEWER HAVE_PLANEVIEWER HAVE_WALKVIEWER HAVE_FLYVIEWER
+export HAVE_RENDERAREA HAVE_EXAMINERVIEWER HAVE_PLANEVIEWER \
+       HAVE_WALKVIEWER HAVE_FLYVIEWER
 
 
 dnl *******************************************************************
@@ -288,7 +290,6 @@ export EXTRA_CPPFLAGS EXTRA_LDFLAGS EXTRA_LIBS
 
 AC_CONFIG_SUBDIRS(examples)
 
-
 dnl ************************************************************************
 dnl * List all makefiles configure must automatically generate.
 dnl ************************************************************************
@@ -301,7 +302,6 @@ AC_OUTPUT([
 	sogtk-config
 	Makefile
 	src/Inventor/Gtk/Makefile
-	src/Inventor/Gtk/common/Makefile
 	src/Inventor/Gtk/devices/Makefile
 	src/Inventor/Gtk/viewers/Makefile
 	src/Inventor/Gtk/widgets/Makefile
@@ -311,6 +311,8 @@ AC_OUTPUT([
 	chmod a+x sogtk-config
 ])
 
+echo ""
 echo "Now, run 'make install' to build and install SoGtk."
+echo ""
 
 dnl ************************************************************************
