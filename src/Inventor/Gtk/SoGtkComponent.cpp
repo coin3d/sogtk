@@ -35,7 +35,7 @@ static const char rcsid[] =
 #include <Inventor/Gtk/SoGtkGLWidget.h>
 #include <Inventor/Gtk/SoGtkRenderArea.h>
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
-#include <Inventor/Gtk/viewers/SoGtkCustomViewer.h>
+// #include <Inventor/Gtk/viewers/SoGtkCustomViewer.h>
 // #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
