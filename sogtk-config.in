@@ -58,6 +58,8 @@ do
     case $1 in
     renderarea)      exit 0 ;;
     examinerviewer)  exit 0 ;;
+    flyviewer)       exit 0 ;;
+    walkviewer)      exit 0 ;;
     planeviewer)     exit 0 ;;
     materiallist)    exit 0 ;;
     grapheditor)     exit 0 ;;
