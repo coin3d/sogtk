@@ -21,6 +21,11 @@ fi
 package=cfg/bootstrap.tar
 verbose=false
 
+if test x"$@" = x"" -a ! -f cfg/mkinstalldirs; then
+  echo "$me: assuming '--add' was meant."
+  set "--add"
+fi
+
 for arg in $@; do
   case "$arg" in
   -v | --verbose)
