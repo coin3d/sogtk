@@ -123,7 +123,7 @@ SoGtk::internal_init(GtkWidget * toplevelwidget)
                                                NULL);
   SoGtk::mainWidget = toplevelwidget;
 #if defined(ENABLE_NLS)
-  char *txt = bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  char *txt = bindtextdomain(PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
 }
 
@@ -449,35 +449,40 @@ SoGtk::createSimpleErrorDialog(GtkWidget * widget,
 
   GtkWidget * dialog = gtk_dialog_new();
   if (widget) {
-    // This behavior is strange
-//      gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+    // FIXME: modality is temporarily disabled, as executing this call
+    // causes weird behavior. Try with the SoGtkExaminerViewer, for
+    // instance: the error dialog on clicking the [i] button comes up
+    // ok, but after it has been removed, it keeps on popping up for
+    // _any_ event in the viewer. 20020312 mortene.
+
+//      gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
   }
-  gtk_window_set_title (GTK_WINDOW (dialog), t.getString());
-  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_MOUSE);
+  gtk_window_set_title(GTK_WINDOW(dialog), t.getString());
+  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
 
-  GtkWidget *action_area = GTK_DIALOG (dialog)->action_area;
+  GtkWidget *action_area = GTK_DIALOG(dialog)->action_area;
 
-  GtkWidget *vbox = GTK_DIALOG (dialog)->vbox ;
+  GtkWidget *vbox = GTK_DIALOG(dialog)->vbox ;
 
-  GtkWidget *label = gtk_label_new (errstr.getString());
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_box_pack_start (GTK_BOX(vbox), label, TRUE, TRUE, 10);
+  GtkWidget *label = gtk_label_new(errstr.getString());
+  gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+  gtk_box_pack_start(GTK_BOX(vbox), label, TRUE, TRUE, 10);
 
   if (string2) {
     GtkWidget *label2 = gtk_label_new(string2);
-    gtk_label_set_line_wrap (GTK_LABEL (label2), TRUE);
-    gtk_box_pack_start (GTK_BOX(vbox), label2, TRUE, TRUE, 10);
+    gtk_label_set_line_wrap(GTK_LABEL(label2), TRUE);
+    gtk_box_pack_start(GTK_BOX(vbox), label2, TRUE, TRUE, 10);
   }
 
-  GtkWidget *okbutton = gtk_button_new_with_label ("OK");
-  gtk_widget_show (okbutton);
-  gtk_box_pack_start (GTK_BOX (action_area), okbutton, FALSE, FALSE, 2);
+  GtkWidget *okbutton = gtk_button_new_with_label("OK");
+  gtk_widget_show(okbutton);
+  gtk_box_pack_start(GTK_BOX(action_area), okbutton, FALSE, FALSE, 2);
 
-  gtk_signal_connect_object (GTK_OBJECT (okbutton), "clicked",
-                             GTK_SIGNAL_FUNC (gtk_widget_destroy),
-                             GTK_OBJECT(dialog));
+  gtk_signal_connect_object(GTK_OBJECT(okbutton), "clicked",
+                            GTK_SIGNAL_FUNC(gtk_widget_destroy),
+                            GTK_OBJECT(dialog));
 
-  gtk_widget_show_all (dialog);
+  gtk_widget_show_all(dialog);
 }
 
 // *************************************************************************
