@@ -315,6 +315,7 @@ SoGtkPlaneViewer::processSoEvent( // virtual, protected
 {
   if ( common->processSoEvent( event ) )
     return TRUE;
+
   return inherited::processSoEvent( event );
 } // processSoEvent()
 
@@ -325,6 +326,10 @@ void
 SoGtkPlaneViewer::processEvent( // virtual, protected
   GdkEvent * event )
 {
+  // SoDebugError::postInfo( "SoGtkPlaneViewer::processEvent", "[invoked]" );
+  if ( SoGtkViewer::processCommonEvents( event ) )
+    return;
+
   inherited::processEvent( event );
 } // processEvent()
 
