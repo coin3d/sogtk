@@ -60,6 +60,7 @@ do
     examinerviewer)  exit 0 ;;
     materiallist)    exit 0 ;;
     grapheditor)     exit 0 ;;
+    roster)          exit 0 ;;
     *)               exit 1 ;;
     esac
     ;;
