@@ -67,32 +67,47 @@
   FIXME: write doc
 */
 
-/*!
-  \var SbVec2s SoGtkDevice::lastEventPosition
+// *************************************************************************
 
-  FIXME: write doc
-*/
+class SoGtkDeviceP {
+public:
+  static SbVec2s lastEventPosition;
+  SbVec2s widgetSize;
+};
 
-SbVec2s SoGtkDevice::lastEventPosition; // static
+SbVec2s SoGtkDeviceP::lastEventPosition; // static
+
+#define PRIVATE(p) (p->pimpl)
 
 // *************************************************************************
 
 SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkDevice);
+
+// *************************************************************************
+
+SoGtkDevice::SoGtkDevice(void)
+{
+  PRIVATE(this) = new SoGtkDeviceP;
+}
+
+SoGtkDevice::~SoGtkDevice()
+{
+  delete PRIVATE(this);
+}
 
 /*!
   This function initializes the type system for all the device classes.
 */
 
 void
-SoGtkDevice::initClasses(// static
-  void)
+SoGtkDevice::initClasses(void)
 {
   SoGtkDevice::initClass();
   SoGtkInputFocus::initClass();
   SoGtkMouse::initClass();
   SoGtkKeyboard::initClass();
   SoGtkSpaceball::initClass();
-} // initClasses()
+}
 
 // *************************************************************************
 
@@ -102,22 +117,20 @@ SoGtkDevice::initClasses(// static
 
 // FIXME: perhaps make virtual?
 void
-SoGtkDevice::setWindowSize(
-  const SbVec2s size)
+SoGtkDevice::setWindowSize(const SbVec2s size)
 {
-  this->widgetSize = size;
-} // setWindowSize()
+  PRIVATE(this)->widgetSize = size;
+}
 
 /*!
   FIXME: write function documentation
 */
 
 const SbVec2s
-SoGtkDevice::getWindowSize(
-  void) const
+SoGtkDevice::getWindowSize(void) const
 {
-  return this->widgetSize;
-} // getWindowSize()
+  return PRIVATE(this)->widgetSize;
+}
 
 // *************************************************************************
 
@@ -126,14 +139,13 @@ SoGtkDevice::getWindowSize(
 */
 
 void
-SoGtkDevice::setEventPosition(
-  SoEvent * event,
-  int x,
-  int y) const
+SoGtkDevice::setEventPosition(SoEvent * event,
+                              int x,
+                              int y) const
 {
-  this->lastEventPosition = SbVec2s(x, y);
-  event->setPosition(SbVec2s(x, this->widgetSize[1] - y - 1));
-} // setEventPosition()
+  SoGtkDeviceP::lastEventPosition = SbVec2s(x, y);
+  event->setPosition(SbVec2s(x, PRIVATE(this)->widgetSize[1] - y - 1));
+}
 
 // *************************************************************************
 
@@ -142,10 +154,9 @@ SoGtkDevice::setEventPosition(
 */
 
 SbVec2s
-SoGtkDevice::getLastEventPosition(// static
-  void)
+SoGtkDevice::getLastEventPosition(void)
 {
-  return SoGtkDevice::lastEventPosition;
-} // getLastEventPosition()
+  return SoGtkDeviceP::lastEventPosition;
+}
 
 // *************************************************************************

@@ -21,9 +21,7 @@
 #define SOGTK_DEVICE_H
 
 #include <gtk/gtk.h>
-
 #include <Inventor/SbLinear.h>
-
 #include <Inventor/Gtk/SoGtkObject.h>
 
 class SoEvent;
@@ -34,6 +32,8 @@ class SOGTK_DLL_API SoGtkDevice : public SoGtkObject {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkDevice, SoGtkObject);
 
 public:
+  virtual ~SoGtkDevice();
+
   typedef gint SoGtkEventHandler(GtkWidget *, GdkEvent *, gpointer);
 
   virtual void enable(GtkWidget * widget, SoGtkEventHandler * func,
@@ -49,16 +49,15 @@ public:
   static void initClasses(void);
 
 protected:
+  SoGtkDevice(void);
+
   void setEventPosition(SoEvent * event, int x, int y) const;
   static SbVec2s getLastEventPosition(void);
 
 private:
-  static SbVec2s lastEventPosition;
-  SbVec2s widgetSize;
-
-}; // class SoGtkDevice
-
-typedef void (*SoGtkEventHandlerPtr)(GtkWidget *, GdkEvent *, gpointer);
+  class SoGtkDeviceP * pimpl;
+  friend class SoGtkDeviceP;
+};
 
 // *************************************************************************
 
