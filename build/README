@@ -1,9 +1,3 @@
-sogtk.doxygen.in
-
-        Configuration file for generating the SoGtk documentation from
-        the source files with Doxygen. The HTML docs are also
-        available on-line at <URL:http://www.coin3d.org/sogtk-docs/>.
-
 sogtk.spec.in
 
         [not supported yet]

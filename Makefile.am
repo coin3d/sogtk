@@ -47,7 +47,6 @@ DISTCLEANFILES = \
 	$(SoGui_BuiltFiles) \
 	$(SoGui_BuiltMetaFiles) \
 	build/Makefile \
-	build/so@gui@.doxygen \
 	build/so@gui@.spec \
 	intl/Makefile \
 	intl/po2tbl.sed \
@@ -61,7 +60,6 @@ EXTRA_DIST = \
 	build/Makefile.am \
 	build/Makefile.in \
 	build/README \
-	build/sogtk.doxygen.in \
 	build/sogtk.spec.in \
 	cfg/m4/sogtk.m4 \
 	po/ChangeLog \
