@@ -240,14 +240,13 @@ INPUT                 = \
 	@sogtk_dox_build_dir@/src/Inventor/Gtk/SoGtkBasic.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtk.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtk.h \
-	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkObject.cpp \
-	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkObject.h \
+	@sogtk_dox_build_dir@/src/Inventor/Gtk/SoGtkObject.cpp \
+	@sogtk_dox_build_dir@/src/Inventor/Gtk/SoGtkObject.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkComponent.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkComponent.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkGLWidget.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkGLWidget.h \
 	@sogtk_dox_build_dir@/src/Inventor/Gtk/SoGtkRenderArea.cpp \
-	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkRenderAreaExtra.cpp \
 	@sogtk_dox_build_dir@/src/Inventor/Gtk/SoGtkRenderArea.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/devices/SoGtkDevice.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/devices/SoGtkDevice.h \
@@ -259,17 +258,18 @@ INPUT                 = \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/devices/SoGtkMouse.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/devices/SoGtkSpaceball.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/devices/SoGtkSpaceball.h \
-	@sogtk_dox_src_dir@/src/Inventor/Gtk/devices/SoGtkLinuxJoystick.cpp \
-	@sogtk_dox_src_dir@/src/Inventor/Gtk/devices/SoGtkLinuxJoystick.h \
 	@sogtk_dox_build_dir@/src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
-	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkViewerExtra.cpp \
 	@sogtk_dox_build_dir@/src/Inventor/Gtk/viewers/SoGtkViewer.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp \
-	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkGraphEditor.cpp \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkGraphEditor.h \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkRoster.cpp \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkRoster.h
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
