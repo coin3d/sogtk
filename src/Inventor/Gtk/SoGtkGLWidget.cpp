@@ -354,7 +354,7 @@ SoGtkGLWidget::getNormalWidget(void) const
 GtkWidget *
 SoGtkGLWidget::getOverlayWidget(void) const
 {
-  SOWIN_STUB();
+  SOGTK_STUB();
   return (GtkWidget *) NULL;
 }
 
