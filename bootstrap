@@ -14,9 +14,34 @@ me=`echo "$0" | sed 's,.*/,,g'`
 
 cd $wd
 if test ! -f ./$me; then
-  echo "unexpected problem with your shell - bailing out"
+  echo >&2 "$me: error: unexpected problem with your shell - bailing out"
   exit 1
 fi
+
+verbose=false
+
+for arg in $@; do
+  case "$arg" in
+  -v | --verbose)
+    verbose=true
+    ;;
+  --clean)
+    ( $verbose && set -x;
+      rm -f aclocal.m4 config.h.in configure stamp-h*
+      rm -f cfg/{config.guess,config.sub,depcomp,install-sh,ltconfig,ltmain.sh,missing,mkinstalldirs}
+      find . -name Makefile.in -print | xargs rm -f
+    )
+    exit 0
+    ;;
+  --add)
+    AUTOMAKE_ADD="--add-missing --copy"
+    ;;
+  *)
+    echo >&2 "$me: error: don't understand argument \"$arg\""
+    DIE=true
+    ;;
+  esac
+done
 
 PROJECT=SoGtk
 
@@ -25,14 +50,7 @@ MACRODIR=cfg/m4
 SUBPROJECTS="$MACRODIR data"
 SUBPROJECTNAMES="SoGtkMacros SoGtkData"
 
-AUTOMAKE_ADD=
-if test "$1" = "--clean"; then
-  rm -f config.h.in configure stamp-h*
-  find . -name Makefile.in -print | xargs rm
-  exit
-elif test "$1" = "--add"; then
-  AUTOMAKE_ADD=""
-fi
+: ${AUTOMAKE_ADD=}
 
 AUTOCONF_VER=2.49b   # Autoconf from CVS
 AUTOMAKE_VER=1.4a    # Automake from CVS
@@ -97,23 +115,31 @@ END
 done
 
 # abnormal exit?
-${DIE=false} && echo "" && echo "Aborting..." && exit 1
+${DIE=false} && echo "" && echo >&2 "$me: aborting..." && exit 1
 
 # **************************************************************************
 
 # generate aclocal.m4
 echo "Running aclocal..."
-aclocal -I $MACRODIR
+( $verbose && set -x;
+  aclocal -I $MACRODIR
+)
 
 # generate config.h.in template
 echo "Running autoheader..."
-( autoheader 3>&1 1>&2 2>&3 | grep -v 'is unchanged$' ) 3>&1 1>&2 2>&3
+( ( $verbose && set -x;
+  autoheader
+) 3>&1 1>&2 2>&3 | grep -v 'is unchanged$' ) 3>&1 1>&2 2>&3
 
 # generate Makefile.in templates
 echo "Running automake..."
-( automake 3>&1 1>&2 2>&3 | grep -v 'directory should not' ) 3>&1 1>&2 2>&3
+( ( $verbose && set -x;
+  automake $AUTOMAKE_ADD
+) 3>&1 1>&2 2>&3 | grep -v 'directory should not' ) 3>&1 1>&2 2>&3
 
 # generate configure script
 echo "Running autoconf..."
-autoconf
+( $verbose && set -x;
+  autoconf
+)
 

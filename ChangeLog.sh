@@ -8,7 +8,7 @@
 moduledir=${0%/[^/]*}
 module=SoGtk
 GUI=Gtk
-cvs2cl=$HOME/code/cvs/src/cvs2cl/cvs2cl.pl
+cvs2cl=$HOME/code/misc/src/cvs2cl/cvs2cl.pl
 headerfile=/tmp/$module.header
 
 cd $moduledir
