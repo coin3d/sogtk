@@ -50,8 +50,6 @@ public:
     SoGtkViewer::Type type = BROWSER );
   ~SoGtkExaminerViewer(void);
 
-  virtual void setViewing( SbBool enable );
-
   void setAnimationEnabled( const SbBool enable );
   SbBool isAnimationEnabled(void) const;
       
@@ -64,8 +62,10 @@ public:
   void setFeedbackSize( const int size );
   int getFeedbackSize(void) const;
 
-  virtual void setCamera( SoCamera * camera );
-
+  virtual void setViewing( SbBool enable );
+  virtual void setCamera( SoCamera * const camera );
+  virtual void setCursorEnabled( SbBool enable );
+  
 protected:
   SoGtkExaminerViewer(
     GtkWidget * parent,
@@ -115,21 +115,33 @@ private:
 
   void setCursorRepresentation( int mode );
 
-  GtkWidget * cameraToggleButton;
-  GtkWidget * feedbackLabel1;
-  GtkWidget * feedbackLabel2;
-  GtkWidget * feedbackWheel;
-  GtkWidget * feedbackEdit;
+  GtkWidget * cameratogglebutton;
+  GtkWidget * feedbacklabel1;
+  GtkWidget * feedbacklabel2;
+  GtkWidget * feedbackwheel;
+  GtkWidget * feedbackedit;
   void setEnableFeedbackControls( const SbBool flag );
 
 private: // slots:
   // Pref sheet.
-  void spinAnimationToggled( SbBool flag );
-  void feedbackVisibilityToggle( SbBool flag );
-  void feedbackEditPressed(void);
-  void feedbackWheelPressed(void);
-  void feedbackSizeChanged( float val );
-  void feedbackWheelReleased(void);
+  static void spinAnimationToggled( 
+    GtkToggleButton	*w,
+    gpointer		closure );
+  static void feedbackVisibilityToggled(
+    GtkToggleButton	*w,
+    gpointer		closure );
+  static void feedbackEditPressed(
+    GtkEntry		*w,
+    gpointer		closure );
+  static void feedbackWheelPressed(
+    GtkWidget		*w,
+    gpointer		closure );
+  static void feedbackSizeChanged(
+    GtkWidget		*w,
+    gpointer		closure );
+  static void feedbackWheelReleased(
+    GtkWidget		*w,
+    gpointer		closure );
   // Button row.
   void cameratoggleClicked(void);
 

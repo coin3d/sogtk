@@ -1396,8 +1396,6 @@ SoGtkFullViewer::makePreferencesWindow(
 
   w = makeStereoPreferences(form);
 
-//  w = makeSpinAnimationPreferences(form);
-
   w = makeSubPreferences(form);
 
   gtk_signal_connect (GTK_OBJECT (this->prefwindow), "destroy",

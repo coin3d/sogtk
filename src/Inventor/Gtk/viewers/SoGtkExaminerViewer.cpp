@@ -286,7 +286,7 @@ SoGtkExaminerViewer::getFeedbackSize(
 
 void
 SoGtkExaminerViewer::setCamera( // virtual
-  SoCamera * camera )
+  SoCamera * const camera )
 {
   if ( camera ) {
     const SoType camtype( camera->getTypeId() );
@@ -294,8 +294,8 @@ SoGtkExaminerViewer::setCamera( // virtual
       camtype.isDerivedFrom( SoOrthographicCamera::getClassTypeId() );
 
     this->setRightWheelString( orthotype ? "Zoom" : "Dolly");
-//    if (this->cameraToggleButton) {
-//      this->cameraToggleButton->setPixmap( orthotype ?
+//    if (this->cameratogglebutton) {
+//      this->cameratogglebutton->setPixmap( orthotype ?
 //        *(this->pixmaps.orthogonal) : *(this->pixmaps.perspective) );
 //    }
   }
@@ -309,14 +309,13 @@ SoGtkExaminerViewer::setCamera( // virtual
   rendering canvas.
 */
 
-/*
 void
-SoGtkExaminerViewer::setCursorEnabled(SbBool on)
+SoGtkExaminerViewer::setCursorEnabled( // virtual
+  SbBool enable )
 {
-  inherited::setCursorEnabled(on);
-  this->setCursorRepresentation(this->currentMode);
-}
-*/
+  inherited::setCursorEnabled( enable );
+  this->setCursorRepresentation(this->common->currentmode);
+} // setCursorEnabled
 
 // *************************************************************************
 
@@ -397,7 +396,72 @@ GtkWidget *
 SoGtkExaminerViewer::makeSubPreferences(
   GtkWidget * parent )
 {
-  return NULL;
+  GtkWidget* form1 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (form1);
+  gtk_container_add (GTK_CONTAINER (parent), form1);
+
+  GtkWidget *checkbutton1 = gtk_check_button_new_with_label ( 
+    "Enable spin animation" );
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
+     this->isAnimationEnabled());
+  gtk_widget_show (checkbutton1);
+  gtk_box_pack_start (GTK_BOX (form1), checkbutton1, FALSE, FALSE, 0);
+  gtk_signal_connect( GTK_OBJECT(checkbutton1), "toggled", 
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::spinAnimationToggled), this );
+
+  // Do the single widget on the second row (a checkbutton).
+  GtkWidget *checkbutton2 = gtk_check_button_new_with_label ( 
+    "Show point of rotation axes" );
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton2), 
+     this->isFeedbackVisible());
+  gtk_widget_show (checkbutton2);
+  gtk_box_pack_start (GTK_BOX (form1), checkbutton2, FALSE, FALSE, 0);
+  gtk_signal_connect( GTK_OBJECT(checkbutton2), "toggled", 
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackVisibilityToggled), this );
+
+  GtkWidget* hbox = gtk_hbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (parent), hbox);
+
+  // Do the four widgets on the third row (label, thumbwheel,
+  // lineedit, label).
+
+  this->feedbacklabel1 = gtk_label_new("axes size");
+  gtk_box_pack_start (GTK_BOX (hbox), this->feedbacklabel1, FALSE, FALSE, 0);
+
+  this->feedbackwheel = gtk_thumbwheel_new( 0 );
+  gtk_box_pack_start (GTK_BOX (hbox), this->feedbackwheel, FALSE, FALSE, 0);
+  gtk_thumbwheel_set_range_boundary_handling( 
+    GTK_THUMBWHEEL(this->feedbackwheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE );
+
+  gtk_signal_connect( GTK_OBJECT(this->feedbackwheel), "attached",
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackWheelPressed), this );
+  gtk_signal_connect( GTK_OBJECT(this->feedbackwheel), "value_changed",
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackSizeChanged), this );
+  gtk_signal_connect( GTK_OBJECT(this->feedbackwheel), "released",
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackWheelReleased), this );
+
+  gtk_thumbwheel_set_value( GTK_THUMBWHEEL(this->feedbackwheel),
+    float(common->getFeedbackSize())/10.0f);
+
+  this->feedbackedit = gtk_entry_new();
+  gtk_box_pack_start (GTK_BOX (hbox), this->feedbackedit, FALSE, FALSE, 0);
+  gtk_widget_set_usize (this->feedbackedit, 48, 24);
+
+  gtk_signal_connect(GTK_OBJECT(this->feedbackedit), "activate",
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackEditPressed), this );
+
+  char buffer[16] ;
+  sprintf( buffer, "%d", common->getFeedbackSize());
+  gtk_entry_set_text( GTK_ENTRY(this->feedbackedit), buffer );
+
+  this->feedbacklabel2 = gtk_label_new("pixels");
+  gtk_box_pack_start (GTK_BOX (hbox), this->feedbacklabel2, FALSE, FALSE, 0);
+
+  gtk_widget_show_all(hbox);
+
+  this->setEnableFeedbackControls(common->isFeedbackVisible());
+
+  return form1;
 }
 
 // *************************************************************************
@@ -495,19 +559,20 @@ SoGtkExaminerViewer::processEvent( // virtual
 
 void
 SoGtkExaminerViewer::setSeekMode( // virtual
-  SbBool enable )
+  SbBool on )
 {
 #if SOGTK_DEBUG
-  if ( enable == this->isSeekMode() ) {
+  if ( on == this->isSeekMode() ) {
     SoDebugError::postWarning( "SoGtkExaminerViewer::setSeekMode",
-                               "seek mode already %sset", enable ? "" : "un");
+                               "seek mode already %sset", on ? "" : "un");
     return;
   }
 #endif // SOGTK_DEBUG
-  if ( common->isAnimating() )
-    common->stopAnimating();
-  inherited::setSeekMode( enable );
-//  this->common->setMode(on ? SoAnyExaminerViewer::WAITING_FOR_SEEK : SoAnyExaminerViewer::EXAMINE);
+  if ( common->isAnimating() ) common->stopAnimating();
+  inherited::setSeekMode( on );
+  this->common->setMode(on ? 
+                        SoAnyExaminerViewer::WAITING_FOR_SEEK : 
+                        SoAnyExaminerViewer::EXAMINE);
 } // setSeekMode()
 
 // *************************************************************************
@@ -614,91 +679,136 @@ void
 SoGtkExaminerViewer::setEnableFeedbackControls(
   const SbBool flag )
 {
-//  this->feedbackLabel1->setEnabled(flag);
-//  this->feedbackLabel2->setEnabled(flag);
-//  this->feedbackWheel->setEnabled(flag);
-//  this->feedbackEdit->setEnabled(flag);
+  gtk_widget_set_sensitive( this->feedbacklabel1, flag );
+  gtk_widget_set_sensitive( this->feedbacklabel2, flag );
+  gtk_widget_set_sensitive( this->feedbackwheel, flag );
+  gtk_widget_set_sensitive( this->feedbackedit, flag );
 } // setEnableFeedbackControls()
 
 // *************************************************************************
 /*!
   \internal
-  Pref sheet slot.
+  Pref sheet Gtk Signal Handler.
 */
 void
-SoGtkExaminerViewer::feedbackVisibilityToggle(
-  SbBool flag )
+SoGtkExaminerViewer::spinAnimationToggled(
+  GtkToggleButton     *w,  
+  gpointer            closure )
 {
-  common->setFeedbackVisibility(flag);
-  this->setEnableFeedbackControls(flag);
+  assert( closure != NULL );
+  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure ;
+  SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE ;
+
+  viewer->common->setAnimationEnabled(flag);
 }
 
 // *************************************************************************
 /*!
   \internal
-  Pref sheet slot.
+  Pref sheet Gtk Signal Handler.
 */
 void
-SoGtkExaminerViewer::feedbackEditPressed()
+SoGtkExaminerViewer::feedbackVisibilityToggled(
+  GtkToggleButton     *w,  
+  gpointer            closure )
 {
-/*
+  assert( closure != NULL );
+  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure ;
+  SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE ;
+
+  viewer->common->setFeedbackVisibility(flag);
+  viewer->setEnableFeedbackControls(flag);
+}
+
+// *************************************************************************
+/*!
+  \internal
+  Pref sheet Gtk Signal Handler.
+*/
+void
+SoGtkExaminerViewer::feedbackEditPressed(
+  GtkEntry	*w,
+  gpointer	closure )
+{
+  assert( closure != NULL );
+  SoGtkExaminerViewer	*viewer = (SoGtkExaminerViewer*) closure ;
+
+  char *s = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1 );
   int val;
-  if ((sscanf(this->feedbackedit->text(), "%d", &val) == 1) && (val > 0.0f)) {
-    this->feedbackwheel->setValue(float(val)/10.0f);
-    this->setFeedbackSize(val);
+  if ((sscanf(s, "%d", &val) == 1) && (val > 0)) {
+    gtk_thumbwheel_set_value( GTK_THUMBWHEEL(viewer->feedbackwheel), 
+      float(val)/10.0f );
+    viewer->setFeedbackSize(val);
   }
-  else {
-    QString s;
-    s.setNum(this->getFeedbackSize());
-    this->feedbackedit->setText(s);
+  g_free(s) ;
+
+  /* else */
+  {
+    char buffer[16] ;
+    sprintf( buffer, "%d", viewer->getFeedbackSize());
+    gtk_entry_set_text( GTK_ENTRY(w), buffer );
   }
-*/
 }
 
 // *************************************************************************
 /*!
   \internal
-  Pref sheet slot.
+  Pref sheet Gtk Signal Handler.
 */
 void
-SoGtkExaminerViewer::feedbackWheelPressed()
+SoGtkExaminerViewer::feedbackWheelPressed(
+  GtkWidget	*w,
+  gpointer	closure )
 {
-  this->interactiveCountInc();
+  assert( closure != NULL );
+  GtkThumbWheel *thumbwheel = (GtkThumbWheel *) w ;
+  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure ;
+  viewer->interactiveCountInc();
 }
 
 // *************************************************************************
 
 /*!
   \internal
-  Pref sheet slot.
+  Pref sheet GtkSignalHandler.
 */
 
 void
-SoGtkExaminerViewer::feedbackWheelReleased()
+SoGtkExaminerViewer::feedbackWheelReleased(
+  GtkWidget	*w,
+  gpointer	closure )
 {
-  this->interactiveCountDec();
+  assert( closure != NULL );
+  GtkThumbWheel *thumbwheel = (GtkThumbWheel *) w ;
+  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure ;
+  viewer->interactiveCountDec();
 }
 
 // *************************************************************************
 /*!
   \internal
-  Pref sheet slot.
+  Pref sheet Gtk Signal Handler.
 */
 void
-SoGtkExaminerViewer::feedbackSizeChanged(float val)
+SoGtkExaminerViewer::feedbackSizeChanged(
+  GtkWidget		*w,
+  gpointer		closure )
 {
-/*
-  if (val <= 0.0f) {
+  assert( closure != NULL );
+  GtkThumbWheel		*thumbwheel = (GtkThumbWheel*) w ;
+  SoGtkExaminerViewer	*viewer = (SoGtkExaminerViewer*) closure ;
+
+  gfloat val = gtk_thumbwheel_get_value( thumbwheel );
+  if (val < 0.1f) {
     val = 0.1f;
-    this->feedbackwheel->setValue(val);
+    gtk_thumbwheel_set_value( thumbwheel, val );
   }
 
-  this->setFeedbackSize(int(val * 10));
+  viewer->setFeedbackSize(int(val * 10.0f));
 
-  QString s;
-  s.setNum(this->getFeedbackSize());
-  this->feedbackedit->setText(s);
-*/
+  char buffer[16] ;
+  sprintf( buffer, "%d", viewer->getFeedbackSize() );
+  gtk_entry_set_text( GTK_ENTRY(viewer->feedbackedit), buffer );
 }
 
 // *************************************************************************
@@ -710,8 +820,8 @@ SoGtkExaminerViewer::feedbackSizeChanged(float val)
 void
 SoGtkExaminerViewer::cameratoggleClicked()
 {
-  this->toggleCameraType();
-}
+  if ( this->getCamera() ) this->toggleCameraType();
+} // cameratoggleClicked()
 
 // *************************************************************************
 
