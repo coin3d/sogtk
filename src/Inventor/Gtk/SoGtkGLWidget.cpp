@@ -22,19 +22,16 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-#include <GL/gl.h>
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+#include <Inventor/@Gui@/common/gl.h>
 
 #include <gtkgl/gtkglarea.h>
 #include <gdk/gdk.h>
 
 #include <Inventor/errors/SoDebugError.h>
-
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
