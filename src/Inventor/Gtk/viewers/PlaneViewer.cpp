@@ -443,8 +443,11 @@ SoGtkPlaneViewer::createViewerButtons(// virtual, protected
     default:
       gdk_pixmap =
         gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
-          &gdk_mask, (GdkColor *) 0,
-          SoGtkPlaneViewerP::SoGtkPlaneViewerButtons[button].xpm_data);
+                                              &gdk_mask, (GdkColor *) 0,
+                                              // FIXME: nasty cast,
+                                              // get rid of
+                                              // it. 20020320 mortene.
+                                              (gchar **)SoGtkPlaneViewerP::SoGtkPlaneViewerButtons[button].xpm_data);
       break;
     }
 
@@ -553,11 +556,18 @@ SoGtkPlaneViewerP::SoGtkPlaneViewerP(
 
   this->orthopixmap =
     gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
-      &this->orthomask, (GdkColor *) 0, ortho_xpm);
+                                          &this->orthomask, (GdkColor *) 0,
+                                          // FIXME: nasty cast, get
+                                          // rid of it. 20020320 mortene.
+                                          (gchar **)ortho_xpm);
 
   this->perspectivepixmap =
     gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
-      &this->perspectivemask, (GdkColor *) 0, perspective_xpm);
+                                          &this->perspectivemask,
+                                          (GdkColor *) 0,
+                                          // FIXME: nasty cast, get
+                                          // rid of it. 20020320 mortene.
+                                          (gchar **)perspective_xpm);
 } // SoGtkPlaneViewerP()
 
 /*

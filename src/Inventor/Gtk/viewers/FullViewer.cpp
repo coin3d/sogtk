@@ -1051,8 +1051,10 @@ SoGtkFullViewer::createViewerButtons(// virtual
 
     GdkPixmap * gdk_pixmap =
       gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) NULL, colormap,
-        &mask, (GdkColor *) NULL,
-        SoGtkFullViewerP::SoGtkFullViewerButtons[button].xpm_data);
+                                            &mask, (GdkColor *) NULL,
+                                            // FIXME: nasty cast, get
+                                            // rid of it. 20020320 mortene.
+                                            (gchar **)SoGtkFullViewerP::SoGtkFullViewerButtons[button].xpm_data);
     GtkWidget * label = gtk_pixmap_new(gdk_pixmap, mask);
     gtk_widget_show(label);
 

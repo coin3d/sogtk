@@ -28,7 +28,7 @@ struct SoGtkViewerButton {
   char * keyword;
   char * label;
   GtkSignalFunc pressed;
-  char ** xpm_data;
+  const char ** xpm_data;
 };
 
 #endif // ! SOGTK_VIEWERBUTTONP_H

@@ -645,11 +645,18 @@ SoGtkExaminerViewerP::SoGtkExaminerViewerP(SoGtkExaminerViewer * publ)
 
   this->orthopixmap =
       gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
-        &this->orthomask, (GdkColor *) 0, ortho_xpm);
+                                            &this->orthomask, (GdkColor *) 0,
+                                            // FIXME: nasty cast, get
+                                            // rid of it. 20020320 mortene.
+                                            (gchar **)ortho_xpm);
 
   this->perspectivepixmap =
-      gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
-        &this->perspectivemask, (GdkColor *) 0, perspective_xpm);
+    gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
+                                          &this->perspectivemask,
+                                          (GdkColor *) 0,
+                                          // FIXME: nasty cast, get
+                                          // rid of it. 20020320 mortene.
+                                          (gchar **)perspective_xpm);
 } // SoGtkExaminerViewerP()
 
 SoGtkExaminerViewerP::~SoGtkExaminerViewerP()
