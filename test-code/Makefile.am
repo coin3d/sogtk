@@ -1,3 +1,3 @@
 
-SUBDIRS = components
+SUBDIRS = components widgets
 

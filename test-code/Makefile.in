@@ -110,7 +110,7 @@ install_sh = @install_sh@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
 
 
-SUBDIRS = components
+SUBDIRS = components widgets
 subdir = test-code
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = ../config.h

@@ -1,6 +1,7 @@
-# Makefile.in generated automatically by automake 1.4a-SIM-20000531 from Makefile.am
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
 
-# Copyright (C) 1994, 1995-9, 2000 Free Software Foundation, Inc.
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
+# Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -57,23 +58,30 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 
 @SET_MAKE@
+build_alias = @build_alias@
+build_triplet = @build@
 host_alias = @host_alias@
 host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
 AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AS = @AS@
 AWK = @AWK@
 CC = @CC@
+CHA = @CHA@
 COMPONENTHEADER = @COMPONENTHEADER@
 CPP = @CPP@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+EVENT = @EVENT@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
 GUI = @GUI@
+Gui = @Gui@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LT_AGE = @LT_AGE@
@@ -82,6 +90,7 @@ LT_RELEASE = @LT_RELEASE@
 LT_REVISION = @LT_REVISION@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+NOCHA = @NOCHA@
 OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
@@ -96,8 +105,9 @@ SOGTK_MINOR_VERSION = @SOGTK_MINOR_VERSION@
 SOGTK_VERSION = @SOGTK_VERSION@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
+gui = @gui@
 install_sh = @install_sh@
-sim_ac_conf_cmd = @sim_ac_conf_cmd@
+sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
 
 
 INCLUDES = -I$(top_srcdir)/src
@@ -106,11 +116,10 @@ LIBS = -lgtkgl `gtk-config --libs` -lstdc++
 noinst_PROGRAMS = thumbwheel
 thumbwheel_SOURCES = thumbwheel.c
 thumbwheel_LDADD = \
-	$(top_builddir)/src/Inventor/Gtk/widgets/libSoGtkWidgets.la \
-	$(top_builddir)/src/Inventor/Gtk/common/libSoCommon.la
+	$(top_builddir)/src/Inventor/Gtk/libSoGtk.la
 
 subdir = test-code/widgets
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
 PROGRAMS =  $(noinst_PROGRAMS)
@@ -125,9 +134,7 @@ X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 am_thumbwheel_OBJECTS =  thumbwheel.o
 thumbwheel_OBJECTS =  $(am_thumbwheel_OBJECTS)
-thumbwheel_DEPENDENCIES =  \
-$(top_builddir)/src/Inventor/Gtk/widgets/libSoGtkWidgets.la \
-$(top_builddir)/src/Inventor/Gtk/common/libSoCommon.la
+thumbwheel_DEPENDENCIES =  $(top_builddir)/src/Inventor/Gtk/libSoGtk.la
 thumbwheel_LDFLAGS = 
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -135,7 +142,7 @@ CFLAGS = @CFLAGS@
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES =  $(thumbwheel_SOURCES)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/thumbwheel.Po
 DIST_COMMON =  Makefile.am Makefile.in
 
