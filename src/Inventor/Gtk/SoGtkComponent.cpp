@@ -56,6 +56,10 @@ static const char rcsid[] =
 
 SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkComponent);
 
+/*!
+  This method initializes the type system for all the component classes.
+*/
+
 void
 SoGtkComponent::initClasses( // static
   void )
@@ -74,12 +78,6 @@ SoGtkComponent::initClasses( // static
 } // initClasses()
 
 // *************************************************************************
-
-/*!
-  \fn virtual const char * SoGtkComponent::componentClassName(void) const
-
-  Returns class name of the component.
-*/
 
 /*!
   \fn virtual void SoGtkComponent::sizeChanged(const SbVec2s size)
@@ -893,6 +891,7 @@ SoGtkComponent::getComponent(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void

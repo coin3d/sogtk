@@ -38,6 +38,7 @@ static const char rcsid[] =
 /*!
   \class SoGtkGLWidget SoGtkGLWidget.h Inventor/Gtk/SoGtkGLWidget.h
   \brief The SoGtkGLWidget class contains an OpenGL canvas.
+  \ingroup components
 */
 
 // *************************************************************************
@@ -74,13 +75,17 @@ SoGtkGLWidgetP::SoGtkGLWidgetP(
   non-abstract subclasses.
 */
 
-/*!
-  \var SbBool SoGtkGLWidget::drawToFrontBuffer
+static const int SO_BORDER_THICKNESS = 2;
 
+/*!
+  \var SbBool SoGtkGLWidget::waitForExpose
   FIXME: write doc
 */
 
-static const int SO_BORDER_THICKNESS = 2;
+/*!
+  \fn GtkWidget * SoGtkGLWidget::getGLWidget(void)
+  FIXME: write doc
+*/
 
 // *************************************************************************
 
@@ -219,7 +224,7 @@ gint
 SoGtkGLWidget::eventHandler( // static, protected
   GtkObject * object,
   GdkEvent * event,
-  void * closure )
+  gpointer closure )
 {
   assert( closure != NULL );
   // SoDebugError::postInfo( "SoGtkGLWidget::eventHandler", "[invoked]" );
@@ -537,6 +542,10 @@ SoGtkGLWidget::sGLInit( // static
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkGLWidget::glReshape( // virtual
   int width,
@@ -544,6 +553,9 @@ SoGtkGLWidget::glReshape( // virtual
 {
 } // glReshape()
 
+/*!
+  FIXME: write doc
+*/
 
 gint
 SoGtkGLWidget::glReshape(
@@ -556,6 +568,10 @@ SoGtkGLWidget::glReshape(
   return TRUE;
 } // glReshape()
 
+/*!
+  FIXME: write doc
+*/
+
 gint
 SoGtkGLWidget::sGLReshape( // static
   GtkWidget * widget,
@@ -567,6 +583,10 @@ SoGtkGLWidget::sGLReshape( // static
 } // sGLReshape()
 
 // *************************************************************************
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkGLWidget::glRender( // virtual
@@ -622,6 +642,7 @@ SoGtkGLWidget::getLockLevel(
 } // getLockLevel()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -633,6 +654,7 @@ SoGtkGLWidget::glLock(
 } // glLock()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -642,6 +664,7 @@ SoGtkGLWidget::glUnlock(
 } // glUnlock()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -653,6 +676,7 @@ SoGtkGLWidget::glSwapBuffers(
 } // glSwapBuffers()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -663,6 +687,10 @@ SoGtkGLWidget::glFlushBuffer(
 } // glFlushBuffer()
 
 // *************************************************************************
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkGLWidget::afterRealizeHook( // virtual, protected
@@ -682,12 +710,20 @@ SoGtkGLWidget::afterRealizeHook( // virtual, protected
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 SbBool
 SoGtkGLWidget::isOverlayRender(
   void ) const
 {
   return THIS->currentIsNormal ? FALSE : TRUE;
 } // isOverlayRender()
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkGLWidget::setOverlayRender(

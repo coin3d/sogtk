@@ -42,9 +42,36 @@ static const char rcsid[] =
   \class SoGtkRoster Inventor/Gtk/SoGtkRoster.h
   \brief The SoGtkRoster class is a component class for tracking the
   creation and destruction of SoGtk components.
+  \ingroup misc
 
   This component class is not part of the original SoXt API - it is a SIM extension.
 */
+
+/*!
+  \enum SoGtkRoster::BuildFlags
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkRoster::BuildFlags SoGtkRoster::MENUBAR
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkRoster::BuildFlags SoGtkRoster::ROSTERLIST
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkRoster::BuildFlags SoGtkRoster::STATUSBAR
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkRoster::BuildFlags SoGtkRoster::BUILD_ALL
+  FIXME: write doc
+*/
+
 
 // *************************************************************************
 
@@ -155,6 +182,7 @@ SoGtkRoster::buildWidget( // virtual, protected
 } // buildWidget()
 
 /*!
+  FIXME: write doc
 */
 
 static void
@@ -168,6 +196,10 @@ create_component(
   SoGtkComponent * component = (SoGtkComponent *) type.createInstance();
   component->show();
 } // create_component()
+
+/*!
+  FIXME: write doc
+*/
 
 GtkWidget *
 SoGtkRoster::buildMenuBarWidget( // virtual, protected
@@ -200,6 +232,7 @@ SoGtkRoster::buildMenuBarWidget( // virtual, protected
 } // buildMenuBarWidget()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -218,6 +251,7 @@ SoGtkRoster::buildRosterList(
 } // buildRosterList()
 
 /*!
+  FIXME: write doc
 */
 
 GtkWidget *
@@ -243,6 +277,7 @@ SoGtkRoster::buildRosterListWidget( // virtual, protected
 } // buildRosterListWidget()
 
 /*!
+  FIXME: write doc
 */
 
 GtkWidget *
@@ -256,6 +291,7 @@ SoGtkRoster::buildStatusBarWidget( // virtual, protected
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -266,6 +302,10 @@ SoGtkRoster::sizeChanged( // virtual, protected
 } // sizeChanged()
 
 // *************************************************************************
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkRoster::componentCreated( // virtual, protected
@@ -281,6 +321,10 @@ SoGtkRoster::componentCreated( // virtual, protected
   gtk_clist_append( GTK_CLIST(this->listwidget), strings );
 } // componentCreated()
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkRoster::componentDestroyed( // virtual, protected
   SoGtkComponent * component )
@@ -291,6 +335,10 @@ SoGtkRoster::componentDestroyed( // virtual, protected
 #endif
 } // componentDestroyed()
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkRoster::componentChanged( // virtual, protected
   SoGtkComponent * component )
@@ -300,6 +348,10 @@ SoGtkRoster::componentChanged( // virtual, protected
     "component = %p", component );
 #endif
 } // componentChanged()
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkRoster::componentActionCB( // static, private
@@ -329,6 +381,7 @@ SoGtkRoster::componentActionCB( // static, private
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -340,6 +393,7 @@ SoGtkRoster::getDefaultWidgetName( // virtual, protected
 } // getDefaultWidgetName()
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -351,6 +405,7 @@ SoGtkRoster::getDefaultTitle( // virtual, protected
 } // getDefaultTitle()
 
 /*!
+  FIXME: write doc
 */
 
 const char *

@@ -46,6 +46,34 @@ static const char rcsid[] =
   \class SoGtkGraphEditor Inventor/Gtk/SoGtkGraphEditor.h
   \brief The SoGtkGraphEditor class is a component for viewing and editing
   the Inventor scene graph of a model.
+  \ingroup editors
+
+  This component is not implemented so far that editing is possible.
+*/
+
+/*!
+  \enum SoGtkGraphEditor::BuildFlag
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkGraphEditor::BuildFlag SoGtkGraphEditor::MENUBAR
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkGraphEditor::BuildFlag SoGtkGraphEditor::GRAPHEDITOR
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkGraphEditor::BuildFlag SoGtkGraphEditor::STATUSBAR
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkGraphEditor::BuildFlag SoGtkGraphEditor::EVERYTHING
+  FIXME: write doc
 */
 
 // *************************************************************************
@@ -157,6 +185,7 @@ SoGtkGraphEditor::getSceneGraph(
 } // getSceneGraph;
 
 /*
+  FIXME: write doc
 */
 
 GtkWidget *
@@ -216,6 +245,7 @@ SoGtkGraphEditor::buildSubGraph(
 }
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -227,6 +257,7 @@ SoGtkGraphEditor::buildSceneGraphTree( // virtual, protected
 } // buildSceneGraphTree()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -238,6 +269,7 @@ SoGtkGraphEditor::clearSceneGraphTree( // virtual, protected
 } // clearSceneGraphTree()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -371,6 +403,7 @@ SoGtkGraphEditor::buildStatusBarWidget( // virtual, protected
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -382,6 +415,7 @@ SoGtkGraphEditor::nodeSelection( // virtual, protected
 } // nodeSelection()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -409,6 +443,7 @@ SoGtkGraphEditor::sizeChanged(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -422,6 +457,7 @@ SoGtkGraphEditor::saveCB( // static, private
 } // saveCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -437,6 +473,7 @@ SoGtkGraphEditor::closeCB( // static, private
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -449,6 +486,7 @@ SoGtkGraphEditor::setStatusMessage( // virtual, protected
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -471,6 +509,7 @@ SoGtkGraphEditor::selectionCB(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -482,6 +521,7 @@ SoGtkGraphEditor::getDefaultWidgetName( // virtual, protected
 } // getDefaultWidgetName()
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -493,6 +533,7 @@ SoGtkGraphEditor::getDefaultTitle( // virtual, protected
 } // getDefaultTitle()
 
 /*!
+  FIXME: write doc
 */
 
 const char *

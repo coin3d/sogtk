@@ -44,8 +44,20 @@ static const char rcsid[] =
 // *************************************************************************
 
 /*!
+  \mainpage
+
+  SoGtk is a C++ GUI toolkit for using Coin with GTK+.  It can also be
+  used on top of Open Inventor from SGI and TGS.  The API is based on the
+  InventorXt API originally from SGI.
+
+  The corresponding documentation for Coin is
+  located at http://www.coin3d.org/coin-docs/
+*/
+
+/*!
   \class SoGtk SoGtk.h Inventor/Gtk/SoGtk.h
   \brief The SoGtk class takes care of Gtk initialization and event dispatching.
+  \ingroup misc
 
   \sa SoGtkComponent
 */
@@ -55,6 +67,31 @@ static const char rcsid[] =
 GtkWidget * SoGtk::mainWidget = (GtkWidget *) NULL;
 SbPList * SoGtk::components = (SbPList *) NULL;
 SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
+
+/*!
+  \typedef void SoGtk::SoGtkComponentActionCallback( SoGtkComponent *, SoGtk::SoGtkComponentAction, void * )
+  FIXME: write doc
+*/
+
+/*!
+  \enum SoGtk::SoGtkComponentAction
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtk::SoGtkComponentAction SoGtk::CREATION
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtk::SoGtkComponentAction SoGtk::DESTRUCTION
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtk::SoGtkComponentAction SoGtk::CHANGE
+  FIXME: write doc
+*/
 
 // *************************************************************************
 
@@ -510,6 +547,7 @@ struct ActionCallbackInfo {
 };
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -526,6 +564,7 @@ SoGtk::addComponentActionCallback( // static
 } // addComponentActionCallback()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -552,6 +591,7 @@ SoGtk::removeComponentActionCallback( // static
 } // removeComponentActionCallback()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -569,6 +609,10 @@ SoGtk::invokeComponentActionCallbacks( // static, protected
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 gint
 SoGtk::componentCreation( // static, protected
   SoGtkComponent * component )
@@ -579,6 +623,10 @@ SoGtk::componentCreation( // static, protected
   SoGtk::invokeComponentActionCallbacks( component, CREATION );
   return FALSE;
 } // componentCreation()
+
+/*!
+  FIXME: write doc
+*/
 
 gint
 SoGtk::componentDestruction( // static, protected
@@ -591,6 +639,10 @@ SoGtk::componentDestruction( // static, protected
   SoGtk::components->remove( idx );
   return FALSE;
 } // componentDestruction()
+
+/*!
+  FIXME: write doc
+*/
 
 gint
 SoGtk::componentChange( // static, protected
