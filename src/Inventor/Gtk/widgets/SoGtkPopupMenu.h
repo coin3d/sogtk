@@ -35,15 +35,15 @@ public:
   SoGtkPopupMenu(void);
   ~SoGtkPopupMenu(void);
 
-  virtual int newMenu( char * name, int menuid = -1 );
-  virtual int getMenu( char * name );
-  virtual void setMenuTitle( int id, char * title );
-  virtual char * getMenuTitle( int id );
+  virtual int newMenu( const char * name, int menuid = -1 );
+  virtual int getMenu( const char * name );
+  virtual void setMenuTitle( int id, const char * title );
+  virtual const char * getMenuTitle( int id );
 
-  virtual int newMenuItem( char * name, int itemid = -1 );
-  virtual int getMenuItem( char * name );
-  virtual void setMenuItemTitle( int itemid, char * title );
-  virtual char * getMenuItemTitle( int itemid );
+  virtual int newMenuItem( const char * name, int itemid = -1 );
+  virtual int getMenuItem( const char * name );
+  virtual void setMenuItemTitle( int itemid, const char * title );
+  virtual const char * getMenuItemTitle( int itemid );
   virtual void setMenuItemEnabled( int itemid, SbBool enabled );
   virtual SbBool getMenuItemEnabled( int itemid );
 
@@ -61,8 +61,8 @@ public:
 protected:
   MenuRecord * getMenuRecord( int menuid );
   ItemRecord * getItemRecord( int itemid );
-  MenuRecord * createMenuRecord( char * name );
-  ItemRecord * createItemRecord( char * name );
+  MenuRecord * createMenuRecord( const char * name );
+  ItemRecord * createItemRecord( const char * name );
 
   void traverseBuild( GtkWidget * parent, MenuRecord * menu, int indent );
   GtkWidget * build( GtkWidget * parent );
