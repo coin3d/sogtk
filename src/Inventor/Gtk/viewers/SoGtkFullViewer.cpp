@@ -61,7 +61,7 @@ static const char rcsid[] =
 /*!
   \class SoGtkFullViewer SoGtkFullViewer.h Inventor/Qt/viewers/SoGtkFullViewer.h
   \brief The SoGtkFullViewer class adds decorations to the simple viewer of the parent.
-  \ingroup gtkviewers
+  \ingroup viewers
 
   TODO: more doc
   ...overview of what this class provides over parent class...
@@ -99,20 +99,103 @@ SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkFullViewer);
   \var SoGtkFullViewer::BuildFlag SoGtkFullViewer::BUILD_NONE
   FIXME: write documentation for enum definition
 */
+
 /*!
   \var SoGtkFullViewer::BuildFlag SoGtkFullViewer::BUILD_DECORATION
   FIXME: write documentation for enum definition
 */
+
 /*!
   \var SoGtkFullViewer::BuildFlag SoGtkFullViewer::BUILD_POPUP
   FIXME: write documentation for enum definition
 */
+
 /*!
   \var SoGtkFullViewer::BuildFlag SoGtkFullViewer::BUILD_ALL
   FIXME: write documentation for enum definition
 */
 
+/*!
+  \var GtkWidget * SoGtkFullViewer::leftDecoration
+  FIXME: write documentation
+*/
 
+/*!
+  \var GtkWidget * SoGtkFullViewer::leftWheel
+  FIXME: write documentation
+*/
+
+/*!
+  \var char * SoGtkFullViewer::leftWheelStr
+  FIXME: write documentation
+*/
+
+/*!
+  \var GtkWidget * SoGtkFullViewer::leftWheelLabel
+  FIXME: write documentation
+*/
+
+/*!
+  \var float SoGtkFullViewer::leftWheelVal
+  FIXME: write documentation
+*/
+
+/*!
+  \var GtkWidget * SoGtkFullViewer::bottomDecoration
+  FIXME: write documentation
+*/
+
+/*!
+  \var GtkWidget * SoGtkFullViewer::bottomWheel
+  FIXME: write documentation
+*/
+
+/*!
+  \var char * SoGtkFullViewer::bottomWheelStr
+  FIXME: write documentation
+*/
+
+/*!
+  \var GtkWidget * SoGtkFullViewer::bottomWheelLabel
+  FIXME: write documentation
+*/
+
+/*!
+  \var float SoGtkFullViewer::bottomWheelVal
+  FIXME: write documentation
+*/
+
+/*!
+  \var GtkWidget * SoGtkFullViewer::rightDecoration
+  FIXME: write documentation
+*/
+
+/*!
+  \var GtkWidget * SoGtkFullViewer::rightWheel
+  FIXME: write documentation
+*/
+
+/*!
+  \var char * SoGtkFullViewer::rightWheelStr
+  FIXME: write documentation
+*/
+
+/*!
+  \var GtkWidget * SoGtkFullViewer::rightWheelLabel
+  FIXME: write documentation
+*/
+
+/*!
+  \var float SoGtkFullViewer::rightWheelVal
+  FIXME: write documentation
+*/
+
+/*!
+  \var SoAnyPopupMenu * SoGtkFullViewer::prefmenu
+  FIXME: write documentation
+*/
+
+// *************************************************************************
 
 static const int VIEWERBORDER = 2;
 static const int ZOOMSLIDERRESOLUTION = 200;
@@ -1052,6 +1135,10 @@ SoGtkFullViewer::getLeftWheelValue(
   return this->leftWheelVal;
 } // getLeftWheelValue()
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkFullViewer::setLeftWheelValue(
   const float value )
@@ -1122,6 +1209,10 @@ SoGtkFullViewer::getBottomWheelValue(
   return this->bottomWheelVal;
 } // getBottomWheelValue()
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkFullViewer::setBottomWheelValue(
   const float value )
@@ -1191,6 +1282,10 @@ SoGtkFullViewer::getRightWheelValue(
 {
   return this->rightWheelVal;
 } // getRightWheelValue()
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkFullViewer::setRightWheelValue(
@@ -2436,6 +2531,10 @@ SoGtkFullViewer::stereoToggled(
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 SbBool
 SoGtkFullViewer::processSoEvent(
   const SoEvent * const event )
@@ -2447,6 +2546,7 @@ SoGtkFullViewer::processSoEvent(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2464,6 +2564,7 @@ SoGtkFullViewer::interactbuttonClicked(
 } // interactbuttonClicked()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2481,6 +2582,7 @@ SoGtkFullViewer::interactbuttonClickedCB( // static
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2499,6 +2601,7 @@ SoGtkFullViewer::viewbuttonClicked(
 } // viewbuttonClicked()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2514,12 +2617,20 @@ SoGtkFullViewer::viewbuttonClickedCB( // static
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkFullViewer::helpbuttonClicked(
   void )
 {
   this->openViewerHelpCard();
 }
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkFullViewer::helpbuttonClickedCB( // static
@@ -2533,12 +2644,20 @@ SoGtkFullViewer::helpbuttonClickedCB( // static
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkFullViewer::homebuttonClicked(
   void )
 {
   this->resetToHomePosition();
 }
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkFullViewer::homebuttonClickedCB( // static
@@ -2552,12 +2671,20 @@ SoGtkFullViewer::homebuttonClickedCB( // static
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkFullViewer::sethomebuttonClicked(
   void )
 {
   this->saveHomePosition();
 }
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkFullViewer::sethomebuttonClickedCB( // static
@@ -2571,12 +2698,20 @@ SoGtkFullViewer::sethomebuttonClickedCB( // static
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkFullViewer::viewallbuttonClicked(
   void )
 {
   this->viewAll();
 }
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkFullViewer::viewallbuttonClickedCB( // static
@@ -2590,12 +2725,20 @@ SoGtkFullViewer::viewallbuttonClickedCB( // static
 
 // *************************************************************************
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkFullViewer::seekbuttonClicked(
   void )
 {
   this->setSeekMode( this->isSeekMode() ? FALSE : TRUE );
 }
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkFullViewer::seekbuttonClickedCB( // static
@@ -2610,6 +2753,7 @@ SoGtkFullViewer::seekbuttonClickedCB( // static
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2623,6 +2767,7 @@ SoGtkFullViewer::leftwheelPressedCB( // static
 } // leftwheelPressedCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2637,6 +2782,7 @@ SoGtkFullViewer::leftwheelMovedCB( // static
 } // leftWheelMovedCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2650,6 +2796,7 @@ SoGtkFullViewer::leftwheelReleasedCB( // static
 } // leftwheelReleasedCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2663,6 +2810,7 @@ SoGtkFullViewer::bottomwheelPressedCB( // static
 } // bottomwheelPressedCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2677,6 +2825,7 @@ SoGtkFullViewer::bottomwheelMovedCB( // static
 } // bottomWheelMovedCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2690,6 +2839,7 @@ SoGtkFullViewer::bottomwheelReleasedCB( // static
 } // bottomwheelReleasedCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2703,6 +2853,7 @@ SoGtkFullViewer::rightwheelPressedCB( // static
 } // rightwheelPressedCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2717,6 +2868,7 @@ SoGtkFullViewer::rightwheelMovedCB( // static
 } // rightWheelMovedCB()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -2732,6 +2884,7 @@ SoGtkFullViewer::rightwheelReleasedCB( // static
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 SbBool
@@ -2743,6 +2896,7 @@ SoGtkFullViewer::addPointer(
 } // addPointer()
 
 /*!
+  FIXME: write doc
 */
 
 SbBool
@@ -2753,6 +2907,7 @@ SoGtkFullViewer::setCurrentPointer(
 } // setCurrentPointer()
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -2767,3 +2922,4 @@ SoGtkFullViewer::getCurrentPointer(
 #if SOGTK_DEBUG
 static const char * getSoGtkFullViewerRCSId(void) { return rcsid; }
 #endif // SOGTK_DEBUG
+

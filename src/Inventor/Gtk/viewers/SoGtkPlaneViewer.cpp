@@ -47,6 +47,7 @@ static const char rcsid[] =
   \class SoGtkPlaneViewer Inventor/Gtk/viewers/SoGtkPlaneViewer.h
   \brief The SoGtkPlaneViewer class is for examining 3D models by
   moving the camera in planes.
+  \ingroup viewers
 */
 
 // *************************************************************************
@@ -149,6 +150,7 @@ SoGtkPlaneViewer::~SoGtkPlaneViewer(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -159,6 +161,7 @@ SoGtkPlaneViewer::setViewing( // virtual
 } // setViewing()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -170,6 +173,7 @@ SoGtkPlaneViewer::setCamera( // virtual
 } // setCamera()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -182,6 +186,7 @@ SoGtkPlaneViewer::setCursorEnabled( // virtual
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 GtkWidget *
@@ -197,6 +202,7 @@ SoGtkPlaneViewer::buildWidget( // protected
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -208,6 +214,7 @@ SoGtkPlaneViewer::getDefaultWidgetName( // virtual, protected
 }
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -219,6 +226,7 @@ SoGtkPlaneViewer::getDefaultTitle( // virtual, protected
 }
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -232,6 +240,7 @@ SoGtkPlaneViewer::getDefaultIconTitle( // virtual, protected
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -243,6 +252,7 @@ SoGtkPlaneViewer::bottomWheelMotion( // virtual, protected
 } // bottomWheelMotion()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -254,6 +264,7 @@ SoGtkPlaneViewer::leftWheelMotion( // virtual, protected
 } // leftWheelMotion()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -297,6 +308,7 @@ SoGtkPlaneViewer::zoom(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 SbBool
@@ -310,6 +322,7 @@ SoGtkPlaneViewer::processSoEvent( // virtual, protected
 } // processSoEvent()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -324,6 +337,7 @@ SoGtkPlaneViewer::processEvent( // virtual, protected
 } // processEvent()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -334,6 +348,7 @@ SoGtkPlaneViewer::setSeekMode( // virtual, protected
 } // setSeekMode()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -342,6 +357,10 @@ SoGtkPlaneViewer::actualRedraw( // virtual, protected
 {
   inherited::actualRedraw();
 } // actualRedraw()
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkPlaneViewer::createPrefSheet( // virtual, protected
@@ -353,6 +372,7 @@ SoGtkPlaneViewer::createPrefSheet( // virtual, protected
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -396,6 +416,7 @@ SoGtkPlaneViewer::createViewerButtons( // virtual, protected
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -408,6 +429,7 @@ SoGtkPlaneViewer::openViewerHelpCard( // virtual, protected
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -421,6 +443,10 @@ SoGtkPlaneViewer::xbuttonCB(
   viewer->common->viewPlaneX();
 } // ybuttonCB()
 
+/*!
+  FIXME: write doc
+*/
+
 void
 SoGtkPlaneViewer::ybuttonCB(
    GtkWidget * button,
@@ -431,6 +457,10 @@ SoGtkPlaneViewer::ybuttonCB(
 
   viewer->common->viewPlaneY();
 } // ybuttonCB()
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkPlaneViewer::zbuttonCB(
@@ -443,6 +473,9 @@ SoGtkPlaneViewer::zbuttonCB(
   viewer->common->viewPlaneZ();
 } // zbuttonCB()
 
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkPlaneViewer::camerabuttonCB(

@@ -58,7 +58,7 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
   \class SoGtkExaminerViewer Inventor/Gtk/viewers/SoGtkExaminerViewer.h
   \brief The SoGtkExaminerViewer class is a full-fledged model viewer
   with functionality for rotation, pan, zoom, etc.
-  \ingroup gtkviewers
+  \ingroup viewers
 
   TODO: more doc
   ...overview of what this class provides over parent class...
@@ -196,6 +196,7 @@ SoGtkExaminerViewer::setViewing( // virtual
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -206,6 +207,7 @@ SoGtkExaminerViewer::setAnimationEnabled(
 } // setAnimationEnabled()
  
 /*!
+  FIXME: write doc
 */
 
 SbBool
@@ -218,6 +220,7 @@ SoGtkExaminerViewer::isAnimationEnabled(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -228,6 +231,7 @@ SoGtkExaminerViewer::stopAnimating(
 } // stopAnimating()
 
 /*!
+  FIXME: write doc
 */
 
 SbBool
@@ -240,6 +244,7 @@ SoGtkExaminerViewer::isAnimating(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -250,6 +255,7 @@ SoGtkExaminerViewer::setFeedbackVisibility(
 } // setFeedbackVisibility()
 
 /*!
+  FIXME: write doc
 */
 
 SbBool
@@ -262,6 +268,7 @@ SoGtkExaminerViewer::isFeedbackVisible(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -272,6 +279,7 @@ SoGtkExaminerViewer::setFeedbackSize(
 } // setFeedbackSize()
 
 /*!
+  FIXME: write doc
 */
 
 int
@@ -519,9 +527,11 @@ SoGtkExaminerViewer::getDefaultIconTitle(void) const
 } // getDefaultIconTitle()
 
 // *************************************************************************
+
 /*!
   Pops up the examiner viewer help card.
 */
+
 void
 SoGtkExaminerViewer::openViewerHelpCard(void)
 {
@@ -531,6 +541,7 @@ SoGtkExaminerViewer::openViewerHelpCard(void)
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 SbBool
@@ -830,6 +841,7 @@ SoGtkExaminerViewer::cameratoggleClicked()
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -840,6 +852,7 @@ SoGtkExaminerViewer::camerabuttonClicked(
 } // camerabuttonClicked()
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -855,6 +868,7 @@ SoGtkExaminerViewer::camerabuttonClickedCB(
 // *************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -866,6 +880,7 @@ SoGtkExaminerViewer::afterRealizeHook( // virtual
 } // afterRealizeHook()
 
 /*!
+  FIXME: write doc
 */
 
 void
