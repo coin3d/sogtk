@@ -144,21 +144,6 @@ if test x"$with_inventor" = xyes; then
     SOGTK_EXTRA_LIBS="$sim_ac_dl_libs $SOGTK_EXTRA_LIBS"
   ])
 
-  SIM_CHECK_X11([
-    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_x11_cppflags"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_x11_ldflags"
-    SOGTK_EXTRA_LIBS="$sim_ac_x11_libs $SOGTK_EXTRA_LIBS"
-  ])
-
-  if test x"$sim_ac_x11_avail" = xyes; then
-    SIM_CHECK_X11SHMEM([
-      SOGTK_EXTRA_LIBS="$sim_ac_x11shmem_libs $SOGTK_EXTRA_LIBS"
-    ])
-    SIM_CHECK_X11MU([
-      SOGTK_EXTRA_LIBS="$sim_ac_x11mu_libs $SOGTK_EXTRA_LIBS"
-    ])
-  fi
-
   SIM_AC_CHECK_OPENGL([
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gl_cppflags"
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gl_ldflags"
@@ -204,7 +189,7 @@ fi
 # Check for the availability of this node (it is used in the hidden
 # line rendering), which is not part of older Inventor implementations.
 
-SIM_AC_HAVE_SOPOLYGONOFFSET()
+SIM_AC_HAVE_SOPOLYGONOFFSET
 
 SIM_AC_HAVE_SOMOUSEBUTTONEVENT_BUTTONS
 
