@@ -566,14 +566,9 @@ GtkNativePopupMenu::removeMenuItem(
 
 // *************************************************************************
 
-/*!
-*/
-
+// Doc in superclass.
 void
-GtkNativePopupMenu::popUp(
-  GtkWidget * inside,
-  int x,
-  int y)
+GtkNativePopupMenu::popUp(GtkWidget * inside, int x, int y)
 {
   MenuRecord * root = this->getMenuRecord(0);
   if (! root) {
@@ -591,7 +586,7 @@ GtkNativePopupMenu::popUp(
   }
   this->dirty = FALSE;
   gtk_menu_popup(GTK_MENU(this->popup), (GtkWidget *) NULL, (GtkWidget *) NULL,
-    (GtkMenuPositionFunc) NULL, NULL, 2, 0);
+                 (GtkMenuPositionFunc) NULL, NULL, 2, 0);
 } // popUp()
 
 // *************************************************************************
