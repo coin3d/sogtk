@@ -26,6 +26,7 @@ matically generated every night.  Entries are in reversed chronological
 order, and starts at January 1st, 2001.  See also the following ChangeLog
 files:
 
+  ./ChangeLog.2000
   ./src/Inventor/$GUI/common/ChangeLog
   ./cfg/m4/ChangeLog 
   ./data/ChangeLog 
