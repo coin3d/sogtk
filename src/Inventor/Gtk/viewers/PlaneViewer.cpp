@@ -22,7 +22,6 @@
 #endif
 
 #include <Inventor/errors/SoDebugError.h>
-#include <Inventor/projectors/SbPlaneProjector.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
 
@@ -48,9 +47,8 @@
 class SoGtkPlaneViewerP {
 public:
   SoGtkPlaneViewerP(SoGtkPlaneViewer * publ);
-  ~SoGtkPlaneViewerP(void);
+  ~SoGtkPlaneViewerP();
 
-  SbPlaneProjector * projector;
   static void visibilityCB(void * data, SbBool visible);
 
   static SoGtkViewerButton SoGtkPlaneViewerButtons[];
@@ -246,44 +244,6 @@ SoGtkPlaneViewer::buildWidget(// protected
   FIXME: write doc
 */
 
-const char *
-SoGtkPlaneViewer::getDefaultWidgetName(// virtual, protected
-  void) const
-{
-  static const char defaultWidgetName[] = "SoGtkPlaneViewer";
-  return defaultWidgetName;
-}
-
-/*!
-  FIXME: write doc
-*/
-
-const char *
-SoGtkPlaneViewer::getDefaultTitle(// virtual, protected
-  void) const
-{
-  static const char defaultTitle[] = N_("Plane Viewer");
-  return _(defaultTitle);
-}
-
-/*!
-  FIXME: write doc
-*/
-
-const char *
-SoGtkPlaneViewer::getDefaultIconTitle(// virtual, protected
-  void) const
-{
-  static const char defaultIconTitle[] = N_("Plane Viewer");
-  return _(defaultIconTitle);
-}
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
 void
 SoGtkPlaneViewer::bottomWheelMotion(// virtual, protected
   float value)
@@ -462,11 +422,6 @@ SoGtkPlaneViewerP::SoGtkPlaneViewerP(
 {
   this->pub = publ;
 
-  this->projector = new SbPlaneProjector;
-  SbViewVolume vv;
-  vv.ortho(-1, 1, -1, 1, -1, 1);
-  this->projector->setViewVolume(vv);
-
   GdkColormap * colormap = gtk_widget_get_colormap (PUBLIC(this)->getParentWidget());
 
   this->orthopixmap =
@@ -488,16 +443,14 @@ SoGtkPlaneViewerP::SoGtkPlaneViewerP(
 /*
 */
 
-SoGtkPlaneViewerP::~SoGtkPlaneViewerP(void)
+SoGtkPlaneViewerP::~SoGtkPlaneViewerP()
 {
   // Button pixmaps.
   gdk_pixmap_unref(this->orthopixmap);
   gdk_bitmap_unref(this->orthomask);  
   gdk_pixmap_unref(this->perspectivepixmap);
   gdk_bitmap_unref(this->perspectivemask);  
-
-  delete this->projector;
-} // ~SoGtkPlaneViewerP()
+}
 
 // ************************************************************************
 
