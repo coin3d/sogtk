@@ -156,7 +156,7 @@ create_component(
   GtkObject * obj,
   gpointer closure )
 {
-  SoType type = SoType::fromKey( (int16_t) closure );
+  SoType type = SoType::fromName( SbName((const char *) closure) );
   assert( type.canCreateInstance() );
   SoDebugError::postInfo( "create_component", "creating %s", type.getName().getString() );
   SoGtkComponent * component = (SoGtkComponent *) type.createInstance();
@@ -182,7 +182,7 @@ SoGtkRoster::buildMenuBarWidget( // virtual, protected
     if ( type.canCreateInstance() ) {
       GtkWidget * item = GTK_WIDGET(gtk_menu_item_new_with_label(name.getString()));
       gtk_signal_connect( GTK_OBJECT(item), "activate",
-        GTK_SIGNAL_FUNC(create_component), (gpointer) type.getKey() );
+        GTK_SIGNAL_FUNC(create_component), (gpointer) type.getName().getString() );
       gtk_widget_show(item);
       gtk_menu_append( GTK_MENU(createmenu), item );
     }
