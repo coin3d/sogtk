@@ -272,7 +272,7 @@ SoGtkComponent::setClassName(
   \sa baseWidget()
 */
 void
-SoGtkComponent::setBaseWidget(const GtkWidget * widget)
+SoGtkComponent::setBaseWidget(GtkWidget * widget)
 {
   // SoDebugError::postInfo("SoGtkComponent::setBaseWidget", "widget = 0x%08x", widget);
 

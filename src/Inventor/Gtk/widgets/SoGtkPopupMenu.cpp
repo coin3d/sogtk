@@ -34,6 +34,7 @@ static const char rcsid[] =
 #include <gtk/gtkhseparator.h>
 
 #include <Inventor/errors/SoDebugError.h>
+#include <Inventor/SbPList.h>
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkBasic.h>
