@@ -12,7 +12,11 @@ BUILT_SOURCES = \
 	SoAnyExaminerViewer.cpp \
 	SoAnyExaminerViewer.h \
 	SoAnyPlaneViewer.cpp \
-	SoAnyPlaneViewer.h
+	SoAnyPlaneViewer.h \
+	SoAnyFlyViewer.cpp \
+	SoAnyFlyViewer.h \
+	SoAnyWalkViewer.cpp \
+	SoAnyWalkViewer.h
 
 libSoGtkViewers_la_SOURCES = \
 	$(BUILT_SOURCES) \
@@ -21,7 +25,13 @@ libSoGtkViewers_la_SOURCES = \
 	SoGtkExaminerViewer.cpp \
 	SoGtkExaminerViewer.h \
 	SoGtkPlaneViewer.cpp \
-	SoGtkPlaneViewer.h
+	SoGtkPlaneViewer.h \
+	SoGtkConstrainedViewer.cpp \
+	SoGtkConstrainedViewer.h \
+	SoGtkFlyViewer.cpp \
+	SoGtkFlyViewer.h \
+	SoGtkWalkViewer.cpp \
+	SoGtkWalkViewer.h
 
 libSoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
 
@@ -29,7 +39,10 @@ libSoGtkViewersinc_HEADERS = \
 	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
 	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
 	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h \
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.h \
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFlyViewer.h \
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkWalkViewer.h
 
 ############################################################################
 
@@ -73,3 +86,22 @@ SoAnyPlaneViewer.cpp: \
 	@( cd $(top_builddir);
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp )
 
+SoAnyFlyViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyFlyViewer.h )
+
+SoAnyFlyViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyFlyViewer.cpp )
+
+SoAnyWalkViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyWalkViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyWalkViewer.h )
+
+SoAnyWalkViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyWalkViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyWalkViewer.cpp )
