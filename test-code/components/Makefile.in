@@ -115,11 +115,13 @@ sogtk_src_dir = @sogtk_src_dir@
 
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 
-noinst_PROGRAMS = graphed
+noinst_PROGRAMS = graphed planeviewer
 
 graphed_SOURCES = graphed.cpp computils.h computils.cpp
-
 graphed_LDADD = ../../src/Inventor/Gtk/libSoGtk.la
+
+planeviewer_SOURCES = planeviewer.cpp computils.h computils.cpp
+planeviewer_LDADD = ../../src/Inventor/Gtk/libSoGtk.la
 subdir = test-code/components
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
 CONFIG_HEADER = ../../config.h
@@ -139,6 +141,10 @@ am_graphed_OBJECTS =  graphed.o computils.o
 graphed_OBJECTS =  $(am_graphed_OBJECTS)
 graphed_DEPENDENCIES =  ../../src/Inventor/Gtk/libSoGtk.la
 graphed_LDFLAGS = 
+am_planeviewer_OBJECTS =  planeviewer.o computils.o
+planeviewer_OBJECTS =  $(am_planeviewer_OBJECTS)
+planeviewer_DEPENDENCIES =  ../../src/Inventor/Gtk/libSoGtk.la
+planeviewer_LDFLAGS = 
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXFLAGS = @CXXFLAGS@
@@ -149,17 +155,18 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CF
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES =  $(graphed_SOURCES)
+DIST_SOURCES =  $(graphed_SOURCES) $(planeviewer_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/computils.Po $(DEPDIR)/graphed.Po
+DEP_FILES =  @AMDEP@ $(DEPDIR)/computils.Po $(DEPDIR)/graphed.Po \
+$(DEPDIR)/planeviewer.Po
 DIST_COMMON =  Makefile.am Makefile.in
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-SOURCES = $(graphed_SOURCES)
-OBJECTS = $(am_graphed_OBJECTS)
+SOURCES = $(graphed_SOURCES) $(planeviewer_SOURCES)
+OBJECTS = $(am_graphed_OBJECTS) $(am_planeviewer_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -205,6 +212,10 @@ graphed: $(graphed_OBJECTS) $(graphed_DEPENDENCIES)
 	@rm -f graphed
 	$(CXXLINK) $(graphed_LDFLAGS) $(graphed_OBJECTS) $(graphed_LDADD) $(LIBS)
 
+planeviewer: $(planeviewer_OBJECTS) $(planeviewer_DEPENDENCIES)
+	@rm -f planeviewer
+	$(CXXLINK) $(planeviewer_LDFLAGS) $(planeviewer_OBJECTS) $(planeviewer_LDADD) $(LIBS)
+
 tags: TAGS
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
@@ -240,6 +251,7 @@ maintainer-clean-tags:
 
 @AMDEP@include $(DEPDIR)/computils.Po
 @AMDEP@include $(DEPDIR)/graphed.Po
+@AMDEP@include $(DEPDIR)/planeviewer.Po
 
 mostlyclean-depend:
 
