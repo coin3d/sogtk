@@ -17,6 +17,7 @@
  *
 \**************************************************************************/
 
+#include <stdlib.h>
 #include <math.h>
 
 #include <Inventor/SoDB.h>
