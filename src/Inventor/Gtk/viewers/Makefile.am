@@ -17,9 +17,6 @@ DISTCLEANFILES = \
 	$(SoGui_src_Inventor_Gui_viewers_BuiltFiles) \
 	$(SoGui_src_Inventor_Gui_viewers_BuiltMetaFiles)
 
-EXTRA_DIST = \
-	SoNativeFlyViewer.cpp
-
 libSoGtkViewers_la_SOURCES = \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
