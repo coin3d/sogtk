@@ -51,18 +51,17 @@ static const char rcsid[] =
 // *************************************************************************
 
 extern "C" {
-void gtk_thumbwheel_update( GtkThumbWheel * thumbwheel );
-gint gtk_thumbwheel_timer( GtkThumbWheel * thumbwheel );
 gint gtk_thumbwheel_motion_notify( GtkWidget * widget, GdkEventMotion * event );
 gint gtk_thumbwheel_button_release( GtkWidget * widget, GdkEventButton * event );
 gint gtk_thumbwheel_button_press( GtkWidget * widget, GdkEventButton * event );
 gint gtk_thumbwheel_expose( GtkWidget * widget, GdkEventExpose * event );
 void gtk_thumbwheel_size_allocate( GtkWidget * widget, GtkAllocation * allocation );
-void gtk_thumbwheel_size_request( GtkWidget * widget, GtkRequisition * requisition );
 void gtk_thumbwheel_realize( GtkWidget * widget );
 void gtk_thumbwheel_destroy( GtkObject * object );
 void gtk_thumbwheel_init( GtkThumbWheel * thumbwheel );
 void gtk_thumbwheel_class_init( GtkThumbWheelClass * cclass );
+
+static void gtk_thumbwheel_paint( GtkWidget * widget, GdkRectangle * area );
 }; /* extern "C" */
 
 enum {
@@ -75,8 +74,19 @@ enum {
 static GtkMiscClass * parent_class = NULL;
 static guint thumbwheel_signals[NUM_SIGNALS] = { 0 };
 
-static const guint GTK_THUMBWHEEL_DEFAULT_WIDTH  = 24;
-static const guint GTK_THUMBWHEEL_DEFAULT_LENGTH = 90;
+/* Default sizes of the widget */
+static const guint GTK_THUMBWHEEL_DEFAULT_NARROW = 16 ;
+static const guint GTK_THUMBWHEEL_DEFAULT_LENGTH = 122 ;
+
+/* Padding between border of the widget and the thumbwheel */
+static const guint GTK_THUMBWHEEL_PAD_NARROW = 2 ;
+static const guint GTK_THUMBWHEEL_PAD_LENGTH = 4 ;
+
+/* Sizes of the thumbwheel */
+static const guint GTK_THUMBWHEEL_WHEEL_NARROW =
+  (GTK_THUMBWHEEL_DEFAULT_NARROW - 2 * GTK_THUMBWHEEL_PAD_NARROW) ;
+static const guint GTK_THUMBWHEEL_WHEEL_LENGTH =
+  (GTK_THUMBWHEEL_DEFAULT_LENGTH - 2 * GTK_THUMBWHEEL_PAD_LENGTH) ;
 
 enum {
   THUMBWHEEL_DISABLED,
@@ -86,13 +96,15 @@ enum {
 
 // *************************************************************************
 
-guint
+GtkType
 gtk_thumbwheel_get_type(
   void )
 {
-  static guint thumbwheel_type = 0;
-  if ( ! thumbwheel_type ) {
-    GtkTypeInfo thumbwheel_info = {
+  static GtkType thumbwheel_type = 0;
+
+  if ( ! thumbwheel_type )
+  {
+    static const GtkTypeInfo thumbwheel_info = {
       "GtkThumbWheel",
       sizeof(GtkThumbWheel),
       sizeof(GtkThumbWheelClass),
@@ -102,9 +114,10 @@ gtk_thumbwheel_get_type(
       (GtkArgGetFunc) NULL,
       (GtkClassInitFunc) NULL
     };
-    thumbwheel_type =
-      gtk_type_unique( gtk_misc_get_type(), &thumbwheel_info );
+    thumbwheel_type = 
+      gtk_type_unique (GTK_TYPE_MISC, &thumbwheel_info);
   }
+
   return thumbwheel_type;
 } // gtk_thumbwheel_get_type()
 
@@ -116,18 +129,16 @@ gtk_thumbwheel_class_init(
   GtkThumbWheelClass * cclass )
 {
   GtkObjectClass * object_class = (GtkObjectClass *) cclass;
-  GtkMiscClass * misc_class = (GtkMiscClass *) cclass;
   GtkWidgetClass * widget_class = (GtkWidgetClass *) cclass;
 
   gdk_rgb_init();
 
-  parent_class = (GtkMiscClass *) gtk_type_class( gtk_misc_get_type() );
+  parent_class = (GtkMiscClass *) gtk_type_class (GTK_TYPE_MISC);
 
   object_class->destroy = gtk_thumbwheel_destroy;
 
   widget_class->realize = gtk_thumbwheel_realize;
   widget_class->expose_event = gtk_thumbwheel_expose;
-  widget_class->size_request = gtk_thumbwheel_size_request;
   widget_class->size_allocate = gtk_thumbwheel_size_allocate;
   widget_class->button_press_event = gtk_thumbwheel_button_press;
   widget_class->motion_notify_event = gtk_thumbwheel_motion_notify;
@@ -183,11 +194,15 @@ gtk_thumbwheel_init(
   thumbwheel->downpos = 0;
   thumbwheel->value = 0.0f;
   thumbwheel->tempvalue = 0.0f;
+  thumbwheel->bitmap = 0 ;
+
   SoAnyThumbWheel * wheel = new SoAnyThumbWheel;
   wheel->setMovement( SoAnyThumbWheel::UNIFORM );
   wheel->setBoundaryHandling( SoAnyThumbWheel::ACCUMULATE );
   wheel->setGraphicsByteOrder( SoAnyThumbWheel::ABGR );
+
   thumbwheel->wheel = (void *) wheel;
+
 } // gtk_thumbwheel_init()
 
 // *************************************************************************
@@ -196,10 +211,39 @@ GtkWidget *
 gtk_thumbwheel_new(
   gint vertical )
 {
-  GtkThumbWheel * thumbwheel =
-    GTK_THUMBWHEEL(gtk_type_new( gtk_thumbwheel_get_type() ));
+  GtkThumbWheel *thumbwheel ;
+  GtkMisc       *misc ;
+
+  thumbwheel = (GtkThumbWheel *) gtk_type_new (GTK_TYPE_THUMBWHEEL);
+  misc = GTK_MISC(thumbwheel) ;
+
   thumbwheel->vertical = (vertical != FALSE) ? 1 : 0;
-  return GTK_WIDGET(thumbwheel);
+  if ( thumbwheel->vertical )
+  {  
+    thumbwheel->wheel_area.x = GTK_THUMBWHEEL_PAD_NARROW + misc->xpad ;
+    thumbwheel->wheel_area.y = GTK_THUMBWHEEL_PAD_LENGTH + misc->ypad ;
+    thumbwheel->wheel_area.width = GTK_THUMBWHEEL_WHEEL_NARROW ;
+    thumbwheel->wheel_area.height = GTK_THUMBWHEEL_WHEEL_LENGTH ;
+
+    GTK_WIDGET (thumbwheel)->requisition.width = 
+      GTK_THUMBWHEEL_DEFAULT_NARROW + misc->xpad * 2;
+    GTK_WIDGET (thumbwheel)->requisition.height =  
+      GTK_THUMBWHEEL_DEFAULT_LENGTH + misc->ypad * 2;
+  }
+  else
+  {
+    thumbwheel->wheel_area.x = GTK_THUMBWHEEL_PAD_LENGTH + misc->xpad ;
+    thumbwheel->wheel_area.y = GTK_THUMBWHEEL_PAD_NARROW + misc->ypad ;
+    thumbwheel->wheel_area.width = GTK_THUMBWHEEL_WHEEL_LENGTH ;
+    thumbwheel->wheel_area.height = GTK_THUMBWHEEL_WHEEL_NARROW ;
+
+    GTK_WIDGET (thumbwheel)->requisition.width = 
+      GTK_THUMBWHEEL_DEFAULT_LENGTH + misc->xpad * 2;
+    GTK_WIDGET (thumbwheel)->requisition.height =  
+      GTK_THUMBWHEEL_DEFAULT_NARROW + misc->ypad * 2;
+  }
+
+  return GTK_WIDGET (thumbwheel);
 } // gtk_thumbwheel_new()
 
 // *************************************************************************
@@ -209,9 +253,16 @@ void
 gtk_thumbwheel_destroy(
   GtkObject * object )
 {
+  GtkThumbWheel *thumbwheel ;
+
   g_return_if_fail( object != NULL );
-  g_return_if_fail( GTK_IS_THUMBWHEEL(object) );
-  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(object);
+  g_return_if_fail( GTK_IS_THUMBWHEEL( object ));
+
+  thumbwheel = GTK_THUMBWHEEL(object);
+  g_free((gpointer) thumbwheel->bitmap);
+
+  delete (SoAnyThumbWheel*) thumbwheel->wheel;
+
   if ( GTK_OBJECT_CLASS(parent_class)->destroy )
     (*GTK_OBJECT_CLASS(parent_class)->destroy)( object );
 } // gtk_thumbwheel_destroy()
@@ -241,7 +292,6 @@ gtk_thumbwheel_realize(
   g_return_if_fail( GTK_IS_THUMBWHEEL(widget) );
 
   GTK_WIDGET_SET_FLAGS( widget, GTK_REALIZED );
-  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
 
   GdkWindowAttr attributes;
   attributes.x = widget->allocation.x;
@@ -251,41 +301,31 @@ gtk_thumbwheel_realize(
   attributes.wclass = GDK_INPUT_OUTPUT;
   attributes.window_type = GDK_WINDOW_CHILD;
   attributes.event_mask = gtk_widget_get_events( widget ) |
-    GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-/*  GDK_BUTTON_MOTION_MASK | GDK_BUTTON1_MOTION_MASK |
-    GDK_BUTTON2_MOTION_MASK | GDK_BUTTON3_MOTION_MASK | */
-    GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK;
+    GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK;
   attributes.visual = gtk_widget_get_visual( widget );
   attributes.colormap = gtk_widget_get_colormap( widget );
   attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
   widget->window =
-    gdk_window_new( widget->parent->window, &attributes, attributes_mask );
+    gdk_window_new( gtk_widget_get_parent_window(widget),
+      &attributes, attributes_mask );
   widget->style = gtk_style_attach( widget->style, widget->window );
   gdk_window_set_user_data( widget->window, widget );
-  gtk_style_set_background( widget->style, widget->window, GTK_STATE_ACTIVE );
-} // gtk_thumbwheel_realize()
+  gtk_style_set_background( widget->style, widget->window, GTK_STATE_NORMAL );
 
-// *************************************************************************
+  // Initially set up everything
+  GtkThumbWheel *thumbwheel = GTK_THUMBWHEEL(widget);
 
-static
-void
-gtk_thumbwheel_size_request(
-  GtkWidget * widget,
-  GtkRequisition * requisition )
-{
-  g_return_if_fail( widget != NULL );
-  g_return_if_fail( GTK_IS_THUMBWHEEL(widget) );
-  g_return_if_fail( requisition != NULL );
+  thumbwheel->img =
+    ((SoAnyThumbWheel *) thumbwheel->wheel)->
+    getBitmapForValue (thumbwheel->tempvalue,
+      GTK_WIDGET_IS_SENSITIVE(widget) ? 
+        SoAnyThumbWheel::ENABLED : SoAnyThumbWheel::DISABLED );
 
-  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
-  if ( thumbwheel->vertical ) {
-    requisition->width = GTK_THUMBWHEEL_DEFAULT_WIDTH;
-    requisition->height = GTK_THUMBWHEEL_DEFAULT_LENGTH;
-  } else {
-    requisition->width = GTK_THUMBWHEEL_DEFAULT_LENGTH;
-    requisition->height = GTK_THUMBWHEEL_DEFAULT_WIDTH;
-  }
-} // gtk_thumbwheel_size_request()
+  ((SoAnyThumbWheel *) thumbwheel->wheel)->drawBitmap (thumbwheel->img, 
+     (void *) thumbwheel->bitmap, 
+     (thumbwheel->vertical != 0) ?
+        SoAnyThumbWheel::VERTICAL : SoAnyThumbWheel::HORIZONTAL);
+}				// gtk_thumbwheel_realize()
 
 // *************************************************************************
 
@@ -300,10 +340,35 @@ gtk_thumbwheel_size_allocate(
   g_return_if_fail( allocation != NULL );
 
   widget->allocation = *allocation;
-  if ( GTK_WIDGET_REALIZED(widget) ) {
-    GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
-    gdk_window_move_resize( widget->window,
-      allocation->x, allocation->y, allocation->width, allocation->height );
+
+  GtkThumbWheel *thumbwheel = GTK_THUMBWHEEL (widget);
+
+  // This is where we finally know the sizes
+  thumbwheel->wheel_area.x = 
+    + widget->allocation.width / 2 
+    - thumbwheel->wheel_area.width / 2 ; 
+  thumbwheel->wheel_area.y = 
+    + widget->allocation.height / 2 
+    - thumbwheel->wheel_area.height / 2 ; 
+
+  // urgh, but ...
+  if ( thumbwheel->bitmap )
+    g_free( (gpointer) thumbwheel->bitmap );
+  thumbwheel->bitmap = g_new( guchar, 
+      thumbwheel->wheel_area.width * thumbwheel->wheel_area.height * 4 * 4 );
+	// just "enough" for now
+
+  ((SoAnyThumbWheel *) thumbwheel->wheel)->setSize (
+      GTK_THUMBWHEEL_WHEEL_LENGTH, 
+      GTK_THUMBWHEEL_WHEEL_NARROW );
+
+  thumbwheel->img = 0 ;  
+
+  if (GTK_WIDGET_REALIZED (widget))
+  {
+    gdk_window_move_resize (widget->window,
+	allocation->x, allocation->y, 
+        allocation->width, allocation->height);
   }
 } // gtk_thumbwheel_size_allocate()
 
@@ -319,115 +384,12 @@ gtk_thumbwheel_expose(
   g_return_val_if_fail( GTK_IS_THUMBWHEEL(widget), FALSE );
   g_return_val_if_fail( event != NULL, FALSE );
 
-  if ( event->count > 0 )
-    return FALSE;
+  if (GTK_WIDGET_DRAWABLE(widget))
+    {
+      GtkThumbWheel *thumbwheel = GTK_THUMBWHEEL (widget);
 
-  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
-  GtkMisc * misc = GTK_MISC(widget);
-
-//  gdk_window_clear_area( widget->window,
-//    0, 0, widget->allocation.width, widget->allocation.height );
-
-  gdk_draw_rectangle( widget->window,
-    widget->style->bg_gc[GTK_WIDGET_STATE(widget)], TRUE,
-    0, 0, widget->allocation.width, widget->allocation.height );
-
-  gdk_draw_line( widget->window,
-    widget->style->light_gc[GTK_WIDGET_STATE(widget)],
-    misc->xpad, misc->ypad, widget->allocation.width - 1 - misc->xpad, misc->ypad );
-  gdk_draw_line( widget->window,
-    widget->style->light_gc[GTK_WIDGET_STATE(widget)],
-    misc->xpad + 1, misc->ypad + 1, widget->allocation.width - 2 - misc->xpad, misc->ypad + 1 );
-
-  gdk_draw_line( widget->window,
-    widget->style->light_gc[GTK_WIDGET_STATE(widget)],
-    misc->xpad, misc->ypad, misc->xpad, widget->allocation.height - 1 - misc->ypad );
-  gdk_draw_line( widget->window,
-    widget->style->light_gc[GTK_WIDGET_STATE(widget)],
-    misc->xpad + 1, misc->ypad + 1, misc->xpad + 1, widget->allocation.height - 2 - misc->ypad );
-
-  gdk_draw_line( widget->window,
-    widget->style->dark_gc[GTK_WIDGET_STATE(widget)],
-                               misc->xpad + 1, widget->allocation.height - 1 - misc->ypad,
-    widget->allocation.width - 1 - misc->xpad, widget->allocation.height - 1 - misc->ypad );
-  gdk_draw_line( widget->window,
-    widget->style->dark_gc[GTK_WIDGET_STATE(widget)],
-                               misc->xpad + 2, widget->allocation.height - 2 - misc->ypad,
-    widget->allocation.width - 2 - misc->xpad, widget->allocation.height - 2 - misc->ypad );
-
-  gdk_draw_line( widget->window,
-    widget->style->dark_gc[GTK_WIDGET_STATE(widget)],
-    widget->allocation.width - 1 - misc->xpad, misc->ypad + 1,
-    widget->allocation.width - 1 - misc->xpad, widget->allocation.height - 1 - misc->ypad );
-
-  gdk_draw_line( widget->window,
-    widget->style->dark_gc[GTK_WIDGET_STATE(widget)],
-    widget->allocation.width - 2 - misc->xpad, misc->ypad + 2,
-    widget->allocation.width - 2 - misc->xpad, widget->allocation.height - 1 - misc->ypad );
-
-  if ( thumbwheel->vertical != 0 ) {
-    gdk_draw_line( widget->window,
-      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-      misc->xpad + 5, misc->ypad + 9, misc->xpad + 5, widget->allocation.height - 10 - misc->ypad );
-    gdk_draw_line( widget->window,
-      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-      misc->xpad + 5, misc->ypad + 9, widget->allocation.width - 6 - misc->xpad, misc->ypad + 9 );
-    gdk_draw_line( widget->window,
-      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-      widget->allocation.width - 6 - misc->xpad, misc->ypad + 9,
-      widget->allocation.width - 6 - misc->xpad, widget->allocation.height - 10 - misc->ypad );
-    gdk_draw_line( widget->window,
-      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-      misc->xpad + 5, widget->allocation.height - 10 - misc->ypad,
-      widget->allocation.width - 6 - misc->xpad, widget->allocation.height - 10 - misc->ypad );
-  } else {
-    gdk_draw_line( widget->window,
-      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-      misc->xpad + 9, misc->ypad + 5,
-      misc->xpad + 9, widget->allocation.height - 6 - misc->ypad );
-    gdk_draw_line( widget->window,
-      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-      misc->xpad + 9, misc->ypad + 5,
-      widget->allocation.width - 10 - misc->xpad, misc->ypad + 5 );
-    gdk_draw_line( widget->window,
-      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-      widget->allocation.width - 10 - misc->xpad, misc->ypad + 5,
-      widget->allocation.width - 10 - misc->xpad, widget->allocation.height - 6 - misc->ypad );
-    gdk_draw_line( widget->window,
-      widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-      misc->xpad + 9, widget->allocation.height - 6 - misc->ypad,
-      widget->allocation.width - 10 - misc->xpad, widget->allocation.height - 6 - misc->ypad );
-  }
-
-  static guchar bitmap[90*26*4*4]; // just "enough" for now
-
-  if ( thumbwheel->vertical != 0 ) {
-    ((SoAnyThumbWheel *)thumbwheel->wheel)->setSize(
-      widget->allocation.height - 20 - 2 * misc->ypad, widget->allocation.width - 12 - 2 * misc->xpad );
-  } else {
-    ((SoAnyThumbWheel *)thumbwheel->wheel)->setSize(
-      widget->allocation.width - 20 - 2 * misc->xpad, widget->allocation.height - 12 - 2 * misc->ypad );
-  }
-
-  int img = ((SoAnyThumbWheel *)thumbwheel->wheel)->getBitmapForValue(
-    thumbwheel->tempvalue, SoAnyThumbWheel::ENABLED );
-
-  ((SoAnyThumbWheel *)thumbwheel->wheel)->drawBitmap( img, (void *) bitmap,
-    (thumbwheel->vertical != 0) ? SoAnyThumbWheel::VERTICAL : SoAnyThumbWheel::HORIZONTAL );
-
-  if ( thumbwheel->vertical != 0 ) {
-    gdk_draw_rgb_32_image(
-      widget->window, widget->style->fg_gc[ GTK_WIDGET_STATE(widget) ],
-      misc->xpad + 6, misc->ypad + 10,
-      widget->allocation.width - 12 - 2 * misc->xpad, widget->allocation.height - 20 - 2 * misc->ypad,
-      GDK_RGB_DITHER_NONE, bitmap, (widget->allocation.width - 12 - 2 * misc->xpad) * 4 );
-  } else {
-    gdk_draw_rgb_32_image(
-      widget->window, widget->style->fg_gc[ GTK_WIDGET_STATE(widget) ],
-      misc->xpad + 10, misc->ypad + 6,
-      widget->allocation.width - 20 - 2 * misc->xpad, widget->allocation.height - 12 - 2 * misc->ypad,
-      GDK_RGB_DITHER_NONE, bitmap, (widget->allocation.width - 20 - 2 * misc->xpad) * 4 );
-  }
+      gtk_thumbwheel_paint(widget, &event->area );
+    }
 
   return FALSE;
 } // gtk_thumbwheel_expose()
@@ -441,22 +403,30 @@ gtk_thumbwheel_button_press(
   GdkEventButton * event )
 {
   g_return_val_if_fail( widget != NULL, FALSE );
-  g_return_val_if_fail( GTK_IS_THUMBWHEEL(widget), FALSE );
+  g_return_val_if_fail( GTK_IS_THUMBWHEEL (widget), FALSE );
   g_return_val_if_fail( event != NULL, FALSE );
 
   GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
 
-  if ( thumbwheel->state != THUMBWHEEL_IDLE )
-    return FALSE;
+  if ( (event->button == 1) && (thumbwheel->state == THUMBWHEEL_IDLE) )
+  {
+    gdk_pointer_grab(widget->window, FALSE,
+      GdkEventMask(GDK_POINTER_MOTION_HINT_MASK
+      | GDK_BUTTON1_MOTION_MASK   
+      | GDK_BUTTON_RELEASE_MASK),  
+      NULL, NULL, event->time);   
 
-  if ( thumbwheel->vertical != 0 )
-    thumbwheel->downpos = (gint) event->y;
-  else
-    thumbwheel->downpos = (gint) event->x;
+    if (thumbwheel->vertical != 0)
+      thumbwheel->downpos = (gint) event->y;
+    else
+      thumbwheel->downpos = (gint) event->x;
 
-  thumbwheel->state = THUMBWHEEL_DRAGGING;
+    thumbwheel->state = THUMBWHEEL_DRAGGING;
 
-  gtk_signal_emit( GTK_OBJECT(widget), thumbwheel_signals[ ATTACHED ] );
+    gtk_signal_emit( GTK_OBJECT (widget), thumbwheel_signals[ ATTACHED ] );
+
+    return TRUE ;
+  }
 
   return FALSE;
 } // gtk_thumbwheel_button_press()
@@ -475,59 +445,22 @@ gtk_thumbwheel_button_release(
 
   GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
 
-  if ( thumbwheel->state != THUMBWHEEL_DRAGGING )
-    return FALSE;
+  if (( thumbwheel->state == THUMBWHEEL_DRAGGING) && (event->button == 1) )
+  {
 
-  thumbwheel->value = thumbwheel->tempvalue;
-  thumbwheel->state = THUMBWHEEL_IDLE;
+    thumbwheel->value = thumbwheel->tempvalue;
+    thumbwheel->state = THUMBWHEEL_IDLE;
+    gdk_pointer_ungrab (event->time);
 
-  gtk_signal_emit( GTK_OBJECT(widget), thumbwheel_signals[ RELEASED ] );
+    gtk_signal_emit (GTK_OBJECT (widget), thumbwheel_signals[ RELEASED ]);
+
+    return TRUE ;
+  }
 
   return FALSE;
 } // gtk_thumbwheel_button_release()
 
 // *************************************************************************
-
-/*
-  The gtk_timeout_add() method is probably not the correct way to track
-  the mouse, but I haven't found another better method yet...
-*/
-
-static
-gint
-gtk_thumbwheel_motion(
-  GtkWidget * widget )
-{
-  g_return_val_if_fail( widget != NULL, FALSE );
-  g_return_val_if_fail( GTK_IS_THUMBWHEEL(widget), FALSE );
-
-  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
-  if ( thumbwheel->state != THUMBWHEEL_DRAGGING )
-    return FALSE;
-
-  gint x, y;
-  GdkModifierType mods;
-  gdk_window_get_pointer( widget->window, &x, &y, &mods );
-
-  gint position = ( thumbwheel->vertical != FALSE ) ? y : x;
-
-  thumbwheel->tempvalue =
-    ((SoAnyThumbWheel *)thumbwheel->wheel)->calculateValue( thumbwheel->value,
-      thumbwheel->downpos, position - thumbwheel->downpos );
-
-  static int bmp = -1;
-  int img = ((SoAnyThumbWheel *)thumbwheel->wheel)->getBitmapForValue(
-    thumbwheel->tempvalue, SoAnyThumbWheel::ENABLED );
-  if ( img != bmp ) {
-    gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
-    gtk_signal_emit( GTK_OBJECT(widget), thumbwheel_signals[ VALUE_CHANGED ] );
-  }
-  bmp = img;
-
-  gtk_timeout_add( 100, (gint (*)(void *)) gtk_thumbwheel_motion, (gpointer) thumbwheel );
-  return FALSE;
-} // gtk_thumbwheel_motion()
-
 
 static
 gint
@@ -535,16 +468,51 @@ gtk_thumbwheel_motion_notify(
   GtkWidget * widget,
   GdkEventMotion * event )
 {
+  GtkThumbWheel *thumbwheel ;
+  gfloat position ;
+
   g_return_val_if_fail( widget != NULL, FALSE );
   g_return_val_if_fail( GTK_IS_THUMBWHEEL(widget), FALSE );
   g_return_val_if_fail( event != NULL, FALSE );
 
-  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
-  if ( thumbwheel->state != THUMBWHEEL_DRAGGING )
-    return FALSE;
+  thumbwheel = GTK_THUMBWHEEL(widget);
 
-  gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
-  gtk_timeout_add( 100, (gint (*)(void *)) gtk_thumbwheel_motion, (gpointer) thumbwheel );
+  if (thumbwheel->state == THUMBWHEEL_DRAGGING)
+  {
+    if ( event->is_hint )
+    {
+      gint x, y ;
+
+      gdk_window_get_pointer( widget->window, &x , &y, NULL );
+      position =  (thumbwheel->vertical != FALSE) ? y : x ;
+    }
+    else
+    {
+      position = (thumbwheel->vertical != FALSE) ? event->y : event->x;
+    }
+
+    thumbwheel->tempvalue =
+      ((SoAnyThumbWheel *) thumbwheel->wheel)->
+        calculateValue (thumbwheel->value, thumbwheel->downpos,
+	  position - thumbwheel->downpos);
+
+    int img = ((SoAnyThumbWheel *) thumbwheel->wheel)->
+      getBitmapForValue (thumbwheel->tempvalue, SoAnyThumbWheel::ENABLED);
+
+    if (img != thumbwheel->img)
+    {
+      ((SoAnyThumbWheel *) thumbwheel->wheel)->drawBitmap (img, 
+        (void *) thumbwheel->bitmap, (thumbwheel->vertical != 0) ?
+	  SoAnyThumbWheel::VERTICAL : SoAnyThumbWheel::HORIZONTAL);
+      thumbwheel->img = img ;
+
+      gtk_thumbwheel_paint (GTK_WIDGET (thumbwheel), NULL );
+      gtk_signal_emit (GTK_OBJECT (widget), thumbwheel_signals[VALUE_CHANGED]);
+    }
+
+    return TRUE ;
+  }
+
   return FALSE;
 } // gtk_thumbwheel_motion_notify()
 
@@ -582,7 +550,7 @@ gtk_thumbwheel_enable(
 
 void
 gtk_thumbwheel_disable(
-  GtkThumbWheel * thumbwheel )
+  GtkThumbWheel * thumbwheel)
 {
   thumbwheel->state = THUMBWHEEL_DISABLED;
 } // gtk_thumbwheel_disable()
@@ -606,3 +574,35 @@ gtk_thumbwheel_set_range_boundary_handling(
 } // gtk_thumbwheel_set_range_boundary_handling()
 
 // *************************************************************************
+
+static
+void
+gtk_thumbwheel_paint (
+  GtkWidget * widget,
+  GdkRectangle * area )
+{
+  GtkThumbWheel *thumbwheel;
+
+  if (GTK_WIDGET_DRAWABLE (widget))
+  {
+    thumbwheel = GTK_THUMBWHEEL (widget);
+
+    gdk_draw_rectangle(widget->window,
+      widget->style->black_gc,
+      FALSE,
+      thumbwheel->wheel_area.x - 1,
+      thumbwheel->wheel_area.y - 1,
+      thumbwheel->wheel_area.width + 1,
+      thumbwheel->wheel_area.height + 1);
+
+    gdk_draw_rgb_32_image (widget->window,
+      widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+      thumbwheel->wheel_area.x,
+      thumbwheel->wheel_area.y,
+      thumbwheel->wheel_area.width,
+      thumbwheel->wheel_area.height,
+      GDK_RGB_DITHER_NONE, 
+      thumbwheel->bitmap,
+      thumbwheel->wheel_area.width * 4);
+  }
+}

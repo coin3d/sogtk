@@ -56,13 +56,18 @@ typedef struct _GtkThumbWheelClass  GtkThumbWheelClass;
 struct _GtkThumbWheel {
   GtkMisc misc;
 
+  GdkRectangle wheel_area ;
+  
   guint8 state : 2;
   guint8 policy : 2;
   guint8 vertical : 1;
   guint8 button;
   gint downpos;
   gfloat value, tempvalue;
-  void * wheel; // ThumbWheel class instance
+
+  int img ; 		// index of the bitmap to be shown
+  guchar *bitmap ;
+  void * wheel; 	// SoAnyThumbWheel class instance
 }; // GtkThumbWheel
 
 struct _GtkThumbWheelClass {
