@@ -109,7 +109,6 @@ SoGtkWalkViewer::constructor(// private
   const SbBool build)
 {
   this->pimpl = new SoGtkWalkViewerP(this);
-  this->common = new SoAnyWalkViewer(this);
 
 #if NOTYET
   GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
@@ -142,7 +141,6 @@ SoGtkWalkViewer::constructor(// private
 SoGtkWalkViewer::~SoGtkWalkViewer(
   void)
 {
-  delete this->common;
   delete this->pimpl;
 } // ~SoGtkWalkViewer()
 
@@ -239,19 +237,6 @@ SoGtkWalkViewer::getDefaultIconTitle(// virtual
 } // getDefaultIconTitle()
 
 // ************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-SbBool
-SoGtkWalkViewer::processSoEvent(// virtual, protected
-  const SoEvent * const event)
-{
-  if (common->processSoEvent(event))
-    return TRUE;
-  return inherited::processSoEvent(event);
-} // processSoEvent()
 
 /*!
   FIXME: write doc
