@@ -450,7 +450,7 @@ SoGtk::createSimpleErrorDialog(
   const char * const errorStr1,
   const char * const errorStr2 )
 {
-#if SOQT_DEBUG
+#if SOGTK_DEBUG
   if (dialogTitle == NULL) {
     SoDebugError::postWarning("SoGtk::createSimpleErrorDialog",
                               "Called with NULL dialogTitle pointer.");
@@ -459,7 +459,7 @@ SoGtk::createSimpleErrorDialog(
     SoDebugError::postWarning("SoGtk::createSimpleErrorDialog",
                               "Called with NULL error string pointer.");
   }
-#endif // SOQT_DEBUG
+#endif // SOGTK_DEBUG
   SbString title(dialogTitle ? dialogTitle : "");
   SbString errstr(errorStr1 ? errorStr1 : "");   
 
