@@ -98,11 +98,7 @@ SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
 
 // *************************************************************************
 
-/*!
-  Calls \a SoDB::init(), \a SoNodeKit::init() and \a SoInteraction::init().
-  Assumes you are creating your own QApplication and main widget.
-  \a topLevelWidget should be your application's main widget.
-*/
+// init()-method documented in common/SoGuiCommon.cpp.in.
 void
 SoGtk::internal_init(GtkWidget * toplevelwidget)
 {
@@ -129,16 +125,7 @@ SoGtk::internal_init(GtkWidget * toplevelwidget)
 
 // *************************************************************************
 
-/*!
-  Initializes the SoGtk component toolkit library, as well as the Open
-  Inventor library.
-
-  Calls \a SoDB::init(), \a SoNodeKit::init() and \a
-  SoInteraction::init(), and creates a QApplication and constructs and
-  returns a main widget for you
-
-  \sa getApplication()
-*/
+// init()-method documented in common/SoGuiCommon.cpp.in.
 GtkWidget *
 SoGtk::internal_init(int & argc, char ** argv,
                      const char * appname, const char * classname)
