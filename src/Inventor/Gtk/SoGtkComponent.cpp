@@ -31,14 +31,15 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtk.h>
 #include <Inventor/Gtk/SoGtkComponent.h>
-// #include <Inventor/Gtk/SoGtkRoster.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
 #include <Inventor/Gtk/SoGtkRenderArea.h>
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
 // #include <Inventor/Gtk/viewers/SoGtkCustomViewer.h>
 // #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
+#include <Inventor/Gtk/SoGtkMaterialList.h>
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
+// #include <Inventor/Gtk/SoGtkRoster.h>
 
 // *************************************************************************
 
@@ -56,7 +57,6 @@ SoGtkComponent::initClasses( // static
   void )
 {
   SoGtkComponent::initClass();
-//  SoGtkRoster::initClass();
   SoGtkGLWidget::initClass();
   SoGtkRenderArea::initClass();
   SoGtkViewer::initClass();
@@ -64,6 +64,8 @@ SoGtkComponent::initClasses( // static
   SoGtkFullViewer::initClass();
   SoGtkExaminerViewer::initClass();
 //  SoGtkPlaneViewer::initClass();
+  SoGtkMaterialList::initClass();
+//  SoGtkRoster::initClass();
   SoGtkGraphEditor::initClass();
 } // initClasses()
 
@@ -792,6 +794,15 @@ SoGtkComponent::getSize(
 {
   return this->storeSize;
 } // getSize()
+
+// *************************************************************************
+
+void
+SoGtkComponent::sizeChanged( // virtual, protected
+  const SbVec2s size )
+{
+  // nada
+} // sizeChanged()
 
 // *************************************************************************
 
