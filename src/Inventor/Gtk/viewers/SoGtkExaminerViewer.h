@@ -36,10 +36,7 @@ class SoScale;
 
 // *************************************************************************
 
-class SoGtkExaminerViewer :
-  public SoGtkFullViewer,
-  public SoAnyExaminerViewer
-{
+class SoGtkExaminerViewer : public SoGtkFullViewer {
   typedef SoGtkFullViewer inherited;
   friend class SoAnyExaminerViewer;
 
@@ -102,7 +99,8 @@ private:
   } pixmaps;
 
   void constructor(SbBool buildNow);
-  static void visibilityCB(void * data, SbBool visible);
+  void visibilityCallback( SbBool visible );
+  static void visibilityCB( void * data, SbBool visible );
 
 //  QTimer * spinDetectTimer;
 
@@ -126,6 +124,9 @@ private: // slots:
   void feedbackWheelReleased();
   // Button row.
   void cameratoggleClicked();
+
+private:
+  SoAnyExaminerViewer * const common;
 
 }; // class SoGtkExaminerViewer
 

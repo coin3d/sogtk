@@ -33,7 +33,9 @@ static const char rcsid[] =
 
 #include <Inventor/Gtk/SoGtk.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
+#include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
 
+#include <Inventor/Gtk/viewers/SoAnyFullViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 
 // Button icons.
@@ -160,7 +162,7 @@ SoGtkFullViewer::SoGtkFullViewer(
   SoGtkViewer::Type type,
   SbBool buildNow )
 : inherited( parent, name, buildInsideParent, type, FALSE )
-, SoAnyFullViewer( this )
+, common( new SoAnyFullViewer( this ) )
 {
   this->viewerWidget = NULL;
   this->canvas = NULL;
@@ -179,13 +181,13 @@ SoGtkFullViewer::SoGtkFullViewer(
   this->mainLayout = NULL;
   this->appButtonLayout = NULL;
 
+  this->prefmenu = NULL;
   this->prefWindow = NULL;
   this->prefWindowTitle = "Viewer Preference Sheet";
 
   this->menuEnabled = buildFlag & SoGtkFullViewer::BUILD_POPUP;
   this->decorations = buildFlag & SoGtkFullViewer::BUILD_DECORATION;
 
-  this->prefMenu = NULL;
   this->menuTitle = "Viewer Menu";
 
   this->viewerButtons = new SbPList;
@@ -239,8 +241,8 @@ SoGtkFullViewer::setDecoration(
 #endif // SOGTK_DEBUG
 
   this->decorations = on;
-//  if ( this->prefMenu )
-//    this->prefMenu->setItemChecked( DECORATION_ITEM, on );
+  if ( this->prefmenu )
+    this->prefmenu->SetMenuItemMarked( DECORATION_ITEM, on );
   if ( this->viewerWidget )
     this->showDecorationWidgets(on);
 }
@@ -496,8 +498,8 @@ SoGtkFullViewer::setDrawStyle(
   SoGtkViewer::DrawStyle style )
 {
   inherited::setDrawStyle( type, style );
-  if ( this->prefMenu )
-    this->setDrawStyleMenuActivation( type, style );
+  if ( this->prefmenu )
+    common->setDrawStyleMenuActivation( type, style );
 } // setDrawStyle()
 
 // *************************************************************************
@@ -513,7 +515,7 @@ SoGtkFullViewer::setBufferingType(
 {
   inherited::setBufferingType(type);
 
-  if (this->prefMenu) {
+  if (this->prefmenu) {
 /*
     QMenuData * m;
     this->prefMenu->findItem(AS_IS_ITEM, &m);
@@ -1015,38 +1017,7 @@ SoGtkFullViewer::buildPopupMenu(
   void )
 {
 /*
-  this->prefMenu = new QPopupMenu(NULL);
-
-  this->prefMenu->insertItem(this->menuTitle.getString(), MENUTITLE_ITEM);
-  this->prefMenu->insertSeparator();
-
-  QPopupMenu * funcsub = (QPopupMenu *)this->buildFunctionsSubmenu(NULL);
-  this->prefmenu->insertItem("Functions", funcsub, FUNCTIONS_ITEM);
-
-  QPopupMenu * dssub = (QPopupMenu *)this->buildDrawStyleSubmenu(NULL);
-  this->prefmenu->insertItem("Draw Style", dssub, DRAWSTYLES_ITEM);
-
-  // Set initial checkmarks on drawstyle menus.
-  this->setDrawStyle(SoGtkViewer::STILL, this->getDrawStyle(SoGtkViewer::STILL));
-  this->setDrawStyle(SoGtkViewer::INTERACTIVE,
-                     this->getDrawStyle(SoGtkViewer::INTERACTIVE));
-  this->setBufferingType(this->getBufferingType());
-
-
-  this->prefmenu->insertItem("Viewing", this, SLOT(selectedViewing()),
-                             0, EXAMINING_ITEM);
-  this->prefmenu->setItemChecked(EXAMINING_ITEM, this->isViewing());
-
-  this->prefmenu->insertItem("Decoration", this, SLOT(selectedDecoration()),
-                             0, DECORATION_ITEM);
-  this->prefmenu->setItemChecked(DECORATION_ITEM, this->decorations);
-
-  this->prefmenu->insertItem("Headlight", this, SLOT(selectedHeadlight()),
-                             0, HEADLIGHT_ITEM);
-  this->prefmenu->setItemChecked(HEADLIGHT_ITEM, this->isHeadlight());
-
-  this->prefmenu->insertItem("Preferences...", this, SLOT(selectedPrefs()),
-                             0, PREFERENCES_ITEM);
+  this->prefmenu = common->buildStandardPopupMenu();
 */
 }
 
@@ -2297,62 +2268,6 @@ SoGtkFullViewer::pasteviewSelected()
   this->pasteView(SbTime::getTimeOfDay());
 }
 */
-
-// *************************************************************************
-
-/*!
-  \internal
-*/
-
-void
-SoGtkFullViewer::setDrawStyleMenuActivation(SoGtkViewer::DrawType type,
-                                           SoGtkViewer::DrawStyle val)
-{
-/*
-  QMenuData * m;
-  assert(this->prefmenu);
-  this->prefmenu->findItem(AS_IS_ITEM, &m);
-  assert(m);
-
-  int start = type == SoGtkViewer::STILL ?
-    AS_IS_ITEM : MOVE_SAME_AS_STILL_ITEM;
-  int end = type == SoGtkViewer::STILL ?
-    BOUNDING_BOX_ITEM : MOVE_BOUNDING_BOX_ITEM;
-
-  for (int i = start; i <= end; i++) m->setItemChecked(i, FALSE);
-
-  int id = 0; // set to dummy value to avoid compiler warning.
-
-  // FIXME: use a dict or two? 990220 mortene.
-  if (type == SoGtkViewer::STILL) {
-    switch (val) {
-    case SoGtkViewer::VIEW_AS_IS: id = AS_IS_ITEM; break;
-    case SoGtkViewer::VIEW_HIDDEN_LINE: id = HIDDEN_LINE_ITEM; break;
-    case SoGtkViewer::VIEW_NO_TEXTURE: id = NO_TEXTURE_ITEM; break;
-    case SoGtkViewer::VIEW_LOW_COMPLEXITY: id = LOW_RESOLUTION_ITEM; break;
-    case SoGtkViewer::VIEW_LINE: id = WIREFRAME_ITEM; break;
-    case SoGtkViewer::VIEW_POINT: id = POINTS_ITEM; break;
-    case SoGtkViewer::VIEW_BBOX: id = BOUNDING_BOX_ITEM; break;
-    default: assert(0); break;
-    }
-  }
-  else if (type == SoGtkViewer::INTERACTIVE) {
-    switch (val) {
-    case SoGtkViewer::VIEW_SAME_AS_STILL: id = MOVE_SAME_AS_STILL_ITEM; break;
-    case SoGtkViewer::VIEW_NO_TEXTURE: id = MOVE_NO_TEXTURE_ITEM; break;
-    case SoGtkViewer::VIEW_LOW_COMPLEXITY: id = MOVE_LOW_RES_ITEM; break;
-    case SoGtkViewer::VIEW_LINE: id = MOVE_WIREFRAME_ITEM; break;
-    case SoGtkViewer::VIEW_LOW_RES_LINE: id= MOVE_LOW_RES_WIREFRAME_ITEM; break;
-    case SoGtkViewer::VIEW_POINT: id = MOVE_POINTS_ITEM; break;
-    case SoGtkViewer::VIEW_LOW_RES_POINT: id = MOVE_LOW_RES_POINTS_ITEM; break;
-    case SoGtkViewer::VIEW_BBOX: id = MOVE_BOUNDING_BOX_ITEM; break;
-    default: assert(0); break;
-    }
-  }
-
-  m->setItemChecked(id, TRUE);
-*/
-}
 
 // *************************************************************************
 

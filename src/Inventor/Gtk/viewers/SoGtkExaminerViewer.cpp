@@ -88,7 +88,7 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(
   SoGtkFullViewer::BuildFlag b,
   SoGtkViewer::Type t )
 : inherited(parent, name, buildInsideParent, b, t, FALSE)
-, SoAnyExaminerViewer( this )
+, common( new SoAnyExaminerViewer( this ) )
 {
   this->constructor(TRUE);
 }
@@ -105,7 +105,7 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(
   SoGtkViewer::Type t,
   SbBool buildNow )
 : inherited(parent, name, buildInsideParent, b, t, FALSE)
-, SoAnyExaminerViewer( this )
+, common( new SoAnyExaminerViewer( this ) )
 {
   this->constructor(buildNow);
 }
@@ -231,7 +231,7 @@ SoGtkExaminerViewer::setCursorEnabled(SbBool on)
 void
 SoGtkExaminerViewer::leftWheelMotion(float val)
 {
-  this->reorientCamera(SbRotation(SbVec3f(1.0f, 0.0f, 0.0f),
+  common->reorientCamera(SbRotation(SbVec3f(1.0f, 0.0f, 0.0f),
                                   val - this->getLeftWheelValue()));
   inherited::leftWheelMotion(val);
 }
@@ -244,7 +244,7 @@ SoGtkExaminerViewer::leftWheelMotion(float val)
 void
 SoGtkExaminerViewer::bottomWheelMotion(float val)
 {
-  this->reorientCamera(SbRotation(SbVec3f(0.0f, 1.0f, 0.0f),
+  common->reorientCamera(SbRotation(SbVec3f(0.0f, 1.0f, 0.0f),
                                   this->getBottomWheelValue() - val));
   inherited::bottomWheelMotion(val);
 }
@@ -257,7 +257,7 @@ SoGtkExaminerViewer::bottomWheelMotion(float val)
 void
 SoGtkExaminerViewer::rightWheelMotion(float val)
 {
-  this->zoom(val - this->getRightWheelValue());
+  common->zoom(val - this->getRightWheelValue());
   inherited::rightWheelMotion(val);
 }
 
@@ -590,7 +590,7 @@ SoGtkExaminerViewer::setSeekMode(SbBool on)
   }
 #endif // SOGTK_DEBUG
 
-  if (this->isAnimating()) this->stopAnimating();
+  if (common->isAnimating()) common->stopAnimating();
   inherited::setSeekMode(on);
   this->setMode(on ? WAITING_FOR_SEEK : EXAMINE);
 }
@@ -604,7 +604,7 @@ void
 SoGtkExaminerViewer::actualRedraw(void)
 {
   inherited::actualRedraw();
-  if (this->isFeedbackVisible()) this->drawAxisCross();
+  if (common->isFeedbackVisible()) common->drawAxisCross();
 }
 
 // *************************************************************************
@@ -666,12 +666,12 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
 
   switch (mode) {
   case INTERACT:
-    if (this->isAnimating()) this->stopAnimating();
+    if (common->isAnimating()) common->stopAnimating();
     while (this->getInteractiveCount()) this->interactiveCountDec();
     break;
 
   case DRAGGING:
-    this->spinprojector->project(this->lastmouseposition);
+    common->spinprojector->project(common->lastmouseposition);
     break;
 
   case PANNING:
@@ -680,8 +680,8 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
       // coordinates should stay the same during the whole pan
       // operation, so we should calculate this value here.
       SoCamera * cam = this->getCamera();
-      SbViewVolume vv = cam->getViewVolume(this->getGlxAspectRatio());
-      this->panningplane = vv.getPlane(cam->focalDistance.getValue());
+      SbViewVolume vv = cam->getViewVolume(this->getGLAspectRatio());
+      common->panningplane = vv.getPlane(cam->focalDistance.getValue());
     }
     break;
 
@@ -812,21 +812,32 @@ SoGtkExaminerViewer::timertriggeredCB(void * data, SoSensor *)
 */
 
 // *************************************************************************
+void
+SoGtkExaminerViewer::visibilityCallback(
+  SbBool visible )
+{
+  if ( common->isAnimating() ) {
+/*
+    if ( visible )
+      common->timertrigger->schedule();
+    else
+      common->timertrigger->unschedule();
+*/
+  }
+} // visibilityCallback()
+
+
 /*!
   \internal
 
   This gets called whenever the visibility status of the viewer widget
   changes (for instance on iconization/deiconization).
 */
+
 void
 SoGtkExaminerViewer::visibilityCB(void * data, SbBool visible)
 {
-  SoGtkExaminerViewer * thisp = (SoGtkExaminerViewer *)data;
-
-  if (thisp->isAnimating()) {
-//    if (visible) thisp->timerTrigger->schedule();
-//    else thisp->timerTrigger->unschedule();
-  }
+  ((SoGtkExaminerViewer *) data)->visibilityCallback( visible);
 }
 
 // *************************************************************************
@@ -838,7 +849,7 @@ void
 SoGtkExaminerViewer::spinAnimationToggled(
   SbBool flag )
 {
-  this->setAnimationEnabled(flag);
+  common->setAnimationEnabled(flag);
 }
 
 // *************************************************************************
@@ -850,7 +861,7 @@ void
 SoGtkExaminerViewer::feedbackVisibilityToggle(
   SbBool flag )
 {
-  this->setFeedbackVisibility(flag);
+  common->setFeedbackVisibility(flag);
   this->setEnableFeedbackControls(flag);
 }
 

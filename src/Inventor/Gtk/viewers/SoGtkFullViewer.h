@@ -23,14 +23,13 @@
 #define SOGTK_FULLVIEWER_H
 
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
-#include <Inventor/Gtk/viewers/SoAnyFullViewer.h>
+
+class SoAnyFullViewer;
+class SoAnyPopupMenu;
 
 // *************************************************************************
 
-class SoGtkFullViewer :
-  public SoGtkViewer,
-  public SoAnyFullViewer
-{
+class SoGtkFullViewer : public SoGtkViewer {
   typedef SoGtkViewer inherited;
   friend class SoAnyFullViewer;
 
@@ -116,6 +115,8 @@ protected:
 
   virtual void openViewerHelpCard(void);
 
+  SoAnyPopupMenu * prefmenu;
+
 private:
   enum {
     LEFTDECORATION,
@@ -143,7 +144,6 @@ private:
   GtkWidget * decorForm[NUMDECORATIONS];
 
   SbString menuTitle;
-  GtkWidget * prefMenu;
   SbBool menuEnabled;
 
   GtkWidget * mainLayout;
@@ -174,9 +174,6 @@ private:
   GtkWidget * nearClippingLabel, * farClippingLabel;
   GtkWidget * nearClippingWheel, * farClippingWheel;
   GtkWidget * nearClippingEdit, * farClippingEdit;
-
-  void setDrawStyleMenuActivation(
-    SoGtkViewer::DrawType type, SoGtkViewer::DrawStyle value );
 
   void setEnabledClippingWidgets( SbBool flag );
 
@@ -240,6 +237,9 @@ private:
   void selectedPrefs(void);
   void seekbuttonClicked(void);
   void drawstyleActivated(int drawstyle);
+
+private:
+  SoAnyFullViewer * const common;
 
 }; // class SoGtkFullViewer
 
