@@ -1,0 +1,45 @@
+## automake - create Makefile.in from Makefile.am
+## Copyright 1994, 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
+
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+## 02111-1307, USA.
+install-@DIR@HEADERS: $(@DIR@_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(@NDIR@dir)
+@CHA@	@list='$(@DIR@_HEADERS)'; for p in $$list; do \
+@CHA@	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+BASE@CHA@	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+NOBASE@CHA@	  f="$$p"; \
+@CHA@	  if cmp -s $$d$$p $(DESTDIR)$(@NDIR@dir)/$$f; then :; else \
+@CHA@	    echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(@NDIR@dir)/$$f"; \
+@CHA@	    $(INSTALL_DATA) $$d$$p $(DESTDIR)$(@NDIR@dir)/$$f; \
+@CHA@	  fi; \
+@CHA@	done
+@NOCHA@	@list='$(@DIR@_HEADERS)'; for p in $$list; do \
+@NOCHA@	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+BASE@NOCHA@	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+NOBASE@NOCHA@	  f="$$p"; \
+@NOCHA@	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(@NDIR@dir)/$$f"; \
+@NOCHA@	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(@NDIR@dir)/$$f; \
+@NOCHA@	done
+
+uninstall-@DIR@HEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(@DIR@_HEADERS)'; for p in $$list; do \
+BASE	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+NOBASE	  f="$$p"; \
+	  echo " rm -f $(DESTDIR)$(@NDIR@dir)/$$f"; \
+	  rm -f $(DESTDIR)$(@NDIR@dir)/$$f; \
+	done
