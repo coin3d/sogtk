@@ -413,7 +413,9 @@ AM_CONDITIONAL([BUILD_INTL], test x"$GMSGFMT" = x"")
 # **************************************************************************
 # Submodules that must be configured.
 
-AC_CONFIG_SUBDIRS(data)
+# Material editor(s) not part of the public API yet, so there's
+# no point yet in installing the material data.
+#AC_CONFIG_SUBDIRS(data)
 
 # **************************************************************************
 
@@ -457,7 +459,7 @@ AC_SUBST([COMPONENTHEADER], [])
 #
 # Note that sogtk-$CONFIG.cfg needs to be generated from the configure
 # script -- not just from the Makefile -- as the data/configure script
-# depends on it.
+# depends on it. (data/configure is temporarily disabled, BTW, but anyway..)
 
 AC_OUTPUT([
 	sogtk-$CONFIG.cfg:src/Inventor/Gtk/common/sogui.cfg.in
