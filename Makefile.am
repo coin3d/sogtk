@@ -11,7 +11,13 @@ else
 EXAMPLEDIR =
 endif
 
-SUBDIRS = src/Inventor/Gtk $(TESTDIR) $(EXAMPLEDIR)
+if BUILD_IV_EXAMPLES
+IVEXAMPLEDIR = ivexamples
+else
+IVEXAMPLEDIR = 
+endif
+
+SUBDIRS = src/Inventor/Gtk $(TESTDIR) $(EXAMPLEDIR) $(IVEXAMPLEDIR)
 
 BUILT_SOURCES = \
 	src/Inventor/Gtk/SoGtkRenderArea.h \

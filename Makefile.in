@@ -105,8 +105,10 @@ sim_ac_conf_cmd = @sim_ac_conf_cmd@
 @BUILD_TESTS_FALSE@TESTDIR = 
 @BUILD_EXAMPLES_TRUE@EXAMPLEDIR = @BUILD_EXAMPLES_TRUE@examples
 @BUILD_EXAMPLES_FALSE@EXAMPLEDIR = 
+@BUILD_IV_EXAMPLES_TRUE@IVEXAMPLEDIR = @BUILD_IV_EXAMPLES_TRUE@ivexamples
+@BUILD_IV_EXAMPLES_FALSE@IVEXAMPLEDIR = 
 
-SUBDIRS = src/Inventor/Gtk $(TESTDIR) $(EXAMPLEDIR)
+SUBDIRS = src/Inventor/Gtk $(TESTDIR) $(EXAMPLEDIR) $(IVEXAMPLEDIR)
 
 BUILT_SOURCES = \
 	src/Inventor/Gtk/SoGtkRenderArea.h \
@@ -131,7 +133,7 @@ ltconfig ltmain.sh missing mkinstalldirs sogtk-config.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-DIST_SUBDIRS =  src/Inventor/Gtk test-code examples
+DIST_SUBDIRS =  src/Inventor/Gtk test-code examples ivexamples
 all: all-redirect
 .SUFFIXES:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
