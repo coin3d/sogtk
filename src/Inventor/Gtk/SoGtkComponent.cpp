@@ -1091,10 +1091,6 @@ SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
       SOGTK_STUB();
       break;
 
-    case SoGtkCursor::BLANK:
-      gdk_window_set_cursor(w->window, (GdkCursor *)NULL);
-      break;
-
     case SoGtkCursor::CROSSHAIR:
       if (!SoGtkComponentP::crosscursor) {
         // FIXME: plug memleak. 20011126 mortene.

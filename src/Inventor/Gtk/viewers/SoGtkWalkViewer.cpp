@@ -111,7 +111,6 @@ SoGtkWalkViewer::constructor(// private
   this->pimpl = new SoGtkWalkViewerP(this);
   this->common = new SoAnyWalkViewer(this);
 
-  // Cursors.
 #if NOTYET
   GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
 

@@ -516,7 +516,7 @@ SoGtkPlaneViewer::setCursorRepresentation(int mode)
   assert(w);
 
   if (! this->isCursorEnabled()) {
-    this->setComponentCursor(SoGtkCursor(SoGtkCursor::BLANK));
+    this->setComponentCursor(SoGtkCursor::getBlankCursor());
     return;
   }
 
@@ -524,7 +524,7 @@ SoGtkPlaneViewer::setCursorRepresentation(int mode)
 //  case SoAnyPlaneViewer::INTERACT:
 //  case SoAnyPlaneViewer::EXAMINE:
   case SoAnyPlaneViewer::IDLE_MODE:
-    this->setComponentCursor(SoGtkCursor(SoGtkCursor::BLANK));
+    this->setComponentCursor(SoGtkCursor::getBlankCursor());
     break ;
   case SoAnyPlaneViewer::DOLLY_MODE:
     this->setComponentCursor(SoGtkCursor(SoGtkCursor::UPARROW));

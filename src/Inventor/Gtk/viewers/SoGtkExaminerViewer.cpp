@@ -712,7 +712,7 @@ SoGtkExaminerViewer::setCursorRepresentation(int mode)
   assert(w);
 
   if (!this->isCursorEnabled()) {
-    this->setComponentCursor(SoGtkCursor(SoGtkCursor::BLANK));
+    this->setComponentCursor(SoGtkCursor::getBlankCursor());
     return;
   }
 

@@ -104,7 +104,6 @@ SoGtkFlyViewer::constructor(// private
   this->pimpl = new SoGtkFlyViewerP(this);
   this->common = new SoAnyFlyViewer(this);
 
-  // Cursors.
 #if NOTYET
   GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
 
