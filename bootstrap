@@ -131,7 +131,8 @@ END
   shift
 done
 
-${DIE=false} && echo "" && echo "$me: faking the bootstrap process..." && tar xf $package && exit 0
+${DIE=false} && echo "" && echo "$me: faking the bootstrap process..." &&
+  gzip -cd $package.gz | tar xf - && exit 0
 
 # **************************************************************************
 

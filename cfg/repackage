@@ -4,11 +4,12 @@
 # need to run this script to support developers without the correct versions
 # of the config tools.
 
-wd=`echo "$0" | sed 's,[^/]*$,,g'`
-me=`echo "$0" | sed 's,.*/,,g'`
+me=`echo "$0" | sed 's,^.*/,,g'`
+wd=`echo "$0" | sed 's,/[^/]*$,,g'`
+basedir=`echo "$wd" | sed 's,/cfg$,,'`
 
-cd $wd
-if test ! -f ./$me; then
+cd $basedir
+if test ! -f ./configure.in; then
   echo >&2 "$me: error: unexpected problem with your shell - bailing out"
   exit 1
 fi
@@ -38,4 +39,5 @@ autofiles=`find $local_hierarchy -maxdepth 1 -type f -a \
 
 rm -f $package
 tar cf $package $autofiles
+gzip -9 $package
 
