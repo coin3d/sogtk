@@ -18,6 +18,8 @@ bin_SCRIPTS = sogtk-config
 BUILT_SOURCES = \
 	sogtkdefs.h \
 	src/Inventor/Gtk/SoGtkBasic.h \
+	src/Inventor/Gtk/SoGtkObject.h \
+	src/Inventor/Gtk/SoGtkObject.cpp \
 	src/Inventor/Gtk/SoGtkCursors.h \
 	src/Inventor/Gtk/SoGtkCursors.cpp \
 	src/Inventor/Gtk/SoGtkRenderArea.h \
@@ -42,6 +44,8 @@ EXTRA_DIST = cfg/m4/sogtk.m4
 
 noinst_HEADERS = $(BUILT_SOURCES)
 
+Makefile: $(BUILT_SOURCES)
+
 ############################################################################
 
 sogtkdefs.h: $(top_srcdir)/sogtkdefs.h.in
@@ -51,6 +55,14 @@ src/Inventor/Gtk/SoGtkBasic.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
 	@./config.status --file=-:src/Inventor/Gtk/common/SoGuiBasic.h.in | \
 	./config.status --header=$@:-
+
+src/Inventor/Gtk/SoGtkObject.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoGuiObject.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiObject.h.in
+
+src/Inventor/Gtk/SoGtkObject.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoGuiObject.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiObject.cpp.in
 
 src/Inventor/Gtk/SoGtkCursors.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in
