@@ -88,6 +88,8 @@ protected:
   virtual void glReshape(int width, int height);
   virtual void glRender(void);
 
+  SbBool waitForExpose;
+
 private:
   GtkWidget * glParent;
   GtkWidget * glWidget;

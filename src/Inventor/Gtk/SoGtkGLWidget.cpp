@@ -65,7 +65,7 @@ SoGtkGLWidget::SoGtkGLWidget(
   const SbBool buildInsideParent,
   const int glModes,
   const SbBool buildNow )
-  : inherited( parent )
+  : inherited( parent ), waitForExpose( TRUE )
 {
   this->glModeBits = glModes;
 
@@ -594,9 +594,8 @@ SoGtkGLWidget::glDraw(
   return TRUE;
 } // glDraw()
 
-/*!
-  FIXME: write doc
-*/
+
+// Callback function for expose events.
 
 gint
 SoGtkGLWidget::sGLDraw( // static
@@ -605,7 +604,9 @@ SoGtkGLWidget::sGLDraw( // static
   void * userData )
 {
   SoGtkGLWidget * that = (SoGtkGLWidget *) userData;
-  return that->glDraw( widget, event );
+  gint result = that->glDraw( widget, event );
+  that->waitForExpose = FALSE; // Gets flipped from TRUE on first expose.
+  return result;
 } // sGLDraw()
 
 // *************************************************************************
