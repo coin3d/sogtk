@@ -180,9 +180,10 @@ private:
   GtkWidget * seekdistancewheel;
   GtkWidget * seekdistancefield;
 
-  GtkWidget * nearClippingLabel, * farClippingLabel;
-  GtkWidget * nearClippingWheel, * farClippingWheel;
-  GtkWidget * nearClippingEdit, * farClippingEdit;
+  GtkWidget * clippingtable ;
+  GtkWidget * nearclippinglabel, * farclippinglabel;
+  GtkWidget * nearclippingwheel, * farclippingwheel;
+  GtkWidget * nearclippingedit, * farclippingedit;
 
   void setEnabledClippingWidgets( SbBool flag );
 
@@ -202,18 +203,16 @@ private: //  slots:
   // Button row.
   void interactbuttonToggled(SbBool);
   void viewbuttonToggled(SbBool);
-
+#endif
   // Menu items.
   void selectedViewing();
   void selectedDecoration();
   void selectedHeadlight();
   void copyviewSelected();
   void pasteviewSelected();
-  void drawstyleActivated(int);
   void selectedPrefs();
 
   // Pref sheet.
-#endif
   static void preferencesDestroyed(
     GtkObject           *object,
     gpointer            closure);
@@ -249,23 +248,32 @@ private: //  slots:
     GtkEditable     	*editable,
     gpointer         	closure);
 
-#if 0
   //  clipping settings
-  void clippingToggled(SbBool flag);
-  void nearclippingwheelMoved(float val);
-  void farclippingwheelMoved(float val);
-  void nearclipEditPressed();
-  void farclipEditPressed();
-#endif
+  static void clippingToggled(
+    GtkToggleButton 	*toggle_button,
+    gpointer         	closure);
+  static void nearclippingwheelMoved(
+    GtkWidget		*w,
+    gpointer		closure );
+  static void farclippingwheelMoved(
+    GtkWidget		*w,
+    gpointer		closure );
+  static void nearclipEditPressed(
+    GtkWidget		*w,
+    gpointer		closure );
+  static void farclipEditPressed(
+    GtkWidget		*w,
+    gpointer		closure );
 
-  // Generic slots.
-  void increaseInteractiveCount(void);
-  void decreaseInteractiveCount(void);
+  // Generic Signal Handlers.
+  static void increaseInteractiveCount(
+    GtkWidget		*w,
+    gpointer		closure );
+  static void decreaseInteractiveCount(
+    GtkWidget		*w,
+    gpointer		closure );
 
 private:
-  void selectedPrefs(void);
-  void drawstyleActivated(int drawstyle);
-
   static SoGtkViewerButton SoGtkFullViewerButtons[];
   SoGtkViewerButton * buttons;
 

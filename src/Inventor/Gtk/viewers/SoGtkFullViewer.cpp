@@ -577,11 +577,11 @@ SoGtkFullViewer::setCamera( // virtual
     this->setZoomSliderPosition(this->getCameraZoom());
     this->setZoomFieldString(this->getCameraZoom());
 
-    const SbBool enable = camera ? TRUE : FALSE;
-//    this->zoomslider->setEnabled(enable);
-//    this->zoomfield->setEnabled(enable);
-//    this->zoomrangefrom->setEnabled(enable);
-//    this->zoomrangeto->setEnabled(enable);
+    const gboolean enable = camera ? TRUE : FALSE;
+    gtk_widget_set_sensitive(this->zoomslider, enable);
+    gtk_widget_set_sensitive(this->zoomfield, enable); 
+    gtk_widget_set_sensitive(this->zoomrangefrom, enable);
+    gtk_widget_set_sensitive(this->zoomrangeto, enable); 
   }
 }
 
@@ -1392,15 +1392,12 @@ SoGtkFullViewer::makePreferencesWindow(
 
   w = makeZoomPreferences(form);
 
-#if 0
   w = makeAutoclipPreferences(form);
-
 //  w = makeStereoPreferences(form);
 
 //  w = makeSpinAnimationPreferences(form);
 
   w = makeSubPreferences(form);
-#endif
 
   gtk_signal_connect (GTK_OBJECT (this->prefwindow), "destroy",
                       GTK_SIGNAL_FUNC (preferencesDestroyed),
@@ -1643,6 +1640,20 @@ SoGtkFullViewer::makeZoomPreferences(
   gtk_widget_show (this->zoomrangeto);
   gtk_box_pack_start (GTK_BOX (hbox2), this->zoomrangeto, FALSE, FALSE, 0);
 
+  SoCamera *cam = this->getCamera();
+  if ( cam )
+  {
+    this->setZoomSliderPosition(this->getCameraZoom());
+    this->setZoomFieldString(this->getCameraZoom());
+  }
+  else
+  {
+    gtk_widget_set_sensitive(this->zoomslider, FALSE);
+    gtk_widget_set_sensitive(this->zoomfield, FALSE); 
+    gtk_widget_set_sensitive(this->zoomrangefrom, FALSE);
+    gtk_widget_set_sensitive(this->zoomrangeto, FALSE); 
+  }
+
   gtk_signal_connect (GTK_OBJECT (this->zoomfield), "activate",
                       GTK_SIGNAL_FUNC (zoomFieldChanged),
                       (gpointer) this);
@@ -1673,6 +1684,44 @@ void
 SoGtkFullViewer::setEnabledClippingWidgets(
   SbBool flag )
 {
+#if 1
+  gtk_widget_set_sensitive( this->clippingtable, flag );
+#else
+// FIXME: This trips a bug in Gtk's interaction with gtkthumbwheel
+// Could be a bug in gtk_table or in gtk_thumbwheel :)
+  if ( flag )
+  {
+    gtk_widget_show( this->clippingtable );
+//    gtk_widget_show( this->nearclippinglabel );
+//    gtk_widget_show( this->nearclippingwheel );
+//    gtk_widget_show( this->nearclippingedit ); 
+//    gtk_widget_show( this->farclippinglabel ); 
+//    gtk_widget_show( this->farclippingwheel ); 
+//    gtk_widget_show( this->farclippingedit );  
+  }
+  else
+  {
+    gtk_widget_hide( this->clippingtable );
+//    gtk_widget_hide( this->nearclippinglabel );
+//    gtk_widget_hide( this->nearclippingwheel );
+//    gtk_widget_hide( this->nearclippingedit ); 
+//    gtk_widget_hide( this->farclippinglabel ); 
+//    gtk_widget_hide( this->farclippingwheel ); 
+//    gtk_widget_hide( this->farclippingedit );  
+  }
+#endif
+  SoCamera * cam = this->getCamera();
+  if ( !cam ) return ;
+
+  {
+    char buffer[16] ;
+
+    sprintf( buffer, "%.3f", cam->nearDistance.getValue() );
+    gtk_entry_set_text( GTK_ENTRY(this->nearclippingedit), buffer );
+
+    sprintf( buffer, "%.3f", cam->farDistance.getValue() );
+    gtk_entry_set_text( GTK_ENTRY(this->farclippingedit), buffer );
+  }
 }
 
 // *************************************************************************
@@ -1686,7 +1735,80 @@ GtkWidget *
 SoGtkFullViewer::makeAutoclipPreferences(
   GtkWidget * dialog )
 {
-  return NULL;
+  GtkWidget *form = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (form);
+  gtk_container_add (GTK_CONTAINER (dialog), form);
+
+  GtkWidget *checkbutton1 = gtk_check_button_new_with_label ( "Auto clipping planes" );
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
+     this->isAutoClipping());
+  gtk_widget_show (checkbutton1);
+  gtk_box_pack_start (GTK_BOX (form), checkbutton1, FALSE, FALSE, 0);
+
+  this->clippingtable = gtk_table_new (2, 3, FALSE);
+  gtk_box_pack_start (GTK_BOX (form), this->clippingtable, FALSE, FALSE, 0);
+  gtk_widget_show( this->clippingtable );
+
+  this->nearclippinglabel = gtk_label_new ( "near plane:" );
+  gtk_label_set_justify (GTK_LABEL (this->nearclippinglabel), GTK_JUSTIFY_RIGHT); 
+  gtk_misc_set_alignment (GTK_MISC (this->nearclippinglabel), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (this->clippingtable), this->nearclippinglabel, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show( this->nearclippinglabel );
+
+  this->nearclippingwheel = gtk_thumbwheel_new (0);
+  gtk_table_attach (GTK_TABLE (this->clippingtable), this->nearclippingwheel, 1, 2, 0, 1,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show( this->nearclippingwheel );
+
+  this->nearclippingedit = gtk_entry_new ();
+  gtk_table_attach (GTK_TABLE (this->clippingtable), this->nearclippingedit, 2, 3, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show( this->nearclippingedit );
+
+  this->farclippinglabel = gtk_label_new ( "far plane:" );
+  gtk_label_set_justify (GTK_LABEL (this->farclippinglabel), GTK_JUSTIFY_RIGHT); 
+  gtk_misc_set_alignment (GTK_MISC (this->farclippinglabel), 1, 0.5);
+  gtk_table_attach (GTK_TABLE (this->clippingtable), this->farclippinglabel, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show( this->farclippinglabel );
+
+  this->farclippingwheel = gtk_thumbwheel_new (0);
+  gtk_table_attach (GTK_TABLE (this->clippingtable), this->farclippingwheel, 1, 2, 1, 2,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show( this->farclippingwheel );
+
+  this->farclippingedit = gtk_entry_new ();
+  gtk_table_attach (GTK_TABLE (this->clippingtable), this->farclippingedit, 2, 3, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_widget_show( this->farclippingedit );
+
+  gtk_signal_connect (GTK_OBJECT (checkbutton1), 
+    "toggled", GTK_SIGNAL_FUNC (clippingToggled), this);
+
+  gtk_signal_connect(GTK_OBJECT(this->nearclippingwheel), 
+    "attached", GTK_SIGNAL_FUNC (increaseInteractiveCount), this);
+  gtk_signal_connect(GTK_OBJECT(this->nearclippingwheel), 
+    "value_changed", GTK_SIGNAL_FUNC (nearclippingwheelMoved), this);
+  gtk_signal_connect(GTK_OBJECT(this->nearclippingwheel), 
+    "released", GTK_SIGNAL_FUNC (decreaseInteractiveCount), this);
+
+  gtk_signal_connect(GTK_OBJECT(this->farclippingwheel), 
+    "attached", GTK_SIGNAL_FUNC (increaseInteractiveCount), this);
+  gtk_signal_connect(GTK_OBJECT(this->farclippingwheel), 
+    "value_changed", GTK_SIGNAL_FUNC (farclippingwheelMoved), this);
+  gtk_signal_connect(GTK_OBJECT(this->farclippingwheel), 
+    "released", GTK_SIGNAL_FUNC (decreaseInteractiveCount), this);
+
+  this->setEnabledClippingWidgets(!this->isAutoClipping());
+
+  return form;
 }
 
 // *************************************************************************
@@ -1747,7 +1869,7 @@ SoGtkFullViewer::setZoomSliderPosition(float zoom)
 
   float f =
     (zoom - this->zoomrange[0]) / (this->zoomrange[1] - this->zoomrange[0]);
-  f = SoGtkMax(0.0f, SoGtkMin(f, 1.0f)) * ZOOMSLIDERRESOLUTION;
+  f = SoGtkClamp(f, 0.0f, 1.0f) * ZOOMSLIDERRESOLUTION;
 
   GtkAdjustment *adj = GTK_RANGE(this->zoomslider)->adjustment ;
   gtk_adjustment_set_value( adj, f );
@@ -1771,163 +1893,72 @@ SoGtkFullViewer::setZoomFieldString(float zoom)
 
 /*!
   \internal
-  Qt slot.
+  SoGtk Slot.
 */
 
-/*
 void
 SoGtkFullViewer::selectedViewing()
 {
   this->setViewing(this->isViewing() ? FALSE : TRUE);
 }
-*/
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  SoGtk slot.
 */
 
-/*
 void
 SoGtkFullViewer::selectedDecoration()
 {
   this->setDecoration(this->isDecoration() ? FALSE : TRUE);
 }
-*/
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  SoGtk slot.
 */
 
-/*
 void
 SoGtkFullViewer::selectedHeadlight()
 {
   this->setHeadlight(this->isHeadlight() ? FALSE : TRUE);
 }
-*/
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  SoGtk slot.
 */
 
-/*
 void
 SoGtkFullViewer::copyviewSelected()
 {
   this->copyView(SbTime::getTimeOfDay());
 }
-*/
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  SoGtk slot.
 */
 
-/*
 void
 SoGtkFullViewer::pasteviewSelected()
 {
   this->pasteView(SbTime::getTimeOfDay());
 }
-*/
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
-*/
-
-/*
-void
-SoGtkFullViewer::drawstyleActivated(
-  int id )
-{
-  // Take care of any buffer menu selection first.
-  switch (id) {
-  case SINGLE_BUFFER_ITEM:
-    this->setBufferingType(SoGtkViewer::BUFFER_SINGLE);
-    return;
-  case DOUBLE_BUFFER_ITEM:
-    this->setBufferingType(SoGtkViewer::BUFFER_DOUBLE);
-    return;
-  case INTERACTIVE_BUFFER_ITEM:
-    this->setBufferingType(SoGtkViewer::BUFFER_INTERACTIVE);
-    return;
-  };
-
-
-  SoGtkViewer::DrawStyle val;
-
-  // FIXME: use a dict or two? 990220 mortene.
-  switch (id) {
-  case AS_IS_ITEM: val = SoGtkViewer::VIEW_AS_IS; break;
-  case HIDDEN_LINE_ITEM: val = SoGtkViewer::VIEW_HIDDEN_LINE; break;
-  case NO_TEXTURE_ITEM: val = SoGtkViewer::VIEW_NO_TEXTURE; break;
-  case LOW_RESOLUTION_ITEM: val = SoGtkViewer::VIEW_LOW_COMPLEXITY; break;
-  case WIREFRAME_ITEM: val = SoGtkViewer::VIEW_LINE; break;
-  case POINTS_ITEM: val = SoGtkViewer::VIEW_POINT; break;
-  case BOUNDING_BOX_ITEM: val = SoGtkViewer::VIEW_BBOX; break;
-
-  case MOVE_SAME_AS_STILL_ITEM: val = SoGtkViewer::VIEW_SAME_AS_STILL; break;
-  case MOVE_NO_TEXTURE_ITEM: val = SoGtkViewer::VIEW_NO_TEXTURE; break;
-  case MOVE_LOW_RES_ITEM: val = SoGtkViewer::VIEW_LOW_COMPLEXITY; break;
-  case MOVE_WIREFRAME_ITEM: val = SoGtkViewer::VIEW_LINE; break;
-  case MOVE_LOW_RES_WIREFRAME_ITEM: val = SoGtkViewer::VIEW_LOW_RES_LINE; break;
-  case MOVE_POINTS_ITEM: val = SoGtkViewer::VIEW_POINT; break;
-  case MOVE_LOW_RES_POINTS_ITEM: val = SoGtkViewer::VIEW_LOW_RES_POINT; break;
-  case MOVE_BOUNDING_BOX_ITEM: val = SoGtkViewer::VIEW_BBOX; break;
-
-  default: assert(0); break;
-  }
-
-  SoGtkViewer::DrawType type;
-
-  switch (id) {
-  case AS_IS_ITEM:
-  case HIDDEN_LINE_ITEM:
-  case NO_TEXTURE_ITEM:
-  case LOW_RESOLUTION_ITEM:
-  case WIREFRAME_ITEM:
-  case POINTS_ITEM:
-  case BOUNDING_BOX_ITEM:
-    type = SoGtkViewer::STILL;
-    break;
-
-  case MOVE_SAME_AS_STILL_ITEM:
-  case MOVE_NO_TEXTURE_ITEM:
-  case MOVE_LOW_RES_ITEM:
-  case MOVE_WIREFRAME_ITEM:
-  case MOVE_LOW_RES_WIREFRAME_ITEM:
-  case MOVE_POINTS_ITEM:
-  case MOVE_LOW_RES_POINTS_ITEM:
-  case MOVE_BOUNDING_BOX_ITEM:
-    type = SoGtkViewer::INTERACTIVE;
-    break;
-
-  default: assert(0); break;
-  }
-
-  this->setDrawStyle(type, val);
-} // drawstyleActivated()
-*/
-
-// *************************************************************************
-
-/*!
-  \internal
-  Slot.
+  SoGtk Slot.
 */
 
 void
@@ -2093,7 +2124,7 @@ SoGtkFullViewer::zoomFieldChanged(
   float val;
   char *s = gtk_editable_get_chars(editable,0,-1);
   if (sscanf(s, "%f", &val) == 1) {
-    val = SoGtkMax(0.001f, SoGtkMin(179.999f, val));
+    val = SoGtkClamp(val, 0.001f, 179.999f );
     viewer->setCameraZoom(val);
     viewer->setZoomSliderPosition(val);
   }
@@ -2178,160 +2209,197 @@ SoGtkFullViewer::zoomRangeChanged2(
 
 /*!
   \internal
-  Qt slot.
+  Gtk Signal Handler.
 */
 
-/*
 void
 SoGtkFullViewer::clippingToggled(
-  bool flag )
+  GtkToggleButton *toggle_button,
+  gpointer         closure)
 {
-  this->setAutoClipping(flag);
-  this->setEnabledClippingWidgets(!flag);
-} // clippingToggled()
-*/
+  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+  bool flag = gtk_toggle_button_get_active (toggle_button);
+
+  viewer->setAutoClipping(flag);
+  viewer->setEnabledClippingWidgets(!flag);
+} // clippingToggled()     
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  Gtk Signal Handler.
 */
 
 void
 SoGtkFullViewer::increaseInteractiveCount(
-  void )
+  GtkWidget	*w,
+  gpointer 	closure )
 {
-  this->interactiveCountInc();
+  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+  viewer->interactiveCountInc();
 } // increaseInteractiveCount()
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  Gtk Signal Handler.
 */
 
 void
 SoGtkFullViewer::decreaseInteractiveCount(
-  void )
+  GtkWidget	*w,
+  gpointer	closure )
 {
-  this->interactiveCountDec();
+  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+  viewer->interactiveCountDec();
 } // decreaseInteractiveCount()
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  Gtk Signal Handler.
 */
 
-/*
 void
 SoGtkFullViewer::nearclippingwheelMoved(
-  float val )
+  GtkWidget		*w,
+  gpointer		closure )
 {
-  SoCamera * cam = this->getCamera();
+  GtkThumbWheel *nearwheel = (GtkThumbWheel*) w ;
+  SoGtkFullViewer* viewer = (SoGtkFullViewer*) closure ;
+
+  assert( viewer->farclippingwheel != NULL );
+
+  float val = gtk_thumbwheel_get_value( nearwheel );
+  if ( val < 0.001f ) {
+    val = 0.001f;
+    gtk_thumbwheel_set_value( nearwheel, val );
+  }
+  float farval = gtk_thumbwheel_get_value( 
+    GTK_THUMBWHEEL(viewer->farclippingwheel) );
+  if ( val >= farval ) {
+    val = farval - 0.001f;
+    gtk_thumbwheel_set_value( GTK_THUMBWHEEL(viewer->nearclippingwheel), val );
+  }
+
+  SoCamera * cam = viewer->getCamera();
   if (!cam) return;
 
   // FIXME: cut off at 0.0? And against far clipping value? 990223 mortene.
   cam->nearDistance = val;
 
-  QString s;
-  s.setNum(cam->nearDistance.getValue(), 'f', 3);
-  this->nearclippingedit->setText(s);
+  char buffer[16] ;
+  sprintf( buffer, "%.3f", cam->nearDistance.getValue());
+  gtk_entry_set_text( GTK_ENTRY(viewer->nearclippingedit), buffer );
 } // nearclippingwheelMoved()
-*/
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  Gtk Signal Handler.
 */
 
-/*
 void
 SoGtkFullViewer::farclippingwheelMoved(
-  float val )
+  GtkWidget		*w,
+  gpointer		closure )
 {
-  SoCamera * cam = this->getCamera();
-  if (!cam) return;
+  GtkThumbWheel *farwheel = (GtkThumbWheel*) w ;
+  SoGtkFullViewer* viewer = (SoGtkFullViewer*) closure ;
 
-  // FIXME: cut off at 0.0? And against near clipping value? 990223 mortene.
+  assert( viewer->nearclippingwheel != NULL );
+
+  float val = gtk_thumbwheel_get_value( farwheel );
+  float nearval = gtk_thumbwheel_get_value( 
+    GTK_THUMBWHEEL(viewer->nearclippingwheel) );
+  if ( val < nearval ) {
+    val = nearval + 0.001f;
+    gtk_thumbwheel_set_value( farwheel, val );
+  }
+
+  SoCamera * cam = viewer->getCamera();
+  if (!cam) return ;
+
+  // FIXME: cut off at 0.0? And against far clipping value? 990223 mortene.
   cam->farDistance = val;
 
-  QString s;
-  s.setNum(cam->farDistance.getValue(), 'f', 3);
-  this->farclippingedit->setText(s);
+  char buffer[16] ;
+  sprintf( buffer, "%.3f", cam->farDistance.getValue());
+  gtk_entry_set_text( GTK_ENTRY(viewer->farclippingedit), buffer );
 } // farclippingwheelMoved()
-*/
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  Gtk Signal Handler.
 */
 
-/*
 void
 SoGtkFullViewer::nearclipEditPressed(
-  void )
+  GtkWidget	*w,
+  gpointer	closure )
 {
-  SoCamera * cam = this->getCamera();
+  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+
+  SoCamera * cam = viewer->getCamera();
   if (!cam) return;
 
+  char *s =
+    gtk_editable_get_chars(GTK_EDITABLE(viewer->nearclippingedit),0,-1);
   float val;
-  if (sscanf(this->nearclippingedit->text(), "%f", &val) == 1) {
+  if (sscanf(s, "%f", &val) == 1) {
     // FIXME: sanity check on val? 990223 mortene.
     cam->nearDistance = val;
-    this->nearclippingwheel->setValue(val);
+    gtk_thumbwheel_set_value( GTK_THUMBWHEEL(viewer->nearclippingwheel), val );
   }
-  else {
-    QString s;
-    s.setNum(cam->nearDistance.getValue(), 'f', 3);
-    this->nearclippingedit->setText(s);
+  g_free(s);
+
+  /* else */
+  {
+    char buffer[16] ;
+    sprintf( buffer, "%.3f", cam->nearDistance.getValue() );
+    gtk_entry_set_text( GTK_ENTRY(viewer->nearclippingedit), buffer );
   }
 } // nearclipEditPressed()
-*/
 
 // *************************************************************************
 
 /*!
   \internal
-  Qt slot.
+  Gtk Signal Handler.
 */
 
-/*
 void
 SoGtkFullViewer::farclipEditPressed(
-  void )
+  GtkWidget	*w,
+  gpointer	closure )
 {
-  SoCamera * cam = this->getCamera();
+  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+
+  SoCamera * cam = viewer->getCamera();
   if (!cam) return;
 
+  char *s = gtk_editable_get_chars(GTK_EDITABLE(viewer->farclippingedit),0,-1 );
   float val;
-  if (sscanf(this->farclippingedit->text(), "%f", &val) == 1) {
+  if (sscanf(s, "%f", &val) == 1) {
     // FIXME: sanity check on val? 990223 mortene.
     cam->farDistance = val;
-    this->farclippingwheel->setValue(val);
+    gtk_thumbwheel_set_value( GTK_THUMBWHEEL(viewer->farclippingwheel), val);
   }
-  else {
-    QString s;
-    s.setNum(cam->farDistance.getValue(), 'f', 3);
-    this->farclippingedit->setText(s);
+  g_free(s);
+
+  /* else */
+  {
+    char buffer[16] ;
+    sprintf( buffer, "%.3f", cam->farDistance.getValue() );
+    gtk_entry_set_text( GTK_ENTRY(viewer->farclippingedit), buffer );
   }
 } // farclipEditPressed()
-*/
-
-// *************************************************************************
-
-void
-SoGtkFullViewer::drawstyleActivated(
-  int )
-{
-}
 
 // *************************************************************************
 
