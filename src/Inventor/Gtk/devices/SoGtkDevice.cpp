@@ -126,7 +126,7 @@ SoGtkDevice::setWindowSize(const SbVec2s size)
   FIXME: write function documentation
 */
 
-const SbVec2s
+SbVec2s
 SoGtkDevice::getWindowSize(void) const
 {
   return PRIVATE(this)->widgetSize;
@@ -160,3 +160,27 @@ SoGtkDevice::getLastEventPosition(void)
 }
 
 // *************************************************************************
+
+void
+SoGtkDevice::addEventHandler(GtkWidget *, SoGtkEventHandler *, void *)
+{
+  // FIXME: not used here, but in other toolkits..?
+  // Investigate. 20020624 mortene.
+  SOGTK_STUB();
+}
+
+void
+SoGtkDevice::removeEventHandler(GtkWidget *, SoGtkEventHandler *, void *)
+{
+  // FIXME: not used here, but in other toolkits..?
+  // Investigate. 20020624 mortene.
+  SOGTK_STUB();
+}
+
+void
+SoGtkDevice::invokeHandlers(GdkEvent * event)
+{
+  // FIXME: not used here, but in other toolkits..?
+  // Investigate. 20020624 mortene.
+  SOGTK_STUB();
+}
