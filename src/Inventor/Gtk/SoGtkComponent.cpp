@@ -62,7 +62,7 @@ static const char rcsid[] =
 // changes.)
 class SoGtkComponentP {
 public:
-  SoGtkComponentP(SoGtkComponent * publ);
+  SoGtkComponentP(SoGtkComponent * owner);
   ~SoGtkComponentP(void);
 
   static gint realizeHandlerCB(GtkObject * object, gpointer closure);
@@ -92,8 +92,12 @@ public:
   };
   NonFull nonfull;
 
+  // List of all SoGtkComponent instances. Needed for the
+  // SoGtkComponent::getComponent() function.
+  static SbPList * soGtkCompList;
+
 private:
-  SoGtkComponent * pub;
+  SoGtkComponent * owner;
   static SbDict * cursordict;
 };
 
@@ -101,8 +105,9 @@ GdkCursor * SoGtkComponentP::arrowcursor = NULL;
 GdkCursor * SoGtkComponentP::crosscursor = NULL;
 GdkCursor * SoGtkComponentP::uparrowcursor = NULL;
 SbDict * SoGtkComponentP::cursordict = NULL;
+SbPList * SoGtkComponentP::soGtkCompList = NULL;
 
-#define PUBLIC(ptr) (ptr->pub)
+#define PUBLIC(ptr) (ptr->owner)
 #define PRIVATE(ptr) (ptr->pimpl)
 
 // *************************************************************************
@@ -182,6 +187,10 @@ SoGtkComponent::SoGtkComponent(GtkWidget * const parent,
 */
 SoGtkComponent::~SoGtkComponent()
 {
+  int idx = SoGtkComponentP::soGtkCompList->find((void *) this);
+  assert(idx != -1);
+  SoGtkComponentP::soGtkCompList->remove(idx);
+
   SoGtk::componentDestruction(this);
 
   // FIXME: this is tmp disabled as it causes a
@@ -829,12 +838,11 @@ SoGtkComponent::setWindowCloseCallback(SoGtkComponentCB * const func,
 SoGtkComponent *
 SoGtkComponent::getComponent(GtkWidget * const widget)
 {
-  SOGTK_STUB();
 
-//  for (int i = 0; i < SoGtkComponent::soGtkCompList->getLength(); i++) {
-//    SoGtkComponent * c = (SoGtkComponent *)((*SoGtkComponent::soGtkCompList)[i]);
-//    if (c->getWidget() == widget) return c;
-//  }
+  for (int i = 0; i < SoGtkComponentP::soGtkCompList->getLength(); i++) {
+    SoGtkComponent * c = (SoGtkComponent *)((*SoGtkComponentP::soGtkCompList)[i]);
+    if (c->getWidget() == widget) return c;
+  }
 
   return NULL;
 }
@@ -867,9 +875,9 @@ SoGtkComponent::afterRealizeHook(void)
   initialize private memory
 */
 
-SoGtkComponentP::SoGtkComponentP(SoGtkComponent * publ)
+SoGtkComponentP::SoGtkComponentP(SoGtkComponent * owner)
 {
-  this->pub = publ;
+  this->owner = owner;
 
   this->widget = NULL;
   this->parent = NULL;
@@ -886,6 +894,10 @@ SoGtkComponentP::SoGtkComponentP(SoGtkComponent * publ)
   this->widgetName = NULL;
   this->captionText = NULL;
   this->iconText = NULL;
+
+  if (!SoGtkComponentP::soGtkCompList)
+    SoGtkComponentP::soGtkCompList = new SbPList;
+  SoGtkComponentP::soGtkCompList->append((void *) this->owner);
 }
 
 /*
@@ -893,6 +905,10 @@ SoGtkComponentP::SoGtkComponentP(SoGtkComponent * publ)
 */
 SoGtkComponentP::~SoGtkComponentP()
 {
+  if (SoGtkComponentP::soGtkCompList->getLength() == 0) {
+    delete SoGtkComponentP::soGtkCompList;
+    SoGtkComponentP::soGtkCompList = NULL;
+  }
   delete this->visibilityChangeCBs;
   delete [] this->widgetName;
   delete [] this->className;
