@@ -56,6 +56,9 @@ public:
   static gint sGLDraw(GtkWidget * widget, GdkEventExpose * event, void * userData);
   gint glReshape(GtkWidget * widget, GdkEventConfigure * event);
   static gint sGLReshape(GtkWidget * widget, GdkEventConfigure * event, void * userData);
+
+protected:
+  virtual SbBool isDirectRendering(void);
 };
 
 // ************************************************************************
