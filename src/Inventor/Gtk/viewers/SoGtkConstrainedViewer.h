@@ -30,10 +30,10 @@ class SOGTK_DLL_API SoGtkConstrainedViewer : public SoGtkFullViewer {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkConstrainedViewer, SoGtkFullViewer);
 
 public:
-  void setUpDirection( const SbVec3f & upDirection );
+  void setUpDirection(const SbVec3f & upDirection);
   const SbVec3f & getUpDirection(void);
 
-  virtual void setCamera( SoCamera * newCamera );
+  virtual void setCamera(SoCamera * newCamera);
   virtual void saveHomePosition(void);
   virtual void resetToHomePosition(void);
   virtual void recomputeSceneSize(void);
@@ -45,19 +45,19 @@ protected:
     SbBool embed,
     SoGtkFullViewer::BuildFlag flag, 
     SoGtkViewer::Type type, 
-    SbBool build );
+    SbBool build);
 
   ~SoGtkConstrainedViewer(void);
 
   SbVec3f upVector;
 //  float sceneHeight;
   
-  virtual void tiltCamera( float delta );
-  virtual void bottomWheelMotion( float value );
-  virtual void leftWheelMotion( float value );
+  virtual void tiltCamera(float delta);
+  virtual void bottomWheelMotion(float value);
+  virtual void leftWheelMotion(float value);
 
-  virtual void changeCameraValues( SoCamera * camera );
-  void findUpDirection( SbVec2s mouseLocation );
+  virtual void changeCameraValues(SoCamera * camera);
+  void findUpDirection(SbVec2s mouseLocation);
   void checkForCameraUpConstrain(void);
   virtual void computeSeekFinalOrientation(void);
 

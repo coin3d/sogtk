@@ -37,22 +37,22 @@ public:
     ALL_EVENTS      = (MOTION | BUTTON_PRESS | BUTTON_RELEASE)
   };
 
-  SoGtkSpaceball( const int eventbits = SoGtkSpaceball::ALL_EVENTS );
+  SoGtkSpaceball(const int eventbits = SoGtkSpaceball::ALL_EVENTS);
   virtual ~SoGtkSpaceball(void);
 
-  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
-  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
+  virtual void enable(GtkWidget * widget, SoGtkEventHandler * func, gpointer closure);
+  virtual void disable(GtkWidget * widget, SoGtkEventHandler * func, gpointer closure);
 
-  virtual const SoEvent * translateEvent( GdkEvent * event );
+  virtual const SoEvent * translateEvent(GdkEvent * event);
 
-  void setRotationScaleFactor( float f );
+  void setRotationScaleFactor(float f);
   float getRotationScaleFactor(void) const;
-  void setTranslationScaleFactor( float f );
+  void setTranslationScaleFactor(float f);
   float getTranslationScaleFactor(void) const;
 
   static SbBool exists(void);
 
-  void setFocusToWindow( SbBool flag );
+  void setFocusToWindow(SbBool flag);
   SbBool isFocusToWindow(void) const;
 
 private:

@@ -27,7 +27,7 @@
 class SoMaterial;
 class SoAnyMaterialList;
 
-typedef void SoGtkMaterialListCB( void * closure, const SoMaterial * material );
+typedef void SoGtkMaterialListCB(void * closure, const SoMaterial * material);
 
 // *************************************************************************
 
@@ -35,39 +35,39 @@ class SOGTK_DLL_API SoGtkMaterialList : public SoGtkComponent {
   SOGTK_OBJECT_HEADER(SoGtkMaterialList, SoGtkComponent);
 
 public:
-  SoGtkMaterialList( GtkWidget * parent = NULL,
+  SoGtkMaterialList(GtkWidget * parent = NULL,
     const char * const name = NULL,
     const SbBool embed = TRUE,
-    const char * const dir = NULL );
+    const char * const dir = NULL);
   ~SoGtkMaterialList(void);
 
   void addCallback(
     SoGtkMaterialListCB * const callback,
-    void * const closure = NULL );
+    void * const closure = NULL);
   void removeCallback(
     SoGtkMaterialListCB * const callback,
-    void * const closure = NULL );
+    void * const closure = NULL);
 
 protected:
-  SoGtkMaterialList( GtkWidget * parent, const char * const name,
-    const SbBool embed, const char * const dir, const SbBool build  );
+  SoGtkMaterialList(GtkWidget * parent, const char * const name,
+    const SbBool embed, const char * const dir, const SbBool build );
 
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
 
-  GtkWidget * buildWidget( GtkWidget * parent );
-  GtkWidget * buildPulldownMenu( GtkWidget * parent );
+  GtkWidget * buildWidget(GtkWidget * parent);
+  GtkWidget * buildPulldownMenu(GtkWidget * parent);
 
 private:
-  void constructor( const SbBool build );
+  void constructor(const SbBool build);
 
-  void menuactivation( GtkWidget * menuitem );
-  static void menuactivationCB( GtkObject * obj, gpointer closure );
+  void menuactivation(GtkWidget * menuitem);
+  static void menuactivationCB(GtkObject * obj, gpointer closure);
 
-  void itemactivation( int item );
-  static void itemactivationCB( GtkObject * obj, gint row, gint column,
-    GdkEvent * event, gpointer closure );
+  void itemactivation(int item);
+  static void itemactivationCB(GtkObject * obj, gint row, gint column,
+    GdkEvent * event, gpointer closure);
 
   GtkWidget * materiallist;
   SoAnyMaterialList * common;

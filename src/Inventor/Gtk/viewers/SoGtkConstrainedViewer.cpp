@@ -50,7 +50,7 @@ static const char rcsid[] =
 
 class SoGtkConstrainedViewerP {
 public:
-  SoGtkConstrainedViewerP( SoGtkConstrainedViewer * publ );
+  SoGtkConstrainedViewerP(SoGtkConstrainedViewer * publ);
   ~SoGtkConstrainedViewerP(void);
 
 private:
@@ -68,32 +68,32 @@ SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkConstrainedViewer);
   Constructor.
 */
 
-SoGtkConstrainedViewer::SoGtkConstrainedViewer( // protected
+SoGtkConstrainedViewer::SoGtkConstrainedViewer(// protected
   GtkWidget * parent,
   const char * const name,
   SbBool embed,
   SoGtkFullViewer::BuildFlag flag, 
   SoGtkViewer::Type type, 
-  SbBool build )
-: inherited( parent, name, embed, flag, type, FALSE )
+  SbBool build)
+: inherited(parent, name, embed, flag, type, FALSE)
 {
   this->pimpl = new SoGtkConstrainedViewerP(this);
   this->common = new SoAnyConstrainedViewer(this);
 
-  this->setClassName( "SoGtkConstrainedViewer" );
-  this->upVector = SbVec3f( 0.0f, 1.0f, 0.0f );
+  this->setClassName("SoGtkConstrainedViewer");
+  this->upVector = SbVec3f(0.0f, 1.0f, 0.0f);
 
-  if ( ! build ) return;
-  GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
-  this->setBaseWidget( viewer );
+  if (! build) return;
+  GtkWidget * viewer = this->buildWidget(this->getParentWidget());
+  this->setBaseWidget(viewer);
 } // SoGtkConstainedViewer()
 
 /*!
   The destructor.
 */
 
-SoGtkConstrainedViewer::~SoGtkConstrainedViewer( // virtual
-  void )
+SoGtkConstrainedViewer::~SoGtkConstrainedViewer(// virtual
+  void)
 {
   delete this->common;
   delete this->pimpl;
@@ -107,7 +107,7 @@ SoGtkConstrainedViewer::~SoGtkConstrainedViewer( // virtual
 
 void
 SoGtkConstrainedViewer::setUpDirection(
-  const SbVec3f & upDirection )
+  const SbVec3f & upDirection)
 {
   this->upVector = upDirection;
 } // setUpDirection()
@@ -120,7 +120,7 @@ SoGtkConstrainedViewer::setUpDirection(
 
 const SbVec3f &
 SoGtkConstrainedViewer::getUpDirection(
-  void )
+  void)
 {
   return upVector;
 } // getUpDirection()
@@ -132,10 +132,10 @@ SoGtkConstrainedViewer::getUpDirection(
 */
 
 void
-SoGtkConstrainedViewer::setCamera( // virtual
-  SoCamera * newCamera )
+SoGtkConstrainedViewer::setCamera(// virtual
+  SoCamera * newCamera)
 {
-  inherited::setCamera( newCamera );
+  inherited::setCamera(newCamera);
 } // setCamera()
 
 // ************************************************************************
@@ -145,8 +145,8 @@ SoGtkConstrainedViewer::setCamera( // virtual
 */
 
 void
-SoGtkConstrainedViewer::saveHomePosition( // virtual
-  void )
+SoGtkConstrainedViewer::saveHomePosition(// virtual
+  void)
 {
 } // saveHomePosition()
 
@@ -157,8 +157,8 @@ SoGtkConstrainedViewer::saveHomePosition( // virtual
 */
 
 void
-SoGtkConstrainedViewer::resetToHomePosition( // virtual
-  void )
+SoGtkConstrainedViewer::resetToHomePosition(// virtual
+  void)
 {
 } // resetToHomePosition()
 
@@ -169,11 +169,11 @@ SoGtkConstrainedViewer::resetToHomePosition( // virtual
 */
 
 void
-SoGtkConstrainedViewer::recomputeSceneSize( // virtual
-  void )
+SoGtkConstrainedViewer::recomputeSceneSize(// virtual
+  void)
 {
-  SoDebugError::postInfo( "SoGtkConstrainedViewer::recomputeSceneSize",
-    "stub called" );
+  SoDebugError::postInfo("SoGtkConstrainedViewer::recomputeSceneSize",
+    "stub called");
 } // recomputeSceneGraph()
 
 // ************************************************************************
@@ -183,8 +183,8 @@ SoGtkConstrainedViewer::recomputeSceneSize( // virtual
 */
 
 void
-SoGtkConstrainedViewer::tiltCamera( // virtual, protected
-  float delta )
+SoGtkConstrainedViewer::tiltCamera(// virtual, protected
+  float delta)
 {
 } // tiltCamera()
 
@@ -195,8 +195,8 @@ SoGtkConstrainedViewer::tiltCamera( // virtual, protected
 */
 
 void
-SoGtkConstrainedViewer::bottomWheelMotion( // virtual, protected
-  float value )
+SoGtkConstrainedViewer::bottomWheelMotion(// virtual, protected
+  float value)
 {
 } // bottomWheelMotion()
 
@@ -207,10 +207,10 @@ SoGtkConstrainedViewer::bottomWheelMotion( // virtual, protected
 */
 
 void
-SoGtkConstrainedViewer::leftWheelMotion( // virtual, protected
-  float value )
+SoGtkConstrainedViewer::leftWheelMotion(// virtual, protected
+  float value)
 {
-//  SoAnyConstrainedViewer::elevation( );
+//  SoAnyConstrainedViewer::elevation();
 } // leftWheelMotion()
 
 // ************************************************************************
@@ -220,11 +220,11 @@ SoGtkConstrainedViewer::leftWheelMotion( // virtual, protected
 */
 
 void
-SoGtkConstrainedViewer::changeCameraValues( // virtual, protected
-  SoCamera * camera )
+SoGtkConstrainedViewer::changeCameraValues(// virtual, protected
+  SoCamera * camera)
 {
-  SoDebugError::postInfo( "SoGtkConstrainedViewer::changeCameraValues",
-    "stub called" );
+  SoDebugError::postInfo("SoGtkConstrainedViewer::changeCameraValues",
+    "stub called");
 } // changeCameraValues()
 
 // ************************************************************************
@@ -235,10 +235,10 @@ SoGtkConstrainedViewer::changeCameraValues( // virtual, protected
 
 void
 SoGtkConstrainedViewer::findUpDirection(
-  SbVec2s mouseLocation )
+  SbVec2s mouseLocation)
 {
-  SoDebugError::postInfo( "SoGtkConstrainedViewer::findUpDirection",
-    "stub called" );
+  SoDebugError::postInfo("SoGtkConstrainedViewer::findUpDirection",
+    "stub called");
   // pick on point, set upVector to normal of picked polygon
 } // findUpDirection()
 
@@ -250,10 +250,10 @@ SoGtkConstrainedViewer::findUpDirection(
 
 void
 SoGtkConstrainedViewer::checkForCameraUpConstrain(
-  void )
+  void)
 {
-  SoDebugError::postInfo( "SoGtkConstrainedViewer::checkForCameraUpConstrain",
-    "stub called" );
+  SoDebugError::postInfo("SoGtkConstrainedViewer::checkForCameraUpConstrain",
+    "stub called");
 } // checkForCameraUpConstrain()
 
 // ************************************************************************
@@ -263,11 +263,11 @@ SoGtkConstrainedViewer::checkForCameraUpConstrain(
 */
 
 void
-SoGtkConstrainedViewer::computeSeekFinalOrientation( // virtual, protected
-  void )
+SoGtkConstrainedViewer::computeSeekFinalOrientation(// virtual, protected
+  void)
 {
-  SoDebugError::postInfo( "SoGtkConstrainedViewer::computeSeekFinalOrientation",
-    "stub called" );
+  SoDebugError::postInfo("SoGtkConstrainedViewer::computeSeekFinalOrientation",
+    "stub called");
 } // computeSeekFinalOrientation()
 
 // ************************************************************************
@@ -279,7 +279,7 @@ SoGtkConstrainedViewer::computeSeekFinalOrientation( // virtual, protected
 */
 
 SoGtkConstrainedViewerP::SoGtkConstrainedViewerP(
-  SoGtkConstrainedViewer * publ )
+  SoGtkConstrainedViewer * publ)
 {
   this->pub = publ;
 } // SoGtkConstrainedViewerP()
@@ -288,7 +288,7 @@ SoGtkConstrainedViewerP::SoGtkConstrainedViewerP(
 */
 
 SoGtkConstrainedViewerP::~SoGtkConstrainedViewerP(
-  void )
+  void)
 {
 } // ~SoGtkConstrainedViewerP()
 

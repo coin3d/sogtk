@@ -85,7 +85,7 @@ SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
 */
 
 SoGtkSpaceball::SoGtkSpaceball(
-  const int eventbits )
+  const int eventbits)
 {
   this->events = eventbits;
   this->rotationscale = 0.006f;
@@ -98,7 +98,7 @@ SoGtkSpaceball::SoGtkSpaceball(
 */
 
 SoGtkSpaceball::~SoGtkSpaceball(
-  void )
+  void)
 {
 } // ~SoGtkSpaceball()
 
@@ -112,11 +112,11 @@ void
 SoGtkSpaceball::enable(
   GtkWidget * widget,
   SoGtkEventHandler * func,
-  gpointer closure )
+  gpointer closure)
 {
-  if ( func )
+  if (func)
     gtk_signal_connect(GTK_OBJECT(widget), "event",
-      GTK_SIGNAL_FUNC(func), closure );
+      GTK_SIGNAL_FUNC(func), closure);
 } // enable()
 
 /*!
@@ -127,11 +127,11 @@ void
 SoGtkSpaceball::disable(
   GtkWidget * widget,
   SoGtkEventHandler * func,
-  gpointer closure )
+  gpointer closure)
 {
-  if ( func )
+  if (func)
     gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
-      GTK_SIGNAL_FUNC(func), closure );
+      GTK_SIGNAL_FUNC(func), closure);
 } // disable()
 
 // *************************************************************************
@@ -142,7 +142,7 @@ SoGtkSpaceball::disable(
 
 const SoEvent *
 SoGtkSpaceball::translateEvent(
-  GdkEvent * /*event*/ )
+  GdkEvent * /*event*/)
 {
   // TODO: implement
   return NULL;
@@ -156,7 +156,7 @@ SoGtkSpaceball::translateEvent(
 
 void
 SoGtkSpaceball::setRotationScaleFactor(
-  float f )
+  float f)
 {
   this->rotationscale = f;
 } // setRotationScaleFactor()
@@ -167,7 +167,7 @@ SoGtkSpaceball::setRotationScaleFactor(
 
 float
 SoGtkSpaceball::getRotationScaleFactor(
-  void ) const
+  void) const
 {
   return this->rotationscale;
 } // getRotationScaleFactor()
@@ -178,7 +178,7 @@ SoGtkSpaceball::getRotationScaleFactor(
 
 void
 SoGtkSpaceball::setTranslationScaleFactor(
-  float f )
+  float f)
 {
   this->translationscale = f;
 } // setTranslationScaleFactor()
@@ -189,7 +189,7 @@ SoGtkSpaceball::setTranslationScaleFactor(
 
 float
 SoGtkSpaceball::getTranslationScaleFactor(
-  void ) const
+  void) const
 {
   return this->translationscale;
 } // getTranslationScaleFactor()
@@ -199,8 +199,8 @@ SoGtkSpaceball::getTranslationScaleFactor(
 */
 
 SbBool
-SoGtkSpaceball::exists( // static
-  void )
+SoGtkSpaceball::exists(// static
+  void)
 {
   // TODO: implement
   return FALSE;
@@ -212,7 +212,7 @@ SoGtkSpaceball::exists( // static
 
 void
 SoGtkSpaceball::setFocusToWindow(
-  SbBool flag )
+  SbBool flag)
 {
   this->focustowindow = flag;
 } // setFocusToWindow()
@@ -223,7 +223,7 @@ SoGtkSpaceball::setFocusToWindow(
 
 SbBool
 SoGtkSpaceball::isFocusToWindow(
-  void ) const
+  void) const
 {
   return this->focustowindow;
 } // isFocusToWindow()

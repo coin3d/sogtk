@@ -82,7 +82,7 @@ SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
 */
 
 SoGtkKeyboard::SoGtkKeyboard(
-  const int eventbits )
+  const int eventbits)
 {
   this->events = eventbits & SoGtkKeyboard::ALL_EVENTS;
   this->kbdevent = new SoKeyboardEvent;
@@ -93,7 +93,7 @@ SoGtkKeyboard::SoGtkKeyboard(
 */
 
 SoGtkKeyboard::~SoGtkKeyboard(
-  void )
+  void)
 {
   delete this->kbdevent;
 } // ~SoGtkKeyboard()
@@ -111,7 +111,7 @@ gboolean SoGtkKeyboard::EnterHandler(
   GdkEventCrossing *event,
   gpointer user_data)
 {
-  if ( !GTK_WIDGET_HAS_FOCUS(widget) )
+  if (!GTK_WIDGET_HAS_FOCUS(widget))
     gtk_widget_grab_focus(widget);
   return FALSE;
 }
@@ -124,21 +124,21 @@ void
 SoGtkKeyboard::enable(
   GtkWidget * widget,
   SoGtkEventHandler *func,
-  gpointer closure )
+  gpointer closure)
 {
-  if ( func )
+  if (func)
   {
-    if ( this->events & SoGtkKeyboard::KEY_PRESS )
+    if (this->events & SoGtkKeyboard::KEY_PRESS)
     {
       gtk_signal_connect(GTK_OBJECT(widget), "key_press_event",
-        GTK_SIGNAL_FUNC(func), closure );
-      gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_PRESS_MASK );
+        GTK_SIGNAL_FUNC(func), closure);
+      gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_PRESS_MASK);
     }
-    if ( this->events & SoGtkKeyboard::KEY_RELEASE )
+    if (this->events & SoGtkKeyboard::KEY_RELEASE)
     {
       gtk_signal_connect(GTK_OBJECT(widget), "key_release_event",
-        GTK_SIGNAL_FUNC(func), closure );
-      gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_RELEASE_MASK );
+        GTK_SIGNAL_FUNC(func), closure);
+      gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_RELEASE_MASK);
     }
   }
 } // enable()
@@ -153,9 +153,9 @@ SoGtkKeyboard::disable(
   SoGtkEventHandler * func,
   gpointer closure)
 {
-  if ( func )
+  if (func)
     gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
-      GTK_SIGNAL_FUNC(func), closure );
+      GTK_SIGNAL_FUNC(func), closure);
 } // disable()
 
 // *************************************************************************
@@ -163,9 +163,9 @@ SoGtkKeyboard::disable(
 static
 SoKeyboardEvent::Key
 getKeyForKeyCode(
-  guint keycode, char & printable )
+  guint keycode, char & printable)
 {
-  switch ( keycode ) {
+  switch (keycode) {
   case GDK_Shift_L:        return SoKeyboardEvent::LEFT_SHIFT;
   case GDK_Shift_R:        return SoKeyboardEvent::RIGHT_SHIFT;
   case GDK_Control_L:      return SoKeyboardEvent::LEFT_CONTROL;
@@ -395,7 +395,7 @@ getKeyForKeyCode(
 
   default:
     break;
-  } // switch ( keycode )
+  } // switch (keycode)
 
   return SoKeyboardEvent::ANY;
 } // getKeyForKeyCode()
@@ -407,55 +407,55 @@ getKeyForKeyCode(
 */
 
 const SoEvent *
-SoGtkKeyboard::translateEvent( // virtual
-  GdkEvent * ev )
+SoGtkKeyboard::translateEvent(// virtual
+  GdkEvent * ev)
 {
-  switch ( ev->type ) {
+  switch (ev->type) {
   case GDK_KEY_PRESS:
-    if ( this->events & KEY_PRESS ) {
+    if (this->events & KEY_PRESS) {
       const GdkEventKey * const event = (GdkEventKey *) ev;
       SbTime stamp;
-      stamp.setMsecValue( event->time );
-      this->kbdevent->setTime( stamp );
+      stamp.setMsecValue(event->time);
+      this->kbdevent->setTime(stamp);
       const SbVec2s pos = SoGtkDevice::getLastEventPosition();
-      SoGtkDevice::setEventPosition( this->kbdevent, pos[0], pos[1] );
+      SoGtkDevice::setEventPosition(this->kbdevent, pos[0], pos[1]);
       char printable = 0;
-      this->kbdevent->setKey( getKeyForKeyCode( event->keyval, printable ) );
+      this->kbdevent->setKey(getKeyForKeyCode(event->keyval, printable));
 #if 0 // disabled. Breaks build when compiling against OIV
       if (printable) this->kbdevent->setPrintableCharacter(printable);
 #endif // disabled
-      this->kbdevent->setState( SoButtonEvent::DOWN );
-      this->kbdevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
-      this->kbdevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
-      this->kbdevent->setAltDown( (event->state & GDK_MOD1_MASK) ? TRUE : FALSE );
+      this->kbdevent->setState(SoButtonEvent::DOWN);
+      this->kbdevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
+      this->kbdevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
+      this->kbdevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
       return this->kbdevent;
     }
     break;
 
   case GDK_KEY_RELEASE:
-    if ( this->events & KEY_RELEASE ) {
+    if (this->events & KEY_RELEASE) {
       const GdkEventKey * const event = (GdkEventKey *) ev;
       SbTime stamp;
-      stamp.setMsecValue( event->time );
-      this->kbdevent->setTime( stamp );
+      stamp.setMsecValue(event->time);
+      this->kbdevent->setTime(stamp);
       const SbVec2s pos = SoGtkDevice::getLastEventPosition();
-      SoGtkDevice::setEventPosition( this->kbdevent, pos[0], pos[1] );
+      SoGtkDevice::setEventPosition(this->kbdevent, pos[0], pos[1]);
       char printable = 0;
-      this->kbdevent->setKey( getKeyForKeyCode( event->keyval, printable ) );
+      this->kbdevent->setKey(getKeyForKeyCode(event->keyval, printable));
 #if 0 // disabled. Breaks build when compiling against OIV
       if (printable) this->kbdevent->setPrintableCharacter(printable);
 #endif // disabled
-      this->kbdevent->setState( SoButtonEvent::UP );
-      this->kbdevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
-      this->kbdevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
-      this->kbdevent->setAltDown( (event->state & GDK_MOD1_MASK) ? TRUE : FALSE );
+      this->kbdevent->setState(SoButtonEvent::UP);
+      this->kbdevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
+      this->kbdevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
+      this->kbdevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
       return this->kbdevent;
     }
     break;
 
   default:
     break;
-  } // switch ( ev->type )
+  } // switch (ev->type)
 
   return (const SoEvent *) NULL;
 } // translateEvent()

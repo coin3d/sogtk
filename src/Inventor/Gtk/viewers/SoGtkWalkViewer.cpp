@@ -47,7 +47,7 @@ static const char rcsid[] =
 
 class SoGtkWalkViewerP {
 public:
-  SoGtkWalkViewerP( SoGtkWalkViewer * publ );
+  SoGtkWalkViewerP(SoGtkWalkViewer * publ);
   ~SoGtkWalkViewerP(void);
 
 private:
@@ -75,26 +75,26 @@ SoGtkWalkViewer::SoGtkWalkViewer(
   const char * name,
   SbBool embed,
   SoGtkFullViewer::BuildFlag flag,
-  SoGtkViewer::Type type )
-: inherited( parent, name, embed, flag, type, FALSE )
+  SoGtkViewer::Type type)
+: inherited(parent, name, embed, flag, type, FALSE)
 {
-  this->constructor( TRUE );
+  this->constructor(TRUE);
 } // SoGtkWalkViewer()
 
 /*!
   A protected constructor.
 */
 
-SoGtkWalkViewer::SoGtkWalkViewer( // protected
+SoGtkWalkViewer::SoGtkWalkViewer(// protected
   GtkWidget * parent,
   const char * name,
   SbBool embed,
   SoGtkFullViewer::BuildFlag flag,
   SoGtkViewer::Type type,
-  SbBool build )
-: inherited( parent, name, embed, flag, type, FALSE )
+  SbBool build)
+: inherited(parent, name, embed, flag, type, FALSE)
 {
-  this->constructor( build );
+  this->constructor(build);
 } // SoGtkWalkViewer()
 
 /*!
@@ -105,8 +105,8 @@ SoGtkWalkViewer::SoGtkWalkViewer( // protected
 */
 
 void
-SoGtkWalkViewer::constructor( // private
-  const SbBool build )
+SoGtkWalkViewer::constructor(// private
+  const SbBool build)
 {
   this->pimpl = new SoGtkWalkViewerP(this);
   this->common = new SoAnyWalkViewer(this);
@@ -116,24 +116,24 @@ SoGtkWalkViewer::constructor( // private
   GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
 
   this->orthopixmap =
-      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
-        &this->orthomask, (GdkColor *) 0, ortho_xpm );
+      gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
+        &this->orthomask, (GdkColor *) 0, ortho_xpm);
 #endif
 
   this->setClassName("SoGtkWalkViewer");
 
-//  this->addVisibilityChangeCallback( SoGtkWalkViewer::visibilityCB, this );
+//  this->addVisibilityChangeCallback(SoGtkWalkViewer::visibilityCB, this);
 
-  this->setPopupMenuString( _( "Walk Viewer" ) );
-  this->setPrefSheetString( _( "Walk Viewer Preference Sheet" ) );
+  this->setPopupMenuString(_("Walk Viewer"));
+  this->setPrefSheetString(_("Walk Viewer Preference Sheet"));
 
-  this->setLeftWheelString( _( "Tilt" ) );
-  this->setBottomWheelString( _( "Rotate" ) );
-  this->setRightWheelString( _( "Dolly" ) );
+  this->setLeftWheelString(_("Tilt"));
+  this->setBottomWheelString(_("Rotate"));
+  this->setRightWheelString(_("Dolly"));
 
-  if ( ! build ) return;
-  GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
-  this->setBaseWidget( viewer );
+  if (! build) return;
+  GtkWidget * viewer = this->buildWidget(this->getParentWidget());
+  this->setBaseWidget(viewer);
 } // constructor()
 
 /*!
@@ -141,7 +141,7 @@ SoGtkWalkViewer::constructor( // private
 */
 
 SoGtkWalkViewer::~SoGtkWalkViewer(
-  void )
+  void)
 {
   delete this->common;
   delete this->pimpl;
@@ -154,10 +154,10 @@ SoGtkWalkViewer::~SoGtkWalkViewer(
 */
 
 void
-SoGtkWalkViewer::setViewing( // virtual
-  SbBool enable )
+SoGtkWalkViewer::setViewing(// virtual
+  SbBool enable)
 {
-  inherited::setViewing( enable );
+  inherited::setViewing(enable);
 } // setViewing()
 
 // ************************************************************************
@@ -167,10 +167,10 @@ SoGtkWalkViewer::setViewing( // virtual
 */
 
 void
-SoGtkWalkViewer::setCamera( // virtual
-  SoCamera * camera )
+SoGtkWalkViewer::setCamera(// virtual
+  SoCamera * camera)
 {
-  inherited::setCamera( camera );
+  inherited::setCamera(camera);
 } // setCamera()
 
 // ************************************************************************
@@ -180,8 +180,8 @@ SoGtkWalkViewer::setCamera( // virtual
 */
 
 void
-SoGtkWalkViewer::setCursorEnabled( // virtual
-  SbBool enable )
+SoGtkWalkViewer::setCursorEnabled(// virtual
+  SbBool enable)
 {
 } // setCursorEnabled()
 
@@ -192,8 +192,8 @@ SoGtkWalkViewer::setCursorEnabled( // virtual
 */
 
 void
-SoGtkWalkViewer::setCameraType( // virtual
-  SoType type )
+SoGtkWalkViewer::setCameraType(// virtual
+  SoType type)
 {
 } // setCameraType()
 
@@ -204,11 +204,11 @@ SoGtkWalkViewer::setCameraType( // virtual
 */
 
 const char *
-SoGtkWalkViewer::getDefaultWidgetName( // virtual
-  void ) const
+SoGtkWalkViewer::getDefaultWidgetName(// virtual
+  void) const
 {
-  static const char defaultWidgetName[] = N_( "Walk Viewer" );
-  return _( defaultWidgetName );
+  static const char defaultWidgetName[] = N_("Walk Viewer");
+  return _(defaultWidgetName);
 } // getDefaultWidgetName()
 
 // ************************************************************************
@@ -218,11 +218,11 @@ SoGtkWalkViewer::getDefaultWidgetName( // virtual
 */
 
 const char *
-SoGtkWalkViewer::getDefaultTitle( // virtual
-  void ) const
+SoGtkWalkViewer::getDefaultTitle(// virtual
+  void) const
 {
-  static const char defaultTitle[] = N_( "Walk Viewer" );
-  return _( defaultTitle );
+  static const char defaultTitle[] = N_("Walk Viewer");
+  return _(defaultTitle);
 } // getDefaultTitle()
 
 // ************************************************************************
@@ -232,11 +232,11 @@ SoGtkWalkViewer::getDefaultTitle( // virtual
 */
 
 const char *
-SoGtkWalkViewer::getDefaultIconTitle( // virtual
-  void ) const
+SoGtkWalkViewer::getDefaultIconTitle(// virtual
+  void) const
 {
-  static const char defaultIconTitle[] = N_( "Walk Viewer" );
-  return _( defaultIconTitle );
+  static const char defaultIconTitle[] = N_("Walk Viewer");
+  return _(defaultIconTitle);
 } // getDefaultIconTitle()
 
 // ************************************************************************
@@ -246,12 +246,12 @@ SoGtkWalkViewer::getDefaultIconTitle( // virtual
 */
 
 SbBool
-SoGtkWalkViewer::processSoEvent( // virtual, protected
-  const SoEvent * const event )
+SoGtkWalkViewer::processSoEvent(// virtual, protected
+  const SoEvent * const event)
 {
-  if ( common->processSoEvent( event ) )
+  if (common->processSoEvent(event))
     return TRUE;
-  return inherited::processSoEvent( event );
+  return inherited::processSoEvent(event);
 } // processSoEvent()
 
 /*!
@@ -259,14 +259,14 @@ SoGtkWalkViewer::processSoEvent( // virtual, protected
 */
 
 void
-SoGtkWalkViewer::processEvent( // virtual, protected
-  GdkEvent * event )
+SoGtkWalkViewer::processEvent(// virtual, protected
+  GdkEvent * event)
 {
-  // SoDebugError::postInfo( "SoGtkWalkViewer::processEvent", "[invoked]" );
-  if ( SoGtkViewer::processCommonEvents( event ) )
+  // SoDebugError::postInfo("SoGtkWalkViewer::processEvent", "[invoked]");
+  if (SoGtkViewer::processCommonEvents(event))
     return;
 
-  inherited::processEvent( event );
+  inherited::processEvent(event);
 } // processEvent()
 
 // ************************************************************************
@@ -276,8 +276,8 @@ SoGtkWalkViewer::processEvent( // virtual, protected
 */
 
 void
-SoGtkWalkViewer::setSeekMode( // virtual
-  SbBool enable )
+SoGtkWalkViewer::setSeekMode(// virtual
+  SbBool enable)
 {
 } // setSeekMode()
 
@@ -288,8 +288,8 @@ SoGtkWalkViewer::setSeekMode( // virtual
 */
 
 void
-SoGtkWalkViewer::actualRedraw( // virtual
-  void )
+SoGtkWalkViewer::actualRedraw(// virtual
+  void)
 {
 } // actualRedraw()
 
@@ -300,8 +300,8 @@ SoGtkWalkViewer::actualRedraw( // virtual
 */
 
 void
-SoGtkWalkViewer::rightWheelMotion( // virtual
-  float value )
+SoGtkWalkViewer::rightWheelMotion(// virtual
+  float value)
 {
 } // rightWheelMotion()
 
@@ -312,31 +312,31 @@ SoGtkWalkViewer::rightWheelMotion( // virtual
 */
 
 GtkWidget *
-SoGtkWalkViewer::buildLeftTrim( // virtual
-  GtkWidget * parent )
+SoGtkWalkViewer::buildLeftTrim(// virtual
+  GtkWidget * parent)
 {
   // get the examiner viewer's left vbox
   GtkWidget *trim = inherited::buildLeftTrim(parent);
 
-  GtkWidget *uleftWheel = gtk_thumbwheel_new( 1 );   
-  gtk_misc_set_padding( GTK_MISC(uleftWheel), 2, 2 );
-  gtk_box_pack_end( GTK_BOX(trim), uleftWheel, FALSE, TRUE, 0 );
+  GtkWidget *uleftWheel = gtk_thumbwheel_new(1);   
+  gtk_misc_set_padding(GTK_MISC(uleftWheel), 2, 2);
+  gtk_box_pack_end(GTK_BOX(trim), uleftWheel, FALSE, TRUE, 0);
   gtk_widget_show(uleftWheel);
 
 #if NOTYET
-  gtk_signal_connect( GTK_OBJECT(uleftWheel), "attached",
-    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelPressedCB), (gpointer) this );
-  gtk_signal_connect( GTK_OBJECT(uleftWheel), "value_changed",
-    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelMovedCB), (gpointer) this );
-  gtk_signal_connect( GTK_OBJECT(uleftWheel), "released",
-    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelReleasedCB), (gpointer) this );
+  gtk_signal_connect(GTK_OBJECT(uleftWheel), "attached",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelPressedCB), (gpointer) this);
+  gtk_signal_connect(GTK_OBJECT(uleftWheel), "value_changed",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelMovedCB), (gpointer) this);
+  gtk_signal_connect(GTK_OBJECT(uleftWheel), "released",
+    GTK_SIGNAL_FUNC(SoGtkFullViewer::leftwheelReleasedCB), (gpointer) this);
 #endif
-  GtkWidget *uleftStr = gtk_label_new( _("H") );
-  gtk_box_pack_end( GTK_BOX(trim), uleftStr, FALSE, TRUE, FALSE );
+  GtkWidget *uleftStr = gtk_label_new(_("H"));
+  gtk_box_pack_end(GTK_BOX(trim), uleftStr, FALSE, TRUE, FALSE);
   gtk_widget_show(uleftStr);
 
   // HACK: reorder the leftWheel to the end of the vbox
-  gtk_box_reorder_child(GTK_BOX(trim), this->leftWheel, INT_MAX );
+  gtk_box_reorder_child(GTK_BOX(trim), this->leftWheel, INT_MAX);
 
   return trim ;
 } // buildLeftTrim()
@@ -348,8 +348,8 @@ SoGtkWalkViewer::buildLeftTrim( // virtual
 */
 
 void
-SoGtkWalkViewer::createPrefSheet( // virtual
-  void )
+SoGtkWalkViewer::createPrefSheet(// virtual
+  void)
 {
 } // createPrefSheet()
 
@@ -360,10 +360,10 @@ SoGtkWalkViewer::createPrefSheet( // virtual
 */
 
 void
-SoGtkWalkViewer::openViewerHelpCard( // virtual, protected
-  void )
+SoGtkWalkViewer::openViewerHelpCard(// virtual, protected
+  void)
 {
-  this->openHelpCard( "SoGtkWalkViewer.help" );
+  this->openHelpCard("SoGtkWalkViewer.help");
 } // openViewerHelpCard()
 
 // ************************************************************************
@@ -375,25 +375,25 @@ SoGtkWalkViewer::openViewerHelpCard( // virtual, protected
 
 GtkWidget *
 SoGtkWalkViewer::makeSubPreferences(
-  GtkWidget * parent )
+  GtkWidget * parent)
 {
   GtkWidget* hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (parent), hbox);
 
-  GtkWidget *label1 = gtk_label_new( _( "Walking speed:" ) );
+  GtkWidget *label1 = gtk_label_new(_("Walking speed:"));
   gtk_box_pack_start (GTK_BOX (hbox), label1, FALSE, FALSE, 0);
 
-  GtkWidget *incbutton = gtk_button_new_with_label( _( "increase" ) );
+  GtkWidget *incbutton = gtk_button_new_with_label(_("increase"));
   gtk_box_pack_start (GTK_BOX (hbox), incbutton, FALSE, FALSE, 0);
 
-  GtkWidget *decbutton = gtk_button_new_with_label( _( "decrease" ) );
+  GtkWidget *decbutton = gtk_button_new_with_label(_("decrease"));
   gtk_box_pack_start (GTK_BOX (hbox), decbutton, FALSE, FALSE, 0);
 
 #if NOTYET
   gtk_signal_connect(GTK_OBJECT(incbutton), "activate",
-    GTK_SIGNAL_FUNC(SoGtkWalkViewer::increaseCB), this );
+    GTK_SIGNAL_FUNC(SoGtkWalkViewer::increaseCB), this);
   gtk_signal_connect(GTK_OBJECT(decbutton), "activate",
-    GTK_SIGNAL_FUNC(SoGtkWalkViewer::decreaseCB), this );
+    GTK_SIGNAL_FUNC(SoGtkWalkViewer::decreaseCB), this);
 #endif
 
   gtk_widget_show_all(hbox);
@@ -407,13 +407,13 @@ SoGtkWalkViewer::makeSubPreferences(
 //
 
 SoGtkWalkViewerP::SoGtkWalkViewerP(
-  SoGtkWalkViewer * publ )
+  SoGtkWalkViewer * publ)
 {
   this->pub = publ;
 } // SoGtkWalkViewerP()
 
 SoGtkWalkViewerP::~SoGtkWalkViewerP(
-  void )
+  void)
 {
 } // ~SoGtkWalkViewerP()
 

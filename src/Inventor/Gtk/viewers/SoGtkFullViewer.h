@@ -39,24 +39,24 @@ public:
     BUILD_ALL         = (BUILD_DECORATION | BUILD_POPUP)
   };
 
-  void setDecoration( const SbBool enable );
+  void setDecoration(const SbBool enable);
   SbBool isDecoration(void) const;
 
-  void setPopupMenuEnabled( const SbBool enable );
+  void setPopupMenuEnabled(const SbBool enable);
   SbBool isPopupMenuEnabled(void) const;
 
   GtkWidget * getAppPushButtonParent(void) const;
-  void addAppPushButton( GtkWidget * button );
-  void insertAppPushButton( GtkWidget * button, int index );
-  void removeAppPushButton( GtkWidget * button );
-  int findAppPushButton( GtkWidget * button ) const;
+  void addAppPushButton(GtkWidget * button);
+  void insertAppPushButton(GtkWidget * button, int index);
+  void removeAppPushButton(GtkWidget * button);
+  int findAppPushButton(GtkWidget * button) const;
   int lengthAppPushButton(void) const;
 
   GtkWidget * getRenderAreaWidget(void);
 
   // overloaded
-  virtual void setViewing( SbBool enable );
-  virtual void setCamera( SoCamera * camera );
+  virtual void setViewing(SbBool enable);
+  virtual void setCamera(SoCamera * camera);
   virtual void hide(void);
 
 protected:
@@ -66,51 +66,51 @@ protected:
     SbBool embed,
     BuildFlag flag,
     SoGtkViewer::Type type,
-    SbBool build );
+    SbBool build);
   ~SoGtkFullViewer(void);
 
-  virtual SbBool eventFilter( GtkWidget * object, GdkEvent * event );
+  virtual SbBool eventFilter(GtkWidget * object, GdkEvent * event);
 
-  GtkWidget * buildWidget( GtkWidget * parent );
+  GtkWidget * buildWidget(GtkWidget * parent);
 
-  virtual void buildDecoration( GtkWidget * parent );
-  virtual GtkWidget * buildLeftTrim( GtkWidget * parent );
-  virtual GtkWidget * buildBottomTrim( GtkWidget * parent );
-  virtual GtkWidget * buildRightTrim( GtkWidget * parent );
-  GtkWidget * buildAppButtons( GtkWidget * parent );
-  GtkWidget * buildViewerButtons( GtkWidget * parent );
-  virtual void createViewerButtons( GtkWidget * parent, SbPList * buttonlist );
+  virtual void buildDecoration(GtkWidget * parent);
+  virtual GtkWidget * buildLeftTrim(GtkWidget * parent);
+  virtual GtkWidget * buildBottomTrim(GtkWidget * parent);
+  virtual GtkWidget * buildRightTrim(GtkWidget * parent);
+  GtkWidget * buildAppButtons(GtkWidget * parent);
+  GtkWidget * buildViewerButtons(GtkWidget * parent);
+  virtual void createViewerButtons(GtkWidget * parent, SbPList * buttonlist);
 
   virtual void buildPopupMenu(void);
-  void setPopupMenuString( const char * title );
-  void openPopupMenu( const SbVec2s position );
+  void setPopupMenuString(const char * title);
+  void openPopupMenu(const SbVec2s position);
 
-  virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
-  void setPrefSheetString( const char * title );
+  virtual GtkWidget * makeSubPreferences(GtkWidget * parent);
+  void setPrefSheetString(const char * title);
 
   virtual void leftWheelStart(void);
-  virtual void leftWheelMotion( float value );
+  virtual void leftWheelMotion(float value);
   virtual void leftWheelFinish(void);
   float getLeftWheelValue(void) const;
-  void setLeftWheelValue( const float value );
+  void setLeftWheelValue(const float value);
 
   virtual void bottomWheelStart(void);
-  virtual void bottomWheelMotion( float value );
+  virtual void bottomWheelMotion(float value);
   virtual void bottomWheelFinish(void);
   float getBottomWheelValue(void) const;
-  void setBottomWheelValue( const float value );
+  void setBottomWheelValue(const float value);
 
   virtual void rightWheelStart(void);
-  virtual void rightWheelMotion( float value );
+  virtual void rightWheelMotion(float value);
   virtual void rightWheelFinish(void);
   float getRightWheelValue(void) const;
-  void setRightWheelValue( const float value );
+  void setRightWheelValue(const float value);
 
-  void setLeftWheelString( const char * name );
-  void setBottomWheelString( const char * name );
-  void setRightWheelString( const char * name );
+  void setLeftWheelString(const char * name);
+  void setBottomWheelString(const char * name);
+  void setRightWheelString(const char * name);
 
-  virtual SbBool processSoEvent( const SoEvent * const event );
+  virtual SbBool processSoEvent(const SoEvent * const event);
   virtual void openViewerHelpCard(void);
 
   SoAnyPopupMenu * prefmenu;

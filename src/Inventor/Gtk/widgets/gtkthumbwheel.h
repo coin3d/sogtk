@@ -37,16 +37,16 @@ extern "C" {
   (gtk_thumbwheel_get_type())
 
 #define GTK_THUMBWHEEL(obj) \
-  (GTK_CHECK_CAST( (obj), GTK_TYPE_THUMBWHEEL, GtkThumbWheel ))
+  (GTK_CHECK_CAST((obj), GTK_TYPE_THUMBWHEEL, GtkThumbWheel))
 
 #define GTK_THUMBWHEEL_CLASS(cclass) \
-  (GTK_CHECK_CLASS_CAST( (cclass), GTK_TYPE_THUMBWHEEL, GtkThumbwheelClass ))
+  (GTK_CHECK_CLASS_CAST((cclass), GTK_TYPE_THUMBWHEEL, GtkThumbwheelClass))
 
 #define GTK_IS_THUMBWHEEL(obj) \
-  (GTK_CHECK_TYPE( (obj), GTK_TYPE_THUMBWHEEL ))
+  (GTK_CHECK_TYPE((obj), GTK_TYPE_THUMBWHEEL))
 
 #define GTK_IS_THUMBWHEEL_CLASS(cclass) \
-  (GTK_CHECK_CLASS_TYPE( (cclass), GTK_TYPE_THUMBWHEEL ))
+  (GTK_CHECK_CLASS_TYPE((cclass), GTK_TYPE_THUMBWHEEL))
 
 /* ********************************************************************** */
 
@@ -86,9 +86,9 @@ struct _GtkThumbWheel {
 struct _GtkThumbWheelClass {
   GtkMiscClass parent_class;
 
-  void (* attached)       ( GtkThumbWheel * thumbwheel );
-  void (* value_changed)  ( GtkThumbWheel * thumbwheel, gfloat value );
-  void (* released)       ( GtkThumbWheel * thumbwheel );
+  void (* attached)       (GtkThumbWheel * thumbwheel);
+  void (* value_changed)  (GtkThumbWheel * thumbwheel, gfloat value);
+  void (* released)       (GtkThumbWheel * thumbwheel);
 }; /* GtkThumbWheelClass */
 
 /* ********************************************************************** */
@@ -106,13 +106,13 @@ void         gtk_thumbwheel_set_range_boundary_handling(
   GtkThumbWheel * thumbwheel,
   GtkThumbWheelBoundaryType handling);
 GtkThumbWheelBoundaryType  gtk_thumbwheel_get_range_boundary_handling(
-  GtkThumbWheel * thumbwheel );
+  GtkThumbWheel * thumbwheel);
 
 void         gtk_thumbwheel_set_motion_method(
   GtkThumbWheel * thumbwheel,
   GtkThumbWheelMotionType     handling);
 GtkThumbWheelMotionType  gtk_thumbwheel_get_motion_method(
-  GtkThumbWheel * thumbwheel );
+  GtkThumbWheel * thumbwheel);
 
 /* ********************************************************************** */
 

@@ -90,10 +90,10 @@ SoGtkGraphEditor::SoGtkGraphEditor(
   GtkWidget * const parent,
   const char * const name,
   const SbBool embed,
-  const int parts )
-: inherited( parent, name, embed )
+  const int parts)
+: inherited(parent, name, embed)
 {
-  this->constructor( TRUE, parts );
+  this->constructor(TRUE, parts);
 } // SoGtkGraphEditor()
 
 /*!
@@ -105,10 +105,10 @@ SoGtkGraphEditor::SoGtkGraphEditor(
   const char * const name,
   const SbBool embed,
   const int parts,
-  const SbBool build )
-: inherited( parent, name, embed )
+  const SbBool build)
+: inherited(parent, name, embed)
 {
-  this->constructor( build, parts );
+  this->constructor(build, parts);
 } // SoGtkGraphEditor()
 
 /*!
@@ -118,7 +118,7 @@ SoGtkGraphEditor::SoGtkGraphEditor(
 void
 SoGtkGraphEditor::constructor(
   const SbBool build,
-  const int parts )
+  const int parts)
 {
   this->scenegraph = (SoNode *) NULL;
 
@@ -134,13 +134,13 @@ SoGtkGraphEditor::constructor(
   this->horizontal = (GtkAdjustment *) NULL;
   this->vertical = (GtkAdjustment *) NULL;
 
-  this->setClassName( "SoGtkGraphEditor" );
+  this->setClassName("SoGtkGraphEditor");
 
-  if ( ! build ) return;
-  this->setSize( SbVec2s(350, 450) );
+  if (! build) return;
+  this->setSize(SbVec2s(350, 450));
   GtkWidget * parent = this->getParentWidget();
-  GtkWidget * editor = this->buildWidget( parent );
-  this->setBaseWidget( editor );
+  GtkWidget * editor = this->buildWidget(parent);
+  this->setBaseWidget(editor);
 } // constructor()
 
 /*!
@@ -148,7 +148,7 @@ SoGtkGraphEditor::constructor(
 */
 
 SoGtkGraphEditor::~SoGtkGraphEditor(
-  void )
+  void)
 {
 } // ~SoGtkGraphEditor()
 
@@ -159,15 +159,15 @@ SoGtkGraphEditor::~SoGtkGraphEditor(
 */
 
 void
-SoGtkGraphEditor::setSceneGraph( // virtual
-  SoNode * root )
+SoGtkGraphEditor::setSceneGraph(// virtual
+  SoNode * root)
 {
-  if ( this->scenegraph ) {
+  if (this->scenegraph) {
     this->clearSceneGraphTree();
     this->scenegraph->unref();
   }
   this->scenegraph = root;
-  if ( this->scenegraph ) {
+  if (this->scenegraph) {
     this->scenegraph->ref();
     this->buildSceneGraphTree();
   }
@@ -179,7 +179,7 @@ SoGtkGraphEditor::setSceneGraph( // virtual
 
 SoNode *
 SoGtkGraphEditor::getSceneGraph(
-  void ) const
+  void) const
 {
   return this->scenegraph;
 } // getSceneGraph;
@@ -191,55 +191,55 @@ SoGtkGraphEditor::getSceneGraph(
 GtkWidget *
 SoGtkGraphEditor::buildSubGraph(
   GtkWidget * parent,
-  SoNode * node )
+  SoNode * node)
 {
-  assert( node != NULL );
+  assert(node != NULL);
   const char * classname = node->getTypeId().getName().getString();
   SbName nodename = node->getName();
   GtkWidget * root;
-  if ( ! nodename ) {
-    root = GTK_WIDGET(gtk_tree_item_new_with_label( classname ));
+  if (! nodename) {
+    root = GTK_WIDGET(gtk_tree_item_new_with_label(classname));
   } else {
     const char * name = nodename.getString();
     char buf[128];
-    sprintf( buf, "%s \"%s\"", classname, name );
-    root = GTK_WIDGET(gtk_tree_item_new_with_label( buf ));
+    sprintf(buf, "%s \"%s\"", classname, name);
+    root = GTK_WIDGET(gtk_tree_item_new_with_label(buf));
   }
-  gtk_object_set_data( GTK_OBJECT(root), "SoNode", (gpointer) node );
+  gtk_object_set_data(GTK_OBJECT(root), "SoNode", (gpointer) node);
   gtk_widget_show(root);
-  gtk_tree_append( GTK_TREE(parent), root );
-  gtk_signal_connect( GTK_OBJECT(root), "select",
-    GTK_SIGNAL_FUNC(SoGtkGraphEditor::selectionCB), (gpointer) this );
+  gtk_tree_append(GTK_TREE(parent), root);
+  gtk_signal_connect(GTK_OBJECT(root), "select",
+    GTK_SIGNAL_FUNC(SoGtkGraphEditor::selectionCB), (gpointer) this);
 
   GtkWidget * substuff = GTK_WIDGET(gtk_tree_new());
-  gtk_tree_item_set_subtree( GTK_TREE_ITEM(root), substuff );
+  gtk_tree_item_set_subtree(GTK_TREE_ITEM(root), substuff);
 
   SoFieldList fields;
-  if ( node->getFields( fields ) > 0 ) {
-    GtkWidget * fieldsitem = GTK_WIDGET(gtk_tree_item_new_with_label( "[fields]" ));
-    gtk_widget_show( fieldsitem );
-    gtk_tree_append( GTK_TREE(substuff), fieldsitem );
+  if (node->getFields(fields) > 0) {
+    GtkWidget * fieldsitem = GTK_WIDGET(gtk_tree_item_new_with_label("[fields]"));
+    gtk_widget_show(fieldsitem);
+    gtk_tree_append(GTK_TREE(substuff), fieldsitem);
     GtkWidget * fieldstree = GTK_WIDGET(gtk_tree_new());
-    gtk_tree_item_set_subtree( GTK_TREE_ITEM(fieldsitem), fieldstree );
-    for ( int i = 0; i < fields.getLength(); i++ ) {
+    gtk_tree_item_set_subtree(GTK_TREE_ITEM(fieldsitem), fieldstree);
+    for (int i = 0; i < fields.getLength(); i++) {
       SoField * field = fields[i];
       SbName fieldname;
-      node->getFieldName( field, fieldname );
+      node->getFieldName(field, fieldname);
       const char * fieldnamestr = fieldname.getString();
-      GtkWidget * fieldwidget = GTK_WIDGET(gtk_tree_item_new_with_label( fieldnamestr ));
-      gtk_object_set_data( GTK_OBJECT(fieldwidget), "SoNode", (gpointer) node );
-      gtk_object_set_data( GTK_OBJECT(fieldwidget), "SoField", (gpointer) field );
-      gtk_widget_show( fieldwidget );
-      gtk_tree_append( GTK_TREE(fieldstree), fieldwidget );
-      gtk_signal_connect( GTK_OBJECT(fieldwidget), "select",
-        GTK_SIGNAL_FUNC(SoGtkGraphEditor::selectionCB), (gpointer) this );
+      GtkWidget * fieldwidget = GTK_WIDGET(gtk_tree_item_new_with_label(fieldnamestr));
+      gtk_object_set_data(GTK_OBJECT(fieldwidget), "SoNode", (gpointer) node);
+      gtk_object_set_data(GTK_OBJECT(fieldwidget), "SoField", (gpointer) field);
+      gtk_widget_show(fieldwidget);
+      gtk_tree_append(GTK_TREE(fieldstree), fieldwidget);
+      gtk_signal_connect(GTK_OBJECT(fieldwidget), "select",
+        GTK_SIGNAL_FUNC(SoGtkGraphEditor::selectionCB), (gpointer) this);
     }
   }
 
   SoChildList * children = node->getChildren();
-  if ( children != NULL && children->getLength() > 0 ) {
-    for ( int i = 0; i < children->getLength(); i++ )
-      GtkWidget * kid = SoGtkGraphEditor::buildSubGraph( substuff, (SoNode *) children->get(i) );
+  if (children != NULL && children->getLength() > 0) {
+    for (int i = 0; i < children->getLength(); i++)
+      GtkWidget * kid = SoGtkGraphEditor::buildSubGraph(substuff, (SoNode *) children->get(i));
   }
   return root;
 }
@@ -249,11 +249,11 @@ SoGtkGraphEditor::buildSubGraph(
 */
 
 void
-SoGtkGraphEditor::buildSceneGraphTree( // virtual, protected
-  void )
+SoGtkGraphEditor::buildSceneGraphTree(// virtual, protected
+  void)
 {
-  GtkWidget * graph = this->buildSubGraph( this->graphroot, this->scenegraph );
-  gtk_tree_item_expand( GTK_TREE_ITEM(graph) );
+  GtkWidget * graph = this->buildSubGraph(this->graphroot, this->scenegraph);
+  gtk_tree_item_expand(GTK_TREE_ITEM(graph));
 } // buildSceneGraphTree()
 
 /*!
@@ -261,11 +261,11 @@ SoGtkGraphEditor::buildSceneGraphTree( // virtual, protected
 */
 
 void
-SoGtkGraphEditor::clearSceneGraphTree( // virtual, protected
-  void )
+SoGtkGraphEditor::clearSceneGraphTree(// virtual, protected
+  void)
 {
-  SoDebugError::postInfo( "SoGtkGraphEditor::clearSceneGraphTree", 
-    _( "[not implemented]" ) );
+  SoDebugError::postInfo("SoGtkGraphEditor::clearSceneGraphTree", 
+    _("[not implemented]"));
 } // clearSceneGraphTree()
 
 /*!
@@ -273,23 +273,23 @@ SoGtkGraphEditor::clearSceneGraphTree( // virtual, protected
 */
 
 void
-SoGtkGraphEditor::saveSceneGraph( // virtual, protected
-  void )
+SoGtkGraphEditor::saveSceneGraph(// virtual, protected
+  void)
 {
-  if ( ! this->scenegraph ) {
-    this->setStatusMessage( _( "No scene to save." ) );
+  if (! this->scenegraph) {
+    this->setStatusMessage(_("No scene to save."));
     return;
   }
   SoOutput * output = new SoOutput;
-  if ( ! output->openFile( "scene.iv" ) ) {
-    this->setStatusMessage( _( "Error opening 'scene.iv' for writing." ) );
+  if (! output->openFile("scene.iv")) {
+    this->setStatusMessage(_("Error opening 'scene.iv' for writing."));
     delete output;
     return;
   }
-  SoWriteAction writer( output );
-  writer.apply( this->scenegraph );
+  SoWriteAction writer(output);
+  writer.apply(this->scenegraph);
   delete output;
-  this->setStatusMessage( _( "Scene saved in 'scene.iv'." ) );
+  this->setStatusMessage(_("Scene saved in 'scene.iv'."));
 } // saveSceneGraph()
 
 // *************************************************************************
@@ -299,26 +299,26 @@ SoGtkGraphEditor::saveSceneGraph( // virtual, protected
 */
 
 GtkWidget *
-SoGtkGraphEditor::buildWidget( // virtual, protected
-  GtkWidget * parent )
+SoGtkGraphEditor::buildWidget(// virtual, protected
+  GtkWidget * parent)
 {
-  this->editorbase = GTK_WIDGET(gtk_vbox_new( FALSE, 0 ));
-  if ( this->buildflags & MENUBAR ) {
-    this->menubar = this->buildMenuBarWidget( this->editorbase );
-    gtk_widget_set_usize( GTK_WIDGET(this->menubar), 0, 30 );
-    gtk_widget_show( this->menubar );
-    gtk_box_pack_start( GTK_BOX(this->editorbase), GTK_WIDGET(this->menubar), FALSE, TRUE, 0 );
+  this->editorbase = GTK_WIDGET(gtk_vbox_new(FALSE, 0));
+  if (this->buildflags & MENUBAR) {
+    this->menubar = this->buildMenuBarWidget(this->editorbase);
+    gtk_widget_set_usize(GTK_WIDGET(this->menubar), 0, 30);
+    gtk_widget_show(this->menubar);
+    gtk_box_pack_start(GTK_BOX(this->editorbase), GTK_WIDGET(this->menubar), FALSE, TRUE, 0);
   }
-  if ( this->buildflags & GRAPHEDITOR ) {
-    this->grapheditor = this->buildGraphEditorWidget( this->editorbase );
-    gtk_widget_show( this->grapheditor );
-    gtk_box_pack_start( GTK_BOX(this->editorbase), GTK_WIDGET(this->grapheditor), TRUE, TRUE, 0 );
+  if (this->buildflags & GRAPHEDITOR) {
+    this->grapheditor = this->buildGraphEditorWidget(this->editorbase);
+    gtk_widget_show(this->grapheditor);
+    gtk_box_pack_start(GTK_BOX(this->editorbase), GTK_WIDGET(this->grapheditor), TRUE, TRUE, 0);
   }
-  if ( this->buildflags & STATUSBAR ) {
-    this->statusbar = this->buildStatusBarWidget( this->editorbase );
-    gtk_widget_set_usize( GTK_WIDGET(this->statusbar), 0, 30 );
-    gtk_widget_show( this->statusbar );
-    gtk_box_pack_end( GTK_BOX(this->editorbase), GTK_WIDGET(this->statusbar), FALSE, TRUE, 0 );
+  if (this->buildflags & STATUSBAR) {
+    this->statusbar = this->buildStatusBarWidget(this->editorbase);
+    gtk_widget_set_usize(GTK_WIDGET(this->statusbar), 0, 30);
+    gtk_widget_show(this->statusbar);
+    gtk_box_pack_end(GTK_BOX(this->editorbase), GTK_WIDGET(this->statusbar), FALSE, TRUE, 0);
   }
   return this->editorbase;
 } // buildWidget()
@@ -328,26 +328,26 @@ SoGtkGraphEditor::buildWidget( // virtual, protected
 */
 
 GtkWidget *
-SoGtkGraphEditor::buildMenuBarWidget( // virtual, protected
-  GtkWidget * parent )
+SoGtkGraphEditor::buildMenuBarWidget(// virtual, protected
+  GtkWidget * parent)
 {
   GtkWidget * menubar = GTK_WIDGET(gtk_menu_bar_new());
-  GtkWidget * filemenuitem = gtk_menu_item_new_with_label( _( "File" ) );
-  gtk_widget_show( filemenuitem );
-  gtk_menu_bar_append( GTK_MENU_BAR(menubar), GTK_WIDGET(filemenuitem) );
+  GtkWidget * filemenuitem = gtk_menu_item_new_with_label(_("File"));
+  gtk_widget_show(filemenuitem);
+  gtk_menu_bar_append(GTK_MENU_BAR(menubar), GTK_WIDGET(filemenuitem));
   GtkWidget * filemenu = GTK_WIDGET(gtk_menu_new());
-  gtk_widget_show( filemenu );
-  GtkWidget * saveitem = gtk_menu_item_new_with_label( _( "Save" ) );
-  gtk_widget_show( saveitem );
-  gtk_menu_append( GTK_MENU(filemenu), GTK_WIDGET(saveitem));
-  gtk_signal_connect( GTK_OBJECT(saveitem), "activate",
-    GTK_SIGNAL_FUNC(SoGtkGraphEditor::saveCB), (gpointer) this );
-  GtkWidget * closeitem = gtk_menu_item_new_with_label( _( "Close" ) );
-  gtk_widget_show( closeitem );
-  gtk_menu_append( GTK_MENU(filemenu), GTK_WIDGET(closeitem));
-  gtk_signal_connect( GTK_OBJECT(closeitem), "activate",
-    GTK_SIGNAL_FUNC(SoGtkGraphEditor::closeCB), (gpointer) this );
-  gtk_menu_item_set_submenu( GTK_MENU_ITEM(filemenuitem), GTK_WIDGET(filemenu) );
+  gtk_widget_show(filemenu);
+  GtkWidget * saveitem = gtk_menu_item_new_with_label(_("Save"));
+  gtk_widget_show(saveitem);
+  gtk_menu_append(GTK_MENU(filemenu), GTK_WIDGET(saveitem));
+  gtk_signal_connect(GTK_OBJECT(saveitem), "activate",
+    GTK_SIGNAL_FUNC(SoGtkGraphEditor::saveCB), (gpointer) this);
+  GtkWidget * closeitem = gtk_menu_item_new_with_label(_("Close"));
+  gtk_widget_show(closeitem);
+  gtk_menu_append(GTK_MENU(filemenu), GTK_WIDGET(closeitem));
+  gtk_signal_connect(GTK_OBJECT(closeitem), "activate",
+    GTK_SIGNAL_FUNC(SoGtkGraphEditor::closeCB), (gpointer) this);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(filemenuitem), GTK_WIDGET(filemenu));
   return menubar;
 } // buildMenuBarWidget()
 
@@ -356,20 +356,20 @@ SoGtkGraphEditor::buildMenuBarWidget( // virtual, protected
 */
 
 GtkWidget *
-SoGtkGraphEditor::buildGraphEditorWidget( // virtual, protected
-  GtkWidget * parent )
+SoGtkGraphEditor::buildGraphEditorWidget(// virtual, protected
+  GtkWidget * parent)
 {
   /* value, lower, upper, step_increment, page_increment, page_size */
-  this->vertical = GTK_ADJUSTMENT(gtk_adjustment_new( 0, 0, 1000, 10, 100, 100 ));
-  this->horizontal = GTK_ADJUSTMENT(gtk_adjustment_new( 0, 0, 1000, 10, 100, 1000 ));
+  this->vertical = GTK_ADJUSTMENT(gtk_adjustment_new(0, 0, 1000, 10, 100, 100));
+  this->horizontal = GTK_ADJUSTMENT(gtk_adjustment_new(0, 0, 1000, 10, 100, 1000));
 
-  GtkWidget * editor = GTK_WIDGET(gtk_scrolled_window_new( horizontal, vertical ));
+  GtkWidget * editor = GTK_WIDGET(gtk_scrolled_window_new(horizontal, vertical));
   gtk_scrolled_window_set_policy(
-    GTK_SCROLLED_WINDOW(editor), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
+    GTK_SCROLLED_WINDOW(editor), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
   this->graphroot = GTK_WIDGET(gtk_tree_new());
-  gtk_widget_show( this->graphroot );
-  gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW(editor), this->graphroot );
+  gtk_widget_show(this->graphroot);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(editor), this->graphroot);
 
   return editor;
 } // buildGraphEditorWidget()
@@ -379,23 +379,23 @@ SoGtkGraphEditor::buildGraphEditorWidget( // virtual, protected
 */
 
 GtkWidget *
-SoGtkGraphEditor::buildStatusBarWidget( // virtual, protected
-  GtkWidget * parent )
+SoGtkGraphEditor::buildStatusBarWidget(// virtual, protected
+  GtkWidget * parent)
 {
-  GtkWidget * statusframe = GTK_WIDGET(gtk_frame_new( (gchar *) NULL ));
-  gtk_widget_set_usize( statusframe, 0, 30 );
-  gtk_frame_set_shadow_type( GTK_FRAME(statusframe), GTK_SHADOW_ETCHED_IN );
-  gtk_container_set_border_width( GTK_CONTAINER(statusframe), 3 );
+  GtkWidget * statusframe = GTK_WIDGET(gtk_frame_new((gchar *) NULL));
+  gtk_widget_set_usize(statusframe, 0, 30);
+  gtk_frame_set_shadow_type(GTK_FRAME(statusframe), GTK_SHADOW_ETCHED_IN);
+  gtk_container_set_border_width(GTK_CONTAINER(statusframe), 3);
   
-  GtkWidget * statuswidgets = gtk_hbox_new( FALSE, 0 );
-  gtk_widget_set_usize( statusframe, 0, 30 );
-  gtk_container_add( GTK_CONTAINER(statusframe), statuswidgets );
-  gtk_widget_show( statuswidgets );
+  GtkWidget * statuswidgets = gtk_hbox_new(FALSE, 0);
+  gtk_widget_set_usize(statusframe, 0, 30);
+  gtk_container_add(GTK_CONTAINER(statusframe), statuswidgets);
+  gtk_widget_show(statuswidgets);
 
   this->statusmessage = GTK_WIDGET(gtk_label_new((gchar *) NULL));
-  gtk_label_set_justify( GTK_LABEL(this->statusmessage), GTK_JUSTIFY_LEFT );
-  gtk_widget_show( this->statusmessage );
-  gtk_box_pack_start( GTK_BOX(statuswidgets), this->statusmessage, FALSE, TRUE, 3 );
+  gtk_label_set_justify(GTK_LABEL(this->statusmessage), GTK_JUSTIFY_LEFT);
+  gtk_widget_show(this->statusmessage);
+  gtk_box_pack_start(GTK_BOX(statuswidgets), this->statusmessage, FALSE, TRUE, 3);
 
   return statusframe;
 } // buildStatusBarWidget()
@@ -407,11 +407,11 @@ SoGtkGraphEditor::buildStatusBarWidget( // virtual, protected
 */
 
 void
-SoGtkGraphEditor::nodeSelection( // virtual, protected
+SoGtkGraphEditor::nodeSelection(// virtual, protected
   GtkWidget * treeitem,
-  SoNode * node )
+  SoNode * node)
 {
-  this->setStatusMessage( node->getTypeId().getName().getString() );
+  this->setStatusMessage(node->getTypeId().getName().getString());
 } // nodeSelection()
 
 /*!
@@ -419,12 +419,12 @@ SoGtkGraphEditor::nodeSelection( // virtual, protected
 */
 
 void
-SoGtkGraphEditor::fieldSelection( // virtual, protected
+SoGtkGraphEditor::fieldSelection(// virtual, protected
   GtkWidget * treeitem,
   SoNode * node,
-  SoField * field )
+  SoField * field)
 {
-  this->setStatusMessage( field->getTypeId().getName().getString() );
+  this->setStatusMessage(field->getTypeId().getName().getString());
 } // fieldSelection()
 
 // *************************************************************************
@@ -435,9 +435,9 @@ SoGtkGraphEditor::fieldSelection( // virtual, protected
 
 void
 SoGtkGraphEditor::sizeChanged(
-  SbVec2s size )
+  SbVec2s size)
 {
-  // inherited::sizeChanged( size );
+  // inherited::sizeChanged(size);
 } // sizeChanged()
 
 // *************************************************************************
@@ -447,11 +447,11 @@ SoGtkGraphEditor::sizeChanged(
 */
 
 void
-SoGtkGraphEditor::saveCB( // static, private
+SoGtkGraphEditor::saveCB(// static, private
   GtkObject * obj,
-  gpointer closure )
+  gpointer closure)
 {
-  assert( closure != NULL );
+  assert(closure != NULL);
   SoGtkGraphEditor * editor = (SoGtkGraphEditor *) closure;
   editor->saveSceneGraph();
 } // saveCB()
@@ -461,11 +461,11 @@ SoGtkGraphEditor::saveCB( // static, private
 */
 
 void
-SoGtkGraphEditor::closeCB( // static, private
+SoGtkGraphEditor::closeCB(// static, private
   GtkObject * obj,
-  gpointer closure )
+  gpointer closure)
 {
-  assert( closure != NULL );
+  assert(closure != NULL);
   SoGtkGraphEditor * editor = (SoGtkGraphEditor *) closure;
   editor->hide();
 } // closeCB()
@@ -477,10 +477,10 @@ SoGtkGraphEditor::closeCB( // static, private
 */
 
 void
-SoGtkGraphEditor::setStatusMessage( // virtual, protected
-  const char * message )
+SoGtkGraphEditor::setStatusMessage(// virtual, protected
+  const char * message)
 {
-  gtk_label_set_text( GTK_LABEL(this->statusmessage), message );
+  gtk_label_set_text(GTK_LABEL(this->statusmessage), message);
 } // setStatusMessage()
 
 // *************************************************************************
@@ -492,18 +492,18 @@ SoGtkGraphEditor::setStatusMessage( // virtual, protected
 void
 SoGtkGraphEditor::selectionCB(
   GtkObject * object,
-  gpointer closure )
+  gpointer closure)
 {
-  assert( closure != NULL );
+  assert(closure != NULL);
   SoGtkGraphEditor * editor = (SoGtkGraphEditor *) closure;
-  SoNode * node = (SoNode *) gtk_object_get_data( GTK_OBJECT(object), "SoNode" );
-  SoField * field = (SoField *) gtk_object_get_data( GTK_OBJECT(object), "SoField" );
-  if ( node && ! field )
-    editor->nodeSelection( GTK_WIDGET(object), node );
-  else if ( node && field )
-    editor->fieldSelection( GTK_WIDGET(object), node, field );
+  SoNode * node = (SoNode *) gtk_object_get_data(GTK_OBJECT(object), "SoNode");
+  SoField * field = (SoField *) gtk_object_get_data(GTK_OBJECT(object), "SoField");
+  if (node && ! field)
+    editor->nodeSelection(GTK_WIDGET(object), node);
+  else if (node && field)
+    editor->fieldSelection(GTK_WIDGET(object), node, field);
   else
-    SoDebugError::postInfo( "SoGtkGraphEditor::selectionCB", "[invalid selection data]" );
+    SoDebugError::postInfo("SoGtkGraphEditor::selectionCB", "[invalid selection data]");
 } // selectionCB()
 
 // *************************************************************************
@@ -513,8 +513,8 @@ SoGtkGraphEditor::selectionCB(
 */
 
 const char *
-SoGtkGraphEditor::getDefaultWidgetName( // virtual, protected
-  void ) const
+SoGtkGraphEditor::getDefaultWidgetName(// virtual, protected
+  void) const
 {
   static const char defaultWidgetName[] = "SoGtkGraphEditor";
   return defaultWidgetName;
@@ -525,11 +525,11 @@ SoGtkGraphEditor::getDefaultWidgetName( // virtual, protected
 */
 
 const char *
-SoGtkGraphEditor::getDefaultTitle( // virtual, protected
-  void ) const
+SoGtkGraphEditor::getDefaultTitle(// virtual, protected
+  void) const
 {
-  static const char defaultTitle[] = N_( "Graph Editor" );
-  return _( defaultTitle );
+  static const char defaultTitle[] = N_("Graph Editor");
+  return _(defaultTitle);
 } // getDefaultTitle()
 
 /*!
@@ -537,11 +537,11 @@ SoGtkGraphEditor::getDefaultTitle( // virtual, protected
 */
 
 const char *
-SoGtkGraphEditor::getDefaultIconTitle( // virtual, protected
-  void ) const
+SoGtkGraphEditor::getDefaultIconTitle(// virtual, protected
+  void) const
 {
-  static const char defaultIconTitle[] = N_( "Graph Editor" );
-  return _( defaultIconTitle );
+  static const char defaultIconTitle[] = N_("Graph Editor");
+  return _(defaultIconTitle);
 } // getDefaultIconTitle()
 
 // *************************************************************************

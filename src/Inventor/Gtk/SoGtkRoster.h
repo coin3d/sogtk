@@ -42,23 +42,23 @@ public:
     GtkWidget * parent = (GtkWidget *) NULL,
     const char * const name = (char *) NULL,
     const SbBool embed = TRUE,
-    const int flags = BUILD_ALL );
+    const int flags = BUILD_ALL);
   ~SoGtkRoster(void);
 
 protected:
-  SoGtkRoster( GtkWidget * parent, const char * const name,
-    const SbBool embed, const int flags, const SbBool build );
+  SoGtkRoster(GtkWidget * parent, const char * const name,
+    const SbBool embed, const int flags, const SbBool build);
 
-  GtkWidget * buildWidget( GtkWidget * parent );
-  virtual GtkWidget * buildMenuBarWidget( GtkWidget * parent );
-  virtual GtkWidget * buildRosterListWidget( GtkWidget * parent );
-  virtual GtkWidget * buildStatusBarWidget( GtkWidget * parent );
+  GtkWidget * buildWidget(GtkWidget * parent);
+  virtual GtkWidget * buildMenuBarWidget(GtkWidget * parent);
+  virtual GtkWidget * buildRosterListWidget(GtkWidget * parent);
+  virtual GtkWidget * buildStatusBarWidget(GtkWidget * parent);
 
-  virtual void sizeChanged( const SbVec2s size );
+  virtual void sizeChanged(const SbVec2s size);
 
-  virtual void componentCreated( SoGtkComponent * component );
-  virtual void componentDestroyed( SoGtkComponent * component );
-  virtual void componentChanged( SoGtkComponent * component );
+  virtual void componentCreated(SoGtkComponent * component);
+  virtual void componentDestroyed(SoGtkComponent * component);
+  virtual void componentChanged(SoGtkComponent * component);
 
   void buildRosterList(void);
 
@@ -67,7 +67,7 @@ protected:
   virtual const char * getDefaultIconTitle(void) const;
 
 private:
-  void constructor( const SbBool build );
+  void constructor(const SbBool build);
 
   int buildflags;
   GtkAdjustment * horizontal;
@@ -78,8 +78,8 @@ private:
   GtkWidget * statusbar;
   GtkWidget * listwidget;
 
-  static void componentActionCB( SoGtkComponent * component,
-    SoGtk::SoGtkComponentAction action, void * closure );
+  static void componentActionCB(SoGtkComponent * component,
+    SoGtk::SoGtkComponentAction action, void * closure);
 
 }; // class SoGtkRoster
 

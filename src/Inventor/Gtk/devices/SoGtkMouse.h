@@ -41,13 +41,13 @@ public:
     ALL_EVENTS     = (BUTTON_PRESS | BUTTON_RELEASE | POINTER_MOTION | BUTTON_MOTION)
   };
 
-  SoGtkMouse( const int eventbits = SoGtkMouse::ALL_EVENTS );
+  SoGtkMouse(const int eventbits = SoGtkMouse::ALL_EVENTS);
   virtual ~SoGtkMouse(void);
 
-  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
-  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
+  virtual void enable(GtkWidget * widget, SoGtkEventHandler * func, gpointer closure);
+  virtual void disable(GtkWidget * widget, SoGtkEventHandler * func, gpointer closure);
 
-  virtual const SoEvent * translateEvent( GdkEvent * event );
+  virtual const SoEvent * translateEvent(GdkEvent * event);
 
 private:
   int events;

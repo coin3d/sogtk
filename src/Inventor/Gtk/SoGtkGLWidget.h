@@ -42,16 +42,16 @@ class SOGTK_DLL_API SoGtkGLWidget : public SoGtkComponent {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkGLWidget, SoGtkComponent);
 
 public:
-  void setBorder( const SbBool enable );
+  void setBorder(const SbBool enable);
   SbBool isBorder(void) const;
 
-  virtual void setDoubleBuffer( const SbBool enable );
+  virtual void setDoubleBuffer(const SbBool enable);
   SbBool isDoubleBuffer(void) const;
 
-  void setDrawToFrontBufferEnable( const SbBool enable );
+  void setDrawToFrontBufferEnable(const SbBool enable);
   SbBool isDrawToFrontBufferEnable(void) const;
 
-  void setQuadBufferStereo( const SbBool enable );
+  void setQuadBufferStereo(const SbBool enable);
   SbBool isQuadBufferStereo(void) const;
 
   GtkWidget * getNormalWidget(void) const;
@@ -69,9 +69,9 @@ protected:
     const SbBool build = TRUE);
   virtual ~SoGtkGLWidget(void);
 
-  virtual void processEvent( GdkEvent * anyevent );
+  virtual void processEvent(GdkEvent * anyevent);
 
-  GtkWidget * buildWidget( GtkWidget * parent );
+  GtkWidget * buildWidget(GtkWidget * parent);
 
   GtkWidget * getGtkGLArea(void) const;
   GtkWidget * getGLWidget(void) const { return this->getGtkGLArea(); }
@@ -79,19 +79,19 @@ protected:
   virtual void redraw(void) = 0;
   virtual void redrawOverlay(void);
 
-  virtual void sizeChanged( const SbVec2s size );
-  virtual void widgetChanged( GtkWidget * widget );
+  virtual void sizeChanged(const SbVec2s size);
+  virtual void widgetChanged(GtkWidget * widget);
 
   virtual void afterRealizeHook(void);
   virtual void initGraphic(void);
   virtual void initOverlayGraphic(void);
 
-  void setGLSize( const SbVec2s size );
+  void setGLSize(const SbVec2s size);
   const SbVec2s getGLSize(void) const;
   float getGLAspectRatio(void) const;
 
   // old aliases
-  void setGlxSize( const SbVec2s size ) { this->setGLSize( size ); }
+  void setGlxSize(const SbVec2s size) { this->setGLSize(size); }
   const SbVec2s getGlxSize(void) const { return this->getGLSize(); }
   float getGlxAspectRatio(void) const { return this->getGLAspectRatio(); }
   void setStereoBuffer(SbBool flag) {
@@ -115,8 +115,8 @@ protected:
 
   SbBool waitForExpose;
 
-  virtual SbBool eventFilter( GtkWidget * object, GdkEvent * event );
-  static gint eventHandler( GtkWidget * object, GdkEvent * event, gpointer closure );
+  virtual SbBool eventFilter(GtkWidget * object, GdkEvent * event);
+  static gint eventHandler(GtkWidget * object, GdkEvent * event, gpointer closure);
 
 private:
   // friends and family

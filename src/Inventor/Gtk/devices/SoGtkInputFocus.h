@@ -36,13 +36,13 @@ public:
     ALL_EVENTS   = (ENTER_WINDOW | LEAVE_WINDOW)
   };
 
-  SoGtkInputFocus( const int eventbits = SoGtkInputFocus::ALL_EVENTS );
+  SoGtkInputFocus(const int eventbits = SoGtkInputFocus::ALL_EVENTS);
   virtual ~SoGtkInputFocus(void);
 
-  virtual void enable( GtkWidget * w, SoGtkEventHandler * func, void * data );
-  virtual void disable( GtkWidget * w, SoGtkEventHandler * func, void * data );
+  virtual void enable(GtkWidget * w, SoGtkEventHandler * func, void * data);
+  virtual void disable(GtkWidget * w, SoGtkEventHandler * func, void * data);
 
-  virtual const SoEvent * translateEvent( GdkEvent * event );
+  virtual const SoEvent * translateEvent(GdkEvent * event);
 
 private:
   int events;

@@ -41,55 +41,55 @@ class SOGTK_DLL_API SoGtk {
   friend class SoGtkComponent;
 
 public:
-  static GtkWidget * init( const char * const appName,
-                           const char * const className = "SoGtk" );
+  static GtkWidget * init(const char * const appName,
+                           const char * const className = "SoGtk");
 
-  static GtkWidget * init( int argc, char ** argv,
+  static GtkWidget * init(int argc, char ** argv,
                            const char * const appName,
-                           const char * const className = "SoGtk" );
+                           const char * const className = "SoGtk");
 
-  static void init( GtkWidget * const topLevelWidget );
+  static void init(GtkWidget * const topLevelWidget);
 
   static void mainLoop(void);
   static void exitMainLoop(void);
 
 //  static GtkApplication * getApplication(void);
   static GtkWidget * getTopLevelWidget(void);
-  static GtkWidget * getShellWidget( const GtkWidget * const widget );
+  static GtkWidget * getShellWidget(const GtkWidget * const widget);
 
-  static void show( GtkWidget * const widget );
-  static void hide( GtkWidget * const widget );
+  static void show(GtkWidget * const widget);
+  static void hide(GtkWidget * const widget);
 
-  static void setWidgetSize( GtkWidget * const widget, const SbVec2s size );
-  static SbVec2s getWidgetSize( const GtkWidget * const widget );
+  static void setWidgetSize(GtkWidget * const widget, const SbVec2s size);
+  static SbVec2s getWidgetSize(const GtkWidget * const widget);
 
-  static void createSimpleErrorDialog( GtkWidget * const widget,
+  static void createSimpleErrorDialog(GtkWidget * const widget,
                                        const char * const dialogTitle,
                                        const char * const errorStr1,
-                                       const char * const errorStr2 = (char *) 0 );
+                                       const char * const errorStr2 = (char *) 0);
 
   enum SoGtkComponentAction { CREATION, DESTRUCTION, CHANGE };
   typedef void SoGtkComponentActionCallback(
-    SoGtkComponent *, SoGtk::SoGtkComponentAction, void * );
+    SoGtkComponent *, SoGtk::SoGtkComponentAction, void *);
 
-  static void addComponentActionCallback( SoGtkComponentActionCallback *, void * );
-  static void removeComponentActionCallback( SoGtkComponentActionCallback *, void * );
+  static void addComponentActionCallback(SoGtkComponentActionCallback *, void *);
+  static void removeComponentActionCallback(SoGtkComponentActionCallback *, void *);
 
-  static int getComponents( SbPList & components );
+  static int getComponents(SbPList & components);
 
 protected:
   static void invokeComponentActionCallbacks(
-    SoGtkComponent * component, SoGtkComponentAction action );
+    SoGtkComponent * component, SoGtkComponentAction action);
 
-  static gint componentCreation( SoGtkComponent * component );
-  static gint componentDestruction( SoGtkComponent * component );
-  static gint componentChange( SoGtkComponent * component );
+  static gint componentCreation(SoGtkComponent * component);
+  static gint componentDestruction(SoGtkComponent * component);
+  static gint componentChange(SoGtkComponent * component);
 
 private:
-  static void sensorQueueChanged( void * cbdata );
-  static gint timerSensorCB( gpointer data );
-  static gint idleSensorCB( gpointer data );
-  static gint delaySensorCB( gpointer data );
+  static void sensorQueueChanged(void * cbdata);
+  static gint timerSensorCB(gpointer data);
+  static gint idleSensorCB(gpointer data);
+  static gint delaySensorCB(gpointer data);
 
   static GtkWidget * mainWidget;
   static SbPList * components;

@@ -35,14 +35,14 @@ public:
     const char * name = (const char *) 0,
     SbBool embed = TRUE,
     SoGtkFullViewer::BuildFlag flag = SoGtkFullViewer::BUILD_ALL,
-    SoGtkViewer::Type type = SoGtkViewer::BROWSER );
+    SoGtkViewer::Type type = SoGtkViewer::BROWSER);
   ~SoGtkWalkViewer(void);
 
-  virtual void setViewing( SbBool enable );
-  virtual void setCamera( SoCamera * camera );
-  virtual void setCursorEnabled( SbBool enable );
+  virtual void setViewing(SbBool enable);
+  virtual void setCamera(SoCamera * camera);
+  virtual void setCursorEnabled(SbBool enable);
 
-  virtual void setCameraType( SoType type );
+  virtual void setCameraType(SoType type);
 
 protected:
   SoGtkWalkViewer(
@@ -51,28 +51,28 @@ protected:
     SbBool embed,
     SoGtkFullViewer::BuildFlag flag,
     SoGtkViewer::Type type,
-    SbBool build );
+    SbBool build);
 
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
 
-  virtual SbBool processSoEvent( const SoEvent * const event );
-  virtual void processEvent( GdkEvent * event );
-  virtual void setSeekMode( SbBool enable );
+  virtual SbBool processSoEvent(const SoEvent * const event);
+  virtual void processEvent(GdkEvent * event);
+  virtual void setSeekMode(SbBool enable);
   virtual void actualRedraw(void);
 
-  virtual void rightWheelMotion( float value );
+  virtual void rightWheelMotion(float value);
 
-  virtual GtkWidget * buildLeftTrim( GtkWidget * parent );
+  virtual GtkWidget * buildLeftTrim(GtkWidget * parent);
 
   virtual void createPrefSheet(void);
   virtual void openViewerHelpCard(void);
 
-  virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
+  virtual GtkWidget * makeSubPreferences(GtkWidget * parent);
 
 private:
-  void constructor( const SbBool build );
+  void constructor(const SbBool build);
 
 private:
   // friends and family

@@ -87,27 +87,27 @@ SoGtkRoster::SoGtkRoster(
   GtkWidget * parent,
   const char * const name,
   const SbBool embed,
-  const int flags )
-: inherited( parent, name, embed )
+  const int flags)
+: inherited(parent, name, embed)
 {
   this->buildflags = flags;
-  this->constructor( TRUE );
+  this->constructor(TRUE);
 } // SoGtkRoster()
 
 /*!
   Protected constructor for derived classes.
 */
 
-SoGtkRoster::SoGtkRoster( // protected
+SoGtkRoster::SoGtkRoster(// protected
   GtkWidget * parent,
   const char * const name,
   const SbBool embed,
   const int flags,
-  const SbBool build )
-: inherited( parent, name, embed )
+  const SbBool build)
+: inherited(parent, name, embed)
 {
   this->buildflags = flags;
-  this->constructor( build );
+  this->constructor(build);
 } // SoGtkRoster()
 
 /*!
@@ -115,8 +115,8 @@ SoGtkRoster::SoGtkRoster( // protected
 */
 
 void
-SoGtkRoster::constructor( // private
-  const SbBool build )
+SoGtkRoster::constructor(// private
+  const SbBool build)
 {
   this->rosterbase = (GtkWidget *) NULL;
   this->menubar = (GtkWidget *) NULL;
@@ -127,14 +127,14 @@ SoGtkRoster::constructor( // private
   this->vertical = (GtkAdjustment *) NULL;
 
   SoGtk::addComponentActionCallback(
-    SoGtkRoster::componentActionCB, (void *) this );
+    SoGtkRoster::componentActionCB, (void *) this);
 
-  this->setSize( SbVec2s( 250, 250 ) );
+  this->setSize(SbVec2s(250, 250));
 
-  if ( ! build ) return;
+  if (! build) return;
   GtkWidget * parent = this->getParentWidget();
-  this->rosterbase = this->buildWidget( parent );
-  this->setBaseWidget( this->rosterbase );
+  this->rosterbase = this->buildWidget(parent);
+  this->setBaseWidget(this->rosterbase);
   gtk_widget_show(this->rosterbase);
 } // constructor()
 
@@ -143,10 +143,10 @@ SoGtkRoster::constructor( // private
 */
 
 SoGtkRoster::~SoGtkRoster(
-  void )
+  void)
 {
   SoGtk::removeComponentActionCallback(
-    SoGtkRoster::componentActionCB, (void *) this );
+    SoGtkRoster::componentActionCB, (void *) this);
 } // ~SoGtkRoster()
 
 // *************************************************************************
@@ -156,26 +156,26 @@ SoGtkRoster::~SoGtkRoster(
 */
 
 GtkWidget *
-SoGtkRoster::buildWidget( // virtual, protected
-  GtkWidget * parent )
+SoGtkRoster::buildWidget(// virtual, protected
+  GtkWidget * parent)
 {
-  GtkWidget * compound = gtk_vbox_new( FALSE, 0 );
-  if ( this->buildflags & MENUBAR ) {
-    this->menubar = this->buildMenuBarWidget( compound );
-    gtk_widget_set_usize( GTK_WIDGET(this->menubar), 0, 30 );
-    gtk_widget_show( this->menubar );
-    gtk_box_pack_start( GTK_BOX(compound), GTK_WIDGET(this->menubar), FALSE, TRUE, 0 );
+  GtkWidget * compound = gtk_vbox_new(FALSE, 0);
+  if (this->buildflags & MENUBAR) {
+    this->menubar = this->buildMenuBarWidget(compound);
+    gtk_widget_set_usize(GTK_WIDGET(this->menubar), 0, 30);
+    gtk_widget_show(this->menubar);
+    gtk_box_pack_start(GTK_BOX(compound), GTK_WIDGET(this->menubar), FALSE, TRUE, 0);
   }
-  if ( this->buildflags & ROSTERLIST ) {
-    this->rosterlist = this->buildRosterListWidget( compound );
-    gtk_widget_show( this->rosterlist );
-    gtk_box_pack_start( GTK_BOX(compound), GTK_WIDGET(this->rosterlist), TRUE, TRUE, 0 );
+  if (this->buildflags & ROSTERLIST) {
+    this->rosterlist = this->buildRosterListWidget(compound);
+    gtk_widget_show(this->rosterlist);
+    gtk_box_pack_start(GTK_BOX(compound), GTK_WIDGET(this->rosterlist), TRUE, TRUE, 0);
   }
-  if ( this->buildflags & STATUSBAR ) {
-    this->statusbar = this->buildStatusBarWidget( compound );
-    gtk_widget_set_usize( GTK_WIDGET(this->statusbar), 0, 30 );
-    gtk_widget_show( this->statusbar );
-    gtk_box_pack_end( GTK_BOX(compound), GTK_WIDGET(this->statusbar), FALSE, TRUE, 0 );
+  if (this->buildflags & STATUSBAR) {
+    this->statusbar = this->buildStatusBarWidget(compound);
+    gtk_widget_set_usize(GTK_WIDGET(this->statusbar), 0, 30);
+    gtk_widget_show(this->statusbar);
+    gtk_box_pack_end(GTK_BOX(compound), GTK_WIDGET(this->statusbar), FALSE, TRUE, 0);
   }
   this->buildRosterList();
   return compound;
@@ -188,11 +188,11 @@ SoGtkRoster::buildWidget( // virtual, protected
 static void
 create_component(
   GtkObject * obj,
-  gpointer closure )
+  gpointer closure)
 {
-  SoType type = SoType::fromName( SbName((const char *) closure) );
-  assert( type.canCreateInstance() );
-  SoDebugError::postInfo( "create_component", "creating %s", type.getName().getString() );
+  SoType type = SoType::fromName(SbName((const char *) closure));
+  assert(type.canCreateInstance());
+  SoDebugError::postInfo("create_component", "creating %s", type.getName().getString());
   SoGtkComponent * component = (SoGtkComponent *) type.createInstance();
   component->show();
 } // create_component()
@@ -202,31 +202,31 @@ create_component(
 */
 
 GtkWidget *
-SoGtkRoster::buildMenuBarWidget( // virtual, protected
-  GtkWidget * parent )
+SoGtkRoster::buildMenuBarWidget(// virtual, protected
+  GtkWidget * parent)
 {
   GtkWidget * menubar = GTK_WIDGET(gtk_menu_bar_new());
 
   GtkWidget * createitem = GTK_WIDGET(gtk_menu_item_new_with_label(_("Create")));
-  gtk_widget_show( createitem );
-  gtk_menu_bar_append( GTK_MENU_BAR(menubar), GTK_WIDGET(createitem) );
+  gtk_widget_show(createitem);
+  gtk_menu_bar_append(GTK_MENU_BAR(menubar), GTK_WIDGET(createitem));
 
   GtkWidget * createmenu = GTK_WIDGET(gtk_menu_new());
   SoTypeList types;
-  const int num = SoType::getAllDerivedFrom( SoGtkComponent::getClassTypeId(), types );
-  for ( int i = 0; i < num; i++ ) {
+  const int num = SoType::getAllDerivedFrom(SoGtkComponent::getClassTypeId(), types);
+  for (int i = 0; i < num; i++) {
     SoType type = types[i];
     SbName name = type.getName();
-    if ( type.canCreateInstance() ) {
+    if (type.canCreateInstance()) {
       GtkWidget * item = GTK_WIDGET(gtk_menu_item_new_with_label(name.getString()));
-      gtk_signal_connect( GTK_OBJECT(item), "activate",
-        GTK_SIGNAL_FUNC(create_component), (gpointer) type.getName().getString() );
+      gtk_signal_connect(GTK_OBJECT(item), "activate",
+        GTK_SIGNAL_FUNC(create_component), (gpointer) type.getName().getString());
       gtk_widget_show(item);
-      gtk_menu_append( GTK_MENU(createmenu), item );
+      gtk_menu_append(GTK_MENU(createmenu), item);
     }
   }
 
-  gtk_menu_item_set_submenu( GTK_MENU_ITEM(createitem), createmenu );
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(createitem), createmenu);
 
   return menubar;
 } // buildMenuBarWidget()
@@ -237,16 +237,16 @@ SoGtkRoster::buildMenuBarWidget( // virtual, protected
 
 void
 SoGtkRoster::buildRosterList(
-  void )
+  void)
 {
   SbPList components;
-  const int numComponents = SoGtk::getComponents( components );
-  for ( int i = 0; i < numComponents; i++ ) {
+  const int numComponents = SoGtk::getComponents(components);
+  for (int i = 0; i < numComponents; i++) {
     SoGtkComponent * component = (SoGtkComponent *) components[i];
     char * title = (char *) component->getTitle();
     char * classname = (char *) component->getTypeId().getName().getString();
     char * columns[] = { title, classname, (char *) NULL };
-    gtk_clist_append( GTK_CLIST(this->listwidget), columns );
+    gtk_clist_append(GTK_CLIST(this->listwidget), columns);
   }
 } // buildRosterList()
 
@@ -255,24 +255,24 @@ SoGtkRoster::buildRosterList(
 */
 
 GtkWidget *
-SoGtkRoster::buildRosterListWidget( // virtual, protected
-  GtkWidget * parent )
+SoGtkRoster::buildRosterListWidget(// virtual, protected
+  GtkWidget * parent)
 {
-  this->vertical = GTK_ADJUSTMENT(gtk_adjustment_new( 0, 0, 1000, 10, 100, 100 ));
-  this->horizontal = GTK_ADJUSTMENT(gtk_adjustment_new( 0, 0, 1000, 10, 100, 1000 ));
+  this->vertical = GTK_ADJUSTMENT(gtk_adjustment_new(0, 0, 1000, 10, 100, 100));
+  this->horizontal = GTK_ADJUSTMENT(gtk_adjustment_new(0, 0, 1000, 10, 100, 1000));
 
-  GtkWidget * rosterlist = GTK_WIDGET(gtk_scrolled_window_new( horizontal, vertical ));
+  GtkWidget * rosterlist = GTK_WIDGET(gtk_scrolled_window_new(horizontal, vertical));
   gtk_scrolled_window_set_policy(
-    GTK_SCROLLED_WINDOW(rosterlist), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
+    GTK_SCROLLED_WINDOW(rosterlist), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
   char * titles[] = { _("Title"), _("Class"), (char *) NULL };
-  this->listwidget = GTK_WIDGET(gtk_clist_new_with_titles( 2, titles ));
-  gtk_clist_column_titles_show( GTK_CLIST(this->listwidget) );
-  gtk_clist_set_column_visibility( GTK_CLIST(this->listwidget), 1, TRUE );
-  gtk_clist_set_column_visibility( GTK_CLIST(this->listwidget), 2, TRUE );
-  gtk_widget_show( this->listwidget );
+  this->listwidget = GTK_WIDGET(gtk_clist_new_with_titles(2, titles));
+  gtk_clist_column_titles_show(GTK_CLIST(this->listwidget));
+  gtk_clist_set_column_visibility(GTK_CLIST(this->listwidget), 1, TRUE);
+  gtk_clist_set_column_visibility(GTK_CLIST(this->listwidget), 2, TRUE);
+  gtk_widget_show(this->listwidget);
 
-  gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW(rosterlist), this->listwidget );
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(rosterlist), this->listwidget);
   return rosterlist;
 } // buildRosterListWidget()
 
@@ -281,8 +281,8 @@ SoGtkRoster::buildRosterListWidget( // virtual, protected
 */
 
 GtkWidget *
-SoGtkRoster::buildStatusBarWidget( // virtual, protected
-  GtkWidget * parent )
+SoGtkRoster::buildStatusBarWidget(// virtual, protected
+  GtkWidget * parent)
 {
   GtkWidget * statusbar = GTK_WIDGET(gtk_hbox_new(FALSE, 0));
   return statusbar;
@@ -295,10 +295,10 @@ SoGtkRoster::buildStatusBarWidget( // virtual, protected
 */
 
 void
-SoGtkRoster::sizeChanged( // virtual, protected
-  const SbVec2s size )
+SoGtkRoster::sizeChanged(// virtual, protected
+  const SbVec2s size)
 {
-  // SoDebugError::postInfo( "SoGtkRoster::sizeChanged", "[invoked]" );
+  // SoDebugError::postInfo("SoGtkRoster::sizeChanged", "[invoked]");
 } // sizeChanged()
 
 // *************************************************************************
@@ -308,17 +308,17 @@ SoGtkRoster::sizeChanged( // virtual, protected
 */
 
 void
-SoGtkRoster::componentCreated( // virtual, protected
-  SoGtkComponent * component )
+SoGtkRoster::componentCreated(// virtual, protected
+  SoGtkComponent * component)
 {
 #if SOGTK_DEBUG && 0
-  SoDebugError::postInfo( "SoGtkRoster::componentCreated",
-    "component = %p", component );
+  SoDebugError::postInfo("SoGtkRoster::componentCreated",
+    "component = %p", component);
 #endif
   char * title = (char *) component->getTitle();
   char * classname = (char *) component->getTypeId().getName().getString();
   char * strings[] = { title, classname, (char *) NULL };
-  gtk_clist_append( GTK_CLIST(this->listwidget), strings );
+  gtk_clist_append(GTK_CLIST(this->listwidget), strings);
 } // componentCreated()
 
 /*!
@@ -326,12 +326,12 @@ SoGtkRoster::componentCreated( // virtual, protected
 */
 
 void
-SoGtkRoster::componentDestroyed( // virtual, protected
-  SoGtkComponent * component )
+SoGtkRoster::componentDestroyed(// virtual, protected
+  SoGtkComponent * component)
 {
 #if SOGTK_DEBUG && 0
-  SoDebugError::postInfo( "SoGtkRoster::componentDestroyed",
-    "component = %p", component );
+  SoDebugError::postInfo("SoGtkRoster::componentDestroyed",
+    "component = %p", component);
 #endif
 } // componentDestroyed()
 
@@ -340,12 +340,12 @@ SoGtkRoster::componentDestroyed( // virtual, protected
 */
 
 void
-SoGtkRoster::componentChanged( // virtual, protected
-  SoGtkComponent * component )
+SoGtkRoster::componentChanged(// virtual, protected
+  SoGtkComponent * component)
 {
 #if SOGTK_DEBUG && 0
-  SoDebugError::postInfo( "SoGtkRoster::componentChanged",
-    "component = %p", component );
+  SoDebugError::postInfo("SoGtkRoster::componentChanged",
+    "component = %p", component);
 #endif
 } // componentChanged()
 
@@ -354,28 +354,28 @@ SoGtkRoster::componentChanged( // virtual, protected
 */
 
 void
-SoGtkRoster::componentActionCB( // static, private
+SoGtkRoster::componentActionCB(// static, private
   SoGtkComponent * component,
   SoGtk::SoGtkComponentAction action,
-  void * closure )
+  void * closure)
 {
   SoGtkRoster * const roster = (SoGtkRoster *) closure;
-  switch ( action ) {
+  switch (action) {
   case SoGtk::CREATION:
-    roster->componentCreated( component );
+    roster->componentCreated(component);
     break;
   case SoGtk::DESTRUCTION:
-    roster->componentChanged( component );
+    roster->componentChanged(component);
     break;
   case SoGtk::CHANGE:
-    roster->componentDestroyed( component );
+    roster->componentDestroyed(component);
     break;
   default:
 #if SOGTK_DEBUG
-    SoDebugError::postInfo( "SoGtkRoster::componentActionCB", "unknown action" );
+    SoDebugError::postInfo("SoGtkRoster::componentActionCB", "unknown action");
 #endif
     break;
-  } // switch ( action )
+  } // switch (action)
 } // componentActionCB()
 
 // *************************************************************************
@@ -385,8 +385,8 @@ SoGtkRoster::componentActionCB( // static, private
 */
 
 const char *
-SoGtkRoster::getDefaultWidgetName( // virtual, protected
-  void ) const
+SoGtkRoster::getDefaultWidgetName(// virtual, protected
+  void) const
 {
   static const char defaultWidgetName[] = "SoGtkRoster";
   return defaultWidgetName;
@@ -397,8 +397,8 @@ SoGtkRoster::getDefaultWidgetName( // virtual, protected
 */
 
 const char *
-SoGtkRoster::getDefaultTitle( // virtual, protected
-  void ) const
+SoGtkRoster::getDefaultTitle(// virtual, protected
+  void) const
 {
   static const char defaultTitle[] = N_("Roster");
   return _(defaultTitle);
@@ -409,8 +409,8 @@ SoGtkRoster::getDefaultTitle( // virtual, protected
 */
 
 const char *
-SoGtkRoster::getDefaultIconTitle( // virtual, protected
-  void ) const
+SoGtkRoster::getDefaultIconTitle(// virtual, protected
+  void) const
 {
   static const char defaultIconTitle[] = N_("Roster");
   return _(defaultIconTitle);

@@ -49,25 +49,25 @@ static const char rcsid[] =
 // *************************************************************************
 
 /*!
-  \typedef void SoGtkDevice::SoGtkEventHandler( GtkWidget *, GdkEvent *, gpointer )
+  \typedef void SoGtkDevice::SoGtkEventHandler(GtkWidget *, GdkEvent *, gpointer)
 
   FIXME: write doc
 */
 
 /*!
-  \fn void SoGtkDevice::enable( GtkWidget * widget, SoGtkEventHandler * func, void * closure ) = 0
+  \fn void SoGtkDevice::enable(GtkWidget * widget, SoGtkEventHandler * func, void * closure) = 0
 
   FIXME: write doc
 */
 
 /*!
-  \fn void SoGtkDevice::disable( GtkWidget * widget, SoGtkEventHandler * func, void * closure ) = 0
+  \fn void SoGtkDevice::disable(GtkWidget * widget, SoGtkEventHandler * func, void * closure) = 0
 
   FIXME: write doc
 */
 
 /*!
-  \fn const SoEvent * SoGtkDevice::translateEvent( GdkEvent * event)
+  \fn const SoEvent * SoGtkDevice::translateEvent(GdkEvent * event)
 
   FIXME: write doc
 */
@@ -89,8 +89,8 @@ SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkDevice);
 */
 
 void
-SoGtkDevice::initClasses( // static
-  void )
+SoGtkDevice::initClasses(// static
+  void)
 {
   SoGtkDevice::initClass();
   SoGtkInputFocus::initClass();
@@ -108,7 +108,7 @@ SoGtkDevice::initClasses( // static
 // FIXME: perhaps make virtual?
 void
 SoGtkDevice::setWindowSize(
-  const SbVec2s size )
+  const SbVec2s size)
 {
   this->widgetSize = size;
 } // setWindowSize()
@@ -119,7 +119,7 @@ SoGtkDevice::setWindowSize(
 
 const SbVec2s
 SoGtkDevice::getWindowSize(
-  void ) const
+  void) const
 {
   return this->widgetSize;
 } // getWindowSize()
@@ -134,10 +134,10 @@ void
 SoGtkDevice::setEventPosition(
   SoEvent * event,
   int x,
-  int y ) const
+  int y) const
 {
-  this->lastEventPosition = SbVec2s( x, y );
-  event->setPosition( SbVec2s( x, this->widgetSize[1] - y - 1 ) );
+  this->lastEventPosition = SbVec2s(x, y);
+  event->setPosition(SbVec2s(x, this->widgetSize[1] - y - 1));
 } // setEventPosition()
 
 // *************************************************************************
@@ -147,8 +147,8 @@ SoGtkDevice::setEventPosition(
 */
 
 SbVec2s
-SoGtkDevice::getLastEventPosition( // static
-  void )
+SoGtkDevice::getLastEventPosition(// static
+  void)
 {
   return SoGtkDevice::lastEventPosition;
 } // getLastEventPosition()

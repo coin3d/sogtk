@@ -35,44 +35,44 @@ public:
   SoGtkPopupMenu(void);
   ~SoGtkPopupMenu(void);
 
-  virtual int newMenu( const char * name, int menuid = -1 );
-  virtual int getMenu( const char * name );
-  virtual void setMenuTitle( int id, const char * title );
-  virtual const char * getMenuTitle( int id );
+  virtual int newMenu(const char * name, int menuid = -1);
+  virtual int getMenu(const char * name);
+  virtual void setMenuTitle(int id, const char * title);
+  virtual const char * getMenuTitle(int id);
 
-  virtual int newMenuItem( const char * name, int itemid = -1 );
-  virtual int getMenuItem( const char * name );
-  virtual void setMenuItemTitle( int itemid, const char * title );
-  virtual const char * getMenuItemTitle( int itemid );
-  virtual void setMenuItemEnabled( int itemid, SbBool enabled );
-  virtual SbBool getMenuItemEnabled( int itemid );
+  virtual int newMenuItem(const char * name, int itemid = -1);
+  virtual int getMenuItem(const char * name);
+  virtual void setMenuItemTitle(int itemid, const char * title);
+  virtual const char * getMenuItemTitle(int itemid);
+  virtual void setMenuItemEnabled(int itemid, SbBool enabled);
+  virtual SbBool getMenuItemEnabled(int itemid);
 
-  virtual void _setMenuItemMarked( int itemid, SbBool marked );
-  virtual SbBool getMenuItemMarked( int itemid );
+  virtual void _setMenuItemMarked(int itemid, SbBool marked);
+  virtual SbBool getMenuItemMarked(int itemid);
 
-  virtual void addMenu( int menuid, int submenuid, int pos = -1 );
-  virtual void addMenuItem( int menuid, int itemid, int pos = -1 );
-  virtual void addSeparator( int menuid, int pos = -1 );
-  virtual void removeMenu( int menuid );
-  virtual void removeMenuItem( int itemid );
+  virtual void addMenu(int menuid, int submenuid, int pos = -1);
+  virtual void addMenuItem(int menuid, int itemid, int pos = -1);
+  virtual void addSeparator(int menuid, int pos = -1);
+  virtual void removeMenu(int menuid);
+  virtual void removeMenuItem(int itemid);
 
-  virtual void popUp( GtkWidget * inside, int x, int y );
+  virtual void popUp(GtkWidget * inside, int x, int y);
 
 protected:
-  MenuRecord * getMenuRecord( int menuid );
-  ItemRecord * getItemRecord( int itemid );
-  MenuRecord * createMenuRecord( const char * name );
-  ItemRecord * createItemRecord( const char * name );
+  MenuRecord * getMenuRecord(int menuid);
+  ItemRecord * getItemRecord(int itemid);
+  MenuRecord * createMenuRecord(const char * name);
+  ItemRecord * createItemRecord(const char * name);
 
-  void traverseBuild( GtkWidget * parent, MenuRecord * menu, int indent );
-  GtkWidget * build( GtkWidget * parent );
+  void traverseBuild(GtkWidget * parent, MenuRecord * menu, int indent);
+  GtkWidget * build(GtkWidget * parent);
 
-  void selection( int itemid );
-  static void selectionCB( GtkWidget *, gpointer );
+  void selection(int itemid);
+  static void selectionCB(GtkWidget *, gpointer);
 
 private:
-  void createSeparator( ItemRecord * item );
-  void createMenuItem( ItemRecord * item );
+  void createSeparator(ItemRecord * item);
+  void createMenuItem(ItemRecord * item);
 
   SbPList * menus;
   SbPList * items;

@@ -40,13 +40,13 @@ public:
     ALL_EVENTS  = (KEY_PRESS | KEY_RELEASE)
   };
 
-  SoGtkKeyboard( const int eventbits = SoGtkKeyboard::ALL_EVENTS );
+  SoGtkKeyboard(const int eventbits = SoGtkKeyboard::ALL_EVENTS);
   virtual ~SoGtkKeyboard(void);
 
-  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
-  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
+  virtual void enable(GtkWidget * widget, SoGtkEventHandler * func, gpointer closure);
+  virtual void disable(GtkWidget * widget, SoGtkEventHandler * func, gpointer closure);
 
-  virtual const SoEvent * translateEvent( GdkEvent * event );
+  virtual const SoEvent * translateEvent(GdkEvent * event);
 
 private:
   int events;

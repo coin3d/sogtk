@@ -39,47 +39,47 @@ public:
     EVERYTHING =    0x07
   };
 
-  SoGtkGraphEditor( GtkWidget * const parent = (GtkWidget *) NULL,
+  SoGtkGraphEditor(GtkWidget * const parent = (GtkWidget *) NULL,
     const char * const name = (char *) NULL, const SbBool embed = TRUE,
-    const int parts = EVERYTHING );
+    const int parts = EVERYTHING);
   ~SoGtkGraphEditor(void);
 
-  virtual void setSceneGraph( SoNode * root );
+  virtual void setSceneGraph(SoNode * root);
   SoNode * getSceneGraph(void) const;
 
 protected:
-  SoGtkGraphEditor( GtkWidget * const parent, const char * const name,
-    const SbBool embed, const int parts, const SbBool build );
+  SoGtkGraphEditor(GtkWidget * const parent, const char * const name,
+    const SbBool embed, const int parts, const SbBool build);
 
-  GtkWidget * buildWidget( GtkWidget * parent );
-  virtual GtkWidget * buildMenuBarWidget( GtkWidget * parent );
-  virtual GtkWidget * buildGraphEditorWidget( GtkWidget * parent );
-  virtual GtkWidget * buildStatusBarWidget( GtkWidget * parent );
+  GtkWidget * buildWidget(GtkWidget * parent);
+  virtual GtkWidget * buildMenuBarWidget(GtkWidget * parent);
+  virtual GtkWidget * buildGraphEditorWidget(GtkWidget * parent);
+  virtual GtkWidget * buildStatusBarWidget(GtkWidget * parent);
 
-  virtual void sizeChanged( const SbVec2s size );
+  virtual void sizeChanged(const SbVec2s size);
 
   virtual void buildSceneGraphTree(void);
   virtual void clearSceneGraphTree(void);
 
   virtual void saveSceneGraph(void);
 
-  virtual void setStatusMessage( const char * message );
+  virtual void setStatusMessage(const char * message);
 
-  virtual void nodeSelection( GtkWidget * item, SoNode * node );
-  virtual void fieldSelection( GtkWidget * item, SoNode * node, SoField * field );
+  virtual void nodeSelection(GtkWidget * item, SoNode * node);
+  virtual void fieldSelection(GtkWidget * item, SoNode * node, SoField * field);
 
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
 
 private:
-  void constructor( const SbBool build, const int parts );
+  void constructor(const SbBool build, const int parts);
 
-  static void saveCB( GtkObject * obj, gpointer closure );
-  static void closeCB( GtkObject * obj, gpointer closure );
-  static void selectionCB( GtkObject * obj, gpointer closure );
+  static void saveCB(GtkObject * obj, gpointer closure);
+  static void closeCB(GtkObject * obj, gpointer closure);
+  static void selectionCB(GtkObject * obj, gpointer closure);
 
-  GtkWidget * buildSubGraph( GtkWidget * parent, SoNode * node );
+  GtkWidget * buildSubGraph(GtkWidget * parent, SoNode * node);
 
 private:
   SoNode * scenegraph;

@@ -45,7 +45,7 @@ static const char rcsid[] =
 
 class SoGtkFlyViewerP {
 public:
-  SoGtkFlyViewerP( SoGtkFlyViewer * publ );
+  SoGtkFlyViewerP(SoGtkFlyViewer * publ);
   ~SoGtkFlyViewerP(void);
 
 private:
@@ -63,31 +63,31 @@ SOGTK_OBJECT_SOURCE(SoGtkFlyViewer);
   Public constructor.
 */
 
-SoGtkFlyViewer::SoGtkFlyViewer( // public
+SoGtkFlyViewer::SoGtkFlyViewer(// public
   GtkWidget * parent,
   const char * name, 
   SbBool embed, 
   SoGtkFullViewer::BuildFlag flag,
-  SoGtkViewer::Type type )
-: inherited( parent, name, embed, flag, type, FALSE )
+  SoGtkViewer::Type type)
+: inherited(parent, name, embed, flag, type, FALSE)
 {
-  this->constructor( TRUE );
+  this->constructor(TRUE);
 } // SoGtkFlyViewer()
 
 /*!
   Protected constructor for derivees.
 */
 
-SoGtkFlyViewer::SoGtkFlyViewer( // protected
+SoGtkFlyViewer::SoGtkFlyViewer(// protected
   GtkWidget * parent,
   const char * const name,
   SbBool embed, 
   SoGtkFullViewer::BuildFlag flag, 
   SoGtkViewer::Type type, 
-  SbBool build )
-: inherited( parent, name, embed, flag, type, FALSE )
+  SbBool build)
+: inherited(parent, name, embed, flag, type, FALSE)
 {
-  this->constructor( build );
+  this->constructor(build);
 } // SoGtkFlyViewer()
 
 /*!
@@ -98,8 +98,8 @@ SoGtkFlyViewer::SoGtkFlyViewer( // protected
 */
 
 void
-SoGtkFlyViewer::constructor( // private
-  const SbBool build )
+SoGtkFlyViewer::constructor(// private
+  const SbBool build)
 {
   this->pimpl = new SoGtkFlyViewerP(this);
   this->common = new SoAnyFlyViewer(this);
@@ -109,24 +109,24 @@ SoGtkFlyViewer::constructor( // private
   GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
 
   this->orthopixmap =
-      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
-        &this->orthomask, (GdkColor *) 0, ortho_xpm );
+      gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
+        &this->orthomask, (GdkColor *) 0, ortho_xpm);
 #endif
 
   this->setClassName("SoGtkFlyViewer");
 
-//  this->addVisibilityChangeCallback( SoGtkFlyViewer::visibilityCB, this );
+//  this->addVisibilityChangeCallback(SoGtkFlyViewer::visibilityCB, this);
 
-  this->setPopupMenuString( _( "Fly Viewer" ) );
-  this->setPrefSheetString( _( "Fly Viewer Preference Sheet" ) );
+  this->setPopupMenuString(_("Fly Viewer"));
+  this->setPrefSheetString(_("Fly Viewer Preference Sheet"));
 
-  this->setLeftWheelString( _( "Tilt" ) );
-  this->setBottomWheelString( _( "Rotate" ) );
-  this->setRightWheelString( _( "Dolly" ) );   
+  this->setLeftWheelString(_("Tilt"));
+  this->setBottomWheelString(_("Rotate"));
+  this->setRightWheelString(_("Dolly"));   
 
-  if ( ! build ) return;
-  GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
-  this->setBaseWidget( viewer );
+  if (! build) return;
+  GtkWidget * viewer = this->buildWidget(this->getParentWidget());
+  this->setBaseWidget(viewer);
 } // constructor()
 
 /*!
@@ -134,7 +134,7 @@ SoGtkFlyViewer::constructor( // private
 */
 
 SoGtkFlyViewer::~SoGtkFlyViewer(
-  void )
+  void)
 {
   delete this->common;
   delete this->pimpl;
@@ -147,8 +147,8 @@ SoGtkFlyViewer::~SoGtkFlyViewer(
 */
 
 void
-SoGtkFlyViewer::setViewing( // virtual
-  SbBool enable )
+SoGtkFlyViewer::setViewing(// virtual
+  SbBool enable)
 {
 } // setViewing()
 
@@ -159,8 +159,8 @@ SoGtkFlyViewer::setViewing( // virtual
 */
 
 void
-SoGtkFlyViewer::resetToHomePosition( // virtual
-  void )
+SoGtkFlyViewer::resetToHomePosition(// virtual
+  void)
 {
 } // resetToHomePosition()
 
@@ -171,10 +171,10 @@ SoGtkFlyViewer::resetToHomePosition( // virtual
 */
 
 void
-SoGtkFlyViewer::setCamera( // virtual
-  SoCamera * camera )
+SoGtkFlyViewer::setCamera(// virtual
+  SoCamera * camera)
 {
-  inherited::setCamera( camera );
+  inherited::setCamera(camera);
 } // setCamera()
 
 // ************************************************************************
@@ -184,8 +184,8 @@ SoGtkFlyViewer::setCamera( // virtual
 */
 
 void
-SoGtkFlyViewer::setCursorEnabled( // virtual
-  SbBool enable )
+SoGtkFlyViewer::setCursorEnabled(// virtual
+  SbBool enable)
 {
 } // setCursorEnabled()
 
@@ -196,8 +196,8 @@ SoGtkFlyViewer::setCursorEnabled( // virtual
 */
 
 void
-SoGtkFlyViewer::setCameraType( // virtual
-  SoType type )
+SoGtkFlyViewer::setCameraType(// virtual
+  SoType type)
 {
 } // setCameraType()
 
@@ -208,8 +208,8 @@ SoGtkFlyViewer::setCameraType( // virtual
 */
 
 const char *
-SoGtkFlyViewer::getDefaultWidgetName( // virtual
-  void ) const
+SoGtkFlyViewer::getDefaultWidgetName(// virtual
+  void) const
 {
   static const char defaultWidgetName[] = "SoGtkFlyViewer";
   return defaultWidgetName;
@@ -222,11 +222,11 @@ SoGtkFlyViewer::getDefaultWidgetName( // virtual
 */
 
 const char *
-SoGtkFlyViewer::getDefaultTitle( // virtual
-  void ) const
+SoGtkFlyViewer::getDefaultTitle(// virtual
+  void) const
 {
-  static const char defaultTitle[] = N_( "Fly Viewer" );
-  return _( defaultTitle );
+  static const char defaultTitle[] = N_("Fly Viewer");
+  return _(defaultTitle);
 } // getDefaultTitle()
 
 // ************************************************************************
@@ -236,11 +236,11 @@ SoGtkFlyViewer::getDefaultTitle( // virtual
 */
 
 const char *
-SoGtkFlyViewer::getDefaultIconTitle( // virtual
-  void ) const
+SoGtkFlyViewer::getDefaultIconTitle(// virtual
+  void) const
 {
-  static const char defaultIconTitle[] = N_( "Fly Viewer" );
-  return _( defaultIconTitle );
+  static const char defaultIconTitle[] = N_("Fly Viewer");
+  return _(defaultIconTitle);
 } // getDefaultIconTitle()
 
 // *************************************************************************
@@ -250,12 +250,12 @@ SoGtkFlyViewer::getDefaultIconTitle( // virtual
 */
 
 SbBool
-SoGtkFlyViewer::processSoEvent( // virtual, protected
-  const SoEvent * const event )
+SoGtkFlyViewer::processSoEvent(// virtual, protected
+  const SoEvent * const event)
 {
-  if ( common->processSoEvent( event ) )
+  if (common->processSoEvent(event))
     return TRUE;
-  return inherited::processSoEvent( event );
+  return inherited::processSoEvent(event);
 } // processSoEvent()
 
 /*!
@@ -263,14 +263,14 @@ SoGtkFlyViewer::processSoEvent( // virtual, protected
 */
 
 void
-SoGtkFlyViewer::processEvent( // virtual, protected
-  GdkEvent * event )
+SoGtkFlyViewer::processEvent(// virtual, protected
+  GdkEvent * event)
 {
-  // SoDebugError::postInfo( "SoGtkFlyViewer::processEvent", "[invoked]" );
-  if ( SoGtkViewer::processCommonEvents( event ) )
+  // SoDebugError::postInfo("SoGtkFlyViewer::processEvent", "[invoked]");
+  if (SoGtkViewer::processCommonEvents(event))
     return;
 
-  inherited::processEvent( event );
+  inherited::processEvent(event);
 } // processEvent()
 
 // ************************************************************************
@@ -280,8 +280,8 @@ SoGtkFlyViewer::processEvent( // virtual, protected
 */
 
 void
-SoGtkFlyViewer::setSeekMode( // virtual
-  SbBool enable )
+SoGtkFlyViewer::setSeekMode(// virtual
+  SbBool enable)
 {
 } // setSeekMode()
 
@@ -292,8 +292,8 @@ SoGtkFlyViewer::setSeekMode( // virtual
 */
 
 void
-SoGtkFlyViewer::actualRedraw( // virtual
-  void )
+SoGtkFlyViewer::actualRedraw(// virtual
+  void)
 {
   inherited::actualRedraw();
 } // actualRedraw()
@@ -305,8 +305,8 @@ SoGtkFlyViewer::actualRedraw( // virtual
 */
 
 void
-SoGtkFlyViewer::rightWheelMotion( // virtual
-  float value )
+SoGtkFlyViewer::rightWheelMotion(// virtual
+  float value)
 {
 } // rightWheelMotion()
 
@@ -317,8 +317,8 @@ SoGtkFlyViewer::rightWheelMotion( // virtual
 */
 
 void
-SoGtkFlyViewer::createPrefSheet( // virtual
-  void )
+SoGtkFlyViewer::createPrefSheet(// virtual
+  void)
 {
 } // createPrefSheet()
 
@@ -329,10 +329,10 @@ SoGtkFlyViewer::createPrefSheet( // virtual
 */
 
 void
-SoGtkFlyViewer::openViewerHelpCard( // virtual
-  void )
+SoGtkFlyViewer::openViewerHelpCard(// virtual
+  void)
 {
-  this->openHelpCard( "SoGtkFlyViewer.help" );
+  this->openHelpCard("SoGtkFlyViewer.help");
 } // openViewerHelpCard()
 
 // ************************************************************************
@@ -344,25 +344,25 @@ SoGtkFlyViewer::openViewerHelpCard( // virtual
 
 GtkWidget *
 SoGtkFlyViewer::makeSubPreferences(
-  GtkWidget * parent )
+  GtkWidget * parent)
 {
   GtkWidget* hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (parent), hbox);
 
-  GtkWidget *label1 = gtk_label_new( _( "Flying speed:" ) );
+  GtkWidget *label1 = gtk_label_new(_("Flying speed:"));
   gtk_box_pack_start (GTK_BOX (hbox), label1, FALSE, FALSE, 0);
 
-  GtkWidget *incbutton = gtk_button_new_with_label( _( "increase" ) );
+  GtkWidget *incbutton = gtk_button_new_with_label(_("increase"));
   gtk_box_pack_start (GTK_BOX (hbox), incbutton, FALSE, FALSE, 0);
 
-  GtkWidget *decbutton = gtk_button_new_with_label( _( "decrease" ) );
+  GtkWidget *decbutton = gtk_button_new_with_label(_("decrease"));
   gtk_box_pack_start (GTK_BOX (hbox), decbutton, FALSE, FALSE, 0);
 
 #if NOTYET
   gtk_signal_connect(GTK_OBJECT(incbutton), "activate",
-    GTK_SIGNAL_FUNC(SoGtkFlyViewer::increaseCB), this );
+    GTK_SIGNAL_FUNC(SoGtkFlyViewer::increaseCB), this);
   gtk_signal_connect(GTK_OBJECT(decbutton), "activate",
-    GTK_SIGNAL_FUNC(SoGtkFlyViewer::decreaseCB), this );
+    GTK_SIGNAL_FUNC(SoGtkFlyViewer::decreaseCB), this);
 #endif
 
   gtk_widget_show_all(hbox);
@@ -376,13 +376,13 @@ SoGtkFlyViewer::makeSubPreferences(
 //
 
 SoGtkFlyViewerP::SoGtkFlyViewerP(
-  SoGtkFlyViewer * publ )
+  SoGtkFlyViewer * publ)
 {
   this->pub = publ;
 } // SoGtkFlyViewerP()
 
 SoGtkFlyViewerP::~SoGtkFlyViewerP(
-  void )
+  void)
 {
 } // ~SoGtkFlyViewerP()
 

@@ -84,7 +84,7 @@ SOGTK_OBJECT_SOURCE(SoGtkInputFocus);
 */
 
 SoGtkInputFocus::SoGtkInputFocus(
-  const int eventbits )
+  const int eventbits)
 {
   this->events = eventbits;
 } // SoGtkInputFocus()
@@ -94,7 +94,7 @@ SoGtkInputFocus::SoGtkInputFocus(
 */
 
 SoGtkInputFocus::~SoGtkInputFocus(
-  void )
+  void)
 {
 } // ~SoGtkInputFocus()
 
@@ -108,7 +108,7 @@ void
 SoGtkInputFocus::enable(
   GtkWidget * widget,
   SoGtkEventHandler * func,
-  void * data )
+  void * data)
 {
 } // enable()
 
@@ -120,7 +120,7 @@ void
 SoGtkInputFocus::disable(
   GtkWidget * widget,
   SoGtkEventHandler * func,
-  void * data )
+  void * data)
 {
 } // disable()
 
@@ -135,7 +135,7 @@ SoGtkInputFocus::disable(
 
 const SoEvent *
 SoGtkInputFocus::translateEvent(
-  GdkEvent * event )
+  GdkEvent * event)
 {
   return NULL;
 } // translateEvent()

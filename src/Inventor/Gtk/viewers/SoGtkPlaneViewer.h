@@ -37,13 +37,13 @@ public:
     const char * const name = (char *) 0,
     const SbBool embed = TRUE,
     const SoGtkFullViewer::BuildFlag flag = SoGtkFullViewer::BUILD_ALL,
-    const SoGtkViewer::Type type = SoGtkViewer::BROWSER );
+    const SoGtkViewer::Type type = SoGtkViewer::BROWSER);
   ~SoGtkPlaneViewer(void);
 
   // overloaded
-  virtual void setViewing( SbBool enable );
-  virtual void setCamera( SoCamera * camera );
-  virtual void setCursorEnabled( SbBool enable );
+  virtual void setViewing(SbBool enable);
+  virtual void setCamera(SoCamera * camera);
+  virtual void setCursorEnabled(SbBool enable);
 
 protected:
   SoGtkPlaneViewer(
@@ -52,30 +52,30 @@ protected:
     const SbBool embed,
     const SoGtkFullViewer::BuildFlag flag,
     const SoGtkViewer::Type type,
-    const SbBool build );
+    const SbBool build);
 
-  GtkWidget * buildWidget( GtkWidget * parent );
+  GtkWidget * buildWidget(GtkWidget * parent);
 
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
 
-  virtual SbBool processSoEvent( const SoEvent * const event );
-  virtual void processEvent( GdkEvent * event );
-  virtual void setSeekMode( SbBool enable );
+  virtual SbBool processSoEvent(const SoEvent * const event);
+  virtual void processEvent(GdkEvent * event);
+  virtual void setSeekMode(SbBool enable);
   virtual void actualRedraw(void);
 
-  virtual void bottomWheelMotion( float value );
-  virtual void leftWheelMotion( float value );
-  virtual void rightWheelMotion( float value );
+  virtual void bottomWheelMotion(float value);
+  virtual void leftWheelMotion(float value);
+  virtual void rightWheelMotion(float value);
 
-  virtual void createViewerButtons( GtkWidget * parent, SbPList * buttons );
+  virtual void createViewerButtons(GtkWidget * parent, SbPList * buttons);
   virtual void openViewerHelpCard(void);
 
 private:
-  void constructor( const SbBool build );
+  void constructor(const SbBool build);
 
-  void setCursorRepresentation( int mode );
+  void setCursorRepresentation(int mode);
 private:
   // friends and family
   class SoAnyPlaneViewer * common;

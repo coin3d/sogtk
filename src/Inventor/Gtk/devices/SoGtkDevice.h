@@ -36,22 +36,22 @@ class SOGTK_DLL_API SoGtkDevice : public SoGtkObject {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkDevice, SoGtkObject);
 
 public:
-  typedef gint SoGtkEventHandler( GtkWidget *, GdkEvent *, gpointer );
+  typedef gint SoGtkEventHandler(GtkWidget *, GdkEvent *, gpointer);
 
-  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func,
-                       void * closure ) = 0;
-  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func,
-                        void * closure ) = 0;
+  virtual void enable(GtkWidget * widget, SoGtkEventHandler * func,
+                       void * closure) = 0;
+  virtual void disable(GtkWidget * widget, SoGtkEventHandler * func,
+                        void * closure) = 0;
 
-  virtual const SoEvent * translateEvent( GdkEvent * event ) = 0;
+  virtual const SoEvent * translateEvent(GdkEvent * event) = 0;
 
-  void setWindowSize( const SbVec2s size );
+  void setWindowSize(const SbVec2s size);
   const SbVec2s getWindowSize(void) const;
 
   static void initClasses(void);
 
 protected:
-  void setEventPosition( SoEvent * event, int x, int y ) const;
+  void setEventPosition(SoEvent * event, int x, int y) const;
   static SbVec2s getLastEventPosition(void);
 
 private:
@@ -60,7 +60,7 @@ private:
 
 }; // class SoGtkDevice
 
-typedef void (*SoGtkEventHandlerPtr)( GtkWidget *, GdkEvent *, gpointer );
+typedef void (*SoGtkEventHandlerPtr)(GtkWidget *, GdkEvent *, gpointer);
 
 // *************************************************************************
 

@@ -72,7 +72,7 @@ SbPList * SoGtk::components = (SbPList *) NULL;
 SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
 
 /*!
-  \typedef void SoGtk::SoGtkComponentActionCallback( SoGtkComponent *, SoGtk::SoGtkComponentAction, void * )
+  \typedef void SoGtk::SoGtkComponentActionCallback(SoGtkComponent *, SoGtk::SoGtkComponentAction, void *)
   FIXME: write doc
 */
 
@@ -107,15 +107,15 @@ SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
 GtkWidget *
 SoGtk::init(
   const char * const appName,
-  const char * const className )
+  const char * const className)
 {
-  if ( appName != NULL ) {
+  if (appName != NULL) {
     char buf[1025];
-    strncpy( buf, appName, 1024 );
+    strncpy(buf, appName, 1024);
     char * array[2] = { buf, (char *) NULL };
-    return SoGtk::init( 1, array, appName, className );
+    return SoGtk::init(1, array, appName, className);
   } else {
-    return SoGtk::init( 0, (char **) NULL, appName, className );
+    return SoGtk::init(0, (char **) NULL, appName, className);
   }
 } // init()
 
@@ -129,12 +129,12 @@ SoGtk::init(
 
 void
 SoGtk::init(
-  GtkWidget * const topLevelWidget )
+  GtkWidget * const topLevelWidget)
 {
 #if SOGTK_DEBUG
-  if ( SoGtk::mainWidget != NULL ) {
-    SoDebugError::postWarning( "SoGtk::init",
-                               "This method should be called only once." );
+  if (SoGtk::mainWidget != NULL) {
+    SoDebugError::postWarning("SoGtk::init",
+                               "This method should be called only once.");
     return;
   }
 #endif // SOGTK_DEBUG
@@ -145,7 +145,7 @@ SoGtk::init(
   SoGtkObject::init();
 
   SoDB::getSensorManager()->setChangedCallback(
-    SoGtk::sensorQueueChanged, NULL );
+    SoGtk::sensorQueueChanged, NULL);
   SoGtk::mainWidget = topLevelWidget;
 #if defined(ENABLE_NLS)
   char *txt = bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
@@ -154,8 +154,8 @@ SoGtk::init(
 
 // documented in common/SoGuiObject.cpp.in
 void
-SoGtkObject::init( // static
-  void )
+SoGtkObject::init(// static
+  void)
 {
   SoGtkObject::initClass();
   SoGtkDevice::initClasses();
@@ -180,27 +180,27 @@ SoGtk::init(
   int argc,
   char ** argv,
   const char * const appName,
-  const char * const className )
+  const char * const className)
 {
 #if SOGTK_DEBUG
-  if ( SoGtk::mainWidget ) {
-    SoDebugError::postWarning( "SoGtk::init",
-                               "This method should be called only once." );
+  if (SoGtk::mainWidget) {
+    SoDebugError::postWarning("SoGtk::init",
+                               "This method should be called only once.");
     return SoGtk::mainWidget;
   }
 #endif // SOGTK_DEBUG
 
-  gtk_init( &argc, &argv );
+  gtk_init(&argc, &argv);
 
-  GtkWidget * mainwin = gtk_window_new( GTK_WINDOW_TOPLEVEL );
-  SoGtk::init( mainwin );
+  GtkWidget * mainwin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  SoGtk::init(mainwin);
 
 #if 0 // debug
   SoDebugError::postInfo("SoGtk::init", "setCaption('%s')", appName);
 #endif // debug
 
-  if ( appName )
-    gtk_window_set_title( GTK_WINDOW(mainwin), appName );
+  if (appName)
+    gtk_window_set_title(GTK_WINDOW(mainwin), appName);
 
 //  SoGtk::appobject->setMainWidget(SoGtk::mainWidget);
   return SoGtk::mainWidget;
@@ -209,29 +209,29 @@ SoGtk::init(
 // *************************************************************************
 
 gint
-SoGtk::timerSensorCB( // static, private
-  gpointer data )
+SoGtk::timerSensorCB(// static, private
+  gpointer data)
 {
   SoDB::getSensorManager()->processTimerQueue();
-  SoGtk::sensorQueueChanged( NULL );
+  SoGtk::sensorQueueChanged(NULL);
   return FALSE; // FIXME: wild guess.. 20000319 mortene.
 } // timerSensorCB()
 
 gint
-SoGtk::idleSensorCB( // static, private
-  gpointer data )
+SoGtk::idleSensorCB(// static, private
+  gpointer data)
 {
   SoDB::getSensorManager()->processDelayQueue(TRUE);
-  SoGtk::sensorQueueChanged( NULL );
+  SoGtk::sensorQueueChanged(NULL);
   return FALSE; // FIXME: wild guess.. 20000319 mortene.
 } // idleSensorCB()
 
 gint
-SoGtk::delaySensorCB( // static, private
+SoGtk::delaySensorCB(// static, private
   gpointer data)
 {
   SoDB::getSensorManager()->processDelayQueue(FALSE);
-  SoGtk::sensorQueueChanged( NULL );
+  SoGtk::sensorQueueChanged(NULL);
   return FALSE; // FIXME: wild guess.. 20000319 mortene.
 }
 
@@ -247,9 +247,9 @@ SoGtk::delaySensorCB( // static, private
 
 void
 SoGtk::sensorQueueChanged(
-  void * )
+  void *)
 {
-//  SoDebugError::postInfo( "SoGtk::sensorQueueChanged", "[invoked]" );
+//  SoDebugError::postInfo("SoGtk::sensorQueueChanged", "[invoked]");
   SoSensorManager * sm = SoDB::getSensorManager();
 
   // FIXME: the timer stuff below (and the timer callback functions
@@ -294,7 +294,7 @@ SoGtk::sensorQueueChanged(
 
 void
 SoGtk::clean(
-  void )
+  void)
 {
   delete SoGtk::mainWidget; SoGtk::mainWidget = NULL;
 //   delete SoGtk::appobject; SoGtk::appobject = NULL;
@@ -318,7 +318,7 @@ SoGtk::clean(
 
 void
 SoGtk::mainLoop(
-  void )
+  void)
 {
   // We need to process immediate sensors _before_ any events are
   // processed. This is done by installing a global eventFilter here...
@@ -331,7 +331,7 @@ SoGtk::mainLoop(
 
 void
 SoGtk::exitMainLoop(
-  void )
+  void)
 {
   SOGTK_STUB();
 }
@@ -348,7 +348,7 @@ SoGtk::exitMainLoop(
 
 GtkWidget *
 SoGtk::getTopLevelWidget(
-  void )
+  void)
 {
   return SoGtk::mainWidget;
 } // getTopLevelWidget()
@@ -367,18 +367,18 @@ SoGtk::getTopLevelWidget(
 
 GtkWidget *
 SoGtk::getShellWidget(
-  const GtkWidget * const widget )
+  const GtkWidget * const widget)
 {
 #if SOGTK_DEBUG
-  if ( widget == NULL ) {
-    SoDebugError::postWarning( "SoGtk::getShellWidget",
-                               "Called with NULL pointer." );
+  if (widget == NULL) {
+    SoDebugError::postWarning("SoGtk::getShellWidget",
+                               "Called with NULL pointer.");
     return (GtkWidget *) NULL;
   }
 #endif // SOGTK_DEBUG
 
-  GtkWidget *w = gtk_widget_get_toplevel( GTK_WIDGET(widget) );
-  if ( GTK_WIDGET_TOPLEVEL(w) )
+  GtkWidget *w = gtk_widget_get_toplevel(GTK_WIDGET(widget));
+  if (GTK_WIDGET_TOPLEVEL(w))
     return w;
   return (GtkWidget*) 0;
   
@@ -396,10 +396,10 @@ SoGtk::getShellWidget(
 
 void
 SoGtk::show(
-  GtkWidget * const widget )
+  GtkWidget * const widget)
 {
-  assert( widget != NULL );
-  gtk_widget_show( widget );
+  assert(widget != NULL);
+  gtk_widget_show(widget);
 } // show()
 
 // *************************************************************************
@@ -414,10 +414,10 @@ SoGtk::show(
 
 void
 SoGtk::hide(
-  GtkWidget * const widget )
+  GtkWidget * const widget)
 {
-  assert( widget != NULL );
-  gtk_widget_hide( widget );
+  assert(widget != NULL);
+  gtk_widget_hide(widget);
 } // hide()
 
 // *************************************************************************
@@ -433,25 +433,25 @@ SoGtk::hide(
 void
 SoGtk::setWidgetSize(
   GtkWidget * const widget,
-  const SbVec2s size )
+  const SbVec2s size)
 {
-  if ( widget == NULL ) {
+  if (widget == NULL) {
 #if SOGTK_DEBUG
-    SoDebugError::postWarning( "SoGtk::setWidgetSize",
-                               "Called with NULL pointer." );
+    SoDebugError::postWarning("SoGtk::setWidgetSize",
+                               "Called with NULL pointer.");
 #endif // SOGTK_DEBUG
     return;
   }
-  if( (size[0] <= 0) || (size[1] <= 0) ) {
+  if((size[0] <= 0) || (size[1] <= 0)) {
 #if SOGTK_DEBUG
-    SoDebugError::postWarning( "SoGtk::setWidgetSize",
+    SoDebugError::postWarning("SoGtk::setWidgetSize",
                                "Called with invalid dimension(s): (%d, %d).",
                                size[0], size[1]);
 #endif // SOGTK_DEBUG
     return;
   }
   GtkRequisition req = { size[0], size[1] };
-  gtk_widget_size_request( GTK_WIDGET(widget), &req );
+  gtk_widget_size_request(GTK_WIDGET(widget), &req);
 } // setWidgetSize()
 
 // *************************************************************************
@@ -466,16 +466,16 @@ SoGtk::setWidgetSize(
 
 SbVec2s
 SoGtk::getWidgetSize(
-  const GtkWidget * const widget )
+  const GtkWidget * const widget)
 {
 #if SOGTK_DEBUG
-  if ( widget == NULL ) {
-    SoDebugError::postWarning( "SoGtk::getWidgetSize",
-                               "Called with NULL pointer." );
+  if (widget == NULL) {
+    SoDebugError::postWarning("SoGtk::getWidgetSize",
+                               "Called with NULL pointer.");
     return SbVec2s(0, 0);
   }
 #endif // SOGTK_DEBUG
-  return SbVec2s( widget->allocation.width, widget->allocation.height );
+  return SbVec2s(widget->allocation.width, widget->allocation.height);
 } // getWidgetSize()
 
 // *************************************************************************
@@ -507,7 +507,7 @@ SoGtk::createSimpleErrorDialog(
   GtkWidget * const widget,
   const char * const dialogTitle,
   const char * const errorStr1,
-  const char * const errorStr2 )
+  const char * const errorStr2)
 {
 #if SOGTK_DEBUG
   if (dialogTitle == NULL) {
@@ -523,9 +523,9 @@ SoGtk::createSimpleErrorDialog(
   SbString errstr(errorStr1 ? errorStr1 : "");   
 
   GtkWidget *dialog = gtk_dialog_new ();
-  if ( widget ) // This behavior is strange
+  if (widget) // This behavior is strange
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_title (GTK_WINDOW (dialog), title.getString() );
+  gtk_window_set_title (GTK_WINDOW (dialog), title.getString());
   gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_MOUSE);
 
   GtkWidget *action_area = GTK_DIALOG (dialog)->action_area;
@@ -536,9 +536,9 @@ SoGtk::createSimpleErrorDialog(
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   gtk_box_pack_start (GTK_BOX(vbox), label, TRUE, TRUE, 10);
 
-  if ( errorStr2 )
+  if (errorStr2)
   {
-    GtkWidget *label2 = gtk_label_new( errorStr2 );
+    GtkWidget *label2 = gtk_label_new(errorStr2);
     gtk_label_set_line_wrap (GTK_LABEL (label2), TRUE);
     gtk_box_pack_start (GTK_BOX(vbox), label2, TRUE, TRUE, 10);
   }
@@ -549,7 +549,7 @@ SoGtk::createSimpleErrorDialog(
 
   gtk_signal_connect_object (GTK_OBJECT (okbutton), "clicked",
     GTK_SIGNAL_FUNC (gtk_widget_destroy),
-    GTK_OBJECT(dialog) );
+    GTK_OBJECT(dialog));
 
   gtk_widget_show_all (dialog);
 } // createSimpleErrorDialog()
@@ -566,11 +566,11 @@ struct ActionCallbackInfo {
 */
 
 void
-SoGtk::addComponentActionCallback( // static
+SoGtk::addComponentActionCallback(// static
   SoGtkComponentActionCallback * callback,
-  void * closure )
+  void * closure)
 {
-  if ( ! SoGtk::component_callbacks )
+  if (! SoGtk::component_callbacks)
     SoGtk::component_callbacks = new SbPList;
   ActionCallbackInfo * info = new ActionCallbackInfo;
   info->callback = callback;
@@ -583,26 +583,26 @@ SoGtk::addComponentActionCallback( // static
 */
 
 void
-SoGtk::removeComponentActionCallback( // static
+SoGtk::removeComponentActionCallback(// static
   SoGtkComponentActionCallback * callback,
-  void * closure )
+  void * closure)
 {
-  if ( ! SoGtk::component_callbacks ) {
-    SoDebugError::post( "SoGtk::removeComponentActionCallback",
-      "no such callback!" );
+  if (! SoGtk::component_callbacks) {
+    SoDebugError::post("SoGtk::removeComponentActionCallback",
+      "no such callback!");
     return;
   }
   const int numCallbacks = SoGtk::component_callbacks->getLength();
-  for ( int i = 0; i < numCallbacks; i++ ) {
+  for (int i = 0; i < numCallbacks; i++) {
     ActionCallbackInfo * info = (ActionCallbackInfo *) SoGtk::component_callbacks->get(i);
-    if ( info->callback == callback && info->closure == closure ) {
+    if (info->callback == callback && info->closure == closure) {
       delete info;
       SoGtk::component_callbacks->remove(i);
       return;
     }
   }
-  SoDebugError::post( "SoGtk::removeComponentActionCallback",
-    "no such callback!" );
+  SoDebugError::post("SoGtk::removeComponentActionCallback",
+    "no such callback!");
 } // removeComponentActionCallback()
 
 /*!
@@ -610,15 +610,15 @@ SoGtk::removeComponentActionCallback( // static
 */
 
 void
-SoGtk::invokeComponentActionCallbacks( // static, protected
+SoGtk::invokeComponentActionCallbacks(// static, protected
   SoGtkComponent * component,
-  SoGtkComponentAction action )
+  SoGtkComponentAction action)
 {
-  if ( ! SoGtk::component_callbacks ) return;
+  if (! SoGtk::component_callbacks) return;
   const int numCallbacks = SoGtk::component_callbacks->getLength();
-  for ( int i = 0; i < numCallbacks; i++ ) {
+  for (int i = 0; i < numCallbacks; i++) {
     ActionCallbackInfo * info = (ActionCallbackInfo *) SoGtk::component_callbacks->get(i);
-    info->callback( component, action, info->closure );
+    info->callback(component, action, info->closure);
   }
 } // SoGtk::invokeComponentActionCallbacks()
 
@@ -629,13 +629,13 @@ SoGtk::invokeComponentActionCallbacks( // static, protected
 */
 
 gint
-SoGtk::componentCreation( // static, protected
-  SoGtkComponent * component )
+SoGtk::componentCreation(// static, protected
+  SoGtkComponent * component)
 {
-  if ( ! SoGtk::components )
+  if (! SoGtk::components)
     SoGtk::components = new SbPList;
-  SoGtk::components->append( (void *) component );
-  SoGtk::invokeComponentActionCallbacks( component, CREATION );
+  SoGtk::components->append((void *) component);
+  SoGtk::invokeComponentActionCallbacks(component, CREATION);
   return FALSE;
 } // componentCreation()
 
@@ -644,14 +644,14 @@ SoGtk::componentCreation( // static, protected
 */
 
 gint
-SoGtk::componentDestruction( // static, protected
-  SoGtkComponent * component )
+SoGtk::componentDestruction(// static, protected
+  SoGtkComponent * component)
 {
-  assert( SoGtk::components );
-  int idx = SoGtk::components->find( component );
-  assert( idx != -1 );
-  SoGtk::invokeComponentActionCallbacks( component, DESTRUCTION );
-  SoGtk::components->remove( idx );
+  assert(SoGtk::components);
+  int idx = SoGtk::components->find(component);
+  assert(idx != -1);
+  SoGtk::invokeComponentActionCallbacks(component, DESTRUCTION);
+  SoGtk::components->remove(idx);
   return FALSE;
 } // componentDestruction()
 
@@ -660,10 +660,10 @@ SoGtk::componentDestruction( // static, protected
 */
 
 gint
-SoGtk::componentChange( // static, protected
-  SoGtkComponent * component )
+SoGtk::componentChange(// static, protected
+  SoGtkComponent * component)
 {
-  SoGtk::invokeComponentActionCallbacks( component, CHANGE );
+  SoGtk::invokeComponentActionCallbacks(component, CHANGE);
   return FALSE;
 } // componentChange()
 
@@ -676,12 +676,12 @@ SoGtk::componentChange( // static, protected
 
 int
 SoGtk::getComponents(
-  SbPList & componentlist )
+  SbPList & componentlist)
 {
-  if ( ! SoGtk::components ) return 0;
+  if (! SoGtk::components) return 0;
   const int numComponents = SoGtk::components->getLength();
-  for ( int i = 0; i < numComponents; i++ )
-    componentlist.append( SoGtk::components->get(i) );
+  for (int i = 0; i < numComponents; i++)
+    componentlist.append(SoGtk::components->get(i));
   return numComponents;
 } // getComponents()
 

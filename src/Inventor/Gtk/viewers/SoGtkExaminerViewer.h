@@ -44,25 +44,25 @@ public:
     const char * name = (char *) NULL,
     SbBool embed = TRUE,
     SoGtkFullViewer::BuildFlag flags = SoGtkFullViewer::BUILD_ALL,
-    SoGtkViewer::Type type = SoGtkViewer::BROWSER );
+    SoGtkViewer::Type type = SoGtkViewer::BROWSER);
   ~SoGtkExaminerViewer(void);
 
-  void setAnimationEnabled( const SbBool enable );
+  void setAnimationEnabled(const SbBool enable);
   SbBool isAnimationEnabled(void) const;
 
   void stopAnimating(void);
   SbBool isAnimating(void) const;
 
-  void setFeedbackVisibility( const SbBool enable );
+  void setFeedbackVisibility(const SbBool enable);
   SbBool isFeedbackVisible(void) const;
 
-  void setFeedbackSize( const int size );
+  void setFeedbackSize(const int size);
   int getFeedbackSize(void) const;
 
   // overloaded
-  virtual void setViewing( SbBool enable );
-  virtual void setCamera( SoCamera * newCamera );
-  virtual void setCursorEnabled( SbBool enable );
+  virtual void setViewing(SbBool enable);
+  virtual void setCamera(SoCamera * newCamera);
+  virtual void setCursorEnabled(SbBool enable);
 
 protected:
   SoGtkExaminerViewer(
@@ -71,25 +71,25 @@ protected:
     SbBool embed,
     SoGtkFullViewer::BuildFlag flags,
     SoGtkViewer::Type type,
-    SbBool build );
+    SbBool build);
 
   virtual void actualRedraw(void);
 
-  virtual void setSeekMode( SbBool enable );
+  virtual void setSeekMode(SbBool enable);
 
-  virtual void processEvent( GdkEvent * event );
+  virtual void processEvent(GdkEvent * event);
   virtual void afterRealizeHook(void);
 
-  virtual SbBool processSoEvent( const SoEvent * const event );
+  virtual SbBool processSoEvent(const SoEvent * const event);
 
   virtual void leftWheelStart(void);
-  virtual void leftWheelMotion( float value );
+  virtual void leftWheelMotion(float value);
   virtual void bottomWheelStart(void);
-  virtual void bottomWheelMotion( float value );
-  virtual void rightWheelMotion( float value );
+  virtual void bottomWheelMotion(float value);
+  virtual void rightWheelMotion(float value);
 
-  virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
-  virtual void createViewerButtons( GtkWidget * parent, SbPList * buttonlist );
+  virtual GtkWidget * makeSubPreferences(GtkWidget * parent);
+  virtual void createViewerButtons(GtkWidget * parent, SbPList * buttonlist);
 
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
@@ -98,9 +98,9 @@ protected:
   virtual void openViewerHelpCard(void);
 
 private:
-  void constructor( const SbBool build );
+  void constructor(const SbBool build);
 
-  void setCursorRepresentation( int mode );
+  void setCursorRepresentation(int mode);
 
 private:
   // friends and family
