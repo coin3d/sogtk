@@ -22,25 +22,72 @@
 #ifndef SOGTK_PLANEVIEWER_H
 #define SOGTK_PLANEVIEWER_H
 
-#include <Inventor/Gtk/viewers/SoGtkViewer.h>
+#include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
+
+class SoAnyPlaneViewer;
+struct SoGtkViewerButton;
 
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkPlaneViewer : public SoGtkFullViewer {
   SOGTK_OBJECT_HEADER(SoGtkPlaneViewer, SoGtkFullViewer);
-  typedef SoGtkFullViewer inherited;
 
 public:
-  SoGtkPlaneViewer(GtkWidget * parent, ...);
+  SoGtkPlaneViewer(
+    GtkWidget * parent = NULL,
+    const char * const name = NULL,
+    const SbBool embed = TRUE,
+    const SoGtkFullViewer::BuildFlag flag = BUILD_ALL,
+    const SoGtkViewer::Type type = BROWSER );
   ~SoGtkPlaneViewer(void);
 
+  virtual void setViewing( SbBool enable );
+  virtual void setCamera( SoCamera * camera );
+  virtual void setCursorEnabled( SbBool enable );
+
 protected:
-  SoGtkPlaneViewer(GtkWidget * parent, ...);
+  SoGtkPlaneViewer(
+    GtkWidget * parent,
+    const char * const name,
+    const SbBool embed,
+    const SoGtkFullViewer::BuildFlag flag,
+    const SoGtkViewer::Type type,
+    const SbBool build );
+
+  GtkWidget * buildWidget( GtkWidget * parent );
+
+  virtual const char * getDefaultWidgetName(void) const;
+  virtual const char * getDefaultTitle(void) const;
+  virtual const char * getDefaultIconTitle(void) const;
+
+  virtual SbBool processSoEvent( const SoEvent * const event );
+  virtual void processEvent( GdkEvent * event );
+  virtual void setSeekMode( SbBool enable );
+  virtual void actualRedraw(void);
+
+  virtual void bottomWheelMotion( float value );
+  virtual void leftWheelMotion( float value );
+  virtual void rightWheelMotion( float value );
+
+  virtual void createPrefSheet(void);
+
+  virtual void createViewerButtons( GtkWidget * parent, SbPList * buttons );
+  virtual void openViewerHelpCard(void);
 
 private:
   void constructor( const SbBool build );
+  void zoom( const float difference );
 
-}; // class SoGtkFullViewer
+  static SoGtkViewerButton SoGtkPlaneViewerButtons[];
+  SoGtkViewerButton * buttons;
+  GtkWidget * findButton( const char * const keyword ) const;
+  int findButton( GtkWidget * widget ) const;
+
+  static void buttonCB( GtkWidget *, gpointer );
+
+  SoAnyPlaneViewer * common;
+
+}; // class SoGtkPlaneViewer
 
 // *************************************************************************
 
