@@ -81,7 +81,6 @@ public:
   void * closeCBdata;
   SbPList * visibilityChangeCBs;
   SbVec2s storeSize;
-  SoGtkCursor cursor;
 
 private:
   SoGtkComponent * pub;
@@ -991,17 +990,16 @@ SoGtkComponent::isFullScreen(void) const
 void 
 SoGtkComponent::setComponentCursor(const SoGtkCursor & cursor)
 {
-  PRIVATE(this)->cursor = cursor;
-  SOGTK_STUB();
+  SoGtkComponent::setWidgetCursor(this->getWidget(), cursor);
 }
 
 /*!
-  Returns the current cursor for this component.
+  Set cursor for a native widget in the underlying toolkit.
 */
-const SoGtkCursor &
-SoGtkComponent::getComponentCursor(void) const
+void
+SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoQtCursor & cursor)
 {
-  return PRIVATE(this)->cursor;
+  SOGTK_STUB();
 }
 
 // *************************************************************************
