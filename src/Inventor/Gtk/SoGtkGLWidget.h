@@ -44,24 +44,28 @@ class SOGTK_DLL_API SoGtkGLWidget : public SoGtkComponent {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkGLWidget, SoGtkComponent);
 
 public:
-  void setBorder( const SbBool enable ); // FIXME: set virtual
+  void setBorder( const SbBool enable ); // FIXME: set virtual?
   SbBool isBorder(void) const;
 
   virtual void setDoubleBuffer( const SbBool enable );
   SbBool isDoubleBuffer(void) const;
 
-  void setDrawToFrontBufferEnable( const SbBool enable ); // FIXME: set virtual
-  SbBool isDrawToFrontBufferEnable(void) const; // FIXME: change name
+  void setDrawToFrontBufferEnable( const SbBool enable ); // FIXME: set virtual, change name?
+  SbBool isDrawToFrontBufferEnable(void) const; // FIXME: change name? "Enable()?"
 
   void setQuadBufferStereo(const SbBool enable);
   SbBool isQuadBufferStereo(void) const;
 
+  GtkWidget * getNormalWidget(void) const;
+  GtkWidget * getOverlayWidget(void) const;
+
 protected:
-  SoGtkGLWidget( GtkWidget * const parent = NULL,
-                 const char * const name = NULL,
-                 const SbBool buildInsideParent = TRUE,
-                 const int glModes = SO_GLX_RGB,
-                 const SbBool buildNow = TRUE);
+  SoGtkGLWidget(
+    GtkWidget * const parent = (GtkWidget *) NULL,
+    const char * const name = (char *) NULL,
+    const SbBool embed = TRUE,
+    const int glModes = SO_GLX_RGB,
+    const SbBool build = TRUE);
 
   virtual void processEvent( GdkEvent * anyevent );
 
@@ -73,11 +77,21 @@ protected:
   virtual void redraw(void) = 0;
 
   virtual void sizeChanged( const SbVec2s size );
-  virtual void widgetChanged(void);
+  virtual void widgetChanged( GtkWidget * widget );
 
-  void setGLSize( const SbVec2s newSize );
+  virtual void afterRealizeHook(void);
+
+  void setGLSize( const SbVec2s size );
   const SbVec2s getGLSize(void) const;
   float getGLAspectRatio(void) const;
+
+  // old aliases
+  void setGlxSize( const SbVec2s size ) { this->setGLSize( size ); }
+  const SbVec2s getGlxSize(void) const { return this->getGLSize(); }
+  float getGlxAspectRatio(void) const { return this->getGLAspectRatio(); }
+
+  SbBool isOverlayRender(void) const;
+  void setOverlayRender( const SbBool enable );
 
   void glLock(void);
   void glUnlock(void);
@@ -90,23 +104,19 @@ protected:
 
   SbBool waitForExpose;
 
-  virtual void afterRealizeHook(void);
-
   virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
   static gint eventHandler( GtkObject * object, GdkEvent * event, gpointer closure );
 
 private:
+  class SoGtkGLWidgetP * priv;
+
   GtkWidget * glParent;
   GtkWidget * glWidget;
   GtkWidget * container;
   int borderThickness;
   int glModeBits;
 
-  struct {
-    unsigned int mouseInput    : 1;
-    unsigned int keyboardInput : 1;
-    unsigned int drawFrontBuff : 1;
-  } properties;
+  SbBool drawFrontBuff;
 
   gint glInit( GtkWidget * widget );
   static gint sGLInit( GtkWidget * widget, void * userData );

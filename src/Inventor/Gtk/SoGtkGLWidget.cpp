@@ -73,17 +73,15 @@ SoGtkGLWidget::SoGtkGLWidget(
   const int glModes,
   const SbBool build )
 : inherited( parent, name, embed )
-, waitForExpose( TRUE )
 {
+  this->waitForExpose = TRUE;
   this->glModeBits = glModes;
 
-  this->glParent = NULL;
-  this->glWidget = NULL;
-  this->container = NULL;
+  this->glParent = (GtkWidget *) NULL;
+  this->glWidget = (GtkWidget *) NULL;
+  this->container = (GtkWidget *) NULL;
 
-  this->properties.mouseInput = FALSE;
-  this->properties.keyboardInput = FALSE;
-  this->properties.drawFrontBuff = FALSE;
+  this->drawFrontBuff = FALSE;
 
   this->borderThickness = 0;
 
@@ -95,8 +93,9 @@ SoGtkGLWidget::SoGtkGLWidget(
   }
 
   if ( ! build ) return;
-  GtkWidget * const parent = this->getParentWidget();
-  GtkWidget * const glwidget = this->buildWidget( parent );
+  this->setClassName( "SoGtkGLWidget" );
+  GtkWidget * const glwidgetparent = this->getParentWidget();
+  GtkWidget * const glwidget = this->buildWidget( glwidgetparent );
   this->setBaseWidget( glwidget );
 } // SoGtkGLWidget()
 
@@ -221,8 +220,6 @@ SoGtkGLWidget::setBorder(
   // update canvas if it is created
 } // setBorder()
 
-// *************************************************************************
-
 /*!
   Returns whether or not there's a border around the OpenGL canvas.
 
@@ -277,8 +274,6 @@ SoGtkGLWidget::setDoubleBuffer(
   }
 } // setDoubleBuffer()
 
-// *************************************************************************
-
 /*!
   Returns the status of the buffer mode.
 
@@ -307,10 +302,8 @@ void
 SoGtkGLWidget::setDrawToFrontBufferEnable(
   const SbBool enable )
 {
-  this->properties.drawFrontBuff = enable;
+  this->drawFrontBuff = enable;
 } // setDrawToFrontBufferEnable()
-
-// *************************************************************************
 
 /*!
   FIXME: write function documentation
@@ -320,7 +313,7 @@ SbBool
 SoGtkGLWidget::isDrawToFrontBufferEnable(
   void ) const
 {
-  return this->properties.drawFrontBuff;
+  return this->drawFrontBuff;
 } // isDrawToFrontBufferEnable()
 
 // *************************************************************************
@@ -347,7 +340,33 @@ SoGtkGLWidget::isQuadBufferStereo(void) const
 // *************************************************************************
 
 /*!
-  FIXME: write function documentation
+  This method is currently just stubbed.
+*/
+
+GtkWidget *
+SoGtkGLWidget::getNormalWidget(
+  void ) const
+{
+  SOGTK_STUB();
+  return (GtkWidget *) NULL;
+} // getNormalWidget()
+
+/*!
+  This method is currently just stubbed.
+*/
+
+GtkWidget *
+SoGtkGLWidget::getOverlayWidget(
+  void ) const
+{
+  SOGTK_STUB();
+  return (GtkWidget *) NULL;
+} // getOverlayWidget()
+
+// *************************************************************************
+
+/*!
+  Sets the size of the GL canvas.
 */
 
 void
@@ -371,7 +390,8 @@ const SbVec2s
 SoGtkGLWidget::getGLSize(
   void ) const
 {
-  assert( this->glWidget );
+  if ( ! this->glWidget )
+    return SbVec2s( -1, -1 );
   return SbVec2s( this->glWidget->allocation.width,
                   this->glWidget->allocation.height );
 } // getGLSize()
@@ -384,10 +404,29 @@ float
 SoGtkGLWidget::getGLAspectRatio(
   void ) const
 {
-  assert( this->glWidget );
+  if ( ! this->glWidget )
+    return 1.0f;
   return (float) this->glWidget->allocation.width /
          (float) this->glWidget->allocation.height;
 } // getGLAspectRatio()
+
+/*!
+  \fn void SoGtkGLWidget::setGlxSize( const SbVec2s size )
+  This method has been renamed to the more appropriate setGLSize
+  \sa setGLSize
+*/
+
+/*!
+  \fn SbVec2s SoGtkGLWidget::getGlxSize(void) const
+  This method has been renamed to the more appropriate getGLSize
+  \sa getGLSize
+*/
+
+/*!
+  \fn float SoGtkGLWidget::getGlxAspectRatio(void) const
+  This method has been renamed to the more appropriate getGLAspectRatio
+  \sa getGLAspectRatio
+*/
 
 // *************************************************************************
 
@@ -424,8 +463,8 @@ SoGtkGLWidget::sizeChanged(
 */
 
 void
-SoGtkGLWidget::widgetChanged(
-  void )
+SoGtkGLWidget::widgetChanged( // virtual
+  GtkWidget * widget )
 {
 } // widgetChanged()
 
@@ -452,7 +491,10 @@ void
 SoGtkGLWidget::glInit(
   void )
 {
+  this->setOverlayRender( FALSE );
+  this->glLock();
   glEnable( GL_DEPTH_TEST );
+  this->glUnlock();
 } // glInit()
 
 /*!
@@ -548,6 +590,7 @@ void
 SoGtkGLWidget::glLock(
   void )
 {
+  // FIXME: overlay stuff
   if ( GTK_IS_GL_AREA(this->glWidget) )
     gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) );
 } // glLock()
@@ -590,6 +633,24 @@ SoGtkGLWidget::afterRealizeHook( // virtual, protected
     GDK_POINTER_MOTION_MASK );
 */
 } // afterRealizeHook()
+
+// *************************************************************************
+
+static SbBool overlay = FALSE;
+
+SbBool
+SoGtkGLWidget::isOverlayRender(
+  void ) const
+{
+  return overlay;
+}
+
+void
+SoGtkGLWidget::setOverlayRender(
+  const SbBool enable )
+{
+  overlay = enable;
+}
 
 // *************************************************************************
 
