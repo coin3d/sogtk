@@ -453,6 +453,10 @@ SIM_AC_CONFIGURATION_SETTING([Install Prefix], [$prefix])
 
 # **************************************************************************
 # List all makefiles configure must automatically generate.
+#
+# Note that sogtk-$CONFIG.cfg needs to be generated from the configure
+# script -- not just from the Makefile -- as the data/configure script
+# depends on it.
 
 AC_OUTPUT([
 	sogtk-$CONFIG.cfg:src/Inventor/Gtk/common/sogui.cfg.in
