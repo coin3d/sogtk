@@ -38,7 +38,7 @@ public:
     BUILD_NONE = 0x00,
     BUILD_DECORATION = 0x01,
     BUILD_POPUP = 0x02,
-    BUILD_ALL = 0xff,
+    BUILD_ALL = 0xff
   };
 
   void setDecoration( const SbBool enable );
@@ -127,7 +127,7 @@ private:
 
     FIRSTDECORATION = LEFTDECORATION,
     LASTDECORATION = RIGHTDECORATION,
-    NUMDECORATIONS = LASTDECORATION - FIRSTDECORATION + 1,
+    NUMDECORATIONS = LASTDECORATION - FIRSTDECORATION + 1
   };
 
   GtkWidget * makePreferencesWindow(void);
