@@ -436,6 +436,13 @@ SoGtk::getWidgetSize(
   There will only be a single "Ok" button for the user to press.
 */
 
+/*
+   FIXME: Gtk-1.2.x doesn't have a MessageBox implementation.
+   Gnome and yet unreleased versions of Gtk however do. 
+   So it might be worth considering either to switch to Gnome or 
+   to change this code once Gtk has MessageBoxes (Gtk-2.0?).
+*/
+
 void
 SoGtk::createSimpleErrorDialog(
   GtkWidget * const widget,
@@ -443,7 +450,49 @@ SoGtk::createSimpleErrorDialog(
   const char * const errorStr1,
   const char * const errorStr2 )
 {
-  SOGTK_STUB();
+#if SOQT_DEBUG
+  if (dialogTitle == NULL) {
+    SoDebugError::postWarning("SoGtk::createSimpleErrorDialog",
+                              "Called with NULL dialogTitle pointer.");
+  }
+  if (errorStr1 == NULL) {
+    SoDebugError::postWarning("SoGtk::createSimpleErrorDialog",
+                              "Called with NULL error string pointer.");
+  }
+#endif // SOQT_DEBUG
+  SbString title(dialogTitle ? dialogTitle : "");
+  SbString errstr(errorStr1 ? errorStr1 : "");   
+
+  GtkWidget *dialog = gtk_dialog_new ();
+  if ( widget ) // This behavior is strange
+    gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_window_set_title (GTK_WINDOW (dialog), title.getString() );
+  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_MOUSE);
+
+  GtkWidget *action_area = GTK_DIALOG (dialog)->action_area;
+
+  GtkWidget *vbox = GTK_DIALOG (dialog)->vbox ;
+
+  GtkWidget *label = gtk_label_new (errstr.getString());
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  gtk_box_pack_start (GTK_BOX(vbox), label, TRUE, TRUE, 10);
+
+  if ( errorStr2 )
+  {
+    GtkWidget *label2 = gtk_label_new( errorStr2 );
+    gtk_label_set_line_wrap (GTK_LABEL (label2), TRUE);
+    gtk_box_pack_start (GTK_BOX(vbox), label2, TRUE, TRUE, 10);
+  }
+
+  GtkWidget *okbutton = gtk_button_new_with_label ("OK");
+  gtk_widget_show (okbutton);
+  gtk_box_pack_start (GTK_BOX (action_area), okbutton, FALSE, FALSE, 2);
+
+  gtk_signal_connect_object (GTK_OBJECT (okbutton), "clicked",
+    GTK_SIGNAL_FUNC (gtk_widget_destroy),
+    GTK_OBJECT(dialog) );
+
+  gtk_widget_show_all (dialog);
 } // createSimpleErrorDialog()
 
 // *************************************************************************

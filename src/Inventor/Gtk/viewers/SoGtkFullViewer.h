@@ -148,7 +148,8 @@ private:
   GtkWidget * makeSeekDistancePreferences( GtkWidget * parent );
   GtkWidget * makeZoomPreferences( GtkWidget * parent );
   GtkWidget * makeAutoclipPreferences( GtkWidget * parent );
-
+  GtkWidget * makeStereoPreferences( GtkWidget * parent );
+  
   GtkWidget * viewerWidget, * canvasParent, * canvas;
   SbBool decorations;
 
@@ -263,6 +264,11 @@ private: //  slots:
     gpointer		closure );
   static void farclipEditPressed(
     GtkWidget		*w,
+    gpointer		closure );
+
+  // Stereo settings
+  static void stereoToggled(
+    GtkToggleButton	*toggle_button,
     gpointer		closure );
 
   // Generic Signal Handlers.

@@ -1393,7 +1393,8 @@ SoGtkFullViewer::makePreferencesWindow(
   w = makeZoomPreferences(form);
 
   w = makeAutoclipPreferences(form);
-//  w = makeStereoPreferences(form);
+
+  w = makeStereoPreferences(form);
 
 //  w = makeSpinAnimationPreferences(form);
 
@@ -1807,6 +1808,34 @@ SoGtkFullViewer::makeAutoclipPreferences(
     "released", GTK_SIGNAL_FUNC (decreaseInteractiveCount), this);
 
   this->setEnabledClippingWidgets(!this->isAutoClipping());
+
+  return form;
+}
+
+// *************************************************************************
+
+/*!
+  Create the UI representation of the preferences' settings for the
+  stereo viewing controls.
+*/
+
+GtkWidget *
+SoGtkFullViewer::makeStereoPreferences(
+  GtkWidget * dialog )
+{
+  GtkWidget *form = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (form);
+  gtk_container_add (GTK_CONTAINER (dialog), form);
+
+  GtkWidget *checkbutton1 = gtk_check_button_new_with_label ( 
+    "Stereo Viewing" );
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
+     this->isStereoViewing());
+  gtk_widget_show (checkbutton1);
+  gtk_box_pack_start (GTK_BOX (form), checkbutton1, FALSE, FALSE, 0);
+
+  gtk_signal_connect (GTK_OBJECT (checkbutton1), 
+    "toggled", GTK_SIGNAL_FUNC (stereoToggled), this);
 
   return form;
 }
@@ -2400,6 +2429,29 @@ SoGtkFullViewer::farclipEditPressed(
     gtk_entry_set_text( GTK_ENTRY(viewer->farclippingedit), buffer );
   }
 } // farclipEditPressed()
+
+// *************************************************************************
+
+/*!
+  \internal
+  Gtk Signal Handler.
+*/
+
+void
+SoGtkFullViewer::stereoToggled(
+  GtkToggleButton *toggle_button,
+  gpointer         closure)
+{
+  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+  bool flag = gtk_toggle_button_get_active (toggle_button);
+
+  SOGTK_STUB();
+
+  // FIXME: this is a dummy dialog
+  SoGtk::createSimpleErrorDialog(GTK_WIDGET(toggle_button), 
+    "Stereo Error Dialog", 
+    "Stereo Viewing can't be set on this machine." );
+} // stereoToggled()     
 
 // *************************************************************************
 
