@@ -22,9 +22,9 @@ BUILT_SOURCES = \
 	SoAnyWalkViewer.h
 
 libSoGtkViewers_la_SOURCES = \
-	$(BUILT_SOURCES) \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
+	SoGtkFullViewerP.h \
 	SoGtkExaminerViewer.cpp \
 	SoGtkExaminerViewer.h \
 	SoGtkPlaneViewer.cpp \
@@ -36,16 +36,24 @@ libSoGtkViewers_la_SOURCES = \
 	SoGtkWalkViewer.cpp \
 	SoGtkWalkViewer.h
 
-libSoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
+nodist_libSoGtkViewers_la_SOURCES = \
+	$(BUILT_SOURCES)
 
-libSoGtkViewersinc_HEADERS = \
-	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFlyViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkWalkViewer.h
+DISTCLEANFILES = \
+	$(BUILT_SOURCES)
+
+############################################################################
+
+SoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
+
+SoGtkViewersinc_HEADERS = \
+	SoGtkViewer.h \
+	SoGtkFullViewer.h \
+	SoGtkExaminerViewer.h \
+	SoGtkPlaneViewer.h \
+	SoGtkConstrainedViewer.h \
+	SoGtkFlyViewer.h \
+	SoGtkWalkViewer.h
 
 ############################################################################
 

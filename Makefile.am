@@ -21,7 +21,7 @@ endif
 
 ############################################################################
 
-SUBDIRS = . data src/Inventor/Gtk $(INTLDIRS) $(TESTDIR)
+SUBDIRS = . data src $(INTLDIRS) $(TESTDIR)
 
 BUILT_SOURCES = \
 	src/sogtkdefs.h \
@@ -66,9 +66,85 @@ bin_SCRIPTS = so@gui@-config
 
 EXTRA_DIST = \
 	so@gui@.m4 \
-	src/Inventor/Gtk/common/soguidefs.h.in \
-	src/Inventor/Gtk/common/sogui-config.in \
-	src/Inventor/Gtk/common/gl.h.in
+	build/Makefile.am \
+	build/Makefile.in \
+	build/README \
+	build/geniwz.pl \
+	build/sogtk.doxygen.in \
+	build/sogtk.spec.in \
+        src/Inventor/@Gui@/common/SoAny.h.in \
+        src/Inventor/@Gui@/common/SoAny.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyConstrainedViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyConstrainedViewer.h.in \
+        src/Inventor/@Gui@/common/SoAnyExaminerViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyExaminerViewer.h.in \
+        src/Inventor/@Gui@/common/SoAnyFlyViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyFlyViewer.h.in \
+        src/Inventor/@Gui@/common/SoAnyFullViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyFullViewer.h.in \
+        src/Inventor/@Gui@/common/SoAnyMaterialList.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyMaterialList.h.in \
+        src/Inventor/@Gui@/common/SoAnyMaterialListBuiltins.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyMaterialListBuiltins.cpp.in.m4 \
+        src/Inventor/@Gui@/common/SoAnyPlaneViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyPlaneViewer.h.in \
+        src/Inventor/@Gui@/common/SoAnyPopupMenu.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyPopupMenu.h.in \
+        src/Inventor/@Gui@/common/SoAnyThumbWheel.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyThumbWheel.h.in \
+        src/Inventor/@Gui@/common/SoAnyWalkViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoAnyWalkViewer.h.in \
+        src/Inventor/@Gui@/common/SoGuiBasic.h.in \
+        src/Inventor/@Gui@/common/SoGuiConstrainedViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoGuiConstrainedViewer.h.in \
+        src/Inventor/@Gui@/common/SoGuiCursors.cpp.in \
+        src/Inventor/@Gui@/common/SoGuiCursors.h.in \
+        src/Inventor/@Gui@/common/SoGuiFlyViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoGuiFlyViewer.h.in \
+        src/Inventor/@Gui@/common/SoGuiGLWidget.h.in \
+        src/Inventor/@Gui@/common/SoGuiObject.cpp.in \
+        src/Inventor/@Gui@/common/SoGuiObject.h.in \
+        src/Inventor/@Gui@/common/SoGuiRenderArea.cpp.in \
+        src/Inventor/@Gui@/common/SoGuiRenderArea.h.in \
+        src/Inventor/@Gui@/common/SoGuiViewer.cpp.in \
+        src/Inventor/@Gui@/common/SoGuiViewer.h.in \
+        src/Inventor/@Gui@/common/gl.h.in \
+        src/Inventor/@Gui@/common/sogui.cfg.in \
+        src/Inventor/@Gui@/common/sogui-config.in \
+        src/Inventor/@Gui@/common/soguidefs.h.in \
+        src/Inventor/@Gui@/common/spwinput.h.in \
+        src/Inventor/@Gui@/common/spwinput_x11.cpp.in \
+        src/Inventor/@Gui@/common/pixmaps/help.xpm \
+        src/Inventor/@Gui@/common/pixmaps/home.xpm \
+        src/Inventor/@Gui@/common/pixmaps/ortho.xpm \
+        src/Inventor/@Gui@/common/pixmaps/perspective.xpm \
+        src/Inventor/@Gui@/common/pixmaps/pick.xpm \
+        src/Inventor/@Gui@/common/pixmaps/seek.xpm \
+        src/Inventor/@Gui@/common/pixmaps/set_home.xpm \
+        src/Inventor/@Gui@/common/pixmaps/view.xpm \
+        src/Inventor/@Gui@/common/pixmaps/view_all.xpm \
+        src/Inventor/@Gui@/common/pixmaps/x.xpm \
+        src/Inventor/@Gui@/common/pixmaps/y.xpm \
+        src/Inventor/@Gui@/common/pixmaps/z.xpm \
+	po/ChangeLog \
+	po/Makefile.in.in \
+	po/POTFILES.in \
+	po/cat-id-tbl.c \
+	po/de.po \
+	po/no.po \
+	po/stamp-cat-id
+
+DISTCLEANFILES = \
+	build/Makefile \
+	build/so@gui@.doxygen \
+	build/so@gui@.spec \
+	intl/Makefile \
+	intl/po2tbl.sed \
+	so@gui@-@CONFIG@.cfg \
+	so@gui@-config \
+	po/POTFILES \
+	po/Makefile.in \
+	po/Makefile
 
 m4datadir = $(datadir)/aclocal
 m4data_DATA = so@gui@.m4
@@ -79,7 +155,7 @@ cfgdata_DATA = so@gui@-@CONFIG@.cfg
 so@gui@-config: Makefile config.status $(srcdir)/src/Inventor/@Gui@/common/sogui-config.in
 	@$(SHELL) config.status --file=$@:src/Inventor/@Gui@/common/sogui-config.in
 
-Makefile: $(BUILT_SOURCES)
+all-local: built-sources
 
 ############################################################################
 

@@ -3,6 +3,9 @@
 
 INCLUDES = -I$(top_srcdir)/src
 
+DISTCLEANFILES = \
+	$(BUILT_SOURCES)
+
 BUILT_SOURCES = \
 	SoAnyThumbWheel.h \
 	SoAnyThumbWheel.cpp \
@@ -12,11 +15,13 @@ BUILT_SOURCES = \
 noinst_LTLIBRARIES = libSoGtkWidgets.la
 
 libSoGtkWidgets_la_SOURCES = \
-	$(BUILT_SOURCES) \
 	gtkthumbwheel.h \
 	gtkthumbwheel.cpp \
 	SoGtkPopupMenu.h \
 	SoGtkPopupMenu.cpp
+
+nodist_libSoGtkWidgets_la_SOURCES = \
+	$(BUILT_SOURCES)
 
 libSoGtkWidgets_la_LIBADD = 
 

@@ -22,10 +22,13 @@ BUILT_SOURCES = \
 	SoAnyMaterialList.cpp \
 	SoAnyMaterialListBuiltins.cpp
 
+DISTCLEANFILES = \
+	$(BUILT_SOURCES) \
+	common/gl.h
+
 ############################################################################
 
 libSoGtk@SUFFIX@_la_SOURCES = \
-	$(BUILT_SOURCES) \
 	SoGtk.cpp \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.cpp \
@@ -36,6 +39,9 @@ libSoGtk@SUFFIX@_la_SOURCES = \
 	SoGtkRoster.h \
 	SoGtkRoster.cpp
 
+nodist_libSoGtk@SUFFIX@_la_SOURCES = \
+	$(BUILT_SOURCES)
+
 libSoGtk@SUFFIX@_la_LIBADD = \
         devices/libSoGtkDevices.la \
 	viewers/libSoGtkViewers.la \
@@ -44,8 +50,10 @@ libSoGtk@SUFFIX@_la_LIBADD = \
 libSoGtk@SUFFIX@_la_LDFLAGS = \
 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
-libSoGtkincdir = $(includedir)/Inventor/Gtk
-libSoGtkinc_HEADERS = \
+############################################################################
+
+SoGtkincdir = $(includedir)/Inventor/Gtk
+SoGtkinc_HEADERS = \
 	SoGtkBasic.h \
 	SoGtk.h \
 	SoGtkObject.h \
@@ -59,67 +67,54 @@ libSoGtkinc_HEADERS = \
 
 ############################################################################
 
-SoGtkBasic.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkBasic.h )
+SoGtkBasic.h: $(srcdir)/common/SoGuiBasic.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtkObject.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiObject.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkObject.h )
+SoGtkObject.h: $(srcdir)/common/SoGuiObject.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtkObject.cpp: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiObject.cpp.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkObject.cpp )
+SoGtkObject.cpp: $(srcdir)/common/SoGuiObject.cpp.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoAny.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoAny.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAny.h )
+SoAny.h: $(srcdir)/common/SoAny.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoAny.cpp: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoAny.cpp.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAny.cpp )
+SoAny.cpp: $(srcdir)/common/SoAny.cpp.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtkCursors.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkCursors.h )
+SoGtkCursors.h: $(srcdir)/common/SoGuiCursors.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtkCursors.cpp: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiCursors.cpp.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkCursors.cpp )
+SoGtkCursors.cpp: $(srcdir)/common/SoGuiCursors.cpp.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtk.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGui.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtk.h )
+SoGtk.h: $(srcdir)/common/SoGui.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtkComponent.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiComponent.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkComponent.h )
+SoGtkComponent.h: $(srcdir)/common/SoGuiComponent.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtkGLWidget.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiGLWidget.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkGLWidget.h )
+SoGtkGLWidget.h: $(srcdir)/common/SoGuiGLWidget.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtkRenderArea.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkRenderArea.h )
+SoGtkRenderArea.h: $(srcdir)/common/SoGuiRenderArea.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoGtkRenderArea.cpp: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkRenderArea.cpp )
+SoGtkRenderArea.cpp: $(srcdir)/common/SoGuiRenderArea.cpp.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoAnyMaterialList.h: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialList.h )
+SoAnyMaterialList.h: $(srcdir)/common/SoAnyMaterialList.h.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoAnyMaterialList.cpp: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialList.cpp )
+SoAnyMaterialList.cpp: $(srcdir)/common/SoAnyMaterialList.cpp.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
-SoAnyMaterialListBuiltins.cpp: \
-  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp )
+SoAnyMaterialListBuiltins.cpp: $(srcdir)/common/SoAnyMaterialListBuiltins.cpp.in
+	@( cd $(top_builddir); $(MAKE) built-sources )
 
 ############################################################################
+
+if BUILD_WITH_MSVC
 
 sogtk@SOGTK_MAJOR_VERSION@.dll: $(libSoGtk_la_OBJECTS) $(libSoGtk_la_DEPENDENCIES)
 	@rm -f sogtk@SOGTK_MAJOR_VERSION@.dll && \
@@ -143,7 +138,7 @@ install-exec-hook: sogtk@SOGTK_MAJOR_VERSION@.dll
 	  done \
 	fi
 
-uninstall: uninstall-am
+uninstall-local: uninstall-am
 	@for e in dll lib pdb; do \
 	  file="$(DESTDIR)$(libdir)/sogtk@SOGTK_MAJOR_VERSION@.$$e"; \
 	  if test -f $$file; then \
@@ -151,4 +146,11 @@ uninstall: uninstall-am
 	    rm -f $$file; \
 	  fi \
 	done
+
+else
+
+install-exec-hook:
+uninstall-local: uninstall-am
+
+endif
 

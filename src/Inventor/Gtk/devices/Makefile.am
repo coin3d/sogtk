@@ -13,6 +13,9 @@ BUILT_SOURCES = \
 	spwinput_x11.cpp \
 	spwinput.h
 
+DISTCLEANFILES = \
+	$(BUILT_SOURCES)
+
 # **************************************************************************
 
 libSoGtkDevices_la_SOURCES = \
@@ -31,14 +34,13 @@ libSoGtkDevices_la_SOURCES = \
 
 # **************************************************************************
 
-libSoGtkdevicesincdir = $(includedir)/Inventor/Gtk/devices
-
-libSoGtkdevicesinc_HEADERS = \
-	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkDevice.h \
-	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkInputFocus.h \
-	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkKeyboard.h \
-	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkMouse.h \
-	$(top_srcdir)/src/Inventor/Gtk/devices/SoGtkSpaceball.h
+SoGtkdevicesincdir = $(includedir)/Inventor/Gtk/devices
+SoGtkdevicesinc_HEADERS = \
+	SoGtkDevice.h \
+	SoGtkInputFocus.h \
+	SoGtkKeyboard.h \
+	SoGtkMouse.h \
+	SoGtkSpaceball.h
 
 # **************************************************************************
 
