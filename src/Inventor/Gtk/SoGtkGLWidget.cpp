@@ -729,15 +729,6 @@ SoGtkGLWidget::glFlushBuffer(void)
 
 // *************************************************************************
 
-// Documented in superclass.
-void
-SoGtkGLWidget::afterRealizeHook(void)
-{
-  inherited::afterRealizeHook();
-}
-
-// *************************************************************************
-
 /*!
   Redraws overlay scene graph. Default method is empty.
 */
