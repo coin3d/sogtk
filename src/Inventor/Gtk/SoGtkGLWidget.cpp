@@ -331,14 +331,14 @@ SoGtkGLWidget::isBorder(
 void
 SoGtkGLWidget::setOverlayRender(const SbBool onoff)
 {
-  SOWIN_STUB();
+  SOGTK_STUB();
 }
 
 // FIXME: make doc in SoQtGLWidget valid for this also. 20011116 mortene.
 SbBool
 SoGtkGLWidget::isOverlayRender(void) const
 {
-  SOWIN_STUB();
+  SOGTK_STUB();
   return FALSE;
 }
 
