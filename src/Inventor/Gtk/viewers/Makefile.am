@@ -56,7 +56,7 @@ SoGtkViewer.h: \
 
 SoGtkViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiViewer.cpp.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.cpp )
 
 SoAnyFullViewer.h: \
@@ -66,7 +66,7 @@ SoAnyFullViewer.h: \
 
 SoAnyFullViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyFullViewer.cpp )
 
 SoAnyExaminerViewer.h: \
@@ -76,7 +76,7 @@ SoAnyExaminerViewer.h: \
 
 SoAnyExaminerViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyExaminerViewer.cpp )
 
 SoAnyPlaneViewer.h: \
@@ -86,7 +86,7 @@ SoAnyPlaneViewer.h: \
 
 SoAnyPlaneViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp )
 
 SoAnyConstrainedViewer.h: \
@@ -96,7 +96,7 @@ SoAnyConstrainedViewer.h: \
 
 SoAnyConstrainedViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyConstrainedViewer.cpp.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.cpp )
 
 SoAnyFlyViewer.h: \
@@ -106,7 +106,7 @@ SoAnyFlyViewer.h: \
 
 SoAnyFlyViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.cpp.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyFlyViewer.cpp )
 
 SoAnyWalkViewer.h: \
@@ -116,7 +116,7 @@ SoAnyWalkViewer.h: \
 
 SoAnyWalkViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyWalkViewer.cpp.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyWalkViewer.cpp )
 
 ############################################################################

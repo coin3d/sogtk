@@ -43,10 +43,10 @@ libSoGtkdevicesinc_HEADERS = \
 # **************************************************************************
 
 spwinput.h: $(top_srcdir)/src/Inventor/Gtk/common/spwinput.h.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/devices/spwinput.h )
 
 spwinput_x11.cpp: $(top_srcdir)/src/Inventor/Gtk/common/spwinput_x11.cpp.in
-	@( cd $(top_builddir);
+	@( cd $(top_builddir); \
 	   $(MAKE) src/Inventor/Gtk/devices/spwinput_x11.cpp )
 
