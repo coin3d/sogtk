@@ -345,20 +345,6 @@ SoGtkPlaneViewer::rightWheelMotion(// virtual, protected
   FIXME: write doc
 */
 
-SbBool
-SoGtkPlaneViewer::processSoEvent(// virtual, protected
-  const SoEvent * const event)
-{
-  if (this->processGenericSoEvent(event))
-    return TRUE;
-
-  return inherited::processSoEvent(event);
-} // processSoEvent()
-
-/*!
-  FIXME: write doc
-*/
-
 void
 SoGtkPlaneViewer::processEvent(// virtual, protected
   GdkEvent * event)

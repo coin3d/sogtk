@@ -553,33 +553,6 @@ SoGtkExaminerViewer::openViewerHelpCard(void)
 // *************************************************************************
 
 /*!
-  FIXME: write doc
-*/
-
-SbBool
-SoGtkExaminerViewer::processSoEvent(// virtual
-  const SoEvent * const event)
-{
-  if (this->processGenericSoEvent(event))
-    return TRUE;
-  return inherited::processSoEvent(event);
-} // processSoEvent()
-
-/*!
-  Overloaded from parent class to take care of any model interaction
-  events.
-*/
-
-void
-SoGtkExaminerViewer::processEvent(// virtual
-  GdkEvent * event)
-{
-  inherited::processEvent(event);
-} // processEvent()
-
-// *************************************************************************
-
-/*!
   Overload this method to make sure any animations are stopped before
   we go into seek mode.
 */
