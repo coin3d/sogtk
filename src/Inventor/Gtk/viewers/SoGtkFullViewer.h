@@ -26,6 +26,7 @@
 
 class SoAnyFullViewer;
 class SoAnyPopupMenu;
+struct SoGtkViewerButton;
 
 // *************************************************************************
 
@@ -239,7 +240,8 @@ private:
   void selectedPrefs(void);
   void drawstyleActivated(int drawstyle);
 
-  static struct SoGtkViewerButton SoGtkFullViewerButtons[];
+  static SoGtkViewerButton SoGtkFullViewerButtons[];
+  SoGtkViewerButton * buttons;
 
   GtkWidget * findButton( const char * const keyword );
 
