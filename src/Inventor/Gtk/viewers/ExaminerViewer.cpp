@@ -37,7 +37,6 @@ static const char rcsid[] =
 #include <Inventor/Gtk/SoGtkCursor.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
-#include <Inventor/Gtk/viewers/SoAnyExaminerViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
 #include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 
@@ -171,8 +170,9 @@ void
 SoGtkExaminerViewer::constructor(// private
   const SbBool build)
 {
+  this->genericConstructor();
+
   this->pimpl = new SoGtkExaminerViewerP(this);
-  this->common = new SoAnyExaminerViewer(this);
 
   this->setClassName("SoGtkExaminerViewer");
 
@@ -194,10 +194,9 @@ SoGtkExaminerViewer::constructor(// private
   Destructor.
 */
 
-SoGtkExaminerViewer::~SoGtkExaminerViewer(
-  void)
+SoGtkExaminerViewer::~SoGtkExaminerViewer()
 {
-  delete this->common;
+  this->genericDestructor();
   delete this->pimpl;
 } // ~SoGtkExaminerViewer()
 
@@ -211,9 +210,9 @@ void
 SoGtkExaminerViewer::setViewing(// virtual
   SbBool enable)
 {
-  this->common->setMode(enable ?
-                         SoAnyExaminerViewer::EXAMINE :
-                         SoAnyExaminerViewer::INTERACT);
+  this->setMode(enable ?
+                         SoGtkExaminerViewer::EXAMINE :
+                         SoGtkExaminerViewer::INTERACT);
   inherited::setViewing(enable);
 } // setViewing()
 
@@ -222,25 +221,12 @@ SoGtkExaminerViewer::setViewing(// virtual
 /*!
   FIXME: write doc
 */
-
-// make this virtual?  20001230 larsa
 void
-SoGtkExaminerViewer::setAnimationEnabled(
-  const SbBool enable)
-{
-  common->setAnimationEnabled(enable);
+SoGtkExaminerViewer::setAnimationEnabled(const SbBool enable)
+{ // FIXME: make this virtual?  20001230 larsa
+  this->setGenericAnimationEnabled(enable);
 } // setAnimationEnabled()
  
-/*!
-  FIXME: write doc
-*/
-
-SbBool
-SoGtkExaminerViewer::isAnimationEnabled(
-  void) const
-{
-  return common->isAnimationEnabled();
-} // isAnimationEnabled()
 
 // *************************************************************************
 
@@ -250,72 +236,10 @@ SoGtkExaminerViewer::isAnimationEnabled(
 
 // make this virtual?  20001230 larsa
 void
-SoGtkExaminerViewer::stopAnimating(
-  void)
+SoGtkExaminerViewer::setFeedbackSize(const int size)
 {
-  common->stopAnimating();
-} // stopAnimating()
-
-/*!
-  FIXME: write doc
-*/
-
-SbBool
-SoGtkExaminerViewer::isAnimating(
-  void) const
-{
-  return common->isAnimating();
-} // isAnimating()
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-// make this virtual?  20001230 larsa
-void
-SoGtkExaminerViewer::setFeedbackVisibility(
-  const SbBool enable)
-{
-  common->setFeedbackVisibility(enable);
-} // setFeedbackVisibility()
-
-/*!
-  FIXME: write doc
-*/
-
-SbBool
-SoGtkExaminerViewer::isFeedbackVisible(
-  void) const
-{
-  return common->isFeedbackVisible();
-} // isFeedbackVisible()
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-// make this virtual?  20001230 larsa
-void
-SoGtkExaminerViewer::setFeedbackSize(
-  const int size)
-{
-  common->setFeedbackSize(size);
+  this->setGenericFeedbackSize(size);
 } // setFeedbackSize()
-
-/*!
-  FIXME: write doc
-*/
-
-int
-SoGtkExaminerViewer::getFeedbackSize(
-  void) const
-{
-  return common->getFeedbackSize();
-} // getFeedbackSize()
 
 // *************************************************************************
 
@@ -355,7 +279,7 @@ SoGtkExaminerViewer::setCursorEnabled(// virtual
   SbBool enable)
 {
   inherited::setCursorEnabled(enable);
-  this->setCursorRepresentation(this->common->currentmode);
+  this->setCursorRepresentation(this->currentmode);
 } // setCursorEnabled
 
 // *************************************************************************
@@ -368,8 +292,8 @@ void
 SoGtkExaminerViewer::leftWheelStart(// virtual
   void)
 {
-  if (common->isAnimating())
-    common->stopAnimating();
+  if (this->isAnimating())
+    this->stopAnimating();
   inherited::leftWheelStart();
 } // leftWheelStart()
 
@@ -383,7 +307,7 @@ SoGtkExaminerViewer::leftWheelMotion(// virtual
   float value)
 {
   inherited::leftWheelMotion(
-    common->rotXWheelMotion(value, this->getLeftWheelValue()));
+    this->rotXWheelMotion(value, this->getLeftWheelValue()));
 } // leftWheelMotion()
 
 /*!
@@ -395,7 +319,7 @@ SoGtkExaminerViewer::bottomWheelStart(// virtual
   void)
 {
   if (this->isAnimating())
-    common->stopAnimating();
+    this->stopAnimating();
   inherited::bottomWheelStart();
 } // bottomWheelStart()
 
@@ -409,7 +333,7 @@ SoGtkExaminerViewer::bottomWheelMotion(// virtual
   float value)
 {
   inherited::bottomWheelMotion(
-    common->rotYWheelMotion(value, this->getBottomWheelValue()));
+    this->rotYWheelMotion(value, this->getBottomWheelValue()));
 } // bottomWheelMotion()
 
 /*!
@@ -421,7 +345,7 @@ void
 SoGtkExaminerViewer::rightWheelMotion(// virtual
   float value)
 {
-  common->zoom(this->getRightWheelValue() - value);
+  this->zoom(this->getRightWheelValue() - value);
   inherited::rightWheelMotion(value);
 } // rightWheelMotion()
 
@@ -482,7 +406,7 @@ SoGtkExaminerViewer::makeSubPreferences(
     GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackWheelReleased), this);
 
   gtk_thumbwheel_set_value(GTK_THUMBWHEEL(PRIVATE(this)->feedbackwheel),
-    float(common->getFeedbackSize())/10.0f);
+    float(this->getFeedbackSize())/10.0f);
 
   PRIVATE(this)->feedbackedit = gtk_entry_new();
   gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbackedit, FALSE, FALSE, 0);
@@ -492,7 +416,7 @@ SoGtkExaminerViewer::makeSubPreferences(
     GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackEditPressed), this);
 
   char buffer[16] ;
-  sprintf(buffer, "%d", common->getFeedbackSize());
+  sprintf(buffer, "%d", this->getFeedbackSize());
   gtk_entry_set_text(GTK_ENTRY(PRIVATE(this)->feedbackedit), buffer);
 
   PRIVATE(this)->feedbacklabel2 = gtk_label_new(_("pixels"));
@@ -500,7 +424,7 @@ SoGtkExaminerViewer::makeSubPreferences(
 
   gtk_widget_show_all(hbox);
 
-  PRIVATE(this)->setEnableFeedbackControls(common->isFeedbackVisible());
+  PRIVATE(this)->setEnableFeedbackControls(this->isFeedbackVisible());
 
   return form1;
 } // makeSubPreferences()
@@ -636,7 +560,7 @@ SbBool
 SoGtkExaminerViewer::processSoEvent(// virtual
   const SoEvent * const event)
 {
-  if (common->processSoEvent(event))
+  if (this->processSoEvent(event))
     return TRUE;
   return inherited::processSoEvent(event);
 } // processSoEvent()
@@ -671,11 +595,11 @@ SoGtkExaminerViewer::setSeekMode(// virtual
     return;
   }
 #endif // SOGTK_DEBUG
-  if (common->isAnimating()) common->stopAnimating();
+  if (this->isAnimating()) this->stopAnimating();
   inherited::setSeekMode(on);
-  this->common->setMode(on ? 
-                        SoAnyExaminerViewer::WAITING_FOR_SEEK : 
-                        SoAnyExaminerViewer::EXAMINE);
+  this->setMode(on ? 
+                        SoGtkExaminerViewer::WAITING_FOR_SEEK : 
+                        SoGtkExaminerViewer::EXAMINE);
 } // setSeekMode()
 
 // *************************************************************************
@@ -689,11 +613,11 @@ void
 SoGtkExaminerViewer::actualRedraw(
   void)
 {
-  common->actualRedraw();
+  this->actualRedraw();
   inherited::actualRedraw();
-  if (common->isFeedbackVisible())
-    common->drawAxisCross();
-  if (common->isAnimating())
+  if (this->isFeedbackVisible())
+    this->drawAxisCross();
+  if (this->isAnimating())
     this->scheduleRedraw();
 } // actualRedraw()
 
@@ -716,21 +640,21 @@ SoGtkExaminerViewer::setCursorRepresentation(int mode)
   }
 
   switch (mode) {
-  case SoAnyExaminerViewer::INTERACT:
+  case SoGtkExaminerViewer::INTERACT:
     this->setComponentCursor(SoGtkCursor(SoGtkCursor::DEFAULT));
     break;
-  case SoAnyExaminerViewer::EXAMINE:
-  case SoAnyExaminerViewer::DRAGGING:
+  case SoGtkExaminerViewer::EXAMINE:
+  case SoGtkExaminerViewer::DRAGGING:
     this->setComponentCursor(SoGtkCursor::getRotateCursor());
     break;
-  case SoAnyExaminerViewer::ZOOMING:
+  case SoGtkExaminerViewer::ZOOMING:
     this->setComponentCursor(SoGtkCursor::getZoomCursor());
     break;
-  case SoAnyExaminerViewer::WAITING_FOR_SEEK:
+  case SoGtkExaminerViewer::WAITING_FOR_SEEK:
     this->setComponentCursor(SoGtkCursor(SoGtkCursor::CROSSHAIR));
     break;
-  case SoAnyExaminerViewer::WAITING_FOR_PAN:
-  case SoAnyExaminerViewer::PANNING:
+  case SoGtkExaminerViewer::WAITING_FOR_PAN:
+  case SoGtkExaminerViewer::PANNING:
     this->setComponentCursor(SoGtkCursor::getPanCursor());
     break;
   default: 
@@ -749,7 +673,7 @@ void
 SoGtkExaminerViewer::afterRealizeHook(// virtual
   void)
 {
-  this->setCursorRepresentation(this->common->currentmode);
+  this->setCursorRepresentation(this->currentmode);
   inherited::afterRealizeHook();
 } // afterRealizeHook()
 
@@ -816,7 +740,7 @@ SoGtkExaminerViewerP::spinAnimationToggled(
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
   SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE;
 
-  viewer->common->setAnimationEnabled(flag);
+  viewer->setAnimationEnabled(flag);
 } // spinAnimationToggled()
 
 // *************************************************************************
@@ -834,7 +758,7 @@ SoGtkExaminerViewerP::feedbackVisibilityToggled(
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
   SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE;
 
-  viewer->common->setFeedbackVisibility(flag);
+  viewer->setFeedbackVisibility(flag);
   PRIVATE(viewer)->setEnableFeedbackControls(flag);
 } // feedbackVisibilityToggled()
 
