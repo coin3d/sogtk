@@ -40,6 +40,8 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtk.h>
 #include <Inventor/Gtk/SoGtkObject.h>
+#include <Inventor/Gtk/devices/SoGtkDevice.h>
+#include <Inventor/Gtk/SoGtkComponent.h>
 
 // *************************************************************************
 
@@ -147,6 +149,16 @@ SoGtk::init(
 #if defined(ENABLE_NLS)
   char *txt = bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
+} // init()
+
+// documented in common/SoGuiObject.cpp.in
+void
+SoGtkObject::init( // static
+  void )
+{
+  SoGtkObject::initClass();
+  SoGtkDevice::initClasses();
+  SoGtkComponent::initClasses();
 } // init()
 
 // *************************************************************************
