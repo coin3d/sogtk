@@ -168,44 +168,37 @@ SoGtkFullViewer::SoGtkFullViewerButtons[] = {
   { // interact button
     N_( "interact" ), "I",
     (GtkSignalFunc) SoGtkFullViewer::interactbuttonClickedCB,
-    pick_xpm,
-    (GtkWidget *) NULL, (GtkWidget *) NULL
+    pick_xpm
   },
   { // view
     N_( "view" ), "E",
     (GtkSignalFunc) SoGtkFullViewer::viewbuttonClickedCB,
-    view_xpm,
-    (GtkWidget *) NULL, (GtkWidget *) NULL
+    view_xpm
   },
   { // help
     N_( "help" ), "?",
     (GtkSignalFunc) SoGtkFullViewer::helpbuttonClickedCB,
-    help_xpm,
-    (GtkWidget *) NULL, (GtkWidget *) NULL
+    help_xpm
   },
   { // home
     N_( "home" ), "h",
     (GtkSignalFunc) SoGtkFullViewer::homebuttonClickedCB,
-    home_xpm,
-    (GtkWidget *) NULL, (GtkWidget *) NULL
+    home_xpm
   },
   { // set home
     N_( "set_home" ), "H",
     (GtkSignalFunc) SoGtkFullViewer::sethomebuttonClickedCB,
-    set_home_xpm,
-    (GtkWidget *) NULL, (GtkWidget *) NULL
+    set_home_xpm
   },
   { // view all
     N_( "view_all" ), "V",
     (GtkSignalFunc) SoGtkFullViewer::viewallbuttonClickedCB,
-    view_all_xpm,
-    (GtkWidget *) NULL, (GtkWidget *) NULL
+    view_all_xpm
   },
   { // seek
     N_( "seek" ), "S",
     (GtkSignalFunc) SoGtkFullViewer::seekbuttonClickedCB,
-    seek_xpm,
-    (GtkWidget *) NULL, (GtkWidget *) NULL
+    seek_xpm
   }
 }; // SoGtkFullViewerButtons[]
 
@@ -230,8 +223,6 @@ SoGtkFullViewer::SoGtkFullViewer(
 , common( new SoAnyFullViewer( this ) )
 {
   const int buttons = sizeof(SoGtkFullViewerButtons) / sizeof(SoGtkViewerButton);
-  this->buttons = new SoGtkViewerButton [ buttons ];
-  memcpy( this->buttons, SoGtkFullViewerButtons, sizeof(SoGtkFullViewerButtons) );
 
   this->viewerWidget = (GtkWidget *) NULL;
   this->canvas = (GtkWidget *) NULL;
@@ -290,7 +281,6 @@ SoGtkFullViewer::SoGtkFullViewer(
 SoGtkFullViewer::~SoGtkFullViewer(
   void )
 {
-  delete [] this->buttons;
   delete this->viewerButtons;
   delete this->appButtonList;
 
@@ -898,44 +888,27 @@ SoGtkFullViewer::createViewerButtons( // virtual
     }
 
     gtk_tooltips_set_tip (tooltips, widget,
-      _( this->buttons[button].keyword ), (const gchar *) NULL);
+      _( SoGtkFullViewerButtons[button].keyword ), (const gchar *) NULL);
 
     GdkPixmap * gdk_pixmap =
       gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) NULL, colormap,
         &mask, (GdkColor *) NULL,
-        this->buttons[button].xpm_data);
+        SoGtkFullViewerButtons[button].xpm_data);
     GtkWidget * label = gtk_pixmap_new( gdk_pixmap, mask );
+    gtk_widget_show( label );
 
     gdk_pixmap_unref (gdk_pixmap);
     gdk_bitmap_unref (mask);
 
-    gtk_widget_show( label );
-    this->buttons[button].lwidget = label;
-
     gtk_container_add( GTK_CONTAINER(widget), GTK_WIDGET(label) );
-    if ( (void *) this->buttons[button].pressed != NULL ) {
+    if ( (void *) SoGtkFullViewerButtons[button].pressed != NULL ) {
       gtk_signal_connect( GTK_OBJECT(widget), "pressed",
-        GTK_SIGNAL_FUNC(this->buttons[button].pressed),
+        GTK_SIGNAL_FUNC(SoGtkFullViewerButtons[button].pressed),
         (gpointer) this );
     }
-    this->buttons[button].bwidget = widget;
     buttonlist->append( widget );
   }
 } // createViewerButtons()
-
-/*!
-*/
-
-GtkWidget *
-SoGtkFullViewer::findButton( // private
-  const char * const keyword )
-{
-  const int buttons = sizeof(SoGtkFullViewerButtons) / sizeof(SoGtkViewerButton);
-  for ( int i = 0; i < buttons; i++ )
-    if ( strcmp( keyword, this->buttons[i].keyword ) == 0 )
-      return this->buttons[i].bwidget;
-  return (GtkWidget *) NULL;
-}
 
 // *************************************************************************
 
@@ -1011,8 +984,9 @@ SoGtkFullViewer::setPrefSheetString(
   const char * title )
 {
   this->prefwindowtitle = title ? title : "";
-//  if (this->prefwindow)
-//    this->prefwindow->setCaption(this->prefwindowtitle.getString());
+  if (this->prefwindow)
+    gtk_window_set_title (GTK_WINDOW (this->prefwindow),
+      this->prefwindowtitle.getString());
 }
 
 // *************************************************************************
@@ -2480,7 +2454,7 @@ SoGtkFullViewer::interactbuttonClicked(
   void )
 {
   if ( ! this->isViewing() ) {
-    GtkWidget * button = findButton( "interact" );
+    GtkWidget * button = this->interactbutton ;
     gtk_signal_handler_block_by_data( GTK_OBJECT(button), (gpointer) this );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(button), TRUE );
     gtk_signal_handler_unblock_by_data( GTK_OBJECT(button), (gpointer) this );
@@ -2515,7 +2489,7 @@ SoGtkFullViewer::viewbuttonClicked(
 {
 
   if ( this->isViewing() ) {
-    GtkWidget * button = findButton( "view" );
+    GtkWidget * button = this->viewbutton ;
     gtk_signal_handler_block_by_data( GTK_OBJECT(button), (gpointer) this );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(button), TRUE );
     gtk_signal_handler_unblock_by_data( GTK_OBJECT(button), (gpointer) this );

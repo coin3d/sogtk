@@ -59,27 +59,23 @@ struct SoGtkViewerButton
 SoGtkPlaneViewer::SoGtkPlaneViewerButtons[] = {
   { // plane X button
     N_("x"), "X",
-    (GtkSignalFunc) SoGtkPlaneViewer::buttonCB,
-    x_xpm,
-    NULL, NULL
+    (GtkSignalFunc) SoGtkPlaneViewer::xbuttonCB,
+    x_xpm
   },
   { // plane Y button
     N_("y"), "Y",
-    (GtkSignalFunc) SoGtkPlaneViewer::buttonCB,
-    y_xpm,
-    NULL, NULL
+    (GtkSignalFunc) SoGtkPlaneViewer::ybuttonCB,
+    y_xpm
   },
   { // plane Z button
     N_("z"), "Z",
-    (GtkSignalFunc) SoGtkPlaneViewer::buttonCB,
-    z_xpm,
-    NULL, NULL
+    (GtkSignalFunc) SoGtkPlaneViewer::zbuttonCB,
+    z_xpm
   },
   { // camera type button
     N_("camera"), "C",
-    (GtkSignalFunc) SoGtkPlaneViewer::buttonCB,
-    perspective_xpm,
-    NULL, NULL
+    (GtkSignalFunc) SoGtkPlaneViewer::camerabuttonCB,
+    perspective_xpm
   }
 }; // SoGtkPlaneViewerButtons[]
 
@@ -127,8 +123,6 @@ SoGtkPlaneViewer::constructor( // private
   const SbBool build )
 {
   const int buttons = sizeof(SoGtkPlaneViewerButtons) / sizeof(SoGtkViewerButton);
-  this->buttons = new SoGtkViewerButton [ buttons ];
-  memcpy( this->buttons, SoGtkPlaneViewerButtons, sizeof(SoGtkPlaneViewerButtons) );
 
   this->setLeftWheelString( _( "Translate Y" ) );
   this->setBottomWheelString( _( "Translate X" ) );
@@ -150,7 +144,6 @@ SoGtkPlaneViewer::constructor( // private
 SoGtkPlaneViewer::~SoGtkPlaneViewer(
   void )
 {
-  delete [] this->buttons;
 } // ~SoGtkPlaneViewer()
 
 // *************************************************************************
@@ -222,7 +215,7 @@ SoGtkPlaneViewer::getDefaultTitle( // virtual, protected
   void ) const
 {
   static const char defaultTitle[] = N_( "Plane Viewer" );
-  return defaultTitle;
+  return _( defaultTitle );
 }
 
 /*!
@@ -233,7 +226,7 @@ SoGtkPlaneViewer::getDefaultIconTitle( // virtual, protected
   void ) const
 {
   static const char defaultIconTitle[] = N_( "Plane Viewer" );
-  return defaultIconTitle;
+  return _( defaultIconTitle );
 }
 
 // *************************************************************************
@@ -373,30 +366,29 @@ SoGtkPlaneViewer::createViewerButtons( // virtual, protected
   GdkColormap * colormap = gtk_widget_get_colormap( parent );
   GdkBitmap * mask;
 
-  const int buttons = sizeof(SoGtkPlaneViewerButtons) / sizeof(SoGtkViewerButton);
-  for ( int button = 0; button < buttons; button++ ) {
+  const size_t buttons = sizeof(SoGtkPlaneViewerButtons) / sizeof(SoGtkViewerButton);
+  for ( size_t button = 0; button < buttons; button++ ) {
     GtkWidget * widget = GTK_WIDGET(gtk_button_new());
-    gtk_tooltips_set_tip( tooltips, widget, this->buttons[button].keyword, NULL );
+    gtk_tooltips_set_tip( tooltips, widget, 
+      _( SoGtkPlaneViewerButtons[button].keyword ), NULL );
 
     GdkPixmap * gdk_pixmap =
       gdk_pixmap_colormap_create_from_xpm_d( NULL, colormap,
         &mask, NULL,
-        this->buttons[button].xpm_data );
+        SoGtkPlaneViewerButtons[button].xpm_data );
 
     GtkWidget * label = gtk_pixmap_new( gdk_pixmap, mask );
+    gtk_widget_show( label );
+
     gdk_pixmap_unref( gdk_pixmap );
     gdk_bitmap_unref( mask );
 
-    gtk_widget_show( label );
-    this->buttons[button].lwidget = label;
-
     gtk_container_add( GTK_CONTAINER(widget), GTK_WIDGET(label) );
-    if ( this->buttons[button].pressed != NULL ) {
+    if ( SoGtkPlaneViewerButtons[button].pressed != NULL ) {
       gtk_signal_connect( GTK_OBJECT(widget), "pressed",
-        GTK_SIGNAL_FUNC(this->buttons[button].pressed),
+        GTK_SIGNAL_FUNC(SoGtkPlaneViewerButtons[button].pressed),
         (gpointer) this );
     }
-    this->buttons[button].bwidget = widget;
     buttonlist->append( widget );
   }
 } // createViewerButtons()
@@ -418,44 +410,50 @@ SoGtkPlaneViewer::openViewerHelpCard( // virtual, protected
 /*!
 */
 
-int
-SoGtkPlaneViewer::findButton(
-  GtkWidget * widget ) const
-{
-  const int buttons = sizeof(SoGtkPlaneViewerButtons) / sizeof(SoGtkViewerButton);
-  for ( int button = 0; button < buttons; button++ ) {
-    if ( this->buttons[button].bwidget == widget ) return button;
-  }
-  return -1;
-} // findButton()
-
-/*!
-*/
-
 void
-SoGtkPlaneViewer::buttonCB(
+SoGtkPlaneViewer::xbuttonCB(
    GtkWidget * button,
    gpointer closure )
 {
   assert( closure != NULL );
   SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
-  const int idx = viewer->findButton( button );
-  if ( idx == -1 ) {
-    SoDebugError::postInfo( "SoGtkPlaneViewer::buttonCB", 
-      _( "unknown button" ) );
-  } else if ( strcmp( viewer->buttons[idx].keyword, "x" ) == 0 ) {
-    viewer->common->viewPlaneX();
-  } else if ( strcmp( viewer->buttons[idx].keyword, "y" ) == 0 ) {
-    viewer->common->viewPlaneY();
-  } else if ( strcmp( viewer->buttons[idx].keyword, "z" ) == 0 ) {
-    viewer->common->viewPlaneZ();
-  } else if ( strcmp( viewer->buttons[idx].keyword, "camera" ) == 0 ) {
-    viewer->toggleCameraType();
-  } else {
-    SoDebugError::postInfo( "SoGtkPlaneViewer::buttonCB", 
-      _( "unsupported button" ) );
-  }
-} // buttonCB()
+
+  viewer->common->viewPlaneX();
+} // ybuttonCB()
+
+void
+SoGtkPlaneViewer::ybuttonCB(
+   GtkWidget * button,
+   gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
+
+  viewer->common->viewPlaneY();
+} // ybuttonCB()
+
+void
+SoGtkPlaneViewer::zbuttonCB(
+   GtkWidget * button,
+   gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
+
+  viewer->common->viewPlaneZ();
+} // zbuttonCB()
+
+
+void
+SoGtkPlaneViewer::camerabuttonCB(
+   GtkWidget * button,
+   gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
+
+  viewer->toggleCameraType();
+} // camerabuttonCB()
 
 // *************************************************************************
 

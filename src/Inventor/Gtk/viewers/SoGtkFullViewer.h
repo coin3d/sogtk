@@ -202,11 +202,6 @@ private: //  slots:
   void bottomWheelChanged( float value );
   void bottomWheelReleased(void);
 
-#if 0
-  // Button row.
-  void interactbuttonToggled(SbBool);
-  void viewbuttonToggled(SbBool);
-#endif
   // Menu items.
   void selectedViewing();
   void selectedDecoration();
@@ -283,9 +278,6 @@ private: //  slots:
 
 private:
   static SoGtkViewerButton SoGtkFullViewerButtons[];
-  SoGtkViewerButton * buttons;
-
-  GtkWidget * findButton( const char * const keyword );
 
   void interactbuttonClicked(void);
   static void interactbuttonClickedCB( GtkWidget *, gpointer );

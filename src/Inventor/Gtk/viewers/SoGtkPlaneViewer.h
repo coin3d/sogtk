@@ -80,11 +80,11 @@ private:
   void zoom( const float difference );
 
   static SoGtkViewerButton SoGtkPlaneViewerButtons[];
-  SoGtkViewerButton * buttons;
-  GtkWidget * findButton( const char * const keyword ) const;
-  int findButton( GtkWidget * widget ) const;
 
-  static void buttonCB( GtkWidget *, gpointer );
+  static void xbuttonCB( GtkWidget *, gpointer );
+  static void ybuttonCB( GtkWidget *, gpointer );
+  static void zbuttonCB( GtkWidget *, gpointer );
+  static void camerabuttonCB( GtkWidget *, gpointer );
 
   SoAnyPlaneViewer * common;
 
