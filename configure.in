@@ -129,14 +129,8 @@ AC_SUBST(SOGTK_EXTRA_LIBS)
 
 # **************************************************************************
 
-# AC_PATH_XTRA
-# if test "x$no_x" = "xyes"; then
-#   AC_MSG_ERROR([X11 libraries couldn't be found! (use --x-includes and --x-libraries to locate them)])
-# fi
-
-# **************************************************************************
-
-if test x"$with_inventor" = xyes; then
+if test s${with_inventor+et} = set \
+     -a x"$with_inventor" != x"no"; then
 
   SIM_AC_CHECK_DL([
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_dl_cppflags"
@@ -155,6 +149,12 @@ if test x"$with_inventor" = xyes; then
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_glu_ldflags"
     SOGTK_EXTRA_LIBS="$sim_ac_glu_libs $SOGTK_EXTRA_LIBS"
   ], [AC_MSG_ERROR(needs the OpenGL utility library)])
+
+  # FIXME: move the following two blocks into SIM_CHECK_INVENTOR
+  if x"$with_inventor" = x"yes"; then
+    CPPFLAGS="$CPPFLAGS -I$with_inventor/include"
+    LDFLAGS="$LDFLAGS -L$with_inventor/lib"
+  fi
 
   SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE([
     SOGTK_EXTRA_CPPFLAGS="$sim_ac_oiv_image_cppflags $SOGTK_EXTRA_CPPFLAGS"

@@ -1345,10 +1345,9 @@ fi
 ])
 
 AC_DEFUN([SIM_CHECK_INVENTOR], [
-AC_ARG_WITH(
-  [inventor],
-  AC_HELP_STRING([--with-inventor=DIR],
-                 [use the Open Inventor library [default=no]]),
+AC_ARG_WITH([inventor],
+  AC_HELP_STRING([--with-inventor], [use another Inventor than Coin [default=no]])
+AC_HELP_STRING([--with-inventor=PATH], [specify where the Inventor implementation resides]),
   [],
   [with_inventor=yes])
 
