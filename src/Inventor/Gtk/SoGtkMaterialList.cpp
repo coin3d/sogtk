@@ -104,7 +104,8 @@ SoGtkMaterialList::buildWidget( // protected
   gtk_widget_set_usize( menubar, 0, 30 );
   gtk_widget_show( menubar );
   gtk_box_pack_start( GTK_BOX(listroot), GTK_WIDGET(menubar), 0, 0, 0 );
-  GtkWidget * materials = GTK_WIDGET(gtk_menu_item_new_with_label( "Materials" ));
+  GtkWidget * materials = 
+    gtk_menu_item_new_with_label( _( "Materials" ));
   gtk_widget_show( materials );
   gtk_menu_bar_append( GTK_MENU_BAR(menubar), materials );
 
@@ -115,7 +116,7 @@ SoGtkMaterialList::buildWidget( // protected
   GtkAdjustment * vertical = GTK_ADJUSTMENT(gtk_adjustment_new( 0, 0, 1000, 10, 100, 100 ));
   GtkAdjustment * horizontal = GTK_ADJUSTMENT(gtk_adjustment_new( 0, 0, 1000, 10, 100, 1000 ));
 
-  GtkWidget * scrolled = GTK_WIDGET(gtk_scrolled_window_new( horizontal, vertical ));
+  GtkWidget * scrolled = gtk_scrolled_window_new( horizontal, vertical );
   gtk_scrolled_window_set_policy(
     GTK_SCROLLED_WINDOW(scrolled), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
   gtk_widget_show( scrolled );
@@ -204,7 +205,8 @@ SoGtkMaterialList::menuactivation( // private
       }
     }
   }
-  SoDebugError::postWarning( "SoGtkMaterialList::menuactivation", "invalid menu item" );
+  SoDebugError::postWarning( "SoGtkMaterialList::menuactivation", 
+    _( "invalid menu item" ) );
 } // menuactivation()
 
 void
@@ -291,16 +293,16 @@ const char *
 SoGtkMaterialList::getDefaultTitle( // virtual, protected
   void ) const
 {
-  static const char defaultTitle[] = "Material List";
-  return defaultTitle;
+  static const char defaultTitle[] = N_( "Material List" );
+  return _( defaultTitle );
 } // getDefaultTitle()
 
 const char *
 SoGtkMaterialList::getDefaultIconTitle( // virtual, protected
   void ) const
 {
-  static const char defaultIconTitle[] = "Material List";
-  return defaultIconTitle;
+  static const char defaultIconTitle[] = N_( "Material List" );
+  return _( defaultIconTitle );
 } // getDefaultIconTitle()
 
 // *************************************************************************

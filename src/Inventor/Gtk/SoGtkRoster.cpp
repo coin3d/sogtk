@@ -175,7 +175,7 @@ SoGtkRoster::buildMenuBarWidget( // virtual, protected
 {
   GtkWidget * menubar = GTK_WIDGET(gtk_menu_bar_new());
 
-  GtkWidget * createitem = GTK_WIDGET(gtk_menu_item_new_with_label("Create"));
+  GtkWidget * createitem = GTK_WIDGET(gtk_menu_item_new_with_label(_("Create")));
   gtk_widget_show( createitem );
   gtk_menu_bar_append( GTK_MENU_BAR(menubar), GTK_WIDGET(createitem) );
 
@@ -231,7 +231,7 @@ SoGtkRoster::buildRosterListWidget( // virtual, protected
   gtk_scrolled_window_set_policy(
     GTK_SCROLLED_WINDOW(rosterlist), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 
-  char * titles[] = { "Title", "Class", (char *) NULL };
+  char * titles[] = { _("Title"), _("Class"), (char *) NULL };
   this->listwidget = GTK_WIDGET(gtk_clist_new_with_titles( 2, titles ));
   gtk_clist_column_titles_show( GTK_CLIST(this->listwidget) );
   gtk_clist_set_column_visibility( GTK_CLIST(this->listwidget), 1, TRUE );
@@ -346,8 +346,8 @@ const char *
 SoGtkRoster::getDefaultTitle( // virtual, protected
   void ) const
 {
-  static const char defaultTitle[] = "Roster";
-  return defaultTitle;
+  static const char defaultTitle[] = N_("Roster");
+  return _(defaultTitle);
 } // getDefaultTitle()
 
 /*!
@@ -357,8 +357,8 @@ const char *
 SoGtkRoster::getDefaultIconTitle( // virtual, protected
   void ) const
 {
-  static const char defaultIconTitle[] = "Roster";
-  return defaultIconTitle;
+  static const char defaultIconTitle[] = N_("Roster");
+  return _(defaultIconTitle);
 } // getDefaultIconTitle()
 
 // *************************************************************************

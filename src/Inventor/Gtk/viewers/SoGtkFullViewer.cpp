@@ -166,43 +166,43 @@ enum {
 struct SoGtkViewerButton
 SoGtkFullViewer::SoGtkFullViewerButtons[] = {
   { // interact button
-    "interact", "I",
+    N_( "interact" ), "I",
     (GtkSignalFunc) SoGtkFullViewer::interactbuttonClickedCB,
     pick_xpm,
     (GtkWidget *) NULL, (GtkWidget *) NULL
   },
   { // view
-    "view", "E",
+    N_( "view" ), "E",
     (GtkSignalFunc) SoGtkFullViewer::viewbuttonClickedCB,
     view_xpm,
     (GtkWidget *) NULL, (GtkWidget *) NULL
   },
   { // help
-    "help", "?",
+    N_( "help" ), "?",
     (GtkSignalFunc) SoGtkFullViewer::helpbuttonClickedCB,
     help_xpm,
     (GtkWidget *) NULL, (GtkWidget *) NULL
   },
   { // home
-    "home", "h",
+    N_( "home" ), "h",
     (GtkSignalFunc) SoGtkFullViewer::homebuttonClickedCB,
     home_xpm,
     (GtkWidget *) NULL, (GtkWidget *) NULL
   },
   { // set home
-    "set_home", "H",
+    N_( "set_home" ), "H",
     (GtkSignalFunc) SoGtkFullViewer::sethomebuttonClickedCB,
     set_home_xpm,
     (GtkWidget *) NULL, (GtkWidget *) NULL
   },
   { // view all
-    "view_all", "V",
+    N_( "view_all" ), "V",
     (GtkSignalFunc) SoGtkFullViewer::viewallbuttonClickedCB,
     view_all_xpm,
     (GtkWidget *) NULL, (GtkWidget *) NULL
   },
   { // seek
-    "seek", "S",
+    N_( "seek" ), "S",
     (GtkSignalFunc) SoGtkFullViewer::seekbuttonClickedCB,
     seek_xpm,
     (GtkWidget *) NULL, (GtkWidget *) NULL
@@ -250,9 +250,9 @@ SoGtkFullViewer::SoGtkFullViewer(
   this->rightWheelStr = (char *) NULL;
   this->rightWheelVal = 0.0f;
 
-  this->setLeftWheelString( "Motion Y" );
-  this->setBottomWheelString( "Motion X" );
-  this->setRightWheelString( "Motion Z" );
+  this->setLeftWheelString( _( "Motion Y" ) );
+  this->setBottomWheelString( _( "Motion X" ) );
+  this->setRightWheelString( _( "Motion Z" ) );
 
   this->zoomrange = SbVec2f( 1.0f, 140.0f );
 
@@ -261,12 +261,12 @@ SoGtkFullViewer::SoGtkFullViewer(
 
   this->prefmenu = (SoAnyPopupMenu *) NULL;
   this->prefwindow = (GtkWidget *) NULL;
-  this->prefwindowtitle = "Viewer Preference Sheet";
+  this->prefwindowtitle = _( "Viewer Preference Sheet" );
 
   this->menuEnabled = buildFlag & SoGtkFullViewer::BUILD_POPUP;
   this->decorations = buildFlag & SoGtkFullViewer::BUILD_DECORATION;
 
-  this->menuTitle = "Viewer Menu";
+  this->menuTitle = _( "Viewer Menu" );
 
   this->viewerButtons = new SbPList;
   this->appButtonList = new SbPList;
@@ -898,7 +898,7 @@ SoGtkFullViewer::createViewerButtons( // virtual
     }
 
     gtk_tooltips_set_tip (tooltips, widget,
-      this->buttons[button].keyword, (const gchar *) NULL);
+      _( this->buttons[button].keyword ), (const gchar *) NULL);
 
     GdkPixmap * gdk_pixmap =
       gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) NULL, colormap,
@@ -1444,7 +1444,7 @@ SoGtkFullViewer::makeSeekPreferences(
   gtk_widget_show (hbox2);
   gtk_box_pack_start (GTK_BOX (form), hbox2, TRUE, TRUE, 0);
 
-  GtkWidget *label6 = gtk_label_new ( "Seek animation time:" );
+  GtkWidget *label6 = gtk_label_new ( _( "Seek animation time:" ) );
   gtk_widget_show (label6);
   gtk_box_pack_start (GTK_BOX (hbox2), label6, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label6), GTK_JUSTIFY_LEFT);
@@ -1460,7 +1460,7 @@ SoGtkFullViewer::makeSeekPreferences(
   sprintf( buffer, "%.2f", this->getSeekTime() );
   gtk_entry_set_text (GTK_ENTRY (entry3), buffer );
 
-  GtkWidget *label7 = gtk_label_new ( "seconds" );
+  GtkWidget *label7 = gtk_label_new ( _( "seconds" ) );
   gtk_widget_show (label7);
   gtk_box_pack_start (GTK_BOX (hbox2), label7, FALSE, TRUE, 0);
 
@@ -1468,21 +1468,21 @@ SoGtkFullViewer::makeSeekPreferences(
   gtk_widget_show (hbox3);
   gtk_box_pack_start (GTK_BOX (form), hbox3, TRUE, TRUE, 0);
 
-  GtkWidget *label8 = gtk_label_new ( "Seek to:" );
+  GtkWidget *label8 = gtk_label_new ( _( "Seek to:" ) );
   gtk_widget_show (label8);
   gtk_box_pack_start (GTK_BOX (hbox3), label8, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label8), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label8), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label8), 4, 0);
 
-  GtkWidget *rb1 = gtk_radio_button_new_with_label (rbg1, "point" );
+  GtkWidget *rb1 = gtk_radio_button_new_with_label (rbg1, _( "point" ) );
   rbg1 = gtk_radio_button_group (GTK_RADIO_BUTTON (rb1));
   gtk_widget_show (rb1);
   gtk_box_pack_start (GTK_BOX (hbox3), rb1, FALSE, FALSE, 0);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb1),
     this->isDetailSeek());
 
-  GtkWidget *rb2 = gtk_radio_button_new_with_label (rbg1, "object" );
+  GtkWidget *rb2 = gtk_radio_button_new_with_label (rbg1, _( "object" ));
   rbg1 = gtk_radio_button_group (GTK_RADIO_BUTTON (rb2));
   gtk_widget_show (rb2);
   gtk_box_pack_start (GTK_BOX (hbox3), rb2, FALSE, FALSE, 0);
@@ -1521,7 +1521,7 @@ SoGtkFullViewer::makeSeekDistancePreferences(
   gtk_widget_show (hbox4);
   gtk_box_pack_start (GTK_BOX (form), hbox4, TRUE, TRUE, 0);
 
-  GtkWidget *label4 = gtk_label_new ( "Seek distance:" );
+  GtkWidget *label4 = gtk_label_new ( _( "Seek distance:" ) );
   gtk_widget_show (label4);
   gtk_box_pack_start (GTK_BOX (hbox4), label4, FALSE, FALSE, 0);
   gtk_misc_set_alignment (GTK_MISC (label4), 0, 0.5);
@@ -1550,14 +1550,14 @@ SoGtkFullViewer::makeSeekDistancePreferences(
   gtk_widget_show (hbox5);
   gtk_box_pack_start (GTK_BOX (form), hbox5, TRUE, FALSE, 0);
 
-  GtkWidget *r1 = gtk_radio_button_new_with_label (bg, "percentage" );
+  GtkWidget *r1 = gtk_radio_button_new_with_label (bg, _( "percentage" ) );
   bg = gtk_radio_button_group (GTK_RADIO_BUTTON (r1));
   gtk_widget_show (r1);
   gtk_box_pack_start (GTK_BOX (hbox5), r1, FALSE, FALSE, 0);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (r1),
     this->isSeekValuePercentage() );
 
-  GtkWidget *r2 = gtk_radio_button_new_with_label (bg, "absolute" );
+  GtkWidget *r2 = gtk_radio_button_new_with_label (bg, _( "absolute" ) );
   bg = gtk_radio_button_group (GTK_RADIO_BUTTON (r2));
   gtk_widget_show (r2);
   gtk_box_pack_start (GTK_BOX (hbox5), r2, FALSE, FALSE, 0);
@@ -1598,7 +1598,7 @@ SoGtkFullViewer::makeZoomPreferences(
   gtk_widget_show (hbox1);
   gtk_box_pack_start (GTK_BOX (form), hbox1, TRUE, FALSE, 0);
 
-  GtkWidget *label9 = gtk_label_new ( "Camera Zoom:" );
+  GtkWidget *label9 = gtk_label_new ( _( "Camera Zoom:" ) );
   gtk_widget_show (label9);
   gtk_box_pack_start (GTK_BOX (hbox1), label9, FALSE, FALSE, 0);
   gtk_misc_set_alignment (GTK_MISC (label9), 0.0, 0.5);
@@ -1621,7 +1621,7 @@ SoGtkFullViewer::makeZoomPreferences(
   gtk_widget_show (hbox2);
   gtk_box_pack_start (GTK_BOX (form), hbox2, TRUE, TRUE, 0);
 
-  GtkWidget *label10 = gtk_label_new ( "Zoom slider ranges from:" );
+  GtkWidget *label10 = gtk_label_new ( _( "Zoom slider ranges from:" ) );
   gtk_widget_show (label10);
   gtk_box_pack_start (GTK_BOX (hbox2), label10, FALSE, FALSE, 0);
   gtk_misc_set_alignment (GTK_MISC (label10), 0, 0.5);
@@ -1634,7 +1634,7 @@ SoGtkFullViewer::makeZoomPreferences(
   gtk_widget_show (this->zoomrangefrom);
   gtk_box_pack_start (GTK_BOX (hbox2), this->zoomrangefrom, FALSE, FALSE, 0);
 
-  GtkWidget *label11 = gtk_label_new ( "to:" );
+  GtkWidget *label11 = gtk_label_new ( _( "to:" ) );
   gtk_widget_show (label11);
   gtk_box_pack_start (GTK_BOX (hbox2), label11, FALSE, FALSE, 0);
 
@@ -1744,7 +1744,8 @@ SoGtkFullViewer::makeAutoclipPreferences(
   gtk_widget_show (form);
   gtk_container_add (GTK_CONTAINER (dialog), form);
 
-  GtkWidget *checkbutton1 = gtk_check_button_new_with_label ( "Auto clipping planes" );
+  GtkWidget *checkbutton1 = gtk_check_button_new_with_label ( 
+    _( "Auto clipping planes" ) );
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
      this->isAutoClipping());
   gtk_widget_show (checkbutton1);
@@ -1754,7 +1755,8 @@ SoGtkFullViewer::makeAutoclipPreferences(
   gtk_box_pack_start (GTK_BOX (form), this->clippingtable, FALSE, FALSE, 0);
   gtk_widget_show( this->clippingtable );
 
-  this->nearclippinglabel = gtk_label_new ( "near plane:" );
+  this->nearclippinglabel = gtk_label_new ( 
+    _( "near plane:" ) );
   gtk_label_set_justify (GTK_LABEL (this->nearclippinglabel), GTK_JUSTIFY_RIGHT); 
   gtk_misc_set_alignment (GTK_MISC (this->nearclippinglabel), 1, 0.5);
   gtk_table_attach (GTK_TABLE (this->clippingtable), this->nearclippinglabel, 0, 1, 0, 1,
@@ -1774,7 +1776,8 @@ SoGtkFullViewer::makeAutoclipPreferences(
                     (GtkAttachOptions) (0), 0, 0);
   gtk_widget_show( this->nearclippingedit );
 
-  this->farclippinglabel = gtk_label_new ( "far plane:" );
+  this->farclippinglabel = gtk_label_new ( 
+    _( "far plane:" ) );
   gtk_label_set_justify (GTK_LABEL (this->farclippinglabel), GTK_JUSTIFY_RIGHT); 
   gtk_misc_set_alignment (GTK_MISC (this->farclippinglabel), 1, 0.5);
   gtk_table_attach (GTK_TABLE (this->clippingtable), this->farclippinglabel, 0, 1, 1, 2,
@@ -1832,7 +1835,7 @@ SoGtkFullViewer::makeStereoPreferences(
   gtk_container_add (GTK_CONTAINER (dialog), form);
 
   GtkWidget *checkbutton1 = gtk_check_button_new_with_label ( 
-    "Stereo Viewing" );
+    _( "Stereo Viewing" ) );
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
      this->isStereoViewing());
   gtk_widget_show (checkbutton1);
@@ -2454,7 +2457,7 @@ SoGtkFullViewer::stereoToggled(
   // FIXME: this is a dummy dialog
   SoGtk::createSimpleErrorDialog(GTK_WIDGET(toggle_button), 
     "Stereo Error Dialog", 
-    "Stereo Viewing can't be set on this machine." );
+    _( "Stereo Viewing can't be set on this machine." ) );
 } // stereoToggled()     
 
 // *************************************************************************

@@ -89,7 +89,8 @@ SoGtkGLWidget::SoGtkGLWidget(
 
   if ( ! gdk_gl_query() ) {
     SoDebugError::post(
-      "SoGtkGLWidget::SoGtkGLWidget", "OpenGL is not available on your display!" );
+      "SoGtkGLWidget::SoGtkGLWidget", 
+      _( "OpenGL is not available on your display!" ) );
     return;
   }
 

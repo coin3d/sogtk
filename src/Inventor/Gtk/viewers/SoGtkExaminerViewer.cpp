@@ -142,12 +142,12 @@ SoGtkExaminerViewer::constructor( // private
 
 //  this->addVisibilityChangeCallback( SoGtkExaminerViewer::visibilityCB, this );
 
-  this->setPopupMenuString( "Examiner Viewer" );
-  this->setPrefSheetString( "Examiner Viewer Preference Sheet" );
+  this->setPopupMenuString( _( "Examiner Viewer" ) );
+  this->setPrefSheetString( _( "Examiner Viewer Preference Sheet" ) );
 
-  this->setLeftWheelString( "Rotx" );
-  this->setBottomWheelString( "Roty" );
-  this->setRightWheelString( "Dolly" );
+  this->setLeftWheelString( _( "Rotx" ) );
+  this->setBottomWheelString( _( "Roty" ) );
+  this->setRightWheelString( _( "Dolly" ) );
 
   if ( ! build ) return;
   GtkWidget * parent = this->getParentWidget();
@@ -297,7 +297,7 @@ SoGtkExaminerViewer::setCamera( // virtual
     const SbBool orthotype =
       camtype.isDerivedFrom( SoOrthographicCamera::getClassTypeId() );
 
-    this->setRightWheelString( orthotype ? "Zoom" : "Dolly");
+    this->setRightWheelString( orthotype ? _( "Zoom" ) : _( "Dolly" ));
 //    if (this->cameratogglebutton) {
 //      this->cameratogglebutton->setPixmap( orthotype ?
 //        *(this->pixmaps.orthogonal) : *(this->pixmaps.perspective) );
@@ -405,7 +405,7 @@ SoGtkExaminerViewer::makeSubPreferences(
   gtk_container_add (GTK_CONTAINER (parent), form1);
 
   GtkWidget *checkbutton1 = gtk_check_button_new_with_label ( 
-    "Enable spin animation" );
+    _( "Enable spin animation" ) );
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
      this->isAnimationEnabled());
   gtk_widget_show (checkbutton1);
@@ -415,7 +415,7 @@ SoGtkExaminerViewer::makeSubPreferences(
 
   // Do the single widget on the second row (a checkbutton).
   GtkWidget *checkbutton2 = gtk_check_button_new_with_label ( 
-    "Show point of rotation axes" );
+    _( "Show point of rotation axes" ) );
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton2), 
      this->isFeedbackVisible());
   gtk_widget_show (checkbutton2);
@@ -429,7 +429,7 @@ SoGtkExaminerViewer::makeSubPreferences(
   // Do the four widgets on the third row (label, thumbwheel,
   // lineedit, label).
 
-  this->feedbacklabel1 = gtk_label_new("axes size");
+  this->feedbacklabel1 = gtk_label_new( _( "axes size" ) );
   gtk_box_pack_start (GTK_BOX (hbox), this->feedbacklabel1, FALSE, FALSE, 0);
 
   this->feedbackwheel = gtk_thumbwheel_new( 0 );
@@ -458,7 +458,7 @@ SoGtkExaminerViewer::makeSubPreferences(
   sprintf( buffer, "%d", common->getFeedbackSize());
   gtk_entry_set_text( GTK_ENTRY(this->feedbackedit), buffer );
 
-  this->feedbacklabel2 = gtk_label_new("pixels");
+  this->feedbacklabel2 = gtk_label_new( _( "pixels" ) );
   gtk_box_pack_start (GTK_BOX (hbox), this->feedbacklabel2, FALSE, FALSE, 0);
 
   gtk_widget_show_all(hbox);
@@ -503,8 +503,8 @@ SoGtkExaminerViewer::getDefaultWidgetName(void) const
 const char *
 SoGtkExaminerViewer::getDefaultTitle(void) const
 {
-  static const char defaultTitle[] = "Examiner Viewer";
-  return defaultTitle;
+  static const char defaultTitle[] = N_( "Examiner Viewer" );
+  return _( defaultTitle );
 } // getDefaultTitle()
 
 /*!
@@ -514,8 +514,8 @@ SoGtkExaminerViewer::getDefaultTitle(void) const
 const char *
 SoGtkExaminerViewer::getDefaultIconTitle(void) const
 {
-  static const char defaultIconTitle[] = "Examiner Viewer";
-  return defaultIconTitle;
+  static const char defaultIconTitle[] = N_( "Examiner Viewer" );
+  return _( defaultIconTitle );
 } // getDefaultIconTitle()
 
 // *************************************************************************

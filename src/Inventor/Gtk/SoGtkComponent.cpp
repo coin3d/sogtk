@@ -320,7 +320,7 @@ static const char * gdk_event_name( GdkEventType type ) {
   default:
     break;
   }
-  return "<unknown>";
+  return _( "<unknown>" );
 } /* gdk_event_name() */
 
 /*!
@@ -753,8 +753,8 @@ const char *
 SoGtkComponent::getDefaultTitle( // virtual
   void ) const
 {
-  static char defaultTitle[] = "Gtk Component";
-  return defaultTitle;
+  static char defaultTitle[] = N_( "Gtk Component" );
+  return _( defaultTitle );
 }
 
 /*!
@@ -766,8 +766,8 @@ const char *
 SoGtkComponent::getDefaultIconTitle( // virtual
   void ) const
 {
-  static char defaultIconTitle[] = "Gtk Comp";
-  return defaultIconTitle;
+  static char defaultIconTitle[] = N_( "Gtk Comp" );
+  return _( defaultIconTitle );
 } // getDefaultIconTitle()
 
 // *************************************************************************

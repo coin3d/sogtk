@@ -58,25 +58,25 @@ SOGTK_OBJECT_SOURCE(SoGtkPlaneViewer);
 struct SoGtkViewerButton
 SoGtkPlaneViewer::SoGtkPlaneViewerButtons[] = {
   { // plane X button
-    "x", "X",
+    N_("x"), "X",
     (GtkSignalFunc) SoGtkPlaneViewer::buttonCB,
     x_xpm,
     NULL, NULL
   },
   { // plane Y button
-    "y", "Y",
+    N_("y"), "Y",
     (GtkSignalFunc) SoGtkPlaneViewer::buttonCB,
     y_xpm,
     NULL, NULL
   },
   { // plane Z button
-    "z", "Z",
+    N_("z"), "Z",
     (GtkSignalFunc) SoGtkPlaneViewer::buttonCB,
     z_xpm,
     NULL, NULL
   },
   { // camera type button
-    "camera", "C",
+    N_("camera"), "C",
     (GtkSignalFunc) SoGtkPlaneViewer::buttonCB,
     perspective_xpm,
     NULL, NULL
@@ -130,9 +130,9 @@ SoGtkPlaneViewer::constructor( // private
   this->buttons = new SoGtkViewerButton [ buttons ];
   memcpy( this->buttons, SoGtkPlaneViewerButtons, sizeof(SoGtkPlaneViewerButtons) );
 
-  this->setLeftWheelString( "Translate Y" );
-  this->setBottomWheelString( "Translate X" );
-  this->setRightWheelString( "Zoom" );
+  this->setLeftWheelString( _( "Translate Y" ) );
+  this->setBottomWheelString( _( "Translate X" ) );
+  this->setRightWheelString( _( "Zoom" ) );
 
   this->setClassName( "SoGtkPlaneViewer" );
 
@@ -221,7 +221,7 @@ const char *
 SoGtkPlaneViewer::getDefaultTitle( // virtual, protected
   void ) const
 {
-  static const char defaultTitle[] = "Plane Viewer";
+  static const char defaultTitle[] = N_( "Plane Viewer" );
   return defaultTitle;
 }
 
@@ -232,7 +232,7 @@ const char *
 SoGtkPlaneViewer::getDefaultIconTitle( // virtual, protected
   void ) const
 {
-  static const char defaultIconTitle[] = "Plane Viewer";
+  static const char defaultIconTitle[] = N_( "Plane Viewer" );
   return defaultIconTitle;
 }
 
@@ -441,7 +441,8 @@ SoGtkPlaneViewer::buttonCB(
   SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
   const int idx = viewer->findButton( button );
   if ( idx == -1 ) {
-    SoDebugError::postInfo( "SoGtkPlaneViewer::buttonCB", "unknown button" );
+    SoDebugError::postInfo( "SoGtkPlaneViewer::buttonCB", 
+      _( "unknown button" ) );
   } else if ( strcmp( viewer->buttons[idx].keyword, "x" ) == 0 ) {
     viewer->common->viewPlaneX();
   } else if ( strcmp( viewer->buttons[idx].keyword, "y" ) == 0 ) {
@@ -451,7 +452,8 @@ SoGtkPlaneViewer::buttonCB(
   } else if ( strcmp( viewer->buttons[idx].keyword, "camera" ) == 0 ) {
     viewer->toggleCameraType();
   } else {
-    SoDebugError::postInfo( "SoGtkPlaneViewer::buttonCB", "unsupported button" );
+    SoDebugError::postInfo( "SoGtkPlaneViewer::buttonCB", 
+      _( "unsupported button" ) );
   }
 } // buttonCB()
 

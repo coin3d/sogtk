@@ -22,8 +22,8 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#if HAVE_CONFIG
-#include <config.h>
+#if HAVE_CONFIG_H
+#include "config.h"
 #endif
 
 #include <gtk/gtk.h>
@@ -107,6 +107,9 @@ SoGtk::init(
   SoDB::getSensorManager()->setChangedCallback(
     SoGtk::sensorQueueChanged, NULL );
   SoGtk::mainWidget = topLevelWidget;
+#if defined(ENABLE_NLS)
+  char *txt = bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+#endif
 } // init()
 
 // *************************************************************************

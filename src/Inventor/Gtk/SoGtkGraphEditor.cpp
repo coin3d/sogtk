@@ -233,7 +233,8 @@ void
 SoGtkGraphEditor::clearSceneGraphTree( // virtual, protected
   void )
 {
-  SoDebugError::postInfo( "SoGtkGraphEditor::clearSceneGraphTree", "[not implemented]" );
+  SoDebugError::postInfo( "SoGtkGraphEditor::clearSceneGraphTree", 
+    _( "[not implemented]" ) );
 } // clearSceneGraphTree()
 
 /*!
@@ -244,19 +245,19 @@ SoGtkGraphEditor::saveSceneGraph( // virtual, protected
   void )
 {
   if ( ! this->scenegraph ) {
-    this->setStatusMessage( "No scene to save." );
+    this->setStatusMessage( _( "No scene to save." ) );
     return;
   }
   SoOutput * output = new SoOutput;
   if ( ! output->openFile( "scene.iv" ) ) {
-    this->setStatusMessage( "Error opening 'scene.iv' for writing." );
+    this->setStatusMessage( _( "Error opening 'scene.iv' for writing." ) );
     delete output;
     return;
   }
   SoWriteAction writer( output );
   writer.apply( this->scenegraph );
   delete output;
-  this->setStatusMessage( "Scene saved in 'scene.iv'." );
+  this->setStatusMessage( _( "Scene saved in 'scene.iv'." ) );
 } // saveSceneGraph()
 
 // *************************************************************************
@@ -299,17 +300,17 @@ SoGtkGraphEditor::buildMenuBarWidget( // virtual, protected
   GtkWidget * parent )
 {
   GtkWidget * menubar = GTK_WIDGET(gtk_menu_bar_new());
-  GtkWidget * filemenuitem = gtk_menu_item_new_with_label( "File" );
+  GtkWidget * filemenuitem = gtk_menu_item_new_with_label( _( "File" ) );
   gtk_widget_show( filemenuitem );
   gtk_menu_bar_append( GTK_MENU_BAR(menubar), GTK_WIDGET(filemenuitem) );
   GtkWidget * filemenu = GTK_WIDGET(gtk_menu_new());
   gtk_widget_show( filemenu );
-  GtkWidget * saveitem = gtk_menu_item_new_with_label( "Save" );
+  GtkWidget * saveitem = gtk_menu_item_new_with_label( _( "Save" ) );
   gtk_widget_show( saveitem );
   gtk_menu_append( GTK_MENU(filemenu), GTK_WIDGET(saveitem));
   gtk_signal_connect( GTK_OBJECT(saveitem), "activate",
     GTK_SIGNAL_FUNC(SoGtkGraphEditor::saveCB), (gpointer) this );
-  GtkWidget * closeitem = gtk_menu_item_new_with_label( "Close" );
+  GtkWidget * closeitem = gtk_menu_item_new_with_label( _( "Close" ) );
   gtk_widget_show( closeitem );
   gtk_menu_append( GTK_MENU(filemenu), GTK_WIDGET(closeitem));
   gtk_signal_connect( GTK_OBJECT(closeitem), "activate",
@@ -487,8 +488,8 @@ const char *
 SoGtkGraphEditor::getDefaultTitle( // virtual, protected
   void ) const
 {
-  static const char defaultTitle[] = "Graph Editor";
-  return defaultTitle;
+  static const char defaultTitle[] = N_( "Graph Editor" );
+  return _( defaultTitle );
 } // getDefaultTitle()
 
 /*!
@@ -498,8 +499,8 @@ const char *
 SoGtkGraphEditor::getDefaultIconTitle( // virtual, protected
   void ) const
 {
-  static const char defaultIconTitle[] = "Graph Editor";
-  return defaultIconTitle;
+  static const char defaultIconTitle[] = N_( "Graph Editor" );
+  return _( defaultIconTitle );
 } // getDefaultIconTitle()
 
 // *************************************************************************
