@@ -1086,55 +1086,6 @@ SoGtkFullViewerP::layoutAppButtons(GtkWidget * form)
 // *************************************************************************
 
 /*!
-  Set camera zoom value.
-*/
-
-void
-SoGtkFullViewerP::setCameraZoom(const float val)
-{
-  SoCamera * cam = PUBLIC(this)->getCamera();
-  if (cam == NULL) return; // can happen if scenegraph is empty
-
-  SoType t = cam->getTypeId();
-
-  if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId()))
-    ((SoPerspectiveCamera *)cam)->heightAngle = val * 2.0f * M_PI / 360.0f;
-  else if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId()))
-    ((SoOrthographicCamera *)cam)->height = val;
-#if SOGTK_DEBUG
-  else assert(0);
-#endif // SOGTK_DEBUG
-}
-
-// *************************************************************************
-
-/*!
-  Return camera zoom value.
-*/
-
-float
-SoGtkFullViewerP::getCameraZoom(void)
-{
-  SoCamera * cam = PUBLIC(this)->getCamera();
-  if (cam == NULL) return 0.0f; // can happen if scenegraph is empty
-
-  SoType t = cam->getTypeId();
-
-  if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId()))
-    return ((SoPerspectiveCamera *)cam)->heightAngle.getValue() /
-      2.0f * 360.0f / M_PI;
-  else if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId()))
-    return ((SoOrthographicCamera *)cam)->height.getValue();
-
-#if SOGTK_DEBUG
-  assert(0);
-#endif // SOGTK_DEBUG
-  return 0.0f;
-}
-
-// *************************************************************************
-
-/*!
   \internal
   Gtk Signal Handler.
 */

@@ -61,9 +61,6 @@ public:
 
   SbPList * viewerButtons;
 
-  void setCameraZoom(const float zoom);
-  float getCameraZoom(void);
-
   // Thumbwheels.
   void leftWheelPressed(void);
   void leftWheelChanged(float value);
