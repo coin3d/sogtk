@@ -135,6 +135,12 @@ ${DIE=false} && echo "" && echo "$me: faking the bootstrap process..." && tar xf
 
 # **************************************************************************
 
+# generate aclocal.m4 (must be done before gettextize)
+echo "Running aclocal..."
+( $verbose && set -x;
+  aclocal -I $MACRODIR
+)
+
 # generate gettext support
 echo "Running gettextize..."
 ( ( $verbose && set -x;
@@ -161,12 +167,6 @@ echo "Running gettextize..."
   grep -v 'progtest.m4 from$' | \
   grep -v '^the directory ' \
 ) 3>&1 1>&2 2>&3
-
-# generate aclocal.m4
-echo "Running aclocal..."
-( $verbose && set -x;
-  aclocal -I $MACRODIR
-)
 
 # generate config.h.in template
 echo "Running autoheader..."
