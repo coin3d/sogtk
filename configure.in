@@ -98,6 +98,7 @@ AM_MAINTAINER_MODE
 
 #  Initialize libtool
 AC_PROG_LIBTOOL
+AC_LIBTOOL_CXX
 
 #  These are used for constructing the sogtk-config file.
 SOGTK_EXTRA_CPPFLAGS=

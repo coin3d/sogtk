@@ -6,3 +6,4 @@ ltconfig
 ltmain.sh
 missing
 mkinstalldirs
+ltcf-*.sh

@@ -54,6 +54,9 @@ bin_SCRIPTS = so@gui@-config
 
 EXTRA_DIST = cfg/m4/so@gui@.m4
 
+m4datadir = $(datadir)/aclocal
+m4data_DATA = cfg/m4/so@gui@.m4
+
 Makefile: $(BUILT_SOURCES)
 
 ############################################################################
