@@ -18,10 +18,8 @@ DISTCLEANFILES = \
 	$(SoGui_src_Inventor_Gui_viewers_BuiltMetaFiles)
 
 libSoGtkViewers_la_SOURCES = \
-	SoGtkPlaneViewer.cpp \
-	SoGtkPlaneViewer.h \
-	SoGtkWalkViewer.cpp \
-	SoGtkWalkViewer.h \
+	PlaneViewer.cpp \
+	WalkViewer.cpp \
 	FullViewer.cpp \
 	ExaminerViewer.cpp
 
@@ -33,15 +31,15 @@ nodist_libSoGtkViewers_la_SOURCES = \
 
 SoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
 
-SoGtkViewersinc_HEADERS = \
-	SoGtkPlaneViewer.h \
-	SoGtkWalkViewer.h
+SoGtkViewersinc_HEADERS =
 
 nodist_SoGtkViewersinc_HEADERS = \
 	SoGtkViewer.h \
 	SoGtkConstrainedViewer.h \
 	SoGtkFullViewer.h \
 	SoGtkExaminerViewer.h \
-	SoGtkFlyViewer.h
+	SoGtkFlyViewer.h \
+	SoGtkPlaneViewer.h \
+	SoGtkWalkViewer.h
 
 ############################################################################
