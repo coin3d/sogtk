@@ -43,8 +43,8 @@ class SOGTK_DLL_API SoGtkExaminerViewer : public SoGtkFullViewer {
 
 public:
   SoGtkExaminerViewer(
-    GtkWidget * parent = NULL,
-    const char * name = NULL,
+    GtkWidget * parent = (GtkWidget *) NULL,
+    const char * name = (char *) NULL,
     SbBool embed = TRUE,
     SoGtkFullViewer::BuildFlag flags = BUILD_ALL,
     SoGtkViewer::Type type = BROWSER );

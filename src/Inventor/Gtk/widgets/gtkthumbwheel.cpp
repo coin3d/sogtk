@@ -110,8 +110,8 @@ gtk_thumbwheel_get_type(
       sizeof(GtkThumbWheelClass),
       (GtkClassInitFunc) gtk_thumbwheel_class_init,
       (GtkObjectInitFunc) gtk_thumbwheel_init,
-      (GtkArgSetFunc) NULL,
-      (GtkArgGetFunc) NULL,
+      NULL,
+      NULL,
       (GtkClassInitFunc) NULL
     };
     thumbwheel_type = 

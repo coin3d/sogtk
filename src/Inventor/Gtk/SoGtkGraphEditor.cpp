@@ -86,19 +86,19 @@ SoGtkGraphEditor::constructor(
   const SbBool build,
   const int parts )
 {
-  this->scenegraph = NULL;
+  this->scenegraph = (SoNode *) NULL;
 
   this->buildflags = parts & EVERYTHING;
 
-  this->editorbase = NULL;
-  this->menubar = NULL;
-  this->grapheditor = NULL;
-  this->graphroot = NULL;
-  this->statusbar = NULL;
-  this->statusmessage = NULL;
+  this->editorbase = (GtkWidget *) NULL;
+  this->menubar = (GtkWidget *) NULL;
+  this->grapheditor = (GtkWidget *) NULL;
+  this->graphroot = (GtkWidget *) NULL;
+  this->statusbar = (GtkWidget *) NULL;
+  this->statusmessage = (GtkWidget *) NULL;
 
-  this->horizontal = NULL;
-  this->vertical = NULL;
+  this->horizontal = (GtkAdjustment *) NULL;
+  this->vertical = (GtkAdjustment *) NULL;
 
   this->setClassName( "SoGtkGraphEditor" );
 
@@ -343,7 +343,7 @@ GtkWidget *
 SoGtkGraphEditor::buildStatusBarWidget( // virtual, protected
   GtkWidget * parent )
 {
-  GtkWidget * statusframe = GTK_WIDGET(gtk_frame_new( NULL ));
+  GtkWidget * statusframe = GTK_WIDGET(gtk_frame_new( (gchar *) NULL ));
   gtk_widget_set_usize( statusframe, 0, 30 );
   gtk_frame_set_shadow_type( GTK_FRAME(statusframe), GTK_SHADOW_ETCHED_IN );
   gtk_container_set_border_width( GTK_CONTAINER(statusframe), 3 );
@@ -353,7 +353,7 @@ SoGtkGraphEditor::buildStatusBarWidget( // virtual, protected
   gtk_container_add( GTK_CONTAINER(statusframe), statuswidgets );
   gtk_widget_show( statuswidgets );
 
-  this->statusmessage = GTK_WIDGET(gtk_label_new(NULL));
+  this->statusmessage = GTK_WIDGET(gtk_label_new((gchar *) NULL));
   gtk_label_set_justify( GTK_LABEL(this->statusmessage), GTK_JUSTIFY_LEFT );
   gtk_widget_show( this->statusmessage );
   gtk_box_pack_start( GTK_BOX(statuswidgets), this->statusmessage, FALSE, TRUE, 3 );

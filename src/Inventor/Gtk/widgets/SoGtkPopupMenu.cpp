@@ -182,7 +182,7 @@ SoGtkPopupMenu::getMenuTitle(
   MenuRecord * rec = this->getMenuRecord( menuid );
   if ( rec )
     return rec->title;
-  return NULL;
+  return (char *) NULL;
 } // getMenuTitle()
 
 // *************************************************************************
@@ -261,7 +261,7 @@ SoGtkPopupMenu::getMenuItemTitle(
   ItemRecord * rec = this->getItemRecord( itemid );
   if ( rec )
     return rec->title;
-  return NULL;
+  return (char *) NULL;
 } // getMenuItemTitle()
 
 /*!
@@ -585,7 +585,8 @@ SoGtkPopupMenu::popUp(
     this->popup = this->build( inside );
   }
   this->dirty = FALSE;
-  gtk_menu_popup( GTK_MENU(this->popup), NULL, NULL, NULL, NULL, 2, 0 );
+  gtk_menu_popup( GTK_MENU(this->popup), (GtkWidget *) NULL, (GtkWidget *) NULL,
+    (GtkMenuPositionFunc) NULL, NULL, 2, 0 );
 } // popUp()
 
 // *************************************************************************
@@ -628,10 +629,10 @@ SoGtkPopupMenu::traverseBuild(
   MenuRecord * menu,
   int indent )
 {
-  char pre[24];
   int i, j;
-  for ( i = 0; i < indent; i++ ) pre[i] = ' ';
-  pre[i] = '\0';
+//  char pre[24];
+//  for ( i = 0; i < indent; i++ ) pre[i] = ' ';
+//  pre[i] = '\0';
   j = 0;
   MenuRecord * sub;
   ItemRecord * item;
@@ -741,9 +742,9 @@ SoGtkPopupMenu::createMenuRecord(
   rec->pos = -1;
   rec->name = strcpy( new char [strlen(name)+1], name );
   rec->title = strcpy( new char [strlen(name)+1], name );
-  rec->menu = NULL;
-  rec->item = NULL;
-  rec->parent = NULL;
+  rec->menu = (GtkWidget *) NULL;
+  rec->item = (GtkWidget *) NULL;
+  rec->parent = (MenuRecord *) NULL;
   return rec;
 } // createMenuRecord()
 
@@ -761,8 +762,8 @@ SoGtkPopupMenu::createItemRecord(
   rec->pos = -1;
   rec->name = strcpy( new char [strlen(name)+1], name );
   rec->title = strcpy( new char [strlen(name)+1], name );
-  rec->item = NULL;
-  rec->parent = NULL;
+  rec->item = (GtkWidget *) NULL;
+  rec->parent = (MenuRecord *) NULL;
   return rec;
 } // createItemRecord()
 

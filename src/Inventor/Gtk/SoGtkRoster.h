@@ -39,8 +39,8 @@ public:
   };
 
   SoGtkRoster(
-    GtkWidget * parent = NULL,
-    const char * const name = NULL,
+    GtkWidget * parent = (GtkWidget *) NULL,
+    const char * const name = (char *) NULL,
     const SbBool embed = TRUE,
     const int flags = BUILD_ALL );
   ~SoGtkRoster(void);

@@ -39,8 +39,8 @@ public:
     EVERYTHING =    0x07
   };
 
-  SoGtkGraphEditor( GtkWidget * const parent = NULL,
-    const char * const name = NULL, const SbBool embed = TRUE,
+  SoGtkGraphEditor( GtkWidget * const parent = (GtkWidget *) NULL,
+    const char * const name = (char *) NULL, const SbBool embed = TRUE,
     const int parts = EVERYTHING );
   ~SoGtkGraphEditor(void);
 

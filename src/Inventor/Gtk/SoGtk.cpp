@@ -48,9 +48,9 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-GtkWidget * SoGtk::mainWidget = NULL;
-SbPList * SoGtk::components = NULL;
-SbPList * SoGtk::component_callbacks = NULL;
+GtkWidget * SoGtk::mainWidget = (GtkWidget *) NULL;
+SbPList * SoGtk::components = (SbPList *) NULL;
+SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
 
 // *************************************************************************
 
@@ -68,10 +68,10 @@ SoGtk::init(
   if ( appName != NULL ) {
     char buf[1025];
     strncpy( buf, appName, 1024 );
-    char * array[2] = { buf, NULL };
+    char * array[2] = { buf, (char *) NULL };
     return SoGtk::init( 1, array, appName, className );
   } else {
-    return SoGtk::init( 0, NULL, appName, className );
+    return SoGtk::init( 0, (char **) NULL, appName, className );
   }
 } // init()
 
@@ -316,12 +316,12 @@ SoGtk::getShellWidget(
   if ( widget == NULL ) {
     SoDebugError::postWarning( "SoGtk::getShellWidget",
                                "Called with NULL pointer." );
-    return NULL;
+    return (GtkWidget *) NULL;
   }
 #endif // SOGTK_DEBUG
 
 //  return gtk_widget_get_toplevel( widget );
-  return NULL;
+  return (GtkWidget *) NULL;
 } // getShellWidget()
 
 // *************************************************************************

@@ -28,6 +28,7 @@ static const char rcsid[] =
 
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
+#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 #include <Inventor/Gtk/viewers/SoAnyPlaneViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkPlaneViewer.h>
 
@@ -48,15 +49,6 @@ static const char rcsid[] =
 SOGTK_OBJECT_SOURCE(SoGtkPlaneViewer);
 
 // *************************************************************************
-
-struct SoGtkViewerButton {
-  char * keyword;
-  char * label;
-  GtkSignalFunc pressed;
-  char ** xpm_data;
-  GtkWidget * bwidget;
-  GtkWidget * lwidget;
-};
 
 struct SoGtkViewerButton
 SoGtkPlaneViewer::SoGtkPlaneViewerButtons[] = {

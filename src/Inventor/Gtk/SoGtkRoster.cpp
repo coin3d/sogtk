@@ -85,13 +85,13 @@ void
 SoGtkRoster::constructor( // private
   const SbBool build )
 {
-  this->rosterbase = NULL;
-  this->menubar = NULL;
-  this->rosterlist = NULL;
-  this->listwidget = NULL;
-  this->statusbar = NULL;
-  this->horizontal = NULL;
-  this->vertical = NULL;
+  this->rosterbase = (GtkWidget *) NULL;
+  this->menubar = (GtkWidget *) NULL;
+  this->rosterlist = (GtkWidget *) NULL;
+  this->listwidget = (GtkWidget *) NULL;
+  this->statusbar = (GtkWidget *) NULL;
+  this->horizontal = (GtkAdjustment *) NULL;
+  this->vertical = (GtkAdjustment *) NULL;
 
   SoGtk::addComponentActionCallback(
     SoGtkRoster::componentActionCB, (void *) this );
@@ -206,7 +206,7 @@ SoGtkRoster::buildRosterList(
     SoGtkComponent * component = (SoGtkComponent *) components[i];
     char * title = (char *) component->getTitle();
     char * classname = (char *) component->getTypeId().getName().getString();
-    char * columns[] = { title, classname, NULL };
+    char * columns[] = { title, classname, (char *) NULL };
     gtk_clist_append( GTK_CLIST(this->listwidget), columns );
   }
 } // buildRosterList()
@@ -225,7 +225,7 @@ SoGtkRoster::buildRosterListWidget( // virtual, protected
   gtk_scrolled_window_set_policy(
     GTK_SCROLLED_WINDOW(rosterlist), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS );
 
-  char * titles[] = { "Title", "Class", NULL };
+  char * titles[] = { "Title", "Class", (char *) NULL };
   this->listwidget = GTK_WIDGET(gtk_clist_new_with_titles( 2, titles ));
   gtk_clist_column_titles_show( GTK_CLIST(this->listwidget) );
   gtk_clist_set_column_visibility( GTK_CLIST(this->listwidget), 1, TRUE );
@@ -271,7 +271,7 @@ SoGtkRoster::componentCreated( // virtual, protected
 #endif
   char * title = (char *) component->getTitle();
   char * classname = (char *) component->getTypeId().getName().getString();
-  char * strings[] = { title, classname, NULL };
+  char * strings[] = { title, classname, (char *) NULL };
   gtk_clist_append( GTK_CLIST(this->listwidget), strings );
 } // componentCreated()
 

@@ -66,7 +66,7 @@ public:
   static void createSimpleErrorDialog( GtkWidget * const widget,
                                        const char * const dialogTitle,
                                        const char * const errorStr1,
-                                       const char * const errorStr2 = NULL );
+                                       const char * const errorStr2 = (char *) NULL );
 
 
   enum SoGtkComponentAction { CREATION, DESTRUCTION, CHANGE };

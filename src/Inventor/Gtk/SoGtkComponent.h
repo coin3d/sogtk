@@ -69,8 +69,8 @@ public:
   static void initClasses(void);
 
 protected:
-  SoGtkComponent( GtkWidget * const parent = NULL,
-                  const char * const name = NULL,
+  SoGtkComponent( GtkWidget * const parent = (GtkWidget *) NULL,
+                  const char * const name = (char *) NULL,
                   const SbBool embed = TRUE );
 
   void setClassName( const char * const name );

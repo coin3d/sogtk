@@ -35,8 +35,8 @@ class SOGTK_DLL_API SoGtkPlaneViewer : public SoGtkFullViewer {
 
 public:
   SoGtkPlaneViewer(
-    GtkWidget * parent = NULL,
-    const char * const name = NULL,
+    GtkWidget * parent = (GtkWidget *) NULL,
+    const char * const name = (char *) NULL,
     const SbBool embed = TRUE,
     const SoGtkFullViewer::BuildFlag flag = BUILD_ALL,
     const SoGtkViewer::Type type = BROWSER );
