@@ -117,17 +117,13 @@ SoGtkGLWidget::buildWidget(
   gtk_widget_set_events( GTK_WIDGET(this->glWidget),
     GDK_EXPOSURE_MASK | GDK_KEY_PRESS_MASK );
 
-  /* GTK_WIDGET_SET_FLAGS( GTK_WIDGET(this->glWidget), GTK_CAN_FOCUS ); */
-  /* gtk_widget_grab_focus( GTK_WIDGET(this->glWidget) ); */
-
+  /* configure_event should probably be moved to SoGtkRenderArea? */
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "expose_event",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLDraw), (void *) this );
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "configure_event",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLReshape), (void *) this );
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "realize",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLInit), (void *) this );
-
-  /* gtk_widget_set_usize( GTK_WIDGET(this->glWidget), 32, 32 ); /* min. size */
 
   this->container = gtk_vbox_new( FALSE, 0 );
   gtk_container_set_border_width( GTK_CONTAINER(this->container),

@@ -74,9 +74,9 @@ void gtk_thumbwheel_class_init(
 }; /* extern "C" */
 
 enum {
-    THUMBWHEEL_ACTIVATED,
-    THUMBWHEEL_CHANGED,
-    THUMBWHEEL_SETTLED,
+    ATTACHED,
+    VALUE_CHANGED,
+    RELEASED,
     NUM_SIGNALS
 };
 
@@ -85,6 +85,12 @@ static guint thumbwheel_signals[NUM_SIGNALS] = { 0 };
 
 static const guint GTK_THUMBWHEEL_DEFAULT_WIDTH = 26;
 static const guint GTK_THUMBWHEEL_DEFAULT_LENGTH = 90;
+
+enum {
+  THUMBWHEEL_DISABLED,
+  THUMBWHEEL_IDLE,
+  THUMBWHEEL_DRAGGING
+};
 
 // *************************************************************************
 
@@ -104,7 +110,6 @@ gtk_thumbwheel_get_type(
       (GtkArgGetFunc) NULL,
       (GtkClassInitFunc) NULL
     };
-
     thumbwheel_type =
       gtk_type_unique( gtk_widget_get_type(), &thumbwheel_info );
   }
@@ -132,42 +137,42 @@ gtk_thumbwheel_class_init(
   widget_class->size_request = gtk_thumbwheel_size_request;
   widget_class->size_allocate = gtk_thumbwheel_size_allocate;
   widget_class->button_press_event = gtk_thumbwheel_button_press;
-  widget_class->button_release_event = gtk_thumbwheel_button_release;
   widget_class->motion_notify_event = gtk_thumbwheel_motion_notify;
+  widget_class->button_release_event = gtk_thumbwheel_button_release;
 
-  thumbwheel_signals[ THUMBWHEEL_ACTIVATED ] =
-    gtk_signal_new( "thumbwheel_activated",
+  thumbwheel_signals[ ATTACHED ] =
+    gtk_signal_new( "attached",
       GTK_RUN_FIRST,
       object_class->type,
-      GTK_SIGNAL_OFFSET( GtkThumbWheelClass, thumbwheel_activated ),
+      GTK_SIGNAL_OFFSET( GtkThumbWheelClass, attached ),
       gtk_signal_default_marshaller,
       GTK_TYPE_NONE,
       0 );
 
-  thumbwheel_signals[ THUMBWHEEL_CHANGED ] =
-    gtk_signal_new( "thumbwheel_changed",
+  thumbwheel_signals[ VALUE_CHANGED ] =
+    gtk_signal_new( "value_changed",
       GTK_RUN_FIRST,
       object_class->type,
-      GTK_SIGNAL_OFFSET( GtkThumbWheelClass, thumbwheel_changed ),
+      GTK_SIGNAL_OFFSET( GtkThumbWheelClass, value_changed ),
       gtk_signal_default_marshaller,
       GTK_TYPE_NONE,
       1,
       GTK_TYPE_FLOAT );
 
-  thumbwheel_signals[ THUMBWHEEL_SETTLED ] =
-    gtk_signal_new( "thumbwheel_settled",
+  thumbwheel_signals[ RELEASED ] =
+    gtk_signal_new( "released",
       GTK_RUN_FIRST,
       object_class->type,
-      GTK_SIGNAL_OFFSET( GtkThumbWheelClass, thumbwheel_settled ),
+      GTK_SIGNAL_OFFSET( GtkThumbWheelClass, released ),
       gtk_signal_default_marshaller,
       GTK_TYPE_NONE,
       0 );
 
   gtk_object_class_add_signals( object_class, thumbwheel_signals, NUM_SIGNALS );
 
-  cclass->thumbwheel_activated = NULL;
-  cclass->thumbwheel_changed = NULL;
-  cclass->thumbwheel_settled = NULL;
+  cclass->attached      = NULL;
+  cclass->value_changed = NULL;
+  cclass->released      = NULL;
 
 } // gtk_thumbwheel_class_init()
 
@@ -178,13 +183,17 @@ void
 gtk_thumbwheel_init(
   GtkThumbWheel * thumbwheel )
 {
+  thumbwheel->state = THUMBWHEEL_IDLE;
   thumbwheel->policy = 0;
   thumbwheel->button = 0;
   thumbwheel->vertical = 0;
   thumbwheel->downpos = 0;
   thumbwheel->value = 0.0f;
   thumbwheel->tempvalue = 0.0f;
-  thumbwheel->wheel = (void *) new ThumbWheel;
+  ThumbWheel * wheel = new ThumbWheel;
+  wheel->SetWheelMotionMethod( ThumbWheel::UNIFORM );
+  wheel->SetWheelRangeBoundaryHandling( ThumbWheel::MODULATE );
+  thumbwheel->wheel = (void *) wheel;
 } // gtk_thumbwheel_init()
 
 // *************************************************************************
@@ -249,6 +258,8 @@ gtk_thumbwheel_realize(
   attributes.window_type = GDK_WINDOW_CHILD;
   attributes.event_mask = gtk_widget_get_events( widget ) |
     GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
+/*  GDK_BUTTON_MOTION_MASK | GDK_BUTTON1_MOTION_MASK |
+    GDK_BUTTON2_MOTION_MASK | GDK_BUTTON3_MOTION_MASK | */
     GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK;
   attributes.visual = gtk_widget_get_visual( widget );
   attributes.colormap = gtk_widget_get_colormap( widget );
@@ -314,8 +325,8 @@ gtk_thumbwheel_expose(
   g_return_val_if_fail( GTK_IS_THUMBWHEEL(widget), FALSE );
   g_return_val_if_fail( event != NULL, FALSE );
 
-  if ( event->count > 0 )
-    return FALSE;
+/*  if ( event->count > 0 )
+    return FALSE; */
 
   GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
 
@@ -371,16 +382,17 @@ gtk_thumbwheel_expose(
     widget->allocation.width - 6, widget->allocation.height - 10 );
 
   static guchar bitmap[90*26*4*4]; // just "enough" for now
+
   ((ThumbWheel *)thumbwheel->wheel)->SetWheelSize(
     widget->allocation.height - 20, widget->allocation.width - 12 );
 
+  int img = ((ThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
+    thumbwheel->tempvalue, ThumbWheel::ENABLED );
+
   ((ThumbWheel *)thumbwheel->wheel)->SetGraphicsByteOrder( ThumbWheel::ABGR );
   ((ThumbWheel *)thumbwheel->wheel)->SetColor( 0, 150, 200 );
-  unsigned int flags = 0;
-  if ( thumbwheel->vertical )
-    flags |= THUMBWHEEL_VERTICAL;
-  flags |= THUMBWHEEL_ENABLED;
-  ((ThumbWheel *)thumbwheel->wheel)->DrawBitmap( 1, (void *) bitmap, flags );
+  ((ThumbWheel *)thumbwheel->wheel)->DrawBitmap( img, (void *) bitmap,
+    (thumbwheel->vertical ? ThumbWheel::VERTICAL : ThumbWheel::HORIZONTAL) );
 
   gdk_draw_rgb_32_image(
     widget->window, widget->style->fg_gc[ GTK_WIDGET_STATE(widget) ],
@@ -404,9 +416,18 @@ gtk_thumbwheel_button_press(
 
   GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
 
+  if ( thumbwheel->state != THUMBWHEEL_IDLE )
+    return FALSE;
+
+  thumbwheel->downpos = (gint) event->y;
+
+  fprintf( stderr, "> press\n" );
+
   if ( thumbwheel->vertical ) {
   } else {
   }
+
+  thumbwheel->state = THUMBWHEEL_DRAGGING;
 
   return FALSE;
 } // gtk_thumbwheel_button_press()
@@ -425,10 +446,55 @@ gtk_thumbwheel_button_release(
 
   GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
 
+  if ( thumbwheel->state != THUMBWHEEL_DRAGGING )
+    return FALSE;
+
+  fprintf( stderr, "> release\n" );
+
+  thumbwheel->tempvalue = thumbwheel->value;
+  thumbwheel->state = THUMBWHEEL_IDLE;
+
   return FALSE;
 } // gtk_thumbwheel_button_release()
 
 // *************************************************************************
+
+/*
+  The gtk_timeout_add() method is probably not the correct way to track
+  the mouse, but I haven't found another better method yet...
+*/
+
+static
+gint
+gtk_thumbwheel_motion(
+  GtkWidget * widget )
+{
+  g_return_val_if_fail( widget != NULL, FALSE );
+  g_return_val_if_fail( GTK_IS_THUMBWHEEL(widget), FALSE );
+
+  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
+  if ( thumbwheel->state != THUMBWHEEL_DRAGGING )
+    return FALSE;
+
+  gint x, y;
+  GdkModifierType mods;
+  gdk_window_get_pointer( widget->window, &x, &y, &mods );
+
+  thumbwheel->tempvalue =
+    ((ThumbWheel *)thumbwheel->wheel)->CalculateValue( thumbwheel->value,
+      thumbwheel->downpos, y - thumbwheel->downpos );
+
+  static int bmp = -1;
+  int img = ((ThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
+    thumbwheel->tempvalue, ThumbWheel::ENABLED );
+  if ( img != bmp )
+    gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
+  bmp = img;
+
+  gtk_timeout_add( 100, gtk_thumbwheel_motion, (gpointer) thumbwheel );
+  return FALSE;
+} // gtk_thumbwheel_motion()
+
 
 static
 gint
@@ -441,27 +507,65 @@ gtk_thumbwheel_motion_notify(
   g_return_val_if_fail( event != NULL, FALSE );
 
   GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
+  if ( thumbwheel->state != THUMBWHEEL_DRAGGING )
+    return FALSE;
 
-// gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
-
+  gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
+  gtk_timeout_add( 100, gtk_thumbwheel_motion, (gpointer) thumbwheel );
   return FALSE;
-} // gtk_thumbwheel_button_release()
+} // gtk_thumbwheel_motion_notify()
 
 // *************************************************************************
 
-static
-gint
-gtk_thumbwheel_timer(
+void
+gtk_thumbwheel_set_value(
+  GtkThumbWheel * thumbwheel,
+  gfloat value )
+{
+  thumbwheel->value = value;
+} // gtk_thumbwheel_set_value()
+
+// *************************************************************************
+
+gfloat
+gtk_thumbwheel_get_value(
   GtkThumbWheel * thumbwheel )
 {
-  g_return_val_if_fail( thumbwheel != NULL, FALSE );
-  g_return_val_if_fail( GTK_IS_THUMBWHEEL(thumbwheel), FALSE );
+  return thumbwheel->value;
+} // gtk_thumbwheel_get_value()
 
-  if ( thumbwheel->policy == GTK_UPDATE_DELAYED )
-    gtk_signal_emit_by_name( GTK_OBJECT(thumbwheel), "thumbwheel_moved",
-      thumbwheel->tempvalue);
+// *************************************************************************
 
-  return FALSE;
-} // gtk_thumbwheel_timer()
+void
+gtk_thumbwheel_enable(
+  GtkThumbWheel * thumbwheel )
+{
+  thumbwheel->state = THUMBWHEEL_IDLE;
+} // gtk_thumbwheel_enable()
+
+// *************************************************************************
+
+void
+gtk_thumbwheel_disable(
+  GtkThumbWheel * thumbwheel )
+{
+  thumbwheel->state = THUMBWHEEL_DISABLED;
+} // gtk_thumbwheel_disable()
+
+// *************************************************************************
+
+void
+gtk_thumbwheel_set_motion_method(
+  GtkThumbWheel * thumbwheel )
+{
+} // gtk_thumbwheel_set_motion_method()
+
+// *************************************************************************
+
+void
+gtk_thumbwheel_set_range_boundary_handling(
+  GtkThumbWheel * thumbwheel )
+{
+} // gtk_thumbwheel_set_range_boundary_handling()
 
 // *************************************************************************

@@ -53,22 +53,22 @@ typedef struct _GtkThumbWheelClass  GtkThumbWheelClass;
 struct _GtkThumbWheel {
   GtkWidget widget;
 
+  guint8 state : 2;
   guint8 policy : 2;
   guint8 vertical : 1;
   guint8 button;
   gint downpos;
   gfloat value, tempvalue;
-  void * wheel;
-
-};
+  void * wheel; // ThumbWheel class instance
+}; // GtkThumbWheel
 
 struct _GtkThumbWheelClass {
   GtkWidgetClass parent_class;
 
-  void (* thumbwheel_activated)  ( GtkThumbWheel * thumbwheel );
-  void (* thumbwheel_changed)    ( GtkThumbWheel * thumbwheel, gfloat value );
-  void (* thumbwheel_settled)    ( GtkThumbWheel * thumbwheel );
-};
+  void (* attached)       ( GtkThumbWheel * thumbwheel );
+  void (* value_changed)  ( GtkThumbWheel * thumbwheel, gfloat value );
+  void (* released)       ( GtkThumbWheel * thumbwheel );
+}; // GtkThumbWheelClass
 
 /* ********************************************************************** */
 
@@ -76,6 +76,17 @@ GtkWidget *  gtk_thumbwheel_new               (gint vertical);
 guint        gtk_thumbwheel_get_type          (void);
 void         gtk_thumbwheel_set_update_policy (GtkThumbWheel * thumbwheel,
                                                GtkUpdateType policy);
+
+void         gtk_thumbwheel_set_value         (GtkThumbWheel * thumbwheel,
+                                               gfloat value);
+gfloat       gtk_thumbwheel_get_value         (GtkThumbWheel * thumbwheel);
+
+void         gtk_thumbwheel_enable            (GtkThumbWheel * thumbwheel);
+void         gtk_thumbwheel_disable           (GtkThumbWheel * thumbwheel);
+
+void         gtk_thumbwheel_set_motion_method (GtkThumbWheel * thumbwheel);
+void         gtk_thumbwheel_set_range_boundary_handling
+                                              (GtkThumbWheel * thumbwheel);
 
 /* ********************************************************************** */
 
