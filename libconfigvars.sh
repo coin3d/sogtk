@@ -8,16 +8,11 @@ WIDGET="GtkWidget *"
 EVENT="GdkEvent *"
 COMPONENTHEADER=""
 
-# new
+GUI=GTK
 Gui=Gtk
 gui=gtk
 
-# old
-GUI="Gtk"
-lGUI="gtk"
-uGUI="GTK"
-
-export Gui gui GUI lGUI uGUI WIDGET EVENT COMPONENTHEADER
+export Gui gui GUI WIDGET EVENT COMPONENTHEADER
 
 ############################################################################
 # Build Conditionals:

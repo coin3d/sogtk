@@ -1,51 +1,85 @@
-#!/bin/sh
+#! /bin/sh
+# **************************************************************************
+# sogtk-config -- a utility for retrieving configuration information for
+# the installed SoGtk library.
 
+me=`echo $0 | sed 's,^.*[/\\],,g'`
 
-###### SUBROUTINES ########################################################
+usage="\
+Usage: $me [OPTIONS]
+Options:
+  --cppflags
+  --ldflags
+  --libs
+  --datadir
+  --ac-subst <keyword>
+  --have-feature <keyword>
+  --build <program> <sourcefile> [<sourcefile>]...
+  --version
+  --help | --usage"
 
-usage()
-{
-cat <<EOF
-    Usage: sogtk-config [OPTIONS]
-    Options:
-            [--version]
-            [--cppflags]
-            [--ldflags]
-            [--libs]
-EOF
-  exit $1
-}
+version="@SOGTK_VERSION@"
 
+# NOTE: If the first argument is changed in the following variables, it is
+# also necessary to update configure.in, since that argument is shifted off.
 
-###### MAIN ###############################################################
+cppflags="-I@includedir@ @SOGTK_EXTRA_CPPFLAGS@"
+ldflags="-L@libdir@ @SOGTK_EXTRA_LDFLAGS@"
+libs="-lSoGtk @SOGTK_EXTRA_LIBS@"
 
-if test $# -eq 0; then
-  usage 1 1>&2
-fi
+datadir="@sogtk_data_dir@"
 
-while test $# -gt 0; do
+while test $# -gt 0
+do
   case $1 in
-    --version)
-      echo @SOGTK_VERSION@
-      ;;
-    --cppflags)
-      # Note: if we for some reason changes this so "includedir" is
-      # not first, we need to fix up the examples/ and ivexamples/
-      # configure.in scripts, as they shift off the first argument.
-      echo -I@includedir@ @SOGTK_EXTRA_CPPFLAGS@
-      ;;
-    --ldflags)
-      echo -L@libdir@ @SOGTK_EXTRA_LDFLAGS@
-      ;;
-    --libs)
-      echo -lSoGtk @SOGTK_EXTRA_LIBS@
-      ;;
+  --help | --usage)  echo "$usage"    ;;
+  --version)         echo "$version"  ;;
+  --cppflags)        echo "$cppflags" ;;
+  --ldflags)         echo "$ldflags"  ;;
+  --libs)            echo "$libs"     ;;
+  --datadir)         echo "$datadir"  ;;
+  --ac-subst)
+    shift
+    case $1 in
+    GUI)              echo "@GUI@" ;;
+    Gui)              echo "@Gui@" ;;
+    gui)              echo "@gui@" ;;
+    EVENT)            echo "@EVENT@" ;;
+    WIDGET)           echo "@WIDGET@" ;;
+    WINWIDGET)        echo "@WINWIDGET@" ;;
+    COMPONENTHEADER)  echo "@COMPONENTHEADER@" ;;
     *)
-      echo "Unknown option: \"$1\""
-      usage 1 1>&2
+      echo >&2 "$me: Invalid AC_SUBST: \"$1\""
+      exit 1
       ;;
+    esac
+    ;;
+  --have-feature)
+    shift
+    case $1 in
+    renderarea)      exit 0 ;;
+    examinerviewer)  exit 0 ;;
+    *)               exit 1 ;;
+    esac
+    ;;
+  --build)
+    shift
+    program=$1
+    shift
+    exec @CXX@ \
+      $CPPFLAGS $cppflags \
+      $LDFLAGS $ldflags \
+      -o $program $@ \
+      $LIBS $libs
+    ;;
+  *)
+    echo >&2 "$me: Invalid option: \"$1\""
+    echo >&2 "$usage"
+    exit 1
+    ;;
   esac
   shift
 done
 
 exit 0
+
