@@ -127,15 +127,6 @@ SoGtk::internal_init(GtkWidget * toplevelwidget)
 #endif
 }
 
-// documented in common/SoGuiObject.cpp.in
-void
-SoGtkObject::init(void)
-{
-  SoGtkObject::initClass();
-  SoGtkDevice::initClasses();
-  SoGtkComponent::initClasses();
-}
-
 // *************************************************************************
 
 /*!
