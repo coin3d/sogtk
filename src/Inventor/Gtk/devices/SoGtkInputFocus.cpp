@@ -110,6 +110,7 @@ SoGtkInputFocus::enable(
   SoGtkEventHandler * func,
   void * data)
 {
+  SOGTK_STUB();
 } // enable()
 
 /*!
@@ -122,6 +123,7 @@ SoGtkInputFocus::disable(
   SoGtkEventHandler * func,
   void * data)
 {
+  SOGTK_STUB();
 } // disable()
 
 // *************************************************************************
@@ -137,6 +139,7 @@ const SoEvent *
 SoGtkInputFocus::translateEvent(
   GdkEvent * event)
 {
+  SOGTK_STUB();
   return NULL;
 } // translateEvent()
 
