@@ -35,6 +35,7 @@
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/viewers/SoGtkPlaneViewer.h>
+#include <Inventor/Gtk/viewers/SoGtkPlaneViewerP.h>
 #include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 
 #include <Inventor/Gtk/SoGtkCursor.h>
@@ -46,33 +47,10 @@
 
 // *************************************************************************
 
-class SoGtkPlaneViewerP {
-public:
-  SoGtkPlaneViewerP(SoGtkPlaneViewer * publ);
-  ~SoGtkPlaneViewerP();
-
-  static void visibilityCB(void * data, SbBool visible);
-
-  static SoGtkViewerButton SoGtkPlaneViewerButtons[];
-  GdkPixmap * orthopixmap, * perspectivepixmap;
-  GdkBitmap * orthomask, * perspectivemask;
-
-  GtkWidget * cameratogglebutton;
-  static void xbuttonCB(GtkWidget *, gpointer);
-  static void ybuttonCB(GtkWidget *, gpointer);
-  static void zbuttonCB(GtkWidget *, gpointer);
-  static void camerabuttonCB(GtkWidget *, gpointer);
-
-private:
-  SoGtkPlaneViewer * pub;
-};
+// SoGtkPlaneViewerP "private implementation" class.
 
 #define PUBLIC(ptr) (ptr->pub)
 #define PRIVATE(ptr) (ptr->pimpl)
-
-#define THIS (PRIVATE(this))
-
-// *************************************************************************
 
 enum {
   X_BUTTON = 0,
@@ -106,100 +84,137 @@ SoGtkPlaneViewerP::SoGtkPlaneViewerButtons[] = {
     (GtkSignalFunc) SoGtkPlaneViewerP::camerabuttonCB,
     perspective_xpm
   }
-}; // SoGtkPlaneViewerButtons[]
+};
 
-// *************************************************************************
-
-/*!
-  Public default constructor.
-*/
-
-SoGtkPlaneViewer::SoGtkPlaneViewer(// public
-  GtkWidget * parent,
-  const char * const name,
-  const SbBool embed,
-  const SoGtkFullViewer::BuildFlag flag,
-  const SoGtkViewer::Type type)
-: inherited(parent, name, embed, flag, type, FALSE)
+SoGtkPlaneViewerP::SoGtkPlaneViewerP(SoGtkPlaneViewer * publ)
+  : SoGuiPlaneViewerP(publ)
 {
-  this->constructor(TRUE);
-} // SoGtkPlaneViewer()
+  GdkColormap * colormap = gtk_widget_get_colormap(PUBLIC(this)->getParentWidget());
 
-/*!
-  Protected destructor used when deriving the SoGtkPlaneViewer component class.
-*/
+  this->orthopixmap =
+    gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
+                                          &this->orthomask, (GdkColor *) 0,
+                                          // FIXME: nasty cast, get
+                                          // rid of it. 20020320 mortene.
+                                          (gchar **)ortho_xpm);
 
-SoGtkPlaneViewer::SoGtkPlaneViewer(// protected
-  GtkWidget * parent,
-  const char * const name,
-  const SbBool embed,
-  const SoGtkFullViewer::BuildFlag flag,
-  const SoGtkViewer::Type type,
-  const SbBool build)
-: inherited(parent, name, embed, flag, type, FALSE)
+  this->perspectivepixmap =
+    gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
+                                          &this->perspectivemask,
+                                          (GdkColor *) 0,
+                                          // FIXME: nasty cast, get
+                                          // rid of it. 20020320 mortene.
+                                          (gchar **)perspective_xpm);
+}
+
+SoGtkPlaneViewerP::~SoGtkPlaneViewerP()
 {
-  this->constructor(build);
-} // SoGtkPlaneViewer()
-
-/*!
-  Common code for all constructors.
-*/
+  // Button pixmaps.
+  gdk_pixmap_unref(this->orthopixmap);
+  gdk_bitmap_unref(this->orthomask);  
+  gdk_pixmap_unref(this->perspectivepixmap);
+  gdk_bitmap_unref(this->perspectivemask);  
+}
 
 void
-SoGtkPlaneViewer::constructor(// private
-  const SbBool build)
+SoGtkPlaneViewerP::constructor(const SbBool build)
 {
   this->commonConstructor(); // set up generic stuff
 
-  this->pimpl = new SoGtkPlaneViewerP(this);
+  PUBLIC(this)->setClassName("SoGtkPlaneViewer");
 
-  this->addVisibilityChangeCallback(SoGtkPlaneViewerP::visibilityCB, this);
+  PUBLIC(this)->setPopupMenuString(_("Plane Viewer"));
+  PUBLIC(this)->setPrefSheetString(_("Plane Viewer Preference Sheet")); 
 
-  this->setClassName("SoGtkPlaneViewer");
-
-  this->setPopupMenuString(_("Plane Viewer"));
-  this->setPrefSheetString(_("Plane Viewer Preference Sheet")); 
-
-  this->setLeftWheelString(_("Translate Y"));
-  this->setBottomWheelString(_("Translate X"));
-  this->setRightWheelString(_("Zoom"));
+  PUBLIC(this)->setLeftWheelString(_("Translate Y"));
+  PUBLIC(this)->setBottomWheelString(_("Translate X"));
+  PUBLIC(this)->setRightWheelString(_("Zoom"));
 
   if (! build) return;
-  GtkWidget * viewer = this->buildWidget(this->getParentWidget());
-  this->setBaseWidget(viewer);
-//  this->setSize(SbVec2s(500, 460));
-} // constructor()
+  GtkWidget * viewer = PUBLIC(this)->buildWidget(PUBLIC(this)->getParentWidget());
+  PUBLIC(this)->setBaseWidget(viewer);
+//  PUBLIC(this)->setSize(SbVec2s(500, 460));
+}
 
-/*!
-  The destructor.
-*/
 
-SoGtkPlaneViewer::~SoGtkPlaneViewer(
-  void)
+void
+SoGtkPlaneViewerP::xbuttonCB(GtkWidget * button, gpointer closure)
 {
-  delete this->pimpl;
-} // ~SoGtkPlaneViewer()
+  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
+  PRIVATE(viewer)->viewPlaneX();
+}
+
+void
+SoGtkPlaneViewerP::ybuttonCB(GtkWidget * button, gpointer closure)
+{
+  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
+  PRIVATE(viewer)->viewPlaneY();
+}
+
+void
+SoGtkPlaneViewerP::zbuttonCB(GtkWidget * button, gpointer closure)
+{
+  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
+  PRIVATE(viewer)->viewPlaneZ();
+}
+
+void
+SoGtkPlaneViewerP::camerabuttonCB(GtkWidget * button, gpointer closure)
+{
+  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
+  if (viewer->getCamera()) { viewer->toggleCameraType(); }
+}
+
+
+// *************************************************************************
+
+// Documented in common/viewers/SoGuiPlaneViewer.cpp.in.
+SoGtkPlaneViewer::SoGtkPlaneViewer(GtkWidget * parent,
+                                   const char * const name,
+                                   const SbBool embed,
+                                   const SoGtkFullViewer::BuildFlag flag,
+                                   const SoGtkViewer::Type type)
+  : inherited(parent, name, embed, flag, type, FALSE)
+{
+  PRIVATE(this) = new SoGtkPlaneViewerP(this);
+  PRIVATE(this)->constructor(TRUE);
+}
+
+// Documented in common/viewers/SoGuiPlaneViewer.cpp.in.
+SoGtkPlaneViewer::SoGtkPlaneViewer(GtkWidget * parent,
+                                   const char * const name,
+                                   const SbBool embed,
+                                   const SoGtkFullViewer::BuildFlag flag,
+                                   const SoGtkViewer::Type type,
+                                   const SbBool build)
+  : inherited(parent, name, embed, flag, type, FALSE)
+{
+  PRIVATE(this) = new SoGtkPlaneViewerP(this);
+  PRIVATE(this)->constructor(build);
+}
+
+// Documented in common/viewers/SoGuiPlaneViewer.cpp.in.
+SoGtkPlaneViewer::~SoGtkPlaneViewer()
+{
+  delete PRIVATE(this);
+}
 
 // *************************************************************************
 
 /*!
   FIXME: write doc
 */
-
 void
-SoGtkPlaneViewer::setViewing(// virtual
-  SbBool enable)
+SoGtkPlaneViewer::setViewing(SbBool enable)
 {
   inherited::setViewing(enable);
-} // setViewing()
+}
 
 /*!
   FIXME: write doc
 */
-
 void
-SoGtkPlaneViewer::setCamera(// virtual
-  SoCamera * newCamera)
+SoGtkPlaneViewer::setCamera(SoCamera * newCamera)
 {
   if (newCamera) {
     const SoType camtype = newCamera->getTypeId() ;
@@ -215,17 +230,15 @@ SoGtkPlaneViewer::setCamera(// virtual
     }
   }
   inherited::setCamera(newCamera);
-} // setCamera()
+}
 
 // *************************************************************************
 
 /*!
   FIXME: write doc
 */
-
 GtkWidget *
-SoGtkPlaneViewer::buildWidget(// protected
-  GtkWidget * parent)
+SoGtkPlaneViewer::buildWidget(GtkWidget * parent)
 {
   GtkWidget * viewer = inherited::buildWidget(parent);
   gtk_thumbwheel_set_range_boundary_handling(
@@ -234,47 +247,40 @@ SoGtkPlaneViewer::buildWidget(// protected
      GTK_THUMBWHEEL(this->rightWheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE);
   
   return viewer;
-} // buildWidget()
+}
 
 // *************************************************************************
 
 /*!
   FIXME: write doc
 */
-
 void
-SoGtkPlaneViewer::processEvent(// virtual, protected
-  GdkEvent * event)
+SoGtkPlaneViewer::processEvent(GdkEvent * event)
 {
-  // SoDebugError::postInfo("SoGtkPlaneViewer::processEvent", "[invoked]");
   if (SoGtkViewer::processCommonEvents(event))
     return;
 
   inherited::processEvent(event);
-} // processEvent()
+}
 
 /*!
   Overload this method to be able to draw the rotation graphics in rotation
   mode.
 */
-
 void
-SoGtkPlaneViewer::actualRedraw(// virtual, protected
-  void)
+SoGtkPlaneViewer::actualRedraw(void)
 {
   inherited::actualRedraw();
-} // actualRedraw()
+}
 
 // *************************************************************************
 
 /*!
   FIXME: write doc
 */
-
 void
-SoGtkPlaneViewer::createViewerButtons(// virtual, protected
-  GtkWidget * parent,
-  SbPList * buttonlist)
+SoGtkPlaneViewer::createViewerButtons(GtkWidget * parent,
+                                      SbPList * buttonlist)
 {
   inherited::createViewerButtons(parent, buttonlist);
 
@@ -354,141 +360,18 @@ SoGtkPlaneViewer::createViewerButtons(// virtual, protected
     }
     buttonlist->append(widget);
   }
-} // createViewerButtons()
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewer::openViewerHelpCard(// virtual, protected
-  void)
-{
-  this->openHelpCard("SoGtkPlaneViewer.help");
-} // openViewerHelpCard()
-
-// ************************************************************************
-//
-//  Private implementation
-//
-
-/*
-*/
-
-SoGtkPlaneViewerP::SoGtkPlaneViewerP(
-  SoGtkPlaneViewer * publ)
-{
-  this->pub = publ;
-
-  GdkColormap * colormap = gtk_widget_get_colormap (PUBLIC(this)->getParentWidget());
-
-  this->orthopixmap =
-    gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
-                                          &this->orthomask, (GdkColor *) 0,
-                                          // FIXME: nasty cast, get
-                                          // rid of it. 20020320 mortene.
-                                          (gchar **)ortho_xpm);
-
-  this->perspectivepixmap =
-    gdk_pixmap_colormap_create_from_xpm_d((GdkWindow *) 0, colormap,
-                                          &this->perspectivemask,
-                                          (GdkColor *) 0,
-                                          // FIXME: nasty cast, get
-                                          // rid of it. 20020320 mortene.
-                                          (gchar **)perspective_xpm);
-} // SoGtkPlaneViewerP()
-
-/*
-*/
-
-SoGtkPlaneViewerP::~SoGtkPlaneViewerP()
-{
-  // Button pixmaps.
-  gdk_pixmap_unref(this->orthopixmap);
-  gdk_bitmap_unref(this->orthomask);  
-  gdk_pixmap_unref(this->perspectivepixmap);
-  gdk_bitmap_unref(this->perspectivemask);  
 }
 
-// ************************************************************************
-
-/*!
-  \internal
-*/
-
-void
-SoGtkPlaneViewerP::visibilityCB(// static
-  void * closure,
-  SbBool visible)
-{
-  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
-  /* no animation to toggle */
-} // visibilityCB()
-
 // *************************************************************************
 
 /*!
   FIXME: write doc
 */
-
 void
-SoGtkPlaneViewerP::xbuttonCB(
-   GtkWidget * button,
-   gpointer closure)
+SoGtkPlaneViewer::openViewerHelpCard(void)
 {
-  assert(closure != NULL);
-  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
-
-  viewer->viewPlaneX();
-} // ybuttonCB()
-
-/*
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewerP::ybuttonCB(
-   GtkWidget * button,
-   gpointer closure)
-{
-  assert(closure != NULL);
-  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
-
-  viewer->viewPlaneY();
-} // ybuttonCB()
-
-/*
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewerP::zbuttonCB(
-   GtkWidget * button,
-   gpointer closure)
-{
-  assert(closure != NULL);
-  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
-
-  viewer->viewPlaneZ();
-} // zbuttonCB()
-
-/*
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewerP::camerabuttonCB(
-   GtkWidget * button,
-   gpointer closure)
-{
-  assert(closure != NULL);
-  SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
-
-  if (viewer->getCamera())
-    viewer->toggleCameraType();
-} // camerabuttonCB()
+  this->openHelpCard("SoGtkPlaneViewer.help");
+}
 
 // ************************************************************************
 
