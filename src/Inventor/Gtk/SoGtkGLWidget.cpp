@@ -37,6 +37,7 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
+#include <Inventor/Gtk/SoAny.h>
 
 // *************************************************************************
 
@@ -168,6 +169,7 @@ SoGtkGLWidget::SoGtkGLWidget(
 SoGtkGLWidget::~SoGtkGLWidget(
   void )
 {
+  if (THIS->glWidget) SoAny::si()->unregisterGLContext((void*) this);
   delete this->pimpl;
 } // ~SoGtkGLWidget()
 
@@ -182,6 +184,12 @@ SoGtkGLWidget::buildWidget(
   GtkWidget * parent )
 {
   PRIVATE(this)->glParent = parent;
+
+  // FIXME!!!! Get X Display and Screen from somewhere. pederb, 2001-06-29
+  void * display = NULL;
+  void * screen = NULL;
+  
+  SoGtkGLWidget * sharewidget = (SoGtkGLWidget*) SoAny::si()->getSharedGLContext(display, screen);
 
   int glAttributes[16], i = 0;
 
@@ -204,8 +212,16 @@ SoGtkGLWidget::buildWidget(
 
   glAttributes[i] = GDK_GL_NONE; i++;
 
-  PRIVATE(this)->glWidget = gtk_gl_area_new( glAttributes );
+  if (sharewidget) {
+    PRIVATE(this)->glWidget = gtk_gl_area_share_new( glAttributes, (GtkGLArea*) sharewidget->getGtkGLArea());
+  }
+  else {
+    PRIVATE(this)->glWidget = gtk_gl_area_new( glAttributes );    
+  }
   assert( PRIVATE(this)->glWidget != NULL );
+
+  SoAny::si()->registerGLContext((void*) this, display, screen);
+
   GtkRequisition req = { 100, 100 };
   gtk_widget_size_request( PRIVATE(this)->glWidget, &req );
   

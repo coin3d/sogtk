@@ -4,6 +4,8 @@ SUBDIRS = devices widgets viewers
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src -I$(top_builddir)/data
 
 BUILT_SOURCES = \
+	SoAny.h \
+	SoAny.cpp \
 	SoGtkBasic.h \
 	SoGtkObject.h \
 	SoGtkObject.cpp \
@@ -66,6 +68,14 @@ SoGtkObject.h: \
 SoGtkObject.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiObject.cpp.in
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkObject.cpp )
+
+SoAny.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAny.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAny.h )
+
+SoAny.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAny.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAny.cpp )
 
 SoGtkCursors.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in

@@ -19,6 +19,8 @@ SUBDIRS = . data src/Inventor/Gtk po intl $(TESTDIR)
 
 BUILT_SOURCES = \
 	sogtkdefs.h \
+	src/Inventor/Gtk/SoAny.h \
+	src/Inventor/Gtk/SoAny.cpp \
 	src/Inventor/Gtk/SoGtkBasic.h \
 	src/Inventor/Gtk/SoGtkObject.h \
 	src/Inventor/Gtk/SoGtkObject.cpp \
@@ -122,6 +124,14 @@ src/Inventor/Gtk/viewers/SoGtkViewer.h: \
 src/Inventor/Gtk/viewers/SoGtkViewer.cpp: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiViewer.cpp.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiViewer.cpp.in
+
+src/Inventor/Gtk/SoAny.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAny.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAny.h.in
+
+src/Inventor/Gtk/SoAny.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAny.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAny.cpp.in
 
 src/Inventor/Gtk/viewers/SoAnyFullViewer.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.h.in
