@@ -39,8 +39,8 @@ static const char rcsid[] =
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
 
 // Icon graphic for the camera button.
-#include "icons/ortho.xpm"
-#include "icons/perspective.xpm"
+#include <Inventor/Gtk/common/pixmaps/ortho.xpm>
+#include <Inventor/Gtk/common/pixmaps/perspective.xpm>
 
 ///////// FIXME start //////////////////////////////////////////////////
 // Do something clever about this Qt layout assistant code.. (the code

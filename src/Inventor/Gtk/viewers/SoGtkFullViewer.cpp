@@ -39,13 +39,13 @@ static const char rcsid[] =
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 
 // Button icons.
-#include "icons/pick.xpm"
-#include "icons/view.xpm"
-#include "icons/help.xpm"
-#include "icons/home.xpm"
-#include "icons/set_home.xpm"
-#include "icons/view_all.xpm"
-#include "icons/seek.xpm"
+#include <Inventor/Gtk/common/pixmaps/pick.xpm>
+#include <Inventor/Gtk/common/pixmaps/view.xpm>
+#include <Inventor/Gtk/common/pixmaps/help.xpm>
+#include <Inventor/Gtk/common/pixmaps/home.xpm>
+#include <Inventor/Gtk/common/pixmaps/set_home.xpm>
+#include <Inventor/Gtk/common/pixmaps/view_all.xpm>
+#include <Inventor/Gtk/common/pixmaps/seek.xpm>
 
 // *************************************************************************
 
