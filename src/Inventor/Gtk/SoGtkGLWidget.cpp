@@ -112,7 +112,7 @@ SoGtkGLWidget::SoGtkGLWidget(
 
   this->drawFrontBuff = FALSE;
 
-  this->borderThickness = 0;
+  this->borderThickness = SO_BORDER_THICKNESS;
 
   if ( ! gdk_gl_query() ) {
     SoDebugError::post(
@@ -176,12 +176,11 @@ SoGtkGLWidget::buildWidget(
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "event",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::eventHandler), (void *) this );
 
-  this->container = gtk_vbox_new( FALSE, 0 );
+  this->container = gtk_frame_new(0);
+  gtk_frame_set_shadow_type (GTK_FRAME (this->container), GTK_SHADOW_IN);
   gtk_container_set_border_width( GTK_CONTAINER(this->container),
     this->borderThickness );
-
-  gtk_box_pack_start( GTK_BOX(this->container), GTK_WIDGET(this->glWidget),
-      TRUE, TRUE, FALSE );
+  gtk_container_add( GTK_CONTAINER(this->container), this->glWidget );
 
   gtk_widget_show( GTK_WIDGET(this->glWidget) );
 
