@@ -34,10 +34,10 @@ public:
     MOTION          = 0x01,
     BUTTON_PRESS    = 0x02,
     BUTTON_RELEASE  = 0x04,
-    ALL_EVENTS      = 0x07
+    ALL_EVENTS      = (MOTION | BUTTON_PRESS | BUTTON_RELEASE)
   };
 
-  SoGtkSpaceball( const Events events = SoGtkSpaceball::ALL_EVENTS );
+  SoGtkSpaceball( const int eventbits = SoGtkSpaceball::ALL_EVENTS );
   virtual ~SoGtkSpaceball(void);
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
@@ -56,8 +56,9 @@ public:
   SbBool isFocusToWindow(void) const;
 
 private:
-  Events events;
-  float rotationscale, translationscale;
+  int events;
+  float rotationscale;
+  float translationscale;
   SbBool focustowindow;
 
 }; // class SoGtkSpaceball

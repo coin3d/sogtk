@@ -44,16 +44,16 @@ class SOGTK_DLL_API SoGtkGLWidget : public SoGtkComponent {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkGLWidget, SoGtkComponent);
 
 public:
-  void setBorder( const SbBool enable ); // FIXME: set virtual?
+  void setBorder( const SbBool enable );
   SbBool isBorder(void) const;
 
   virtual void setDoubleBuffer( const SbBool enable );
   SbBool isDoubleBuffer(void) const;
 
-  void setDrawToFrontBufferEnable( const SbBool enable ); // FIXME: set virtual, change name?
-  SbBool isDrawToFrontBufferEnable(void) const; // FIXME: change name? "Enable()?"
+  void setDrawToFrontBufferEnable( const SbBool enable );
+  SbBool isDrawToFrontBufferEnable(void) const;
 
-  void setQuadBufferStereo(const SbBool enable);
+  void setQuadBufferStereo( const SbBool enable );
   SbBool isQuadBufferStereo(void) const;
 
   GtkWidget * getNormalWidget(void) const;
@@ -66,13 +66,14 @@ protected:
     const SbBool embed = TRUE,
     const int glModes = SO_GLX_RGB,
     const SbBool build = TRUE);
+  virtual ~SoGtkGLWidget(void);
 
   virtual void processEvent( GdkEvent * anyevent );
 
   GtkWidget * buildWidget( GtkWidget * parent );
 
   GtkWidget * getGtkGLArea(void);
-  GtkWidget * getGLWidget(void) { return getGtkGLArea(); }
+  GtkWidget * getGLWidget(void) { return this->getGtkGLArea(); }
 
   virtual void redraw(void) = 0;
 
@@ -100,7 +101,7 @@ protected:
   int getLockLevel(void) const;
 
   virtual void glInit(void);
-  virtual void glReshape(int width, int height);
+  virtual void glReshape( int width, int height );
   virtual void glRender(void);
 
   SbBool waitForExpose;
@@ -109,24 +110,9 @@ protected:
   static gint eventHandler( GtkObject * object, GdkEvent * event, gpointer closure );
 
 private:
-  class SoGtkGLWidgetP * priv;
-
-  GtkWidget * glParent;
-  GtkWidget * glWidget;
-  GtkWidget * container;
-  int borderThickness;
-  int glModeBits;
-
-  SbBool drawFrontBuff;
-
-  gint glInit( GtkWidget * widget );
-  static gint sGLInit( GtkWidget * widget, void * userData );
-  gint glDraw( GtkWidget * widget, GdkEventExpose * event );
-  static gint sGLDraw( GtkWidget * widget, GdkEventExpose * event,
-    void * userData );
-  gint glReshape( GtkWidget * widget, GdkEventConfigure * event );
-  static gint sGLReshape( GtkWidget * widget, GdkEventConfigure * event,
-    void * userData );
+  // friends and family
+  class SoGtkGLWidgetP * pimpl;
+  friend class SoGtkGLWidgetP;
 
 }; // class SoGtkGLWidget
 

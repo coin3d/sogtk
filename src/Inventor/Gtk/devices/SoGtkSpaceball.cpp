@@ -41,10 +41,6 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
-
-// *************************************************************************
-
 /*¡
   TODO:
   - not implemented yet! no spaceball available
@@ -57,22 +53,30 @@ SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
   \enum SoGtkSpaceball::Events
   FIXME: write documentation for enum
 */
+
 /*!
   \var SoGtkSpaceball::Events SoGtkSpaceball::MOTION
   FIXME: write documentation for enum definition
 */
+
 /*!
   \var SoGtkSpaceball::Events SoGtkSpaceball::BUTTON_PRESS
   FIXME: write documentation for enum definition
 */
+
 /*!
   \var SoGtkSpaceball::Events SoGtkSpaceball::BUTTON_RELEASE
   FIXME: write documentation for enum definition
 */
+
 /*!
   \var SoGtkSpaceball::Events SoGtkSpaceball::ALL_EVENTS
   FIXME: write documentation for enum definition
 */
+
+// *************************************************************************
+
+SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
 
 // *************************************************************************
 
@@ -81,112 +85,148 @@ SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
 */
 
 SoGtkSpaceball::SoGtkSpaceball(
-  const Events events )
+  const int eventbits )
 {
-  this->events = events;
+  this->events = eventbits;
   this->rotationscale = 0.006f;
   this->translationscale = 0.006f;
   this->focustowindow = FALSE;
-}
+} // SoGtkSpaceball()
 
 /*!
   Destructor.
 */
 
-SoGtkSpaceball::~SoGtkSpaceball()
+SoGtkSpaceball::~SoGtkSpaceball(
+  void )
 {
-}
+} // ~SoGtkSpaceball()
+
+// *************************************************************************
 
 /*!
   FIXME: write function documentation
 */
 
 void
-SoGtkSpaceball::enable(GtkWidget * /*w*/, SoGtkEventHandler * /*f*/, void * /*data*/)
+SoGtkSpaceball::enable(
+  GtkWidget *, // w,
+  SoGtkEventHandler *, // f,
+  void * ) // data )
 {
   // TODO: implement
-}
+} // enable()
 
 /*!
   FIXME: write function documentation
 */
+
 void
-SoGtkSpaceball::disable(GtkWidget * /*w*/, SoGtkEventHandler * /*f*/, void * /*data*/)
+SoGtkSpaceball::disable(
+  GtkWidget * /*w*/,
+  SoGtkEventHandler * /*f*/,
+  void * /*data*/ )
 {
   // TODO: implement
-}
+} // disable()
+
+// *************************************************************************
 
 /*!
   FIXME: write function documentation
 */
+
 const SoEvent *
-SoGtkSpaceball::translateEvent(GdkEvent * /*event*/)
+SoGtkSpaceball::translateEvent(
+  GdkEvent * /*event*/ )
 {
   // TODO: implement
   return NULL;
-}
+} // translateEvent()
+
+// *************************************************************************
 
 /*!
   FIXME: write function documentation
 */
+
 void
-SoGtkSpaceball::setRotationScaleFactor(float f)
+SoGtkSpaceball::setRotationScaleFactor(
+  float f )
 {
   this->rotationscale = f;
-}
+} // setRotationScaleFactor()
 
 /*!
   FIXME: write function documentation
 */
+
 float
-SoGtkSpaceball::getRotationScaleFactor(void) const
+SoGtkSpaceball::getRotationScaleFactor(
+  void ) const
 {
   return this->rotationscale;
-}
+} // getRotationScaleFactor()
 
 /*!
   FIXME: write function documentation
 */
+
 void
-SoGtkSpaceball::setTranslationScaleFactor(float f)
+SoGtkSpaceball::setTranslationScaleFactor(
+  float f )
 {
   this->translationscale = f;
-}
+} // setTranslationScaleFactor()
 
 /*!
   FIXME: write function documentation
 */
+
 float
-SoGtkSpaceball::getTranslationScaleFactor(void) const
+SoGtkSpaceball::getTranslationScaleFactor(
+  void ) const
 {
   return this->translationscale;
-}
+} // getTranslationScaleFactor()
 
 /*!
   FIXME: write function documentation
 */
+
 SbBool
-SoGtkSpaceball::exists(void)
+SoGtkSpaceball::exists( // static
+  void )
 {
   // TODO: implement
   return FALSE;
-}
+} // exists()
 
 /*!
   FIXME: write function documentation
 */
+
 void
-SoGtkSpaceball::setFocusToWindow(SbBool flag)
+SoGtkSpaceball::setFocusToWindow(
+  SbBool flag )
 {
   this->focustowindow = flag;
-}
+} // setFocusToWindow()
 
 /*!
   FIXME: write function documentation
 */
+
 SbBool
-SoGtkSpaceball::isFocusToWindow(void) const
+SoGtkSpaceball::isFocusToWindow(
+  void ) const
 {
   return this->focustowindow;
-}
+} // isFocusToWindow()
+
+// *************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkSpaceballRCSId(void) { return rcsid; }
+#endif // SOGTK_DEBUG
 

@@ -31,11 +31,11 @@ class SOGTK_DLL_API SoGtkFlyViewer : public SoGtkConstrainedViewer {
 
 public:
   SoGtkFlyViewer(
-    GtkWidget * parent = NULL,
-    const char * name = NULL, 
+    GtkWidget * parent = (GtkWidget *) 0,
+    const char * name = (const char *) 0, 
     SbBool embed = TRUE, 
-    SoGtkFullViewer::BuildFlag flag = BUILD_ALL,
-    SoGtkViewer::Type type = BROWSER );
+    SoGtkFullViewer::BuildFlag flag = SoGtkFullViewer::BUILD_ALL,
+    SoGtkViewer::Type type = SoGtkViewer::BROWSER );
   ~SoGtkFlyViewer(void);
 
   virtual void setViewing( SbBool enable );
@@ -72,8 +72,13 @@ protected:
 private:
   void constructor( const SbBool build );
 
-  class SoAnyFlyViewer *common ;
-    
+private:
+  // friends and family
+  class SoAnyFlyViewer * common;
+  friend class SoAnyFlyViewer;
+  class SoGtkFlyViewerP * pimpl;
+  friend class SoGtkFlyViewerP;
+
 }; // class SoGtkFlyViewer
 
 // ************************************************************************

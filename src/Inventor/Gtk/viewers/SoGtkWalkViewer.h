@@ -31,11 +31,11 @@ class SOGTK_DLL_API SoGtkWalkViewer : public SoGtkConstrainedViewer {
 
 public:
   SoGtkWalkViewer(
-    GtkWidget * parent = NULL,
-    const char * name = NULL,
+    GtkWidget * parent = (GtkWidget *) 0,
+    const char * name = (const char *) 0,
     SbBool embed = TRUE,
-    SoGtkFullViewer::BuildFlag flag = BUILD_ALL,
-    SoGtkViewer::Type type = BROWSER );
+    SoGtkFullViewer::BuildFlag flag = SoGtkFullViewer::BUILD_ALL,
+    SoGtkViewer::Type type = SoGtkViewer::BROWSER );
   ~SoGtkWalkViewer(void);
 
   virtual void setViewing( SbBool enable );
@@ -73,7 +73,13 @@ protected:
 
 private:
   void constructor( const SbBool build );
-  class SoAnyWalkViewer *common ;
+
+private:
+  // friends and family
+  class SoAnyWalkViewer * common;
+  friend class SoAnyWalkViewer;
+  class SoGtkWalkViewerP * pimpl;
+  friend class SoGtkWalkViewerP;
 
 }; // class SoGtkWalkViewer
 

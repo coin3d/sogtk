@@ -61,6 +61,13 @@ protected:
   void checkForCameraUpConstrain(void);
   virtual void computeSeekFinalOrientation(void);
 
+private:
+  // friends and family
+  class SoAnyConstrainedViewer * common;
+  friend class SoAnyConstrainedViewer;
+  class SoGtkConstrainedViewerP * pimpl;
+  friend class SoGtkConstrainedViewerP;
+
 }; // class SoGtkConstrainedViewer
 
 // ************************************************************************

@@ -95,22 +95,8 @@ protected:
   static gint eventHandler( GtkObject * object, GdkEvent * event, gpointer closure );
 
 private:
-  gint realizeHandler( GtkObject * object );
-  static gint realizeHandlerCB( GtkObject * object, gpointer closure );
-
-private:
-  GtkWidget * widget;
-  GtkWidget * parent;
-  SbBool embedded;
-  SbBool shelled;
-  char * className;
-  char * widgetName;
-  char * captionText;
-  char * iconText;
-  SoGtkComponentCB * closeCB;
-  void * closeCBdata;
-  SbPList * visibilityChangeCBs;
-  SbVec2s storeSize;
+  class SoGtkComponentP * pimpl;
+  friend class SoGtkComponentP;
 
 }; // class SoGtkComponent
 

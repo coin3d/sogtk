@@ -26,8 +26,6 @@ static const char rcsid[] =
 #include <config.h>
 #endif
 
-#include <GL/gl.h>
-
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
@@ -66,7 +64,53 @@ static const char rcsid[] =
   ...example code...
 */
 
+// *************************************************************************
+
 SOGTK_OBJECT_SOURCE(SoGtkExaminerViewer);
+
+// *************************************************************************
+
+class SoGtkExaminerViewerP {
+public:
+  SoGtkExaminerViewerP( SoGtkExaminerViewer * publ );
+  ~SoGtkExaminerViewerP(void);
+
+  static SoGtkViewerButton SoGtkExaminerViewerButtons[];
+
+  GdkPixmap * orthopixmap, * perspectivepixmap;
+  GdkBitmap * orthomask, * perspectivemask;
+
+  GdkCursor * pancursor, * rotatecursor;
+  GdkCursor * zoomcursor;
+  GdkCursor * arrowcursor, * crosscursor;
+
+  GtkWidget * cameratogglebutton;
+  GtkWidget * feedbacklabel1;
+  GtkWidget * feedbacklabel2;
+  GtkWidget * feedbackwheel;
+  GtkWidget * feedbackedit;
+  void setEnableFeedbackControls( const SbBool flag );
+
+  // Pref sheet.
+  static void spinAnimationToggled( GtkToggleButton *, gpointer );
+  static void feedbackVisibilityToggled( GtkToggleButton *, gpointer );
+  static void feedbackEditPressed( GtkEntry *, gpointer );
+  static void feedbackWheelPressed( GtkWidget *, gpointer );
+  static void feedbackSizeChanged( GtkWidget *, gpointer );
+  static void feedbackWheelReleased( GtkWidget *, gpointer );
+
+  // Button row.
+  static void camerabuttonCB( GtkWidget *, gpointer );
+
+private:
+  SoGtkExaminerViewer * pub;
+
+}; // class SoGtkExaminerViewerP
+
+#define PUBLIC(ptr) (ptr->pub)
+#define PRIVATE(ptr) (ptr->pimpl)
+
+#define THIS (PRIVATE(this))
 
 // *************************************************************************
 
@@ -77,16 +121,16 @@ enum {
   LAST_BUTTON = CAMERA_BUTTON
 };
 
-// *************************************************************************
-
 struct SoGtkViewerButton
-SoGtkExaminerViewer::SoGtkExaminerViewerButtons[] = {
+SoGtkExaminerViewerP::SoGtkExaminerViewerButtons[] = {
   { // camera type button
     N_("camera"), "C",   
-    (GtkSignalFunc) SoGtkExaminerViewer::camerabuttonCB,
+    (GtkSignalFunc) SoGtkExaminerViewerP::camerabuttonCB,
     perspective_xpm
   }
 }; // SoGtkExaminerViewerButtons[]
+
+// *************************************************************************
 
 /*!
   Constructor. See parent class for explanation of arguments.
@@ -101,7 +145,6 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(
   SoGtkFullViewer::BuildFlag flags,
   SoGtkViewer::Type type )
 : inherited( parent, name, embed, flags, type, FALSE )
-, common( new SoAnyExaminerViewer( this ) )
 {
   this->constructor( TRUE );
 } // SoGtkExaminerViewer()
@@ -118,7 +161,6 @@ SoGtkExaminerViewer::SoGtkExaminerViewer( // protected
   SoGtkViewer::Type type,
   SbBool build )
 : inherited( parent, name, embed, flags, type, FALSE )
-, common( new SoAnyExaminerViewer( this ) )
 {
   this->constructor( build );
 } // SoGtkExaminerViewer()
@@ -134,26 +176,12 @@ void
 SoGtkExaminerViewer::constructor( // private
   const SbBool build )
 {
-  // Cursors.
-  this->rotatecursor = (GdkCursor*) 0;
-  this->pancursor = (GdkCursor*) 0;
-  this->zoomcursor = (GdkCursor*) 0;
-  this->crosscursor = (GdkCursor*) 0 ;
-  this->arrowcursor = (GdkCursor*) 0 ;
+  this->pimpl = new SoGtkExaminerViewerP( this );
+  this->common = new SoAnyExaminerViewer( this );
 
-  GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
+  this->setClassName( "SoGtkExaminerViewer" );
 
-  this->orthopixmap =
-      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
-        &this->orthomask, (GdkColor *) 0, ortho_xpm );
-
-  this->perspectivepixmap =
-      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
-        &this->perspectivemask, (GdkColor *) 0, perspective_xpm );
-
-  this->setClassName("SoGtkExaminerViewer");
-
-//  this->addVisibilityChangeCallback( SoGtkExaminerViewer::visibilityCB, this );
+//  this->addVisibilityChangeCallback( SoGtkExaminerViewerP::visibilityCB, this );
 
   this->setPopupMenuString( _( "Examiner Viewer" ) );
   this->setPrefSheetString( _( "Examiner Viewer Preference Sheet" ) );
@@ -174,29 +202,8 @@ SoGtkExaminerViewer::constructor( // private
 SoGtkExaminerViewer::~SoGtkExaminerViewer(
   void )
 {
-  // Cursors.
-  if ( this->zoomcursor ) 
-    gdk_cursor_destroy( this->zoomcursor );
-  if ( this->pancursor )
-    gdk_cursor_destroy( this->pancursor );
-  if ( this->rotatecursor ) 
-    gdk_cursor_destroy( this->rotatecursor );
-  if ( this->arrowcursor ) 
-    gdk_cursor_destroy( this->arrowcursor );
-  if ( this->crosscursor ) 
-    gdk_cursor_destroy( this->crosscursor );
-
-  // Button pixmaps.
-  gdk_pixmap_unref( this->orthopixmap );
-  gdk_bitmap_unref( this->orthomask );
-
-  gdk_pixmap_unref( this->perspectivepixmap );
-  gdk_bitmap_unref( this->perspectivemask );
-
-  // Variables used in the spin animation code.
-//  delete this->spinDetectTimer;
-
-  delete this->common ;
+  delete this->common;
+  delete this->pimpl;
 } // ~SoGtkExaminerViewer()
 
 // *************************************************************************
@@ -222,6 +229,7 @@ SoGtkExaminerViewer::setViewing( // virtual
   FIXME: write doc
 */
 
+// make this virtual?  20001230 larsa
 void
 SoGtkExaminerViewer::setAnimationEnabled(
   const SbBool enable )
@@ -246,6 +254,7 @@ SoGtkExaminerViewer::isAnimationEnabled(
   FIXME: write doc
 */
 
+// make this virtual?  20001230 larsa
 void
 SoGtkExaminerViewer::stopAnimating(
   void )
@@ -270,6 +279,7 @@ SoGtkExaminerViewer::isAnimating(
   FIXME: write doc
 */
 
+// make this virtual?  20001230 larsa
 void
 SoGtkExaminerViewer::setFeedbackVisibility(
   const SbBool enable )
@@ -294,6 +304,7 @@ SoGtkExaminerViewer::isFeedbackVisible(
   FIXME: write doc
 */
 
+// make this virtual?  20001230 larsa
 void
 SoGtkExaminerViewer::setFeedbackSize(
   const int size )
@@ -329,11 +340,11 @@ SoGtkExaminerViewer::setCamera( // virtual
       camtype.isDerivedFrom( SoOrthographicCamera::getClassTypeId() );
 
     this->setRightWheelString( orthotype ? _( "Zoom" ) : _( "Dolly" ));
-    if (this->cameratogglebutton) {
-      GtkWidget *label = GTK_BIN(this->cameratogglebutton)->child;
+    if ( PRIVATE(this)->cameratogglebutton ) {
+      GtkWidget * label = GTK_BIN( PRIVATE(this)->cameratogglebutton)->child;
       gtk_pixmap_set( GTK_PIXMAP(label),
-        (orthotype ? this->orthopixmap : this->perspectivepixmap),
-        (orthotype ? this->orthomask : this->perspectivemask) );
+        (orthotype ? PRIVATE(this)->orthopixmap : PRIVATE(this)->perspectivepixmap),
+        (orthotype ? PRIVATE(this)->orthomask : PRIVATE(this)->perspectivemask) );
     }
   }
   inherited::setCamera( newCamera );
@@ -351,7 +362,7 @@ SoGtkExaminerViewer::setCursorEnabled( // virtual
   SbBool enable )
 {
   inherited::setCursorEnabled( enable );
-  this->setCursorRepresentation(this->common->currentmode);
+  this->setCursorRepresentation( this->common->currentmode );
 } // setCursorEnabled
 
 // *************************************************************************
@@ -444,7 +455,7 @@ SoGtkExaminerViewer::makeSubPreferences(
   gtk_widget_show (checkbutton1);
   gtk_box_pack_start (GTK_BOX (form1), checkbutton1, FALSE, FALSE, 0);
   gtk_signal_connect( GTK_OBJECT(checkbutton1), "toggled", 
-    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::spinAnimationToggled), this );
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::spinAnimationToggled), this );
 
   // Do the single widget on the second row (a checkbutton).
   GtkWidget *checkbutton2 = gtk_check_button_new_with_label ( 
@@ -454,7 +465,7 @@ SoGtkExaminerViewer::makeSubPreferences(
   gtk_widget_show (checkbutton2);
   gtk_box_pack_start (GTK_BOX (form1), checkbutton2, FALSE, FALSE, 0);
   gtk_signal_connect( GTK_OBJECT(checkbutton2), "toggled", 
-    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackVisibilityToggled), this );
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackVisibilityToggled), this );
 
   GtkWidget* hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (parent), hbox);
@@ -462,44 +473,44 @@ SoGtkExaminerViewer::makeSubPreferences(
   // Do the four widgets on the third row (label, thumbwheel,
   // lineedit, label).
 
-  this->feedbacklabel1 = gtk_label_new( _( "axes size" ) );
-  gtk_box_pack_start (GTK_BOX (hbox), this->feedbacklabel1, FALSE, FALSE, 0);
+  PRIVATE(this)->feedbacklabel1 = gtk_label_new( _( "axes size" ) );
+  gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbacklabel1, FALSE, FALSE, 0);
 
-  this->feedbackwheel = gtk_thumbwheel_new( 0 );
-  gtk_box_pack_start (GTK_BOX (hbox), this->feedbackwheel, FALSE, FALSE, 0);
+  PRIVATE(this)->feedbackwheel = gtk_thumbwheel_new( 0 );
+  gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbackwheel, FALSE, FALSE, 0);
   gtk_thumbwheel_set_range_boundary_handling( 
-    GTK_THUMBWHEEL(this->feedbackwheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE );
+    GTK_THUMBWHEEL(PRIVATE(this)->feedbackwheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE );
 
-  gtk_signal_connect( GTK_OBJECT(this->feedbackwheel), "attached",
-    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackWheelPressed), this );
-  gtk_signal_connect( GTK_OBJECT(this->feedbackwheel), "value_changed",
-    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackSizeChanged), this );
-  gtk_signal_connect( GTK_OBJECT(this->feedbackwheel), "released",
-    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackWheelReleased), this );
+  gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->feedbackwheel), "attached",
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackWheelPressed), this );
+  gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->feedbackwheel), "value_changed",
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackSizeChanged), this );
+  gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->feedbackwheel), "released",
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackWheelReleased), this );
 
-  gtk_thumbwheel_set_value( GTK_THUMBWHEEL(this->feedbackwheel),
+  gtk_thumbwheel_set_value( GTK_THUMBWHEEL(PRIVATE(this)->feedbackwheel),
     float(common->getFeedbackSize())/10.0f);
 
-  this->feedbackedit = gtk_entry_new();
-  gtk_box_pack_start (GTK_BOX (hbox), this->feedbackedit, FALSE, FALSE, 0);
-  gtk_widget_set_usize (this->feedbackedit, 48, 24);
+  PRIVATE(this)->feedbackedit = gtk_entry_new();
+  gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbackedit, FALSE, FALSE, 0);
+  gtk_widget_set_usize (PRIVATE(this)->feedbackedit, 48, 24);
 
-  gtk_signal_connect(GTK_OBJECT(this->feedbackedit), "activate",
-    GTK_SIGNAL_FUNC(SoGtkExaminerViewer::feedbackEditPressed), this );
+  gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->feedbackedit), "activate",
+    GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackEditPressed), this );
 
   char buffer[16] ;
   sprintf( buffer, "%d", common->getFeedbackSize());
-  gtk_entry_set_text( GTK_ENTRY(this->feedbackedit), buffer );
+  gtk_entry_set_text( GTK_ENTRY(PRIVATE(this)->feedbackedit), buffer );
 
-  this->feedbacklabel2 = gtk_label_new( _( "pixels" ) );
-  gtk_box_pack_start (GTK_BOX (hbox), this->feedbacklabel2, FALSE, FALSE, 0);
+  PRIVATE(this)->feedbacklabel2 = gtk_label_new( _( "pixels" ) );
+  gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbacklabel2, FALSE, FALSE, 0);
 
   gtk_widget_show_all(hbox);
 
-  this->setEnableFeedbackControls(common->isFeedbackVisible());
+  PRIVATE(this)->setEnableFeedbackControls( common->isFeedbackVisible() );
 
   return form1;
-}
+} // makeSubPreferences()
 
 // *************************************************************************
 
@@ -513,27 +524,28 @@ SoGtkExaminerViewer::createViewerButtons(
   GtkWidget * parent,
   SbPList * buttonlist )
 {
-  inherited::createViewerButtons(parent, buttonlist);
+  inherited::createViewerButtons( parent, buttonlist );
   
   GtkTooltips * tooltips = gtk_tooltips_new();
   GdkColormap * colormap = gtk_widget_get_colormap( parent );
 
-  const size_t buttons = sizeof(SoGtkExaminerViewerButtons) / sizeof(SoGtkViewerButton) ;
+  const size_t buttons = sizeof(SoGtkExaminerViewerP::SoGtkExaminerViewerButtons)
+                         / sizeof(SoGtkViewerButton);
   for ( size_t button = 0; button < buttons; button++ ) {
-    GtkWidget	*widget = (GtkWidget*) 0 ;
+    GtkWidget	*widget = (GtkWidget*) 0;
 
     switch(button)
     {
     case CAMERA_BUTTON :
-      this->cameratogglebutton = widget = gtk_button_new();
-      break ;
+      PRIVATE(this)->cameratogglebutton = widget = gtk_button_new();
+      break;
     default:
-      break ;
+      break;
     }
 
     GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
     gtk_tooltips_set_tip( tooltips, widget, 
-      _( SoGtkExaminerViewerButtons[button].keyword ), NULL );
+      _( SoGtkExaminerViewerP::SoGtkExaminerViewerButtons[button].keyword ), NULL );
 
     GdkPixmap * gdk_pixmap = (GdkPixmap *) 0;
     GdkBitmap * gdk_mask   = (GdkBitmap *) 0;
@@ -545,34 +557,34 @@ SoGtkExaminerViewer::createViewerButtons(
         SoType t = this->getCameraType();
         if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId()))
         {
-          gdk_pixmap = this->orthopixmap;
-          gdk_mask   = this->orthomask;
+          gdk_pixmap = PRIVATE(this)->orthopixmap;
+          gdk_mask   = PRIVATE(this)->orthomask;
         }
         else if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId()))
         {
-          gdk_pixmap = this->perspectivepixmap;
-          gdk_mask   = this->perspectivemask;
+          gdk_pixmap = PRIVATE(this)->perspectivepixmap;
+          gdk_mask   = PRIVATE(this)->perspectivemask;
         }
-        else assert(0 && "unsupported cameratype");
+        else
+          assert(0 && "unsupported cameratype");
       }
-      break ;
+      break;
     default:
-      break ;
+      break;
     }
 
     GtkWidget * label = gtk_pixmap_new( gdk_pixmap, gdk_mask );
     gtk_widget_show( label );
 
     gtk_container_add( GTK_CONTAINER(widget), GTK_WIDGET(label) );
-    if ( SoGtkExaminerViewerButtons[button].pressed != NULL ) {
+    if ( SoGtkExaminerViewerP::SoGtkExaminerViewerButtons[button].pressed != NULL ) {
       gtk_signal_connect( GTK_OBJECT(widget), "pressed",
-        GTK_SIGNAL_FUNC(SoGtkExaminerViewerButtons[button].pressed),
+        GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::SoGtkExaminerViewerButtons[button].pressed),
         (gpointer) this );
     }
-
     buttonlist->append( widget );
   }
-}
+} // createViewerButtons()
 
 // *************************************************************************
 
@@ -618,7 +630,7 @@ SoGtkExaminerViewer::getDefaultIconTitle(void) const
 void
 SoGtkExaminerViewer::openViewerHelpCard(void)
 {
-  this->openHelpCard("SoGtkExaminerViewer.help");
+  this->openHelpCard( "SoGtkExaminerViewer.help" );
 } // openViewerHelpCard()
 
 // *************************************************************************
@@ -707,7 +719,7 @@ SoGtkExaminerViewer::setCursorRepresentation(
   GtkWidget * w = this->getGLWidget();
   assert(w);
 
-  if (!this->arrowcursor) {
+  if ( ! PRIVATE(this)->arrowcursor ) {
     if ( GTK_WIDGET_NO_WINDOW(w) )
     {
 #if SOGTK_DEBUG
@@ -737,8 +749,8 @@ SoGtkExaminerViewer::setCursorRepresentation(
     GdkColor fg = style->black ;
     GdkColor bg = style->white ;
 
-    this->arrowcursor = gdk_cursor_new( GDK_TOP_LEFT_ARROW );
-    this->crosscursor = gdk_cursor_new( GDK_CROSSHAIR );
+    PRIVATE(this)->arrowcursor = gdk_cursor_new( GDK_TOP_LEFT_ARROW );
+    PRIVATE(this)->crosscursor = gdk_cursor_new( GDK_CROSSHAIR );
 
     GdkPixmap *zoomBtm = 
       gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_zoom_bitmap,
@@ -746,7 +758,7 @@ SoGtkExaminerViewer::setCursorRepresentation(
     GdkPixmap *zoomMask =
       gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_zoom_mask_bitmap,
         so_gtk_zoom_width, so_gtk_zoom_height);
-    this->zoomcursor = gdk_cursor_new_from_pixmap (
+    PRIVATE(this)->zoomcursor = gdk_cursor_new_from_pixmap (
       zoomBtm, zoomMask, 
       &fg, &bg,
       so_gtk_zoom_x_hot, so_gtk_zoom_y_hot);
@@ -759,7 +771,7 @@ SoGtkExaminerViewer::setCursorRepresentation(
     GdkPixmap *panMask =
       gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_pan_mask_bitmap,
         so_gtk_pan_width, so_gtk_pan_height);
-    this->pancursor = gdk_cursor_new_from_pixmap (
+    PRIVATE(this)->pancursor = gdk_cursor_new_from_pixmap (
       panBtm, panMask, 
       &fg, &bg, 
       so_gtk_pan_x_hot, so_gtk_pan_y_hot);
@@ -772,7 +784,7 @@ SoGtkExaminerViewer::setCursorRepresentation(
     GdkPixmap *rotateMask =
       gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_rotate_mask_bitmap,
         so_gtk_rotate_width, so_gtk_rotate_height);
-    this->rotatecursor = gdk_cursor_new_from_pixmap (
+    PRIVATE(this)->rotatecursor = gdk_cursor_new_from_pixmap (
       rotateBtm, rotateMask, 
       &fg, &bg, 
       so_gtk_rotate_x_hot, so_gtk_rotate_y_hot);
@@ -780,43 +792,114 @@ SoGtkExaminerViewer::setCursorRepresentation(
     gdk_pixmap_unref (rotateMask);
   }
 
-  if (!this->isCursorEnabled()) {
+  if ( ! this->isCursorEnabled() ) {
     gdk_window_set_cursor( w->window, (GdkCursor*) 0 );
     return;
   }
 
   switch (mode) {
   case SoAnyExaminerViewer::INTERACT:
-    gdk_window_set_cursor( w->window, this->arrowcursor );
+    gdk_window_set_cursor( w->window, PRIVATE(this)->arrowcursor );
     break;
   case SoAnyExaminerViewer::EXAMINE:
   case SoAnyExaminerViewer::DRAGGING:
-    gdk_window_set_cursor( w->window, this->rotatecursor);
+    gdk_window_set_cursor( w->window, PRIVATE(this)->rotatecursor);
     break;
   case SoAnyExaminerViewer::ZOOMING:
-    gdk_window_set_cursor( w->window, this->zoomcursor );
+    gdk_window_set_cursor( w->window, PRIVATE(this)->zoomcursor );
     break;
   case SoAnyExaminerViewer::WAITING_FOR_SEEK:
-    gdk_window_set_cursor( w->window, this->crosscursor );
+    gdk_window_set_cursor( w->window, PRIVATE(this)->crosscursor );
     break;
   case SoAnyExaminerViewer::WAITING_FOR_PAN:
   case SoAnyExaminerViewer::PANNING:
-    gdk_window_set_cursor( w->window, this->pancursor);
+    gdk_window_set_cursor( w->window, PRIVATE(this)->pancursor);
     break;
   default: 
     assert(0); 
     break;
   }
-}
+} // setCursorRepresentation()
 
 // *************************************************************************
 
 /*!
-  \internal
+  FIXME: write doc
 */
 
 void
-SoGtkExaminerViewer::setEnableFeedbackControls(
+SoGtkExaminerViewer::afterRealizeHook( // virtual
+  void )
+{
+  this->setCursorRepresentation( this->common->currentmode );
+  inherited::afterRealizeHook();
+} // afterRealizeHook()
+
+// *************************************************************************
+//
+//  Private implementation
+//
+
+/*
+*/
+
+SoGtkExaminerViewerP::SoGtkExaminerViewerP(
+  SoGtkExaminerViewer * publ )
+{
+  this->pub = publ;
+
+  // Cursors.
+  this->rotatecursor = (GdkCursor *) 0;
+  this->pancursor = (GdkCursor *) 0;
+  this->zoomcursor = (GdkCursor *) 0;
+  this->crosscursor = (GdkCursor *) 0;
+  this->arrowcursor = (GdkCursor *) 0;
+
+  GdkColormap * colormap = gtk_widget_get_colormap (PUBLIC(this)->getParentWidget());
+
+  this->orthopixmap =
+      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
+        &this->orthomask, (GdkColor *) 0, ortho_xpm );
+
+  this->perspectivepixmap =
+      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
+        &this->perspectivemask, (GdkColor *) 0, perspective_xpm );
+} // SoGtkExaminerViewerP()
+
+/*
+*/
+
+SoGtkExaminerViewerP::~SoGtkExaminerViewerP(
+  void )
+{
+  if ( this->zoomcursor ) 
+    gdk_cursor_destroy( this->zoomcursor );
+  if ( this->pancursor )
+    gdk_cursor_destroy( this->pancursor );
+  if ( this->rotatecursor ) 
+    gdk_cursor_destroy( this->rotatecursor );
+  if ( this->arrowcursor ) 
+    gdk_cursor_destroy( this->arrowcursor );
+  if ( this->crosscursor ) 
+    gdk_cursor_destroy( this->crosscursor );
+
+  // Button pixmaps.
+  gdk_pixmap_unref( this->orthopixmap );
+  gdk_bitmap_unref( this->orthomask );
+
+  gdk_pixmap_unref( this->perspectivepixmap );
+  gdk_bitmap_unref( this->perspectivemask );
+
+} // ~SoGtkExaminerViewerP()
+
+// *************************************************************************
+
+/*
+  internal
+*/
+
+void
+SoGtkExaminerViewerP::setEnableFeedbackControls(
   const SbBool flag )
 {
   gtk_widget_set_sensitive( this->feedbacklabel1, flag );
@@ -826,49 +909,52 @@ SoGtkExaminerViewer::setEnableFeedbackControls(
 } // setEnableFeedbackControls()
 
 // *************************************************************************
-/*!
-  \internal
-  Pref sheet Gtk Signal Handler.
+
+/*
+  internal
 */
+
 void
-SoGtkExaminerViewer::spinAnimationToggled(
-  GtkToggleButton     *w,  
-  gpointer            closure )
+SoGtkExaminerViewerP::spinAnimationToggled(
+  GtkToggleButton * w,  
+  gpointer closure )
 {
   assert( closure != NULL );
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure ;
   SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE ;
 
   viewer->common->setAnimationEnabled(flag);
-}
+} // spinAnimationToggled()
 
 // *************************************************************************
-/*!
-  \internal
-  Pref sheet Gtk Signal Handler.
+
+/*
+  internal
 */
+
 void
-SoGtkExaminerViewer::feedbackVisibilityToggled(
-  GtkToggleButton     *w,  
-  gpointer            closure )
+SoGtkExaminerViewerP::feedbackVisibilityToggled(
+  GtkToggleButton * w,  
+  gpointer closure )
 {
   assert( closure != NULL );
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure ;
   SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE ;
 
   viewer->common->setFeedbackVisibility(flag);
-  viewer->setEnableFeedbackControls(flag);
-}
+  PRIVATE(viewer)->setEnableFeedbackControls(flag);
+} // feedbackVisibilityToggled()
 
 // *************************************************************************
-/*!
-  \internal
-  Pref sheet Gtk Signal Handler.
+
+/*
+  internal
 */
+
 void
-SoGtkExaminerViewer::feedbackEditPressed(
-  GtkEntry	*w,
-  gpointer	closure )
+SoGtkExaminerViewerP::feedbackEditPressed(
+  GtkEntry * w,
+  gpointer closure )
 {
   assert( closure != NULL );
   SoGtkExaminerViewer	*viewer = (SoGtkExaminerViewer*) closure ;
@@ -876,7 +962,7 @@ SoGtkExaminerViewer::feedbackEditPressed(
   char *s = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1 );
   int val;
   if ((sscanf(s, "%d", &val) == 1) && (val > 0)) {
-    gtk_thumbwheel_set_value( GTK_THUMBWHEEL(viewer->feedbackwheel), 
+    gtk_thumbwheel_set_value( GTK_THUMBWHEEL(PRIVATE(viewer)->feedbackwheel), 
       float(val)/10.0f );
     viewer->setFeedbackSize(val);
   }
@@ -888,51 +974,52 @@ SoGtkExaminerViewer::feedbackEditPressed(
     sprintf( buffer, "%d", viewer->getFeedbackSize());
     gtk_entry_set_text( GTK_ENTRY(w), buffer );
   }
-}
+} // feedbackEditPressed()
 
 // *************************************************************************
-/*!
-  \internal
-  Pref sheet Gtk Signal Handler.
+
+/*
+  internal
 */
+
 void
-SoGtkExaminerViewer::feedbackWheelPressed(
-  GtkWidget	*w,
-  gpointer	closure )
+SoGtkExaminerViewerP::feedbackWheelPressed(
+  GtkWidget * w,
+  gpointer closure )
 {
   assert( closure != NULL );
   GtkThumbWheel *thumbwheel = (GtkThumbWheel *) w ;
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure ;
   viewer->interactiveCountInc();
-}
+} // feedbackWheelPressed()
 
 // *************************************************************************
 
-/*!
-  \internal
-  Pref sheet GtkSignalHandler.
+/*
+  internal
 */
 
 void
-SoGtkExaminerViewer::feedbackWheelReleased(
-  GtkWidget	*w,
-  gpointer	closure )
+SoGtkExaminerViewerP::feedbackWheelReleased(
+  GtkWidget * w,
+  gpointer closure )
 {
   assert( closure != NULL );
   GtkThumbWheel *thumbwheel = (GtkThumbWheel *) w ;
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure ;
   viewer->interactiveCountDec();
-}
+} // feedbackWheelReleased()
 
 // *************************************************************************
-/*!
-  \internal
-  Pref sheet Gtk Signal Handler.
+
+/*
+  internal
 */
+
 void
-SoGtkExaminerViewer::feedbackSizeChanged(
-  GtkWidget		*w,
-  gpointer		closure )
+SoGtkExaminerViewerP::feedbackSizeChanged(
+  GtkWidget * w,
+  gpointer closure )
 {
   assert( closure != NULL );
   GtkThumbWheel		*thumbwheel = (GtkThumbWheel*) w ;
@@ -948,39 +1035,25 @@ SoGtkExaminerViewer::feedbackSizeChanged(
 
   char buffer[16] ;
   sprintf( buffer, "%d", viewer->getFeedbackSize() );
-  gtk_entry_set_text( GTK_ENTRY(viewer->feedbackedit), buffer );
-}
+  gtk_entry_set_text( GTK_ENTRY(PRIVATE(viewer)->feedbackedit), buffer );
+} // feedbackSizeChanged()
 
 // *************************************************************************
 
-/*!
-  \internal
-  Gtk Signal Handler.
+/*
+  internal
 */
 
 void
-SoGtkExaminerViewer::camerabuttonCB(
+SoGtkExaminerViewerP::camerabuttonCB(
   GtkWidget *,
   gpointer closure )
 {
   assert( closure != NULL );
   SoGtkExaminerViewer * viewer = (SoGtkExaminerViewer *) closure;
-  if ( viewer->getCamera() ) viewer->toggleCameraType();
+  if ( viewer->getCamera() )
+    viewer->toggleCameraType();
 } // camerabuttonCB()
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkExaminerViewer::afterRealizeHook( // virtual
-  void )
-{
-  this->setCursorRepresentation( this->common->currentmode );
-  inherited::afterRealizeHook();
-} // afterRealizeHook()
 
 // *************************************************************************
 

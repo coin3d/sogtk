@@ -26,46 +26,44 @@
 
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 
-class SbSphereSheetProjector;
-class SoTimerSensor;
-class SoSeparator;
-class SoSwitch;
-class SoTranslation;
-class SoScale;
-
-class SoAnyExaminerViewer;
+// class SbSphereSheetProjector;
+// class SoTimerSensor;
+// class SoSeparator;
+// class SoSwitch;
+// class SoTranslation;
+// class SoScale;
 
 // *************************************************************************
 
 class SOGTK_DLL_API SoGtkExaminerViewer : public SoGtkFullViewer {
   SOGTK_OBJECT_HEADER(SoGtkExaminerViewer, SoGtkFullViewer);
-  friend class SoAnyExaminerViewer;
 
 public:
   SoGtkExaminerViewer(
     GtkWidget * parent = (GtkWidget *) NULL,
     const char * name = (char *) NULL,
     SbBool embed = TRUE,
-    SoGtkFullViewer::BuildFlag flags = BUILD_ALL,
-    SoGtkViewer::Type type = BROWSER );
+    SoGtkFullViewer::BuildFlag flags = SoGtkFullViewer::BUILD_ALL,
+    SoGtkViewer::Type type = SoGtkViewer::BROWSER );
   ~SoGtkExaminerViewer(void);
 
   void setAnimationEnabled( const SbBool enable );
   SbBool isAnimationEnabled(void) const;
-      
+
   void stopAnimating(void);
   SbBool isAnimating(void) const;
-	  
+
   void setFeedbackVisibility( const SbBool enable );
   SbBool isFeedbackVisible(void) const;
 
   void setFeedbackSize( const int size );
   int getFeedbackSize(void) const;
 
+  // overloaded
   virtual void setViewing( SbBool enable );
   virtual void setCamera( SoCamera * newCamera );
   virtual void setCursorEnabled( SbBool enable );
-  
+
 protected:
   SoGtkExaminerViewer(
     GtkWidget * parent,
@@ -97,54 +95,19 @@ protected:
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
 
-
   virtual void openViewerHelpCard(void);
-private:
-  static SoGtkViewerButton SoGtkExaminerViewerButtons[];
-  GdkPixmap * orthopixmap, * perspectivepixmap;
-  GdkBitmap * orthomask, * perspectivemask;
 
+private:
   void constructor( const SbBool build );
 
   void setCursorRepresentation( int mode );
-  GdkCursor * pancursor, * rotatecursor;
-  GdkCursor * zoomcursor;
-  GdkCursor * arrowcursor, * crosscursor ;
-
-  GtkWidget * cameratogglebutton;
-  GtkWidget * feedbacklabel1;
-  GtkWidget * feedbacklabel2;
-  GtkWidget * feedbackwheel;
-  GtkWidget * feedbackedit;
-  void setEnableFeedbackControls( const SbBool flag );
-
-private: // slots:
-  // Pref sheet.
-  static void spinAnimationToggled( 
-    GtkToggleButton	*w,
-    gpointer		closure );
-  static void feedbackVisibilityToggled(
-    GtkToggleButton	*w,
-    gpointer		closure );
-  static void feedbackEditPressed(
-    GtkEntry		*w,
-    gpointer		closure );
-  static void feedbackWheelPressed(
-    GtkWidget		*w,
-    gpointer		closure );
-  static void feedbackSizeChanged(
-    GtkWidget		*w,
-    gpointer		closure );
-  static void feedbackWheelReleased(
-    GtkWidget		*w,
-    gpointer		closure );
-  // Button row.
-  static void camerabuttonCB( 
-    GtkWidget 		*w, 
-    gpointer 		closure );
 
 private:
-  SoAnyExaminerViewer * const common;
+  // friends and family
+  class SoAnyExaminerViewer * common;
+  friend class SoAnyExaminerViewer;
+  class SoGtkExaminerViewerP * pimpl;
+  friend class SoGtkExaminerViewerP;
 
 }; // class SoGtkExaminerViewer
 

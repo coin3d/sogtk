@@ -34,14 +34,14 @@ class SOGTK_DLL_API SoGtkMouse : public SoGtkDevice {
 
 public:
   enum Events {
-    BUTTON_PRESS         = 0x01,
-    BUTTON_RELEASE       = 0x02,
-    POINTER_MOTION       = 0x04,
-    BUTTON_MOTION        = 0x08,
-    ALL_EVENTS           = 0x0f
+    BUTTON_PRESS   = 0x01,
+    BUTTON_RELEASE = 0x02,
+    POINTER_MOTION = 0x04,
+    BUTTON_MOTION  = 0x08,
+    ALL_EVENTS     = (BUTTON_PRESS | BUTTON_RELEASE | POINTER_MOTION | BUTTON_MOTION)
   };
 
-  SoGtkMouse( const Events events = SoGtkMouse::ALL_EVENTS );
+  SoGtkMouse( const int eventbits = SoGtkMouse::ALL_EVENTS );
   virtual ~SoGtkMouse(void);
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, gpointer closure );
@@ -50,7 +50,7 @@ public:
   virtual const SoEvent * translateEvent( GdkEvent * event );
 
 private:
-  Events events;
+  int events;
   SoMouseButtonEvent * buttonevent;
   SoLocation2Event * locationevent;
 

@@ -24,7 +24,7 @@ static const char rcsid[] =
 
 #if HAVE_CONFIG_H
 #include <config.h>
-#endif
+#endif // HAVE_CONFIG_H
 
 #include <stdio.h>
 
@@ -41,6 +41,10 @@ static const char rcsid[] =
 // #include <Inventor/Gtk/viewers/SoGtkCustomViewer.h>
 // #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
+// #include <Inventor/Gtk/viewers/SoGtkPlaneViewer.h>
+// #include <Inventor/Gtk/viewers/SoGtkConstrainedViewer.h>
+// #include <Inventor/Gtk/viewers/SoGtkWalkViewer.h>
+// #include <Inventor/Gtk/viewers/SoGtkFlyViewer.h>
 #include <Inventor/Gtk/SoGtkMaterialList.h>
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
 #include <Inventor/Gtk/SoGtkRoster.h>
@@ -49,33 +53,9 @@ static const char rcsid[] =
 
 /*!
   \class SoGtkComponent SoGtkComponent.h Inventor/Gtk/SoGtkComponent.h
-  \brief The SoGtkComponent class is the base class for all GUI components.
+  \brief The SoGtkComponent class is the base class for all SoGtk GUI
+  components.
 */
-
-// *************************************************************************
-
-SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkComponent);
-
-/*!
-  This method initializes the type system for all the component classes.
-*/
-
-void
-SoGtkComponent::initClasses( // static
-  void )
-{
-  SoGtkComponent::initClass();
-  SoGtkGLWidget::initClass();
-  SoGtkRenderArea::initClass();
-  SoGtkViewer::initClass();
-//  SoGtkCustomViewer::initClass();
-  SoGtkFullViewer::initClass();
-  SoGtkExaminerViewer::initClass();
-//  SoGtkPlaneViewer::initClass();
-  SoGtkMaterialList::initClass();
-  SoGtkGraphEditor::initClass();
-  SoGtkRoster::initClass();
-} // initClasses()
 
 // *************************************************************************
 
@@ -92,6 +72,67 @@ SoGtkComponent::initClasses( // static
   Pointer to the Gtk widget. This member must be set from all component
   classes which inherits SoGtkComponent directly.
 */
+
+// *************************************************************************
+
+class SoGtkComponentP {
+public:
+  SoGtkComponentP( SoGtkComponent * publ );
+  ~SoGtkComponentP(void);
+
+  static gint realizeHandlerCB( GtkObject * object, gpointer closure );
+
+  GtkWidget * widget;
+  GtkWidget * parent;
+  SbBool embedded;
+  SbBool shelled;
+  char * className;
+  char * widgetName;
+  char * captionText;
+  char * iconText; 
+  SoGtkComponentCB * closeCB;
+  void * closeCBdata;
+  SbPList * visibilityChangeCBs;
+  SbVec2s storeSize;
+
+private:
+  SoGtkComponent * pub;
+
+}; // class SoGtkComponentP
+
+#define PUBLIC(ptr) (ptr->pub)
+#define PRIVATE(ptr) (ptr->pimpl)
+
+#define THIS (PRIVATE(this))
+
+// *************************************************************************
+
+SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkComponent);
+
+/*!
+  \internal
+  This method initializes the type system for all the component classes.
+*/
+
+void
+SoGtkComponent::initClasses( // static
+  void )
+{
+  SoGtkComponent::initClass();
+  SoGtkGLWidget::initClass();
+  SoGtkRenderArea::initClass();
+  SoGtkViewer::initClass();
+//  SoGtkCustomViewer::initClass();
+  SoGtkFullViewer::initClass();
+  SoGtkExaminerViewer::initClass();
+//  SoGtkPlaneViewer::initClass();
+//  SoGtkConstrainedViewer::initClass();
+//  SoGtkWalkViewer::initClass();
+//  SoGtkFlyViewer::initClass();
+  SoGtkMaterialList::initClass();
+  SoGtkGraphEditor::initClass();
+  SoGtkRoster::initClass();
+} // initClasses()
 
 // *************************************************************************
 
@@ -113,35 +154,26 @@ SoGtkComponent::SoGtkComponent(
   const char * const name,
   const SbBool embed )
 {
-  this->parent = parent;
-  this->shelled = FALSE;
-  this->widget = NULL;
-  this->closeCB = NULL;
-  this->closeCBdata = NULL;
-  this->visibilityChangeCBs = NULL;
+  PRIVATE(this) = new SoGtkComponentP(this);
 
-  this->className = NULL;
-  this->widgetName = NULL;
-  this->captionText = NULL;
-  this->iconText = NULL;
+  PRIVATE(this)->parent = parent;
 
   if ( name )
-    this->widgetName = strcpy( new char [strlen(name)+1], name );
+    PRIVATE(this)->widgetName = strcpy( new char [strlen(name)+1], name );
 
   this->setClassName( "SoGtkComponent" );
 
-  this->storeSize.setValue(-1, -1);
-
   if ( parent == NULL || ! embed ) {
-    this->parent = gtk_window_new( GTK_WINDOW_TOPLEVEL );
-    this->shelled = TRUE;
-    this->embedded = FALSE;
+    PRIVATE(this)->parent = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+    PRIVATE(this)->shelled = TRUE;
+    PRIVATE(this)->embedded = FALSE;
   } else if ( parent == SoGtk::getTopLevelWidget() ) {
-    this->embedded = FALSE; // what if...?
+    PRIVATE(this)->embedded = FALSE; // what if...?
   } else {
-    this->embedded = TRUE;
+    PRIVATE(this)->embedded = TRUE;
   }
-  gtk_signal_connect( GTK_OBJECT(this->parent), "event",
+
+  gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->parent), "event",
     GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
 
   gtk_idle_add( (GtkFunction) SoGtk::componentCreation, (gpointer) this );
@@ -155,13 +187,9 @@ SoGtkComponent::~SoGtkComponent( // virtual
   void )
 {
   SoGtk::componentDestruction( this );
-  if ( this->widget )
-    gtk_widget_destroy( this->widget );
-  delete this->visibilityChangeCBs;
-  delete [] this->widgetName;
-  delete [] this->className;
-  delete [] this->captionText;
-  delete [] this->iconText;
+  if ( PRIVATE(this)->widget )
+    gtk_widget_destroy( PRIVATE(this)->widget );
+  delete PRIVATE(this);
 } // ~SoGtkComponent()
 
 // *************************************************************************
@@ -179,9 +207,10 @@ SoGtkComponent::addVisibilityChangeCallback(
   SoGtkComponentVisibilityCB * func,
   void * userData )
 {
-  if (!this->visibilityChangeCBs) this->visibilityChangeCBs = new SbPList;
-  this->visibilityChangeCBs->append((void *)func);
-  this->visibilityChangeCBs->append(userData);
+  if ( ! PRIVATE(this)->visibilityChangeCBs )
+    PRIVATE(this)->visibilityChangeCBs = new SbPList;
+  PRIVATE(this)->visibilityChangeCBs->append( (void *) func );
+  PRIVATE(this)->visibilityChangeCBs->append( userData );
 } // addVisibilityCallback()
 
 /*!
@@ -197,21 +226,21 @@ SoGtkComponent::removeVisibilityChangeCallback(
   void * userData )
 {
 #if SOGTK_DEBUG
-  if (!this->visibilityChangeCBs) {
+  if ( ! PRIVATE(this)->visibilityChangeCBs ) {
     SoDebugError::postWarning("SoGtkComponent::removeVisibilityChangeCallback",
                               "empty callback list");
     return;
   }
 #endif // SOGTK_DEBUG
 
-  int idx = this->visibilityChangeCBs->find((void *)func);
-  if (idx != -1 ) {
-    this->visibilityChangeCBs->remove(idx);
-    this->visibilityChangeCBs->remove(idx);
+  int idx = PRIVATE(this)->visibilityChangeCBs->find( (void *)func );
+  if ( idx != -1 ) {
+    PRIVATE(this)->visibilityChangeCBs->remove(idx);
+    PRIVATE(this)->visibilityChangeCBs->remove(idx);
   }
 
 #if SOGTK_DEBUG
-  if (idx == -1) {
+  if ( idx == -1 ) {
     SoDebugError::postWarning(
       "SoGtkComponent::removeVisibilityChangeCallback",
       "tried to remove non-existant callback" );
@@ -232,12 +261,12 @@ void
 SoGtkComponent::setClassName(
   const char * const name )
 {
-  if ( this->className ) {
-    delete [] this->className;
-    this->className = NULL;
+  if ( PRIVATE(this)->className ) {
+    delete [] PRIVATE(this)->className;
+    PRIVATE(this)->className = NULL;
   }
   if ( name )
-    this->className = strcpy( new char [strlen(name)+1], name );
+    PRIVATE(this)->className = strcpy( new char [strlen(name)+1], name );
 } // setClassName()
 
 // *************************************************************************
@@ -255,12 +284,13 @@ SoGtkComponent::setBaseWidget(
   GtkWidget * widget )
 {
   // SoDebugError::postInfo( "SoGtkComponent::setBaseWidget", "widget = 0x%08x", widget );
-  if ( this->widget ) {
-    gtk_signal_disconnect_by_func( GTK_OBJECT(this->widget),
-      GTK_SIGNAL_FUNC(SoGtkComponent::realizeHandlerCB), (gpointer) this );
+
+  if ( PRIVATE(this)->widget ) {
+    gtk_signal_disconnect_by_func( GTK_OBJECT(PRIVATE(this)->widget),
+      GTK_SIGNAL_FUNC(SoGtkComponentP::realizeHandlerCB), (gpointer) this );
   }
 
-  this->widget = NULL;
+  PRIVATE(this)->widget = NULL;
 
   if ( ! GTK_IS_WIDGET(widget) ) {
 #if SOGTK_DEBUG
@@ -269,11 +299,11 @@ SoGtkComponent::setBaseWidget(
     return;
   }
 
-  this->widget = widget;
+  PRIVATE(this)->widget = widget;
 
-  if ( this->widget ) {
-    gtk_signal_connect( GTK_OBJECT(this->widget), "realize",
-      GTK_SIGNAL_FUNC(SoGtkComponent::realizeHandlerCB), (gpointer) this );
+  if ( PRIVATE(this)->widget ) {
+    gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->widget), "realize",
+      GTK_SIGNAL_FUNC(SoGtkComponentP::realizeHandlerCB), (gpointer) this );
   }
 } // setBaseWidget()
 
@@ -377,44 +407,11 @@ SoGtkComponent::eventHandler( // static, private
   GdkEvent * event,
   gpointer closure )
 {
-  assert( closure != NULL );
-//  SoDebugError::postInfo( "SoGtkComponent::eventHandler",
-//    "[invoked (event %d)]", event->type );
+//  SoDebugError::postInfo( "SoGtkComponent::eventHandler", "[event %d]", event->type );
   SoGtkComponent * const component = (SoGtkComponent *) closure;
   component->eventFilter( object, event );
   return FALSE;
 } // eventHandler()
-
-/*!
-*/
-
-gint
-SoGtkComponent::realizeHandler( // private
-  GtkObject * object )
-{
-  assert( GTK_WIDGET_REALIZED(this->baseWidget()) );
-  if ( this->storeSize != SbVec2s(-1, -1) ) {
-    GtkRequisition req = { this->storeSize[0], this->storeSize[1] };
-    gtk_widget_size_request( this->baseWidget(), &req );
-  }
-  SbVec2s size( this->baseWidget()->allocation.width, this->baseWidget()->allocation.height );
-  this->sizeChanged( size );
-  this->afterRealizeHook();
-  return FALSE;
-} // realizeHandler()
-
-/*!
-*/
-
-gint
-SoGtkComponent::realizeHandlerCB( // static, private
-  GtkObject * object,
-  gpointer closure )
-{
-  assert( closure != NULL );
-  SoGtkComponent * const component = (SoGtkComponent *) closure;
-  return component->realizeHandler( object );
-} // realizeHandlerCB()
 
 // *************************************************************************
 
@@ -466,10 +463,11 @@ SoGtkComponent::show( // virtual
   if ( ! widget->parent )
     gtk_container_add( GTK_CONTAINER(parent), widget );
 
-  if ( this->storeSize != SbVec2s( -1, -1 ) && GTK_IS_WINDOW(parent) )
-    gtk_window_set_default_size( GTK_WINDOW(parent), this->storeSize[0], this->storeSize[1] );
+  if ( PRIVATE(this)->storeSize != SbVec2s( -1, -1 ) && GTK_IS_WINDOW(parent) )
+    gtk_window_set_default_size( GTK_WINDOW(parent),
+      PRIVATE(this)->storeSize[0], PRIVATE(this)->storeSize[1] );
 
-  if ( this->shelled ) {
+  if ( PRIVATE(this)->shelled ) {
     if ( ! GTK_WIDGET_REALIZED(this->baseWidget()) ) {
       gtk_widget_show( widget );
     }
@@ -497,7 +495,7 @@ SoGtkComponent::hide( // virtual
     return;
   }
 #endif // SOGTK_DEBUG
-  if ( this->shelled )
+  if ( PRIVATE(this)->shelled )
     gtk_widget_hide( GTK_WIDGET(this->getParentWidget()) );
   else
     gtk_widget_hide( GTK_WIDGET(this->baseWidget()) );
@@ -515,10 +513,8 @@ GtkWidget *
 SoGtkComponent::getWidget(
   void ) const
 {
-  return this->widget;
+  return PRIVATE(this)->widget;
 } // getWidget()
-
-// *************************************************************************
 
 /*!
   An SoGtkComponent may be composed of any number of widgets in
@@ -532,7 +528,7 @@ GtkWidget *
 SoGtkComponent::baseWidget(
   void ) const
 {
-  return this->widget;
+  return PRIVATE(this)->widget;
 } // baseWidget()
 
 // *************************************************************************
@@ -549,14 +545,14 @@ SoGtkComponent::isTopLevelShell(
   void ) const
 {
 #if SOGTK_DEBUG
-  if(!this->widget) {
+  if( ! PRIVATE(this)->widget ) {
     SoDebugError::postWarning("SoGtkComponent::isTopLevelShell",
                               "Called while no GtkWidget has been set.");
     return FALSE;
   }
 #endif // SOGTK_DEBUG
 
-  if ( this->widget->parent == 0 )
+  if ( PRIVATE(this)->widget->parent == 0 )
   {
     // FIXME: Dunno if this can happen.
     SoDebugError::postWarning("SoGtkComponent::isTopLevelShell",
@@ -564,7 +560,7 @@ SoGtkComponent::isTopLevelShell(
   }
   else
   {
-    if ( this->widget->parent == gtk_widget_get_toplevel(this->widget) )
+    if ( PRIVATE(this)->widget->parent == gtk_widget_get_toplevel(PRIVATE(this)->widget) )
     {
       return TRUE ;
     }
@@ -589,17 +585,15 @@ GtkWidget *
 SoGtkComponent::getShellWidget(
   void ) const
 {
-  if ( ! this->widget ) {
+  if ( ! PRIVATE(this)->widget ) {
 #if SOGTK_DEBUG
     SoDebugError::postWarning( "SoGtkComponent::getShellWidget", "no widget" );
 #endif // SOGTK_DEBUG
     return NULL;
   }
-  return this->widget; // FIXME
+  return PRIVATE(this)->widget; // FIXME
 } // getShellWidget()
  
-// *************************************************************************
-
 /*!
   Returns the widget which is the parent (i.e. contains) this component's
   base widget.
@@ -611,7 +605,7 @@ GtkWidget *
 SoGtkComponent::getParentWidget(
   void ) const
 {
-  return this->parent;
+  return PRIVATE(this)->parent;
 } // getParentWidget()
 
 // *************************************************************************
@@ -627,14 +621,14 @@ void
 SoGtkComponent::setTitle(
   const char * const title )
 {
-  if ( this->captionText ) {
-    delete [] this->captionText;
-    this->captionText = NULL;
+  if ( PRIVATE(this)->captionText ) {
+    delete [] PRIVATE(this)->captionText;
+    PRIVATE(this)->captionText = NULL;
   }
   if ( title )
-    this->captionText = strcpy( new char [strlen(title)+1], title );
-  if ( ! this->embedded )
-    gtk_window_set_title( GTK_WINDOW(this->parent), title ? title : "" );
+    PRIVATE(this)->captionText = strcpy( new char [strlen(title)+1], title );
+  if ( ! PRIVATE(this)->embedded )
+    gtk_window_set_title( GTK_WINDOW(PRIVATE(this)->parent), title ? title : "" );
 } // setTitle()
 
 /*!
@@ -648,9 +642,9 @@ const char *
 SoGtkComponent::getTitle(
   void ) const
 {
-  if ( this->captionText == NULL )
+  if ( PRIVATE(this)->captionText == NULL )
     return this->getDefaultTitle();
-  return this->captionText;
+  return PRIVATE(this)->captionText;
 } // getTitle()
 
 // *************************************************************************
@@ -666,14 +660,14 @@ void
 SoGtkComponent::setIconTitle(
   const char * const title )
 {
-  if ( this->iconText ) {
-    delete [] this->iconText;
-    this->iconText = NULL;
+  if ( PRIVATE(this)->iconText ) {
+    delete [] PRIVATE(this)->iconText;
+    PRIVATE(this)->iconText = NULL;
   }
   if ( title )
-    this->iconText = strcpy( new char [strlen(title)+1], title );
-//  if ( this->widget ) {
-//    GtkWidget * window = gtk_widget_get_toplevel( this->widget );
+    PRIVATE(this)->iconText = strcpy( new char [strlen(title)+1], title );
+//  if ( PRIVATE(this)->widget ) {
+//    GtkWidget * window = gtk_widget_get_toplevel( PRIVATE(this)->widget );
 //    assert( window != NULL );
 //    gtk_window_set_icon_title( GTK_WINDOW(window), title ? title : "" );
 //  }
@@ -690,8 +684,7 @@ const char *
 SoGtkComponent::getIconTitle(
   void ) const
 {
-//  return this->icontext.isNull() ? nullstring : (const char *)this->icontext;
-  return "";
+  return PRIVATE(this)->iconText;
 } // getIconTitle()
 
 // *************************************************************************
@@ -704,9 +697,7 @@ const char *
 SoGtkComponent::getWidgetName(
   void ) const
 {
-//   return
-//    this->widgetname.isNull() ? nullstring : (const char *)this->widgetname;
-  return "";
+  return PRIVATE(this)->widgetName;
 } // getWidgetName()
 
 // *************************************************************************
@@ -719,8 +710,7 @@ const char *
 SoGtkComponent::getClassName(
   void ) const
 {
-  return "";
-//  return (const char *) this->classname;
+  return (const char *) PRIVATE(this)->className;
 } // getClassName()
 
 // *************************************************************************
@@ -747,7 +737,7 @@ const char *
 SoGtkComponent::getDefaultTitle( // virtual
   void ) const
 {
-  static char defaultTitle[] = N_( "Gtk Component" );
+  static char defaultTitle[] = N_( "SoGtk Component" );
   return _( defaultTitle );
 }
 
@@ -760,7 +750,7 @@ const char *
 SoGtkComponent::getDefaultIconTitle( // virtual
   void ) const
 {
-  static char defaultIconTitle[] = N_( "Gtk Comp" );
+  static char defaultIconTitle[] = N_( "Component" );
   return _( defaultIconTitle );
 } // getDefaultIconTitle()
 
@@ -785,20 +775,20 @@ SoGtkComponent::setSize(
     return;
   }
 
-  this->storeSize = size;
+  PRIVATE(this)->storeSize = size;
 
-  if ( ! this->embedded ) {
-    if ( this->parent ) {
+  if ( ! PRIVATE(this)->embedded ) {
+    if ( PRIVATE(this)->parent ) {
       GtkRequisition req = { size[0], size[1] };
-      gtk_widget_size_request( GTK_WIDGET(this->parent), &req );
+      gtk_widget_size_request( GTK_WIDGET(PRIVATE(this)->parent), &req );
     }
   } else {
-    if ( this->widget ) {
+    if ( PRIVATE(this)->widget ) {
       GtkRequisition req = { size[0], size[1] };
-      gtk_widget_size_request( GTK_WIDGET(this->widget), &req );
+      gtk_widget_size_request( GTK_WIDGET(PRIVATE(this)->widget), &req );
     }
   }
-  if ( this->widget && GTK_WIDGET_REALIZED(this->widget) ) 
+  if ( PRIVATE(this)->widget && GTK_WIDGET_REALIZED(PRIVATE(this)->widget) ) 
     this->sizeChanged( size );
 
 //  SoDebugError::postInfo( "SoGtkComponent::setSize", "[exit]" );
@@ -814,10 +804,13 @@ SbVec2s
 SoGtkComponent::getSize(
   void ) const
 {
-  return this->storeSize;
+  return PRIVATE(this)->storeSize;
 } // getSize()
 
 // *************************************************************************
+
+/*!
+*/
 
 void
 SoGtkComponent::sizeChanged( // virtual, protected
@@ -839,7 +832,8 @@ void
 SoGtkComponent::openHelpCard(
   const char * card )
 {
-  SOGTK_STUB() ;
+  SoGtk::createSimpleErrorDialog( PRIVATE(this)->widget, "Not Implemented",
+    "The help card system has not been implemented yet." );
 } // openHelpCard()
 
 // *************************************************************************
@@ -855,13 +849,15 @@ SoGtkComponent::openHelpCard(
   \sa isTopLevelShell()
 */
 
+// make list instead of one slot that is overwritten?
+
 void
 SoGtkComponent::setWindowCloseCallback(
   SoGtkComponentCB * func,
   void * const data )
 {
-  this->closeCB = func;
-  this->closeCBdata = data;
+  PRIVATE(this)->closeCB = func;
+  PRIVATE(this)->closeCBdata = data;
 } // setWindowCloseCallback()
 
 // *************************************************************************
@@ -894,9 +890,87 @@ void
 SoGtkComponent::afterRealizeHook( // virtual, protected
   void )
 {
-  // SoDebugError::postInfo( "SoGtkComponent::afterRealizeHook", "[invoked]" );
-  gtk_signal_connect( GTK_OBJECT(this->widget), "event",
+#if SOGTK_DEBUG && 0
+  SoDebugError::postInfo( "SoGtkComponent::afterRealizeHook", "[invoked]" );
+#endif
+  gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->widget), "event",
     GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
 } // afterRealizeHook()
 
 // *************************************************************************
+//
+//  Private implementation
+//
+
+/*
+  initialize private memory
+*/
+
+SoGtkComponentP::SoGtkComponentP(
+  SoGtkComponent * publ )
+{
+  this->pub = publ;
+
+  this->widget = NULL;
+  this->parent = NULL;
+  this->embedded = FALSE;
+  this->shelled = FALSE;
+  this->widget = NULL;
+  this->closeCB = NULL;
+  this->closeCBdata = NULL;
+  this->visibilityChangeCBs = NULL;
+  this->storeSize.setValue( -1, -1 );
+
+  this->className = NULL;
+  this->widgetName = NULL;
+  this->captionText = NULL;
+  this->iconText = NULL;
+} // SoGtkComponentP()
+
+/*
+  free privately allocated memory
+*/
+
+SoGtkComponentP::~SoGtkComponentP(
+  void )
+{
+  delete this->visibilityChangeCBs;
+  delete [] this->widgetName;
+  delete [] this->className;
+  delete [] this->captionText;
+  delete [] this->iconText;
+} // ~SoGtkComponentP()
+
+// *************************************************************************
+
+/*
+  event handler for realize events, used for invoking afterRealizeHook()
+*/
+
+gint
+SoGtkComponentP::realizeHandlerCB( // static
+  GtkObject * object,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkComponent * const component = (SoGtkComponent *) closure;
+  GtkWidget * widget = component->baseWidget();
+  assert( GTK_WIDGET_REALIZED(widget) );
+  if ( PRIVATE(component)->storeSize != SbVec2s(-1, -1) ) {
+    GtkRequisition req = {
+      PRIVATE(component)->storeSize[0],
+      PRIVATE(component)->storeSize[1] };
+    gtk_widget_size_request( widget, &req );
+  }
+  SbVec2s size( widget->allocation.width, widget->allocation.height );
+  component->sizeChanged( size );
+  component->afterRealizeHook();
+  return FALSE;
+} // realizeHandlerCB()
+
+// *************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkComponentRCSId(void) { return rcsid; }
+#endif // SOGTK_DEBUG
+

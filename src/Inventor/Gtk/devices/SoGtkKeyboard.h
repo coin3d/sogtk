@@ -37,10 +37,10 @@ public:
   enum Events {
     KEY_PRESS   = 0x01,
     KEY_RELEASE = 0x02,
-    ALL_EVENTS  = 0x03
+    ALL_EVENTS  = (KEY_PRESS | KEY_RELEASE)
   };
 
-  SoGtkKeyboard( const Events events = SoGtkKeyboard::ALL_EVENTS );
+  SoGtkKeyboard( const int eventbits = SoGtkKeyboard::ALL_EVENTS );
   virtual ~SoGtkKeyboard(void);
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
@@ -49,7 +49,7 @@ public:
   virtual const SoEvent * translateEvent( GdkEvent * event );
 
 private:
-  Events events;
+  int events;
   SoKeyboardEvent * kbdevent;
 
 }; // class SoGtkKeyboard

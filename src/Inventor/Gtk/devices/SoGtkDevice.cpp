@@ -48,34 +48,6 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkDevice);
-
-/*!
-  This function initializes the type system for all the device classes.
-*/
-
-void
-SoGtkDevice::initClasses( // static
-  void )
-{
-  SoGtkDevice::initClass();
-  SoGtkInputFocus::initClass();
-  SoGtkMouse::initClass();
-  SoGtkKeyboard::initClass();
-  SoGtkSpaceball::initClass();
-} // initClasses()
-
-// *************************************************************************
-
-/*!
-  \var SbVec2s SoGtkDevice::lastEventPosition
-  FIXME: write doc
-*/
-
-SbVec2s SoGtkDevice::lastEventPosition; // static
-
-// *************************************************************************
-
 /*!
   \typedef void SoGtkDevice::SoGtkEventHandler( GtkWidget *, GdkEvent *, gpointer )
 
@@ -99,6 +71,33 @@ SbVec2s SoGtkDevice::lastEventPosition; // static
 
   FIXME: write doc
 */
+
+/*!
+  \var SbVec2s SoGtkDevice::lastEventPosition
+
+  FIXME: write doc
+*/
+
+SbVec2s SoGtkDevice::lastEventPosition; // static
+
+// *************************************************************************
+
+SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkDevice);
+
+/*!
+  This function initializes the type system for all the device classes.
+*/
+
+void
+SoGtkDevice::initClasses( // static
+  void )
+{
+  SoGtkDevice::initClass();
+  SoGtkInputFocus::initClass();
+  SoGtkMouse::initClass();
+  SoGtkKeyboard::initClass();
+  SoGtkSpaceball::initClass();
+} // initClasses()
 
 // *************************************************************************
 

@@ -32,11 +32,26 @@ static const char rcsid[] =
 #include <Inventor/Gtk/viewers/SoAnyFlyViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkFlyViewer.h>
 
+// ************************************************************************
+
 /*!
   \class SoGtkFlyViewer Inventor/Gtk/viewers/SoGtkFlyViewer.h
   \brief The SoGtkFlyViewer class is yet to be documented.
   \ingroup components viewers
 */
+
+// ************************************************************************
+// ************************************************************************
+
+class SoGtkFlyViewerP {
+public:
+  SoGtkFlyViewerP( SoGtkFlyViewer * publ );
+  ~SoGtkFlyViewerP(void);
+
+private:
+  SoGtkFlyViewer * pub;
+
+}; // class SoGtkFlyViewerP
 
 // ************************************************************************
 
@@ -55,12 +70,9 @@ SoGtkFlyViewer::SoGtkFlyViewer( // public
   SoGtkFullViewer::BuildFlag flag,
   SoGtkViewer::Type type )
 : inherited( parent, name, embed, flag, type, FALSE )
-, common( new SoAnyFlyViewer(this) )     
 {
   this->constructor( TRUE );
 } // SoGtkFlyViewer()
-
-// ************************************************************************
 
 /*!
   Protected constructor for derivees.
@@ -74,12 +86,9 @@ SoGtkFlyViewer::SoGtkFlyViewer( // protected
   SoGtkViewer::Type type, 
   SbBool build )
 : inherited( parent, name, embed, flag, type, FALSE )
-, common( new SoAnyFlyViewer(this) )     
 {
   this->constructor( build );
 } // SoGtkFlyViewer()
-
-// ************************************************************************
 
 /*!
   \internal
@@ -92,6 +101,9 @@ void
 SoGtkFlyViewer::constructor( // private
   const SbBool build )
 {
+  this->pimpl = new SoGtkFlyViewerP(this);
+  this->common = new SoAnyFlyViewer(this);
+
   // Cursors.
 #if NOTYET
   GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
@@ -117,8 +129,6 @@ SoGtkFlyViewer::constructor( // private
   this->setBaseWidget( viewer );
 } // constructor()
 
-// ************************************************************************
-
 /*!
   Destructor.
 */
@@ -126,7 +136,8 @@ SoGtkFlyViewer::constructor( // private
 SoGtkFlyViewer::~SoGtkFlyViewer(
   void )
 {
-  delete this->common ;
+  delete this->common;
+  delete this->pimpl;
 } // ~SoGtkFlyViewer()
 
 // ************************************************************************
@@ -163,6 +174,7 @@ void
 SoGtkFlyViewer::setCamera( // virtual
   SoCamera * camera )
 {
+  inherited::setCamera( camera );
 } // setCamera()
 
 // ************************************************************************
@@ -283,6 +295,7 @@ void
 SoGtkFlyViewer::actualRedraw( // virtual
   void )
 {
+  inherited::actualRedraw();
 } // actualRedraw()
 
 // ************************************************************************
@@ -358,4 +371,24 @@ SoGtkFlyViewer::makeSubPreferences(
 }
 
 // *************************************************************************
+//
+//  Private implementation
+//
+
+SoGtkFlyViewerP::SoGtkFlyViewerP(
+  SoGtkFlyViewer * publ )
+{
+  this->pub = publ;
+} // SoGtkFlyViewerP()
+
+SoGtkFlyViewerP::~SoGtkFlyViewerP(
+  void )
+{
+} // ~SoGtkFlyViewerP()
+
+// *************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkFlyViewerRCSId(void) { return rcsid; }
+#endif
 

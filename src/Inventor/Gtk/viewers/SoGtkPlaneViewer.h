@@ -22,9 +22,9 @@
 #ifndef SOGTK_PLANEVIEWER_H
 #define SOGTK_PLANEVIEWER_H
 
-class SbPlaneProjector;
-
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
+
+// class SbPlaneProjector;
 
 // *************************************************************************
 
@@ -33,13 +33,14 @@ class SOGTK_DLL_API SoGtkPlaneViewer : public SoGtkFullViewer {
 
 public:
   SoGtkPlaneViewer(
-    GtkWidget * parent = (GtkWidget *) NULL,
-    const char * const name = (char *) NULL,
+    GtkWidget * parent = (GtkWidget *) 0,
+    const char * const name = (char *) 0,
     const SbBool embed = TRUE,
-    const SoGtkFullViewer::BuildFlag flag = BUILD_ALL,
-    const SoGtkViewer::Type type = BROWSER );
+    const SoGtkFullViewer::BuildFlag flag = SoGtkFullViewer::BUILD_ALL,
+    const SoGtkViewer::Type type = SoGtkViewer::BROWSER );
   ~SoGtkPlaneViewer(void);
 
+  // overloaded
   virtual void setViewing( SbBool enable );
   virtual void setCamera( SoCamera * camera );
   virtual void setCursorEnabled( SbBool enable );
@@ -73,21 +74,13 @@ protected:
 
 private:
   void constructor( const SbBool build );
-  SbPlaneProjector * projector;
-  static void visibilityCB( void * data, SbBool visible );
-  
-  static SoGtkViewerButton SoGtkPlaneViewerButtons[];
-  GdkPixmap * orthopixmap, * perspectivepixmap;
-  GdkBitmap * orthomask, * perspectivemask;
 
-  GtkWidget * cameratogglebutton;
-  static void xbuttonCB( GtkWidget *, gpointer );
-  static void ybuttonCB( GtkWidget *, gpointer );
-  static void zbuttonCB( GtkWidget *, gpointer );
-  static void camerabuttonCB( GtkWidget *, gpointer );
-
+private:
+  // friends and family
   class SoAnyPlaneViewer * common;
   friend class SoAnyPlaneViewer;
+  class SoGtkPlaneViewerP * pimpl;
+  friend class SoGtkPlaneViewerP;
 
 }; // class SoGtkPlaneViewer
 

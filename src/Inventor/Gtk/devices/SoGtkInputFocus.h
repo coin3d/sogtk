@@ -33,10 +33,10 @@ public:
   enum Events {
     ENTER_WINDOW = 0x01,
     LEAVE_WINDOW = 0x02,
-    ALL_EVENTS   = 0x03
+    ALL_EVENTS   = (ENTER_WINDOW | LEAVE_WINDOW)
   };
 
-  SoGtkInputFocus( const Events events = SoGtkInputFocus::ALL_EVENTS );
+  SoGtkInputFocus( const int eventbits = SoGtkInputFocus::ALL_EVENTS );
   virtual ~SoGtkInputFocus(void);
 
   virtual void enable( GtkWidget * w, SoGtkEventHandler * func, void * data );
@@ -45,7 +45,7 @@ public:
   virtual const SoEvent * translateEvent( GdkEvent * event );
 
 private:
-  Events events;
+  int events;
 
 }; // class SoGtkInputFocus
 

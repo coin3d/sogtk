@@ -46,8 +46,6 @@ static const char rcsid[] =
   \ingroup devices
 */
 
-SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
-
 // *************************************************************************
 
 /*!
@@ -72,14 +70,21 @@ SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
 
 // *************************************************************************
 
+SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
+
+// *************************************************************************
+
 /*!
   Constructor.
+
+  The \a eventbits argument decides which events are handled.
+  It defaults to SoGtkKeyboard::ALL_EVENTS.
 */
 
 SoGtkKeyboard::SoGtkKeyboard(
-  const Events events )
+  const int eventbits )
 {
-  this->events = events;
+  this->events = eventbits;
   this->kbdevent = new SoKeyboardEvent;
 } // SoGtkKeyboard()
 

@@ -24,22 +24,19 @@
 
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
 
-class SoAnyFullViewer;
 class SoAnyPopupMenu;
-struct SoGtkViewerButton;
 
 // *************************************************************************
 
 class SOGTK_DLL_API SoGtkFullViewer : public SoGtkViewer {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkFullViewer, SoGtkViewer);
-  friend class SoAnyFullViewer;
 
 public:
   enum BuildFlag {
-    BUILD_NONE = 0x00,
-    BUILD_DECORATION = 0x01,
-    BUILD_POPUP = 0x02,
-    BUILD_ALL = 0xff
+    BUILD_NONE        = 0x00,
+    BUILD_DECORATION  = 0x01,
+    BUILD_POPUP       = 0x02,
+    BUILD_ALL         = (BUILD_DECORATION | BUILD_POPUP)
   };
 
   void setDecoration( const SbBool enable );
@@ -50,15 +47,14 @@ public:
 
   GtkWidget * getAppPushButtonParent(void) const;
   void addAppPushButton( GtkWidget * button );
-  void insertAppPushButton( GtkWidget * button , int index);
+  void insertAppPushButton( GtkWidget * button, int index );
   void removeAppPushButton( GtkWidget * button );
   int findAppPushButton( GtkWidget * button ) const;
   int lengthAppPushButton(void) const;
 
   GtkWidget * getRenderAreaWidget(void);
 
-  // internal
-  // These are overloaded to update user interface components.
+  // overloaded
   virtual void setViewing( SbBool enable );
   virtual void setCamera( SoCamera * camera );
   virtual void hide(void);
@@ -87,7 +83,7 @@ protected:
 
   virtual void buildPopupMenu(void);
   void setPopupMenuString( const char * title );
-  void openPopupMenu(const SbVec2s position);
+  void openPopupMenu( const SbVec2s position );
 
   virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
   void setPrefSheetString( const char * title );
@@ -114,199 +110,56 @@ protected:
   void setBottomWheelString( const char * name );
   void setRightWheelString( const char * name );
 
-  virtual SbBool processSoEvent(const SoEvent * const event);
+  virtual SbBool processSoEvent( const SoEvent * const event );
   virtual void openViewerHelpCard(void);
 
   SoAnyPopupMenu * prefmenu;
-
-  SbBool addPointer( const char * name, void * data );
-  SbBool setCurrentPointer( const char * name );
-  const char * getCurrentPointer(void) const;
 
 protected:
   GtkWidget * leftDecoration;
   GtkWidget * leftWheel;
   GtkWidget * leftWheelLabel;
-  char * leftWheelStr;
-  float leftWheelVal;
+  char *      leftWheelStr;
+  float       leftWheelVal;
 
   GtkWidget * bottomDecoration;
   GtkWidget * bottomWheel;
   GtkWidget * bottomWheelLabel;
-  char * bottomWheelStr;
-  float bottomWheelVal;
+  char *      bottomWheelStr;
+  float       bottomWheelVal;
 
   GtkWidget * rightDecoration;
   GtkWidget * rightWheel;
   GtkWidget * rightWheelLabel;
-  char * rightWheelStr;
-  float rightWheelVal;
+  char *      rightWheelStr;
+  float       rightWheelVal;
 
 private:
-  GtkWidget * makePreferencesWindow(void);
-  GtkWidget * makeSeekPreferences( GtkWidget * parent );
-  GtkWidget * makeSeekDistancePreferences( GtkWidget * parent );
-  GtkWidget * makeZoomPreferences( GtkWidget * parent );
-  GtkWidget * makeAutoclipPreferences( GtkWidget * parent );
-  GtkWidget * makeStereoPreferences( GtkWidget * parent );
-  
-  GtkWidget * viewerWidget, * canvasParent, * canvas;
-  GtkWidget * interactbutton, * viewbutton, * seekbutton;
+  // hooks for SoAnyFullViewer
 
-  SbBool decorations;
+  // menu selections
+  void selectedPrefs(void);
+  void selectedViewing(void);
+  void selectedDecoration(void);
+  void selectedHeadlight(void);
+  void copyviewSelected(void);
+  void pasteviewSelected(void);
 
-  SbString menuTitle;
-  SbBool menuEnabled;
-
-  GtkWidget * mainLayout;
-  void showDecorationWidgets( SbBool enable );
-
-  GtkWidget * appButtonLayout;
-  GtkWidget * appButtonForm;
-  SbPList * appButtonList;
-  void layoutAppButtons( GtkWidget * form );
-
-  SbPList * viewerButtons;
-
-  GtkWidget * prefwindow;
-  SbString prefwindowtitle;
-
-  GtkWidget * zoomslider;
-  GtkWidget * zoomfield, * zoomrangefrom, * zoomrangeto;
-  SbVec2f zoomrange;
-
-  void setCameraZoom( const float zoom );
-  float getCameraZoom(void);
-  void setZoomSliderPosition( float zoom );
-  void setZoomFieldString( float zoom );
-
-  GtkWidget * seekdistancewheel;
-  GtkWidget * seekdistancefield;
-
-  GtkWidget * clippingtable ;
-  GtkWidget * nearclippinglabel, * farclippinglabel;
-  GtkWidget * nearclippingwheel, * farclippingwheel;
-  GtkWidget * nearclippingedit, * farclippingedit;
-
-  void setEnabledClippingWidgets( SbBool flag );
-
-private: //  slots:
-  // Thumbwheels.
-  void leftWheelPressed(void);
-  void leftWheelChanged( float value );
-  void leftWheelReleased(void);
-  void rightWheelPressed(void);
-  void rightWheelChanged( float value );
-  void rightWheelReleased(void);
-  void bottomWheelPressed(void);
-  void bottomWheelChanged( float value );
-  void bottomWheelReleased(void);
-
-  // Menu items.
-  void selectedViewing();
-  void selectedDecoration();
-  void selectedHeadlight();
-  void copyviewSelected();
-  void pasteviewSelected();
-  void selectedPrefs();
-
-  // Pref sheet.
-  static void preferencesDestroyed(
-    GtkObject           *object,
-    gpointer            closure);
-
-  //  seek settings
-  static void seekAnimationTimeChanged(
-    GtkEditable     	*editable,
-    gpointer         	closure);
-  static void seekDetailToggled(
-    GtkToggleButton	*button,
-    gpointer		closure );
-  static void seekDistanceWheelChanged(
-    GtkWidget		*wheel,
-    gpointer		closure );
-  static void seekDistanceEdit(
-    GtkEditable     	*editable,
-    gpointer         	closure);
-  static void seekDistanceTypeToggle(
-    GtkToggleButton* button,
-    gpointer		closure );
-
-  //  zoom settings
-  static void zoomSliderMoved(
-    GtkAdjustment *adjustment,
-    gpointer closure);
-  static void zoomFieldChanged(
-    GtkEditable     	*editable,
-    gpointer         	closure);
-  static void zoomRangeChanged1(
-    GtkEditable     	*editable,
-    gpointer         	closure);
-  static void zoomRangeChanged2(
-    GtkEditable     	*editable,
-    gpointer         	closure);
-
-  //  clipping settings
-  static void clippingToggled(
-    GtkToggleButton 	*toggle_button,
-    gpointer         	closure);
-  static void nearclippingwheelMoved(
-    GtkWidget		*w,
-    gpointer		closure );
-  static void farclippingwheelMoved(
-    GtkWidget		*w,
-    gpointer		closure );
-  static void nearclipEditPressed(
-    GtkWidget		*w,
-    gpointer		closure );
-  static void farclipEditPressed(
-    GtkWidget		*w,
-    gpointer		closure );
-
-  // Stereo settings
-  static void stereoToggled(
-    GtkToggleButton	*toggle_button,
-    gpointer		closure );
-
-  // Generic Signal Handlers.
-  static void increaseInteractiveCount(
-    GtkWidget		*w,
-    gpointer		closure );
-  static void decreaseInteractiveCount(
-    GtkWidget		*w,
-    gpointer		closure );
-
-private:
-  static SoGtkViewerButton SoGtkFullViewerButtons[];
-
+  // button selections
   void interactbuttonClicked(void);
-  static void interactbuttonClickedCB( GtkWidget *, gpointer );
   void viewbuttonClicked(void);
-  static void viewbuttonClickedCB( GtkWidget *, gpointer );
-
   void helpbuttonClicked(void);
-  static void helpbuttonClickedCB( GtkWidget *, gpointer );
   void homebuttonClicked(void);
-  static void homebuttonClickedCB( GtkWidget *, gpointer );
   void sethomebuttonClicked(void);
-  static void sethomebuttonClickedCB( GtkWidget *, gpointer );
   void viewallbuttonClicked(void);
-  static void viewallbuttonClickedCB( GtkWidget *, gpointer );
   void seekbuttonClicked(void);
-  static void seekbuttonClickedCB( GtkWidget *, gpointer );
-
-  static void leftwheelPressedCB( GtkWidget *, gpointer );
-  static void leftwheelMovedCB( GtkWidget *, gpointer );
-  static void leftwheelReleasedCB( GtkWidget *, gpointer );
-  static void bottomwheelPressedCB( GtkWidget *, gpointer );
-  static void bottomwheelMovedCB( GtkWidget *, gpointer );
-  static void bottomwheelReleasedCB( GtkWidget *, gpointer );
-  static void rightwheelPressedCB( GtkWidget *, gpointer );
-  static void rightwheelMovedCB( GtkWidget *, gpointer );
-  static void rightwheelReleasedCB( GtkWidget *, gpointer );
 
 private:
-  SoAnyFullViewer * const common;
+  // friends and family
+  class SoAnyFullViewer * common;
+  friend class SoAnyFullViewer;
+  class SoGtkFullViewerP * pimpl;
+  friend class SoGtkFullViewerP;
 
 }; // class SoGtkFullViewer
 

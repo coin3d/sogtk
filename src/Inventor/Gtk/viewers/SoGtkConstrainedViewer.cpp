@@ -26,6 +26,7 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/viewers/SoGtkConstrainedViewer.h>
+#include <Inventor/Gtk/viewers/SoAnyConstrainedViewer.h>
 
 // ************************************************************************
 
@@ -47,7 +48,21 @@ static const char rcsid[] =
 
 // ************************************************************************
 
+class SoGtkConstrainedViewerP {
+public:
+  SoGtkConstrainedViewerP( SoGtkConstrainedViewer * publ );
+  ~SoGtkConstrainedViewerP(void);
+
+private:
+  SoGtkConstrainedViewer * pub;
+
+}; // class SoGtkConstrainedViewerP
+
+// ************************************************************************
+
 SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkConstrainedViewer);
+
+// ************************************************************************
 
 /*!
   Constructor.
@@ -62,16 +77,16 @@ SoGtkConstrainedViewer::SoGtkConstrainedViewer( // protected
   SbBool build )
 : inherited( parent, name, embed, flag, type, FALSE )
 {
+  this->pimpl = new SoGtkConstrainedViewerP(this);
+  this->common = new SoAnyConstrainedViewer(this);
+
   this->setClassName( "SoGtkConstrainedViewer" );
   this->upVector = SbVec3f( 0.0f, 1.0f, 0.0f );
 
-  if ( build ) {
-    GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
-    this->setBaseWidget( viewer );
-  }
+  if ( ! build ) return;
+  GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
+  this->setBaseWidget( viewer );
 } // SoGtkConstainedViewer()
-
-// ************************************************************************
 
 /*!
   The destructor.
@@ -80,6 +95,8 @@ SoGtkConstrainedViewer::SoGtkConstrainedViewer( // protected
 SoGtkConstrainedViewer::~SoGtkConstrainedViewer( // virtual
   void )
 {
+  delete this->common;
+  delete this->pimpl;
 } // ~SoGtkConstarinedViewer()
   
 // ************************************************************************
@@ -118,6 +135,7 @@ void
 SoGtkConstrainedViewer::setCamera( // virtual
   SoCamera * newCamera )
 {
+  inherited::setCamera( newCamera );
 } // setCamera()
 
 // ************************************************************************
@@ -253,5 +271,30 @@ SoGtkConstrainedViewer::computeSeekFinalOrientation( // virtual, protected
 } // computeSeekFinalOrientation()
 
 // ************************************************************************
+//
+//  Private implementation
+//
 
+/*
+*/
+
+SoGtkConstrainedViewerP::SoGtkConstrainedViewerP(
+  SoGtkConstrainedViewer * publ )
+{
+  this->pub = publ;
+} // SoGtkConstrainedViewerP()
+
+/*
+*/
+
+SoGtkConstrainedViewerP::~SoGtkConstrainedViewerP(
+  void )
+{
+} // ~SoGtkConstrainedViewerP()
+
+// ************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkConstrainedViewerRCSId(void) { return rcsid; }
+#endif
 

@@ -48,10 +48,6 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_OBJECT_SOURCE(SoGtkMouse);
-
-// *************************************************************************
-
 /*!
   \enum SoGtkMouse::Events
   FIXME: write documentation for enum
@@ -79,14 +75,18 @@ SOGTK_OBJECT_SOURCE(SoGtkMouse);
 
 // *************************************************************************
 
+SOGTK_OBJECT_SOURCE(SoGtkMouse);
+
+// *************************************************************************
+
 /*!
   Constructor.
 */
 
 SoGtkMouse::SoGtkMouse(
-  const Events events )
+  const int eventbits )
 {
-  this->events = events;
+  this->events = eventbits;
   this->buttonevent = new SoMouseButtonEvent;
   this->locationevent = new SoLocation2Event;
 } // SoGtkMouse()
@@ -110,8 +110,8 @@ SoGtkMouse::~SoGtkMouse(
 
 void
 SoGtkMouse::enable(
-  GtkWidget *widget,
-  SoGtkEventHandler* func,
+  GtkWidget * widget,
+  SoGtkEventHandler * func,
   gpointer closure)
 {
   if ( func )
@@ -125,7 +125,7 @@ SoGtkMouse::enable(
 
 void
 SoGtkMouse::disable(
-  GtkWidget *widget,
+  GtkWidget * widget,
   SoGtkEventHandler * func,
   gpointer closure )
 {

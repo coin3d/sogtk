@@ -22,18 +22,23 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#if HAVE_CONFIG_H
-#include <config.h>
+#ifdef _WIN32
+#include <windows.h>
 #endif
-
 #include <GL/gl.h>
 
 #include <gtkgl/gtkglarea.h>
 
 #include <Inventor/errors/SoDebugError.h>
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
+
+// *************************************************************************
 
 /*!
   \class SoGtkGLWidget SoGtkGLWidget.h Inventor/Gtk/SoGtkGLWidget.h
@@ -43,39 +48,11 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkGLWidget);
-
-// *************************************************************************
-
-class SoGtkGLWidgetP {
-public:
-  SoGtkGLWidgetP( SoGtkGLWidget * publ );
-  ~SoGtkGLWidgetP(void);
-
-  int glLockLevel;
-  SbBool currentIsNormal;
-  SoGtkGLWidget * pub;
-};
-
-SoGtkGLWidgetP::SoGtkGLWidgetP(
-  SoGtkGLWidget * publ )
-{
-  this->pub = publ;
-  this->glLockLevel = 0;
-  this->currentIsNormal = TRUE;
-} // SoGtkGLWidgetP()
-
-#define THIS (this->priv)
-
-// *************************************************************************
-
 /*!
   \fn virtual void SoGtkGLWidget::redraw(void)
   This method will be called when we need a redraw. It must be overloaded in
   non-abstract subclasses.
 */
-
-static const int SO_BORDER_THICKNESS = 2;
 
 /*!
   \var SbBool SoGtkGLWidget::waitForExpose
@@ -86,6 +63,49 @@ static const int SO_BORDER_THICKNESS = 2;
   \fn GtkWidget * SoGtkGLWidget::getGLWidget(void)
   FIXME: write doc
 */
+
+static const int SO_BORDER_THICKNESS = 2;
+
+// *************************************************************************
+
+class SoGtkGLWidgetP {
+public:
+  SoGtkGLWidgetP( SoGtkGLWidget * publ );
+  ~SoGtkGLWidgetP(void);
+
+  int glLockLevel;
+  SbBool currentIsNormal;
+
+  GtkWidget * glParent;
+  GtkWidget * glWidget;
+  GtkWidget * container;
+  int borderThickness;
+  int glModeBits;
+
+  SbBool drawFrontBuff;
+
+  gint glInit( GtkWidget * widget );
+  static gint sGLInit( GtkWidget * widget, void * userData );
+  gint glDraw( GtkWidget * widget, GdkEventExpose * event );
+  static gint sGLDraw( GtkWidget * widget, GdkEventExpose * event,
+    void * userData );
+  gint glReshape( GtkWidget * widget, GdkEventConfigure * event );
+  static gint sGLReshape( GtkWidget * widget, GdkEventConfigure * event,
+    void * userData );
+
+private:
+  SoGtkGLWidget * pub;
+
+}; // class SoGtkGLWidgetP
+
+#define PUBLIC(ptr) (ptr->pub)
+#define PRIVATE(ptr) (ptr->pimpl)
+
+#define THIS (this->pimpl)
+
+// *************************************************************************
+
+SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkGLWidget);
 
 // *************************************************************************
 
@@ -101,32 +121,40 @@ SoGtkGLWidget::SoGtkGLWidget(
   const SbBool build )
 : inherited( parent, name, embed )
 {
-  THIS = new SoGtkGLWidgetP( this );
+  this->pimpl = new SoGtkGLWidgetP( this );
 
   this->waitForExpose = TRUE;
-  this->glModeBits = glModes;
 
-  this->glParent = (GtkWidget *) NULL;
-  this->glWidget = (GtkWidget *) NULL;
-  this->container = (GtkWidget *) NULL;
+  PRIVATE(this)->glModeBits = glModes;
 
-  this->drawFrontBuff = FALSE;
+  PRIVATE(this)->glParent = (GtkWidget *) NULL;
+  PRIVATE(this)->glWidget = (GtkWidget *) NULL;
+  PRIVATE(this)->container = (GtkWidget *) NULL;
 
-  this->borderThickness = SO_BORDER_THICKNESS;
+  PRIVATE(this)->drawFrontBuff = FALSE;
+
+  PRIVATE(this)->borderThickness = SO_BORDER_THICKNESS;
 
   if ( ! gdk_gl_query() ) {
-    SoDebugError::post(
-      "SoGtkGLWidget::SoGtkGLWidget", 
+    SoDebugError::post( "SoGtkGLWidget::SoGtkGLWidget", 
       _( "OpenGL is not available on your display!" ) );
     return;
   }
 
   if ( ! build ) return;
   this->setClassName( "SoGtkGLWidget" );
-  GtkWidget * const glwidgetparent = this->getParentWidget();
-  GtkWidget * const glwidget = this->buildWidget( glwidgetparent );
+  GtkWidget * const glwidget = this->buildWidget( this->getParentWidget() );
   this->setBaseWidget( glwidget );
 } // SoGtkGLWidget()
+
+/*!
+*/
+
+SoGtkGLWidget::~SoGtkGLWidget(
+  void )
+{
+  delete this->pimpl;
+} // ~SoGtkGLWidget()
 
 // *************************************************************************
 
@@ -138,21 +166,21 @@ GtkWidget *
 SoGtkGLWidget::buildWidget(
   GtkWidget * parent )
 {
-  this->glParent = parent;
+  PRIVATE(this)->glParent = parent;
 
   int glAttributes[16], i = 0;
 
-  if ( this->glModeBits & SO_GL_RGB ) {
+  if ( PRIVATE(this)->glModeBits & SO_GL_RGB ) {
     glAttributes[i] = GDK_GL_RGBA; i++;
   }
-  if ( this->glModeBits & SO_GL_DOUBLE ) {
+  if ( PRIVATE(this)->glModeBits & SO_GL_DOUBLE ) {
     glAttributes[i] = GDK_GL_DOUBLEBUFFER; i++;
   }
-  if ( this->glModeBits & SO_GL_ZBUFFER ) {
+  if ( PRIVATE(this)->glModeBits & SO_GL_ZBUFFER ) {
     glAttributes[i] = GDK_GL_DEPTH_SIZE; i++;
     glAttributes[i] = 1; i++;
   }
-  if ( this->glModeBits & SO_GL_STEREO ) {
+  if ( PRIVATE(this)->glModeBits & SO_GL_STEREO ) {
     glAttributes[i] = GDK_GL_STEREO; i++;
   }
 
@@ -161,34 +189,34 @@ SoGtkGLWidget::buildWidget(
 
   glAttributes[i] = GDK_GL_NONE; i++;
 
-  this->glWidget = gtk_gl_area_new( glAttributes );
-  assert( this->glWidget != NULL );
+  PRIVATE(this)->glWidget = gtk_gl_area_new( glAttributes );
+  assert( PRIVATE(this)->glWidget != NULL );
   GtkRequisition req = { 100, 100 };
-  gtk_widget_size_request( this->glWidget, &req );
+  gtk_widget_size_request( PRIVATE(this)->glWidget, &req );
   
-  gtk_signal_connect( GTK_OBJECT(this->glWidget), "realize",
-    GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLInit), (void *) this );
-  gtk_signal_connect( GTK_OBJECT(this->glWidget), "configure_event",
-    GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLReshape), (void *) this );
-  gtk_signal_connect( GTK_OBJECT(this->glWidget), "expose_event",
-    GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLDraw), (void *) this );
+  gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->glWidget), "realize",
+    GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLInit), (void *) this );
+  gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->glWidget), "configure_event",
+    GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLReshape), (void *) this );
+  gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->glWidget), "expose_event",
+    GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLDraw), (void *) this );
 
-  this->container = gtk_frame_new(0);
-  gtk_frame_set_shadow_type (GTK_FRAME (this->container), GTK_SHADOW_IN);
-  gtk_container_set_border_width( GTK_CONTAINER(this->container),
-    this->borderThickness );
-  gtk_container_add( GTK_CONTAINER(this->container), this->glWidget );
+  PRIVATE(this)->container = gtk_frame_new(0);
+  gtk_frame_set_shadow_type(GTK_FRAME(PRIVATE(this)->container), GTK_SHADOW_IN);
+  gtk_container_set_border_width( GTK_CONTAINER(PRIVATE(this)->container),
+    PRIVATE(this)->borderThickness );
+  gtk_container_add( GTK_CONTAINER(PRIVATE(this)->container), PRIVATE(this)->glWidget );
 
-  gtk_widget_show( GTK_WIDGET(this->glWidget) );
+  gtk_widget_show( GTK_WIDGET(PRIVATE(this)->glWidget) );
 
-  gtk_widget_add_events( GTK_WIDGET(this->glWidget),
+  gtk_widget_add_events( GTK_WIDGET(PRIVATE(this)->glWidget),
     GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK |
     GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
     GDK_BUTTON_MOTION_MASK | GDK_BUTTON1_MOTION_MASK |
     GDK_BUTTON2_MOTION_MASK | GDK_BUTTON3_MOTION_MASK |
     GDK_POINTER_MOTION_MASK );
 
-  return this->container;
+  return PRIVATE(this)->container;
 } // buildWidget()
 
 // *************************************************************************
@@ -241,7 +269,7 @@ void
 SoGtkGLWidget::setBorder(
   const SbBool enable )
 {
-  this->borderThickness = enable ? SO_BORDER_THICKNESS : 0;
+  PRIVATE(this)->borderThickness = enable ? SO_BORDER_THICKNESS : 0;
   // update canvas if it is created
 } // setBorder()
 
@@ -255,7 +283,7 @@ SbBool
 SoGtkGLWidget::isBorder(
   void ) const
 {
-  return (this->borderThickness != 0) ? TRUE : FALSE;
+  return (PRIVATE(this)->borderThickness != 0) ? TRUE : FALSE;
 } // isBorder()
 
 // *************************************************************************
@@ -271,7 +299,7 @@ void
 SoGtkGLWidget::setDoubleBuffer(
   const SbBool enable )
 {
-  if ( this->glWidget ) {
+  if ( PRIVATE(this)->glWidget ) {
 /*
     if ( enable != this->getQGLWidget()->doubleBuffer() ) {
       QGLFormat format = this->getQGLWidget()->format();
@@ -293,9 +321,9 @@ SoGtkGLWidget::setDoubleBuffer(
 */
   } else {
     if ( enable )
-      this->glModeBits |= SO_GLX_DOUBLE;
+      PRIVATE(this)->glModeBits |= SO_GLX_DOUBLE;
     else
-      this->glModeBits &= ~SO_GLX_DOUBLE;
+      PRIVATE(this)->glModeBits &= ~SO_GLX_DOUBLE;
   }
 } // setDoubleBuffer()
 
@@ -310,11 +338,11 @@ SoGtkGLWidget::isDoubleBuffer(
   void ) const
 {
 /*
-  if ( this->glWidget )
-    return this->glWidget->doubleBuffer();
+  if ( PRIVATE(this)->glWidget )
+    return PRIVATE(this)->glWidget->doubleBuffer();
   else
 */
-  return (this->glModeBits & SO_GL_DOUBLE) ? TRUE : FALSE;
+  return (PRIVATE(this)->glModeBits & SO_GL_DOUBLE) ? TRUE : FALSE;
 } // isDoubleBuffer()
 
 // *************************************************************************
@@ -327,7 +355,7 @@ void
 SoGtkGLWidget::setDrawToFrontBufferEnable(
   const SbBool enable )
 {
-  this->drawFrontBuff = enable;
+  PRIVATE(this)->drawFrontBuff = enable;
 } // setDrawToFrontBufferEnable()
 
 /*!
@@ -338,7 +366,7 @@ SbBool
 SoGtkGLWidget::isDrawToFrontBufferEnable(
   void ) const
 {
-  return this->drawFrontBuff;
+  return PRIVATE(this)->drawFrontBuff;
 } // isDrawToFrontBufferEnable()
 
 // *************************************************************************
@@ -346,6 +374,7 @@ SoGtkGLWidget::isDrawToFrontBufferEnable(
 /*!
   Enables or disables quad buffer stereo.
 */
+
 void 
 SoGtkGLWidget::setQuadBufferStereo(const SbBool enable)
 {
@@ -355,6 +384,7 @@ SoGtkGLWidget::setQuadBufferStereo(const SbBool enable)
 /*!
   Returns \c TRUE if quad buffer stereo is enabled for this widget.
 */
+
 SbBool 
 SoGtkGLWidget::isQuadBufferStereo(void) const
 {
@@ -398,13 +428,13 @@ void
 SoGtkGLWidget::setGLSize(
   const SbVec2s size )
 {
-  assert( this->container );
+  assert( PRIVATE(this)->container );
   GtkRequisition req = {
-    size[0] + this->borderThickness * 2,
-    size[1] + this->borderThickness * 2
+    size[0] + PRIVATE(this)->borderThickness * 2,
+    size[1] + PRIVATE(this)->borderThickness * 2
   };
 
-  gtk_widget_size_request( GTK_WIDGET(this->container), &req );
+  gtk_widget_size_request( GTK_WIDGET(PRIVATE(this)->container), &req );
 } // setGLSize()
 
 /*!
@@ -415,10 +445,10 @@ const SbVec2s
 SoGtkGLWidget::getGLSize(
   void ) const
 {
-  if ( ! this->glWidget )
+  if ( ! PRIVATE(this)->glWidget )
     return SbVec2s( -1, -1 );
-  return SbVec2s( this->glWidget->allocation.width,
-                  this->glWidget->allocation.height );
+  return SbVec2s( PRIVATE(this)->glWidget->allocation.width,
+                  PRIVATE(this)->glWidget->allocation.height );
 } // getGLSize()
 
 /*!
@@ -429,10 +459,10 @@ float
 SoGtkGLWidget::getGLAspectRatio(
   void ) const
 {
-  if ( ! this->glWidget )
+  if ( ! PRIVATE(this)->glWidget )
     return 1.0f;
-  return (float) this->glWidget->allocation.width /
-         (float) this->glWidget->allocation.height;
+  return (float) PRIVATE(this)->glWidget->allocation.width /
+         (float) PRIVATE(this)->glWidget->allocation.height;
 } // getGLAspectRatio()
 
 /*!
@@ -463,8 +493,8 @@ GtkWidget *
 SoGtkGLWidget::getGtkGLArea(
   void )
 {
-  return this->glWidget;
-} // getGltGLArea()
+  return PRIVATE(this)->glWidget;
+} // getGtkGLArea()
 
 // *************************************************************************
 
@@ -527,12 +557,12 @@ SoGtkGLWidget::glInit(
 */
 
 gint
-SoGtkGLWidget::sGLInit( // static
+SoGtkGLWidgetP::sGLInit( // static
   GtkWidget * widget,
   void * closure )
 {
-  SoGtkGLWidget * that = (SoGtkGLWidget *) closure;
-  that->glInit();
+  SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
+  glwidget->glInit();
   return TRUE;
 } // sGLInit()
 
@@ -554,12 +584,12 @@ SoGtkGLWidget::glReshape( // virtual
 */
 
 gint
-SoGtkGLWidget::glReshape(
+SoGtkGLWidgetP::glReshape(
   GtkWidget * widget,
   GdkEventConfigure * event )
 {
   assert( this->glWidget != NULL );
-  this->glReshape( this->glWidget->allocation.width,
+  PUBLIC(this)->glReshape( this->glWidget->allocation.width,
                    this->glWidget->allocation.height );
   return TRUE;
 } // glReshape()
@@ -569,13 +599,13 @@ SoGtkGLWidget::glReshape(
 */
 
 gint
-SoGtkGLWidget::sGLReshape( // static
+SoGtkGLWidgetP::sGLReshape( // static
   GtkWidget * widget,
   GdkEventConfigure * event, 
-  void * userData )
+  void * closure )
 {
-  SoGtkGLWidget * that = (SoGtkGLWidget *) userData;
-  return that->glReshape( widget, event );
+  SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
+  return PRIVATE(glwidget)->glReshape( widget, event );
 } // sGLReshape()
 
 // *************************************************************************
@@ -595,11 +625,11 @@ SoGtkGLWidget::glRender( // virtual
 */
 
 gint
-SoGtkGLWidget::glDraw(
+SoGtkGLWidgetP::glDraw(
   GtkWidget * widget,
   GdkEventExpose * event )
 {
-  this->glRender();
+  PUBLIC(this)->glRender();
 //  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) ) )
 //    return TRUE;
 
@@ -613,14 +643,14 @@ SoGtkGLWidget::glDraw(
 // Callback function for expose events.
 
 gint
-SoGtkGLWidget::sGLDraw( // static
+SoGtkGLWidgetP::sGLDraw( // static
   GtkWidget * widget,
   GdkEventExpose * event, 
-  void * userData )
+  void * closure )
 {
-  SoGtkGLWidget * that = (SoGtkGLWidget *) userData;
-  gint result = that->glDraw( widget, event );
-  that->waitForExpose = FALSE; // Gets flipped from TRUE on first expose.
+  SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
+  gint result = PRIVATE(glwidget)->glDraw( widget, event );
+  glwidget->waitForExpose = FALSE; // Gets flipped from TRUE on first expose.
   return result;
 } // sGLDraw()
 
@@ -634,29 +664,31 @@ int
 SoGtkGLWidget::getLockLevel(
   void ) const
 {
-  return THIS->glLockLevel;
+  return PRIVATE(this)->glLockLevel;
 } // getLockLevel()
 
 /*!
-  FIXME: write doc
+  This method invokes makecurrent on the GL appropriate context.
 */
 
 void
 SoGtkGLWidget::glLock(
   void )
 {
-  if ( GTK_IS_GL_AREA(this->glWidget) )
-    gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) );
+  if ( GTK_IS_GL_AREA(PRIVATE(this)->glWidget) )
+    gtk_gl_area_make_current( GTK_GL_AREA(PRIVATE(this)->glWidget) );
+  PRIVATE(this)->glLockLevel++;
 } // glLock()
 
 /*!
-  FIXME: write doc
+  This method unlocks the locked GL context.
 */
 
 void
 SoGtkGLWidget::glUnlock(
   void )
 {
+  PRIVATE(this)->glLockLevel--;
 } // glUnlock()
 
 /*!
@@ -667,8 +699,8 @@ void
 SoGtkGLWidget::glSwapBuffers(
   void )
 {
-  if ( GTK_IS_GL_AREA(this->glWidget) )
-    gtk_gl_area_swapbuffers( GTK_GL_AREA(this->glWidget) );
+  if ( GTK_IS_GL_AREA(PRIVATE(this)->glWidget) )
+    gtk_gl_area_swapbuffers( GTK_GL_AREA(PRIVATE(this)->glWidget) );
 } // glSwapBuffers()
 
 /*!
@@ -732,6 +764,21 @@ SoGtkGLWidget::setOverlayRender(
 
   THIS->currentIsNormal = enable ? FALSE : TRUE;
 } // setOverlayRender()
+
+// *************************************************************************
+
+SoGtkGLWidgetP::SoGtkGLWidgetP(
+  SoGtkGLWidget * publ )
+{
+  this->pub = publ;
+  this->glLockLevel = 0;
+  this->currentIsNormal = TRUE;
+} // SoGtkGLWidgetP()
+
+SoGtkGLWidgetP::~SoGtkGLWidgetP(
+  void )
+{
+} // ~SoGtkGLWidgetP()
 
 // *************************************************************************
 
