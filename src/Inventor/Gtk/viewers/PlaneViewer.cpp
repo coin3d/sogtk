@@ -168,39 +168,6 @@ SoGtkPlaneViewerP::camerabuttonCB(GtkWidget * button, gpointer closure)
 
 // *************************************************************************
 
-// Documented in common/viewers/SoGuiPlaneViewer.cpp.in.
-SoGtkPlaneViewer::SoGtkPlaneViewer(GtkWidget * parent,
-                                   const char * const name,
-                                   const SbBool embed,
-                                   const SoGtkFullViewer::BuildFlag flag,
-                                   const SoGtkViewer::Type type)
-  : inherited(parent, name, embed, flag, type, FALSE)
-{
-  PRIVATE(this) = new SoGtkPlaneViewerP(this);
-  PRIVATE(this)->constructor(TRUE);
-}
-
-// Documented in common/viewers/SoGuiPlaneViewer.cpp.in.
-SoGtkPlaneViewer::SoGtkPlaneViewer(GtkWidget * parent,
-                                   const char * const name,
-                                   const SbBool embed,
-                                   const SoGtkFullViewer::BuildFlag flag,
-                                   const SoGtkViewer::Type type,
-                                   const SbBool build)
-  : inherited(parent, name, embed, flag, type, FALSE)
-{
-  PRIVATE(this) = new SoGtkPlaneViewerP(this);
-  PRIVATE(this)->constructor(build);
-}
-
-// Documented in common/viewers/SoGuiPlaneViewer.cpp.in.
-SoGtkPlaneViewer::~SoGtkPlaneViewer()
-{
-  delete PRIVATE(this);
-}
-
-// *************************************************************************
-
 // Documented in superclass.
 void
 SoGtkPlaneViewer::setCamera(SoCamera * newCamera)
