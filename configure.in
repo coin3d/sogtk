@@ -181,8 +181,10 @@ else
 
 fi
 
+dnl Check for the availability of this node (it is used in the hidden
+dnl line rendering), which is not part of older Inventor implementations.
+SIM_HAVE_SOPOLYGONOFFSET
 
-dnl * Set up necessary stuff to use Open Inventor or Coin.
 
 dnl Check for GTK+
 AC_LANG_SAVE
