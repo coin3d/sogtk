@@ -16,8 +16,6 @@ srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
 
-top_builddir = ..
-
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 datadir = $(prefix)/@DATADIRNAME@
@@ -28,7 +26,7 @@ subdir = po
 
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
-MKINSTALLDIRS = @MKINSTALLDIRS@
+MKINSTALLDIRS = $(top_srcdir)/cfg/mkinstalldirs
 
 CC = @CC@
 GENCAT = @GENCAT@
@@ -112,10 +110,10 @@ install-exec:
 install-data: install-data-@USE_NLS@
 install-data-no: all
 install-data-yes: all
-	if test -r "$(top_builddir)/$(MKINSTALLDIRS)"; then \
-	  $(top_builddir)/$(MKINSTALLDIRS) $(datadir); \
+	if test -r "$(MKINSTALLDIRS)"; then \
+	  $(MKINSTALLDIRS) $(datadir); \
 	else \
-	  $(SHELL) $(top_srcdir)/mkinstalldirs $(datadir); \
+	  $(SHELL) $(top_srcdir)/cfg/mkinstalldirs $(datadir); \
 	fi
 	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
@@ -126,10 +124,10 @@ install-data-yes: all
 	  esac; \
 	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
 	  dir=$$destdir/$$lang/LC_MESSAGES; \
-	  if test -r "$(top_builddir)/$(MKINSTALLDIRS)"; then \
-	    $(top_builddir)/$(MKINSTALLDIRS) $$dir; \
+	  if test -r "$(MKINSTALLDIRS)"; then \
+	    $(MKINSTALLDIRS) $$dir; \
 	  else \
-	    $(SHELL) $(top_srcdir)/mkinstalldirs $$dir; \
+	    $(SHELL) $(top_srcdir)/cfg/mkinstalldirs $$dir; \
 	  fi; \
 	  if test -r $$cat; then \
 	    $(INSTALL_DATA) $$cat $$dir/$(PACKAGE)$(INSTOBJEXT); \
@@ -154,10 +152,10 @@ install-data-yes: all
 	  fi; \
 	done
 	if test "$(PACKAGE)" = "gettext"; then \
-	  if test -r "$(top_builddir)/$(MKINSTALLDIRS)"; then \
-	    $(top_builddir)/$(MKINSTALLDIRS) $(gettextsrcdir); \
+	  if test -r "$(MKINSTALLDIRS)"; then \
+	    $(MKINSTALLDIRS) $(gettextsrcdir); \
 	  else \
-	    $(SHELL) $(top_srcdir)/mkinstalldirs $(gettextsrcdir); \
+	    $(SHELL) $(top_srcdir)/cfg/mkinstalldirs $(gettextsrcdir); \
 	  fi; \
 	  $(INSTALL_DATA) $(srcdir)/Makefile.in.in \
 			  $(gettextsrcdir)/Makefile.in.in; \

@@ -113,8 +113,6 @@ const struct _msg_ent _msg_tbl[] = {
   {"Translate Y", 104},
   {"Translate X", 105},
   {"Plane Viewer", 106},
-  {"unknown button", 107},
-  {"unsupported button", 108},
 };
 
-int _msg_tbl_length = 108;
+int _msg_tbl_length = 106;
