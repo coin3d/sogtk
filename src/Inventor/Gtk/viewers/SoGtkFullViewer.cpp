@@ -325,7 +325,7 @@ SoGtkFullViewer::setDecoration(
 
   this->decorations = enable;
   if ( this->prefmenu )
-    this->prefmenu->SetMenuItemMarked( DECORATION_ITEM, enable );
+    this->prefmenu->setMenuItemMarked( DECORATION_ITEM, enable );
   if ( this->viewerWidget )
     this->showDecorationWidgets(enable);
 }
@@ -546,7 +546,7 @@ SoGtkFullViewer::setViewing(
   }
 
   if ( this->prefmenu )
-    this->prefmenu->SetMenuItemMarked( EXAMINING_ITEM, enable );
+    this->prefmenu->setMenuItemMarked( EXAMINING_ITEM, enable );
 
   inherited::setViewing( enable );
 
@@ -578,7 +578,7 @@ SoGtkFullViewer::setHeadlight(
 {
   inherited::setHeadlight( enable );
   if ( this->prefmenu )
-    this->prefmenu->SetMenuItemMarked( HEADLIGHT_ITEM, enable );
+    this->prefmenu->setMenuItemMarked( HEADLIGHT_ITEM, enable );
 } // setHeadlight()
 
 // *************************************************************************
@@ -993,11 +993,11 @@ SoGtkFullViewer::buildPopupMenu(
   this->prefmenu = common->setupStandardPopupMenu();
   assert( this->prefmenu != NULL );
   if ( this->isViewing() )
-    this->prefmenu->SetMenuItemMarked( EXAMINING_ITEM, TRUE );
+    this->prefmenu->setMenuItemMarked( EXAMINING_ITEM, TRUE );
   if ( this->isDecoration() )
-    this->prefmenu->SetMenuItemMarked( DECORATION_ITEM, TRUE );
+    this->prefmenu->setMenuItemMarked( DECORATION_ITEM, TRUE );
   if ( this->isHeadlight() )
-    this->prefmenu->SetMenuItemMarked( HEADLIGHT_ITEM, TRUE );
+    this->prefmenu->setMenuItemMarked( HEADLIGHT_ITEM, TRUE );
 } // buildPopupMenu()
 
 // *************************************************************************
@@ -1029,7 +1029,7 @@ SoGtkFullViewer::openPopupMenu(
   if ( ! this->prefmenu && this->menuEnabled )
     this->buildPopupMenu();
   if ( this->prefmenu )
-    this->prefmenu->PopUp( this->getGLWidget(), position[0], position[1] );
+    this->prefmenu->popUp( this->getGLWidget(), position[0], position[1] );
 } // openPopupMenu()
 
 // *************************************************************************
