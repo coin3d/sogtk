@@ -17,8 +17,10 @@
  *
 \**************************************************************************/
 
+#if SOGTK_DEBUG
 static const char rcsid[] =
   "$Id$";
+#endif // SOGTK_DEBUG
 
 /*!
   \class SoGtkMouse SoGtkMouse.h Inventor/Gtk/devices/SoGtkMouse.h
@@ -33,6 +35,7 @@ static const char rcsid[] =
 #include <gdk/gdktypes.h>
 
 #include <Inventor/errors/SoDebugError.h>
+
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/events/SoLocation2Event.h>
 
@@ -77,10 +80,9 @@ static const char rcsid[] =
 */
 
 SoGtkMouse::SoGtkMouse(
-  SoGtkMouseEventMask mask )
+  SoGtkMouseEventMask eventmask )
 {
-  this->eventmask = mask;
-
+  this->events = eventmask;
   this->buttonevent = new SoMouseButtonEvent;
   this->locationevent = new SoLocation2Event;
 } // SoGtkMouse()
@@ -134,15 +136,14 @@ const SoEvent *
 SoGtkMouse::translateEvent(
   GdkEvent * ev )
 {
-  SoEvent * super = NULL;
   switch ( ev->type ) {
   case GDK_BUTTON_PRESS:
     do {
       GdkEventButton * event = (GdkEventButton *) ev;
       this->buttonevent->setState( SoButtonEvent::DOWN );
-      this->buttonevent->setShiftDown( event->state & GDK_SHIFT_MASK );
-      this->buttonevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
-      this->buttonevent->setAltDown( event->state & GDK_MOD1_MASK );
+      this->buttonevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
+      this->buttonevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
+      this->buttonevent->setAltDown( (event->state & GDK_MOD1_MASK) ? TRUE : FALSE );
       SbTime stamp;
       stamp.setMsecValue( event->time );
       this->buttonevent->setTime( stamp );
@@ -171,16 +172,16 @@ SoGtkMouse::translateEvent(
         break;
       }
     } while ( FALSE );
-    super = this->buttonevent;
+    return this->buttonevent;
     break;
 
   case GDK_BUTTON_RELEASE:
     do {
       GdkEventButton * event = (GdkEventButton *) ev;
       this->buttonevent->setState( SoButtonEvent::UP);
-      this->buttonevent->setShiftDown( event->state & GDK_SHIFT_MASK );
-      this->buttonevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
-      this->buttonevent->setAltDown( event->state & GDK_MOD1_MASK );
+      this->buttonevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
+      this->buttonevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
+      this->buttonevent->setAltDown( (event->state & GDK_MOD1_MASK) ? TRUE : FALSE );
       SbTime stamp;
       stamp.setMsecValue( event->time );
       this->buttonevent->setTime( stamp );
@@ -209,7 +210,7 @@ SoGtkMouse::translateEvent(
         break;
       }
     } while ( FALSE );
-    super = this->buttonevent;
+    return this->buttonevent;
     break;
 
   case GDK_MOTION_NOTIFY:
@@ -224,7 +225,7 @@ SoGtkMouse::translateEvent(
       SoGtkDevice::setEventPosition( this->locationevent,
         (int) event->x, (int) event->y );
     } while ( 0 );
-    super = this->locationevent;
+    return this->locationevent;
     break;
 
   default:
@@ -232,7 +233,12 @@ SoGtkMouse::translateEvent(
 
   } // switch ( ev->type )
 
-  return super;
+  return (const SoEvent *) NULL;
 } // translateEvent()
 
 // *************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkMouseRCSId(void) { rcsid; }
+#endif // SOGTK_DEBUG
+
