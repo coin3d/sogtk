@@ -1,0 +1,54 @@
+If you want to work _with_ the SoGtk sourcecode (not just writing
+applications _using_ the SoGtk library) -- for helping us fixing bugs,
+improve performance, or whatever reasons -- this file contains some
+hints and tips for you.
+
+==============================================================================
+
+1 The Bleeding Edge
+===================
+
+First of all, you should make sure you are building from the latest
+sources from the CVS branch you want to work with. This is done by
+using the Concurrent Versioning System for staying in sync with the
+sourcecode repository we at Systems in Motion are using.  Follow the
+instructions on the webpages at <URL:http://www.coin3d.org>.
+
+If you are not familiar with CVS, check out the CVS homepages at
+<URL:http://cvshome.org/>.
+
+
+XXX FIXME: complete doc. XXX
+
+* Building SoGtk for development (UNIX)
+	- discuss common C++ large project problems
+	- solutions applied in SoGtk
+		o using multiply configure'd build directories
+			- slim
+			- full debug
+                        - with profiling
+                        - different platforms
+		o --enable-hacking (gives quick turn-around time)
+		o symlinks from install directory to avoid ``make install''
+		o ``make install'' from src/Inventor/Gtk instead of root
+                o make install-data
+                o make *-am
+		o explain mechanisms for overloading methods in
+                  dynamic libraries
+
+* Differences, MSWin
+
+* Build hacking, autogen.sh/Autoconf/Automake/Libtool
+
+* Styleguide for code
+	- rip out the text from Metadon.conf
+
+* Submitting patches
+	- technical walk-through
+	- legal aspects
+
+* come work for us
+        - interest in 3D visualization
+        - C++ expertise a definitive plus
+
+==============================================================================
