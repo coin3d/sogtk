@@ -51,5 +51,5 @@ cvs log -d"00:00:00 Jan 1 2001<00:00:00 Jan 1 2002" |
 
 rm ChangeLog.bak $headerfile
 
-# cvs commit -m "Automatic ChangeLog generation" ChangeLog
+cvs commit -m "Automatic ChangeLog generation" ChangeLog
 
