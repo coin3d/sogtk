@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef __SOGTK_KEYBOARD_H__
-#define __SOGTK_KEYBOARD_H__
+#ifndef SOGTK_KEYBOARD_H
+#define SOGTK_KEYBOARD_H
 
 #include <Inventor/SbDict.h>
 
@@ -60,4 +60,4 @@ private:
 
 // *************************************************************************
 
-#endif // ! __SOGTK_KEYBOARD_H__
+#endif // ! SOGTK_KEYBOARD_H

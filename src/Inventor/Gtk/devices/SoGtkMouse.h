@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef __SOGTK_MOUSE_H__
-#define __SOGTK_MOUSE_H__
+#ifndef SOGTK_MOUSE_H
+#define SOGTK_MOUSE_H
 
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 
@@ -62,4 +62,4 @@ private:
 
 // *************************************************************************
 
-#endif // ! __SOGTK_MOUSE_H__
+#endif // ! SOGTK_MOUSE_H

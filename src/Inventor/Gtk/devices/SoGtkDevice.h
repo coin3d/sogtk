@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef __SOGTK_DEVICE_H__
-#define __SOGTK_DEVICE_H__
+#ifndef SOGTK_DEVICE_H
+#define SOGTK_DEVICE_H
 
 /*!
   \defgroup gtkdevices Gtk Device Classes
@@ -63,4 +63,4 @@ private:
 
 // *************************************************************************
 
-#endif // ! __SOGTK_DEVICE_H__
+#endif // ! SOGTK_DEVICE_H

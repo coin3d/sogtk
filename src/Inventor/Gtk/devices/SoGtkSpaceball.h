@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef __SOGTK_SPACEBALL_H__
-#define __SOGTK_SPACEBALL_H__
+#ifndef SOGTK_SPACEBALL_H
+#define SOGTK_SPACEBALL_H
 
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 
@@ -65,4 +65,4 @@ private:
 
 // *************************************************************************
 
-#endif // ! __SOGTK_SPACEBALL_H__
+#endif // ! SOGTK_SPACEBALL_H

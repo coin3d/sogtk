@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef __SOGTK_INPUTFOCUS_H__
-#define __SOGTK_INPUTFOCUS_H__
+#ifndef SOGTK_INPUTFOCUS_H
+#define SOGTK_INPUTFOCUS_H
 
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 
@@ -51,4 +51,4 @@ private:
 
 // *************************************************************************
 
-#endif // ! __SOGTK_INPUTFOCUS_H__
+#endif // ! SOGTK_INPUTFOCUS_H
