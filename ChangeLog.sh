@@ -1,14 +1,14 @@
 #!/bin/sh
 ############################################################################
 #
-#  gen-changelog is a wrapper-script for generating ChangeLog files
+#  ChangeLog.sh-changelog is a wrapper-script for generating ChangeLog files
 #  using the cvs2cl script.
 #
 
 moduledir=${0%/[^/]*}
-module=${moduledir##*/}
-GUI=`echo $module | cut -c3-`
-cvs2cl=$HOME/store/cvs/cvs2cl/cvs2cl.pl
+module=SoGtk
+GUI=Gtk
+cvs2cl=$HOME/code/cvs/src/cvs2cl/cvs2cl.pl
 headerfile=/tmp/So$GUI.header
 
 cd $moduledir
@@ -23,7 +23,7 @@ matically generated every night.  Entries are in reversed chronological
 order.  See also the following ChangeLog files:
 
   ./src/Inventor/$GUI/common/ChangeLog
-  ./examples/ChangeLog
+  ./data/ChangeLog
   ./conf-macros/ChangeLog 
 
 See http://www.red-bean.com/~kfogel/cvs2cl.shtml for information about the
@@ -43,7 +43,7 @@ cvs log | $cvs2cl --stdin --header $headerfile --separate-header --prune \
   --ignore 'config\.h\.in$' \
   --ignore 'conf-macros/' \
   --ignore "src/Inventor/$GUI/common/" \
-  --ignore "examples/"
+  --ignore "data/"
 
 rm ChangeLog.bak $headerfile
 
