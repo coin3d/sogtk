@@ -16,4 +16,8 @@ Although you can contact the author directly, please use the coin-discuss
 mailing-list for SoGtk-related questions.  Information on the coin mailing-
 lists can be found on the support page at <URL:http://www.coin3d.org/>.
 
+Set $COIN_HOME to ${prefix}/share/Coin to use the installed materials with
+the SoGtkMaterialList component, or add --enable-static-defaults to the
+configure options you use to get them compiled directly into libSoGtk.
+
   Lars J
