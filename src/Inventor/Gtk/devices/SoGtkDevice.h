@@ -40,12 +40,12 @@ class SOGTK_DLL_API SoGtkDevice : public SoGtkObject {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkDevice, SoGtkObject);
 
 public:
-  typedef void SoGtkEventHandler( GtkWidget *, void *, GdkEvent *, bool * );
+  typedef void SoGtkEventHandler( GtkWidget *, GdkEvent *, gpointer );
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func,
-                       void * data ) = 0;
+                       void * closure ) = 0;
   virtual void disable( GtkWidget * widget, SoGtkEventHandler * func,
-                        void * data ) = 0;
+                        void * closure ) = 0;
 
   virtual const SoEvent * translateEvent( GdkEvent * event ) = 0;
 
@@ -64,7 +64,7 @@ private:
 
 }; // class SoGtkDevice
 
-typedef void (*SoGtkEventHandlerPtr)( GtkWidget *, void *, GdkEvent *, bool * );
+typedef void (*SoGtkEventHandlerPtr)( GtkWidget *, GdkEvent *, gpointer );
 
 // *************************************************************************
 
