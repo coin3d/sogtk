@@ -190,6 +190,7 @@ void
 SoGtk::sensorQueueChanged(
   void * )
 {
+//  SoDebugError::postInfo( "SoGtk::sensorQueueChanged", "[invoked]" );
   SoSensorManager * sm = SoDB::getSensorManager();
 
   // FIXME: the timer stuff below (and the timer callback functions
@@ -263,6 +264,17 @@ SoGtk::mainLoop(
   // We need to process immediate sensors _before_ any events are
   // processed. This is done by installing a global eventFilter here...
   gtk_main();
+}
+
+/*!
+  This method should tell the main loop to quit.
+*/
+
+void
+SoGtk::exitMainLoop(
+  void )
+{
+  SOGTK_STUB();
 }
 
 // *************************************************************************

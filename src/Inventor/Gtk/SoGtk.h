@@ -49,6 +49,7 @@ public:
   static void init( GtkWidget * const topLevelWidget );
 
   static void mainLoop(void);
+  static void exitMainLoop(void);
 
 //  static GtkApplication * getApplication(void);
   static GtkWidget * getTopLevelWidget(void);
