@@ -32,6 +32,7 @@
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtk.h>
+#include <Inventor/Gtk/SoGuiP.h>
 #include <Inventor/Gtk/SoGtkObject.h>
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 #include <Inventor/Gtk/SoGtkComponent.h>
@@ -95,7 +96,7 @@ SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
 
 // init()-method documented in common/SoGuiCommon.cpp.in.
 void
-SoGtk::internal_init(GtkWidget * toplevelwidget)
+SoGtk::init(GtkWidget * toplevelwidget)
 {
   if (SoGtk::mainWidget != NULL) {
 #if SOGTK_DEBUG
@@ -110,7 +111,7 @@ SoGtk::internal_init(GtkWidget * toplevelwidget)
   SoInteraction::init();
   SoGtkObject::init();
 
-  SoDB::getSensorManager()->setChangedCallback(SoGtk::sensorQueueChanged,
+  SoDB::getSensorManager()->setChangedCallback(SoGuiP::sensorQueueChanged,
                                                NULL);
   SoGtk::mainWidget = toplevelwidget;
 #if defined(ENABLE_NLS)
@@ -122,8 +123,8 @@ SoGtk::internal_init(GtkWidget * toplevelwidget)
 
 // init()-method documented in common/SoGuiCommon.cpp.in.
 GtkWidget *
-SoGtk::internal_init(int & argc, char ** argv,
-                     const char * appname, const char * classname)
+SoGtk::init(int & argc, char ** argv,
+            const char * appname, const char * classname)
 {
   if (SoGtk::mainWidget) {
 #if SOGTK_DEBUG
@@ -149,7 +150,7 @@ gint
 SoGtk::timerSensorCB(gpointer data)
 {
   SoDB::getSensorManager()->processTimerQueue();
-  SoGtk::sensorQueueChanged(NULL);
+  SoGuiP::sensorQueueChanged(NULL);
   return FALSE; // FIXME: wild guess.. 20000319 mortene.
 }
 
@@ -157,7 +158,7 @@ gint
 SoGtk::idleSensorCB(gpointer data)
 {
   SoDB::getSensorManager()->processDelayQueue(TRUE);
-  SoGtk::sensorQueueChanged(NULL);
+  SoGuiP::sensorQueueChanged(NULL);
   return FALSE; // FIXME: wild guess.. 20000319 mortene.
 }
 
@@ -165,21 +166,17 @@ gint
 SoGtk::delaySensorCB(gpointer data)
 {
   SoDB::getSensorManager()->processDelayQueue(FALSE);
-  SoGtk::sensorQueueChanged(NULL);
+  SoGuiP::sensorQueueChanged(NULL);
   return FALSE; // FIXME: wild guess.. 20000319 mortene.
 }
 
 // *************************************************************************
 
-/*!
-  \internal
-
-  This function gets called whenever something has happened to any of
-  the sensor queues. It starts or reschedules a timer which will
-  trigger when a sensor is ripe for plucking.
-*/
+// This function gets called whenever something has happened to any of
+// the sensor queues. It starts or reschedules a timer which will
+// trigger when a sensor is ripe for plucking.
 void
-SoGtk::sensorQueueChanged(void *)
+SoGuiP::sensorQueueChanged(void *)
 {
   SoSensorManager * sm = SoDB::getSensorManager();
 
