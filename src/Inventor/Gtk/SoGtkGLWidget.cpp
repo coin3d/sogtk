@@ -46,6 +46,28 @@ SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkGLWidget);
 
 // *************************************************************************
 
+class SoGtkGLWidgetP {
+public:
+  SoGtkGLWidgetP( SoGtkGLWidget * publ );
+  ~SoGtkGLWidgetP(void);
+
+  int glLockLevel;
+  SbBool currentIsNormal;
+  SoGtkGLWidget * pub;
+};
+
+SoGtkGLWidgetP::SoGtkGLWidgetP(
+  SoGtkGLWidget * publ )
+{
+  this->pub = publ;
+  this->glLockLevel = 0;
+  this->currentIsNormal = TRUE;
+} // SoGtkGLWidgetP()
+
+#define THIS (this->priv)
+
+// *************************************************************************
+
 /*!
   \fn virtual void SoGtkGLWidget::redraw(void)
   This method will be called when we need a redraw. It must be overloaded in
@@ -74,6 +96,8 @@ SoGtkGLWidget::SoGtkGLWidget(
   const SbBool build )
 : inherited( parent, name, embed )
 {
+  THIS = new SoGtkGLWidgetP( this );
+
   this->waitForExpose = TRUE;
   this->glModeBits = glModes;
 
@@ -586,20 +610,39 @@ SoGtkGLWidget::sGLDraw( // static
 
 // *************************************************************************
 
+/*!
+  This method returns the number of times glLock() has been called.
+*/
+
+int
+SoGtkGLWidget::getLockLevel(
+  void ) const
+{
+  return THIS->glLockLevel;
+} // getLockLevel()
+
+/*!
+*/
+
 void
 SoGtkGLWidget::glLock(
   void )
 {
-  // FIXME: overlay stuff
   if ( GTK_IS_GL_AREA(this->glWidget) )
     gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) );
 } // glLock()
+
+/*!
+*/
 
 void
 SoGtkGLWidget::glUnlock(
   void )
 {
 } // glUnlock()
+
+/*!
+*/
 
 void
 SoGtkGLWidget::glSwapBuffers(
@@ -608,6 +651,9 @@ SoGtkGLWidget::glSwapBuffers(
   if ( GTK_IS_GL_AREA(this->glWidget) )
     gtk_gl_area_swapbuffers( GTK_GL_AREA(this->glWidget) );
 } // glSwapBuffers()
+
+/*!
+*/
 
 void
 SoGtkGLWidget::glFlushBuffer(
@@ -636,21 +682,24 @@ SoGtkGLWidget::afterRealizeHook( // virtual, protected
 
 // *************************************************************************
 
-static SbBool overlay = FALSE;
-
 SbBool
 SoGtkGLWidget::isOverlayRender(
   void ) const
 {
-  return overlay;
-}
+  return THIS->currentIsNormal ? FALSE : TRUE;
+} // isOverlayRender()
 
 void
 SoGtkGLWidget::setOverlayRender(
   const SbBool enable )
 {
-  overlay = enable;
-}
+#if SOGTK_DEBUG
+  if ( THIS->glLockLevel > 0 ) {
+  }
+#endif
+
+  THIS->currentIsNormal = enable ? FALSE : TRUE;
+} // setOverlayRender()
 
 // *************************************************************************
 

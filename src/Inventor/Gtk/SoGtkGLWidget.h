@@ -97,6 +97,7 @@ protected:
   void glUnlock(void);
   void glSwapBuffers(void);
   void glFlushBuffer(void);
+  int getLockLevel(void) const;
 
   virtual void glInit(void);
   virtual void glReshape(int width, int height);
