@@ -329,14 +329,14 @@ SoGtkGLWidget::isBorder(
 
 // FIXME: make doc in SoQtGLWidget valid for this also. 20011116 mortene.
 void
-SoGtkGLWidget::setOverlayPlanes(const SbBool onoff)
+SoGtkGLWidget::setOverlayRender(const SbBool onoff)
 {
   SOWIN_STUB();
 }
 
 // FIXME: make doc in SoQtGLWidget valid for this also. 20011116 mortene.
 SbBool
-SoGtkGLWidget::isOverlayPlanes(void) const
+SoGtkGLWidget::isOverlayRender(void) const
 {
   SOWIN_STUB();
   return FALSE;
