@@ -646,12 +646,16 @@ SoGtkFullViewer::lengthAppPushButton(
 // *************************************************************************
 
 /*!
-  Returns the render area OpenGL canvas widget.
-*/
+  Returns the parent widget of the render area OpenGL canvas widget.
 
+  \sa getGLWidget()
+*/
 GtkWidget *
 SoGtkFullViewer::getRenderAreaWidget(void) const
 {
+  // We mirror SGI's original InventorXt toolkit, and do _not_ return
+  // the OpenGL widget, but the widget above it (the one which
+  // provides a border around the rendering canvas upon request).
   return PRIVATE(this)->canvas;
 } // getRenderAreaWidget()
 
@@ -1625,13 +1629,11 @@ SoGtkFullViewerP::~SoGtkFullViewerP(
 /*!
   \internal
 
-  Show or hide decorations. Will make and activate a Qt layout grid
-  if we're turning the decorations on.
+  Show or hide decorations.
 */
 
 void
-SoGtkFullViewerP::showDecorationWidgets(
-  SbBool enable)
+SoGtkFullViewerP::showDecorationWidgets(SbBool enable)
 {
 //  if (this->mainLayout)
 //    delete this->mainLayout;
@@ -1639,12 +1641,16 @@ SoGtkFullViewerP::showDecorationWidgets(
   assert(this->viewerWidget);
   assert(this->canvasParent);
 
-/*
-  if (enable)
-    gtk_widget_show(GTK_WIDGET(this->rightDecoration));
-  else
-    gtk_widget_hide(GTK_WIDGET(this->rightDecoration));
-*/
+  if (enable) {
+    gtk_widget_show(GTK_WIDGET(PUBLIC(this)->leftDecoration));
+    gtk_widget_show(GTK_WIDGET(PUBLIC(this)->rightDecoration));
+    gtk_widget_show(GTK_WIDGET(PUBLIC(this)->bottomDecoration));
+  }
+  else {
+    gtk_widget_hide(GTK_WIDGET(PUBLIC(this)->leftDecoration));
+    gtk_widget_hide(GTK_WIDGET(PUBLIC(this)->rightDecoration));
+    gtk_widget_hide(GTK_WIDGET(PUBLIC(this)->bottomDecoration));
+  }
 } // showDecorationWidgets()
 
 // *************************************************************************
