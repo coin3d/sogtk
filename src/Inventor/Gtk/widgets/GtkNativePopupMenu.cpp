@@ -195,10 +195,14 @@ GtkNativePopupMenu::newMenuItem(
   const char * name,
   int itemid)
 {
+  // FIXME: this function is the same in the other So-libraries --
+  // move to common abstraction layer SoGuiPopupMenu of
+  // possible. 20031012 mortene.
+
   int id = itemid;
   if (id == -1) {
     id = 1;
-    while (this->getItemRecord(itemid) != NULL)
+    while (this->getItemRecord(id) != NULL)
       id++;
   } else {
     if (this->getItemRecord(itemid) != NULL) {
