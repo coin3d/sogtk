@@ -1,0 +1,97 @@
+/**************************************************************************
+ *
+ *  This file is part of the Coin SoGtk GUI binding library.
+ *  Copyright (C) 2000 by Systems in Motion.  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public License
+ *  version 2.1 as published by the Free Software Foundation.  See the
+ *  file LICENSE.LGPL at the root directory of the distribution for
+ *  more details.
+ *
+ *  If you want to use Coin SoGtk for applications not compatible with the
+ *  LGPL, please contact SIM to acquire a Professional Edition License.
+ *
+ *  Systems in Motion, Prof Brochs gate 6, N-7030 Trondheim, NORWAY
+ *  http://www.sim.no/ support@sim.no Voice: +47 22114160 Fax: +47 22207097
+ *
+ **************************************************************************/
+
+// $Id$
+
+#ifndef SOGTK_GRAPHEDITOR_H
+#define SOGTK_GRAPHEDITOR_H
+
+#include <Inventor/Gtk/SoGtkComponent.h>
+
+class SoNode;
+
+// *************************************************************************
+
+class SOGTK_DLL_EXPORT SoGtkGraphEditor : public SoGtkComponent {
+  typedef SoGtkComponent inherited;
+
+public:
+  enum BuildFlag {
+    MENUBAR =       0x01,
+    GRAPHEDITOR =   0x02,
+    STATUSBAR =     0x04,
+    EVERYTHING =    0x07
+  };
+
+  SoGtkGraphEditor( GtkWidget * const parent = NULL,
+    const char * const name = NULL, const SbBool embed = TRUE,
+    const int parts = EVERYTHING );
+  ~SoGtkGraphEditor(void);
+
+  virtual void setSceneGraph( SoNode * root );
+  SoNode * getSceneGraph(void) const;
+
+protected:
+  SoGtkGraphEditor( GtkWidget * const parent, const char * const name,
+    const SbBool embed, const int parts, const SbBool build );
+
+  virtual GtkWidget * buildWidget( GtkWidget * parent );
+  virtual GtkWidget * buildMenuBarWidget( GtkWidget * parent );
+  virtual GtkWidget * buildGraphEditorWidget( GtkWidget * parent );
+  virtual GtkWidget * buildStatusBarWidget( GtkWidget * parent );
+
+  virtual void sizeChanged( const SbVec2s size );
+
+  virtual void buildSceneGraphTree(void);
+  virtual void clearSceneGraphTree(void);
+
+  virtual void saveSceneGraph(void);
+
+  virtual void setStatusMessage( const char * message );
+
+  virtual void nodeSelection( GtkWidget * item, SoNode * node );
+  virtual void fieldSelection( GtkWidget * item, SoNode * node, SoField * field );
+
+private:
+  void constructor( const SbBool build, const int parts );
+
+  static void saveCB( GtkObject * obj, gpointer closure );
+  static void selectionCB( GtkObject * obj, gpointer closure );
+
+  GtkWidget * buildSubGraph( GtkWidget * parent, SoNode * node );
+
+private:
+  SoNode * scenegraph;
+
+  int buildflags;
+  GtkWidget * editorbase;
+  GtkWidget * menubar;
+  GtkWidget * grapheditor;
+  GtkWidget * graphroot;
+  GtkWidget * statusbar;
+  GtkWidget * statusmessage;
+
+  GtkAdjustment * vertical;
+  GtkAdjustment * horizontal;
+
+}; // class SoGtkGraphEditor
+
+// *************************************************************************
+
+#endif // ! SOGTK_H
