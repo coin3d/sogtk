@@ -263,41 +263,19 @@ AM_CONDITIONAL(BUILD_IV_EXAMPLES, test x"$sim_ac_ivexamples_available" = xyes)
 
 
 dnl *******************************************************************
+dnl * Variable substitutions for using libSoGtk in the generic code.
+dnl *******************************************************************
 
-GUI=Gtk
-lGUI=gtk
-uGUI=GTK
-WIDGET="GtkWidget *"
-WINWIDGET="GtkWidget *"
-EVENT="GdkEvent *"
-COMPONENTHEADER=""
+. ${srcdir}/libconfigvars.sh
 
 AC_SUBST(GUI)AC_SUBST(lGUI)AC_SUBST(uGUI)
 AC_SUBST(WIDGET)AC_SUBST(WINWIDGET)AC_SUBST(EVENT)
 AC_SUBST(COMPONENTHEADER)
 
-# Pass to examples/configure
-export GUI lGUI uGUI WIDGET EVENT COMPONENTHEADER
-
-# Pass to examples/configure
-HAVE_RENDERAREA=true
-HAVE_EXAMINERVIEWER=true
-HAVE_PLANEVIEWER=false
-HAVE_WALKVIEWER=false
-HAVE_FLYVIEWER=false
-export HAVE_RENDERAREA HAVE_EXAMINERVIEWER HAVE_PLANEVIEWER \
-       HAVE_WALKVIEWER HAVE_FLYVIEWER
-
 
 dnl *******************************************************************
 dnl * Configure the submodule with the examples.
 dnl *******************************************************************
-
-# Pass to examples/configure.in
-EXTRA_CPPFLAGS=$SOGTK_EXTRA_CPPFLAGS
-EXTRA_LDFLAGS=$SOGTK_EXTRA_LDFLAGS
-EXTRA_LIBS=$SOGTK_EXTRA_LIBS
-export EXTRA_CPPFLAGS EXTRA_LDFLAGS EXTRA_LIBS
 
 sim_ac_subconfig=examples
 if test x"$sim_ac_ivexamples_available" = xyes; then
