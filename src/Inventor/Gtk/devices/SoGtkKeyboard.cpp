@@ -140,13 +140,6 @@ SoGtkKeyboard::enable(
         GTK_SIGNAL_FUNC(func), closure );
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_RELEASE_MASK );
     }
-    if ( this->events & SoGtkKeyboard::ALL_EVENTS )
-    {
-       GTK_WIDGET_SET_FLAGS(GTK_WIDGET(widget),GTK_CAN_FOCUS);
-       gtk_signal_connect(GTK_OBJECT(widget), "enter-notify-event",
-         GTK_SIGNAL_FUNC(&SoGtkKeyboard::EnterHandler), 0 );
-       gtk_widget_add_events(GTK_WIDGET(widget),GDK_ENTER_NOTIFY_MASK );
-    }
   }
 } // enable()
 
