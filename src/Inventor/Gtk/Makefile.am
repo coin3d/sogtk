@@ -93,3 +93,35 @@ SoAnyMaterialListBuiltins.cpp: \
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp )
 
 ############################################################################
+
+sogtk@SOGTK_MAJOR_VERSION@.dll: $(libSoGtk_la_OBJECTS) $(libSoGtk_la_DEPENDENCIES)
+	@rm -f sogtk@SOGTK_MAJOR_VERSION@.dll && \
+	if @BUILD_WITH_MSVC@; then \
+	  echo "Linking DLL..."; \
+	  $(CC) @DLLFLAGS@ /out:sogtk@SOGTK_MAJOR_VERSION@.dll $(LDFLAGS) \
+	        `echo $(libSoGtk_la_OBJECTS) | sed 's%\.lo%.obj%g'` \
+	        $(libSoGtk_la_LIBADD) $(LIBS); \
+	else \
+	  touch sogtk@SOGTK_MAJOR_VERSION@.dll; \
+	fi
+
+install-exec-hook: sogtk@SOGTK_MAJOR_VERSION@.dll
+	@if test -s sogtk@SOGTK_MAJOR_VERSION@.dll; then \
+	  echo "Installing sogtk@SOGTK_MAJOR_VERSION@.dll"; \
+	  for e in dll lib pdb; do \
+	    file="sogtk@SOGTK_MAJOR_VERSION@.$$e"; \
+	    if test -s $$file; then \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(libdir)/$$file; \
+	    fi \
+	  done \
+	fi
+
+uninstall: uninstall-am
+	@for e in dll lib pdb; do \
+	  file="$(DESTDIR)$(libdir)/sogtk@SOGTK_MAJOR_VERSION@.$$e"; \
+	  if test -f $$file; then \
+	    echo rm -f $$file; \
+	    rm -f $$file; \
+	  fi \
+	done
+
