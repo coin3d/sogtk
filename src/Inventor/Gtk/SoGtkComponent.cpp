@@ -362,8 +362,8 @@ SoGtkComponent::eventFilter(GtkWidget * obj, GdkEvent * ev)
 
   GtkWidget * widget = GTK_WIDGET(obj);
 
-  if (widget != this->baseWidget() &&
-      !gtk_widget_is_ancestor(GTK_WIDGET(this->baseWidget()),
+  if (widget != this->getBaseWidget() &&
+      !gtk_widget_is_ancestor(GTK_WIDGET(this->getBaseWidget()),
                               GTK_WIDGET(widget))) {
     return FALSE;
   }
@@ -374,7 +374,7 @@ SoGtkComponent::eventFilter(GtkWidget * obj, GdkEvent * ev)
     return FALSE;
 
   case GDK_CONFIGURE:
-    if(GTK_WIDGET_REALIZED(this->baseWidget())) {
+    if(GTK_WIDGET_REALIZED(this->getBaseWidget())) {
       GdkEventConfigure * event = (GdkEventConfigure *) ev;
       SbVec2s size(event->width, event->height);
       PRIVATE(this)->storeSize.setValue(event->width, event->height);
@@ -425,10 +425,10 @@ SoGtkComponent::eventHandler(GtkWidget * object,
 SbBool
 SoGtkComponent::isVisible(void)
 {
-  if (! this->baseWidget()) { return FALSE; }
+  if (! this->getBaseWidget()) { return FALSE; }
   // FIXME - return true visibility state. 200????? larsa.
   // Close, but probably still incomplete
-  return GTK_WIDGET_DRAWABLE(this->baseWidget()) ? TRUE : FALSE;
+  return GTK_WIDGET_DRAWABLE(this->getBaseWidget()) ? TRUE : FALSE;
 }
 
 /*!
@@ -440,16 +440,16 @@ SoGtkComponent::isVisible(void)
 void
 SoGtkComponent::show(void)
 {
-  if(! this->baseWidget() || ! GTK_IS_WIDGET(this->baseWidget())) {
+  if(! this->getBaseWidget() || ! GTK_IS_WIDGET(this->getBaseWidget())) {
 #if SOGTK_DEBUG
     SoDebugError::postWarning("SoGtkComponent::show",
-                              this->baseWidget() ?
+                              this->getBaseWidget() ?
                               "not a widget" : "no widget");
 #endif // SOGTK_DEBUG
     return;
   }
   GtkWidget * parent = this->getParentWidget();
-  GtkWidget * widget = this->baseWidget();
+  GtkWidget * widget = this->getBaseWidget();
   assert(parent != NULL);
   assert(widget != NULL);
 
@@ -463,7 +463,7 @@ SoGtkComponent::show(void)
   }
 
   if (PRIVATE(this)->shelled) {
-    if (! GTK_WIDGET_REALIZED(this->baseWidget())) {
+    if (! GTK_WIDGET_REALIZED(this->getBaseWidget())) {
       gtk_widget_show(widget);
     }
     gtk_widget_show(parent);
@@ -484,9 +484,9 @@ void
 SoGtkComponent::hide(void)
 {
 #if SOGTK_DEBUG
-  if (! this->baseWidget() || ! GTK_IS_WIDGET(this->baseWidget())) {
+  if (! this->getBaseWidget() || ! GTK_IS_WIDGET(this->getBaseWidget())) {
     SoDebugError::postWarning("SoGtkComponent::hide",
-                              this->baseWidget() ?
+                              this->getBaseWidget() ?
                               "not a widget" : "no widget");
     return;
   }
@@ -495,7 +495,7 @@ SoGtkComponent::hide(void)
     gtk_widget_hide(GTK_WIDGET(this->getParentWidget()));
   }
   else {
-    gtk_widget_hide(GTK_WIDGET(this->baseWidget()));
+    gtk_widget_hide(GTK_WIDGET(this->getBaseWidget()));
   }
 }
 
@@ -872,7 +872,7 @@ SoGtkComponentP::realizeHandlerCB(GtkObject * object,
 {
   assert(closure != NULL);
   SoGtkComponent * const component = (SoGtkComponent *) closure;
-  GtkWidget * widget = component->baseWidget();
+  GtkWidget * widget = component->getBaseWidget();
   assert(GTK_WIDGET_REALIZED(widget));
   if (PRIVATE(component)->storeSize != SbVec2s(-1, -1)) {
     GtkRequisition req = {
