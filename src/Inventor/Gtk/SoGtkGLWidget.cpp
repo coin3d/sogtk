@@ -102,14 +102,19 @@ SoGtkGLWidget::buildWidget(
   int glAttributes[10];
   int i = 0;
 
-  if ( this->glModeBits & SO_GLX_DOUBLE )
+  if ( this->glModeBits & SO_GL_DOUBLE )
     glAttributes[i++] = GDK_GL_DOUBLEBUFFER;
-//  if ( this->glModeBits & SO_GLX_ZBUFFER )
-//    glAttributes[i++] = GDK_GL_DEPTH;
-  if ( this->glModeBits & SO_GLX_RGB )
+  if ( this->glModeBits & SO_GL_ZBUFFER ) {
+    glAttributes[i++] = GDK_GL_DEPTH_SIZE;
+    glAttributes[i++] = 1;
+  }
+  if ( this->glModeBits & SO_GL_RGB )
     glAttributes[i++] = GDK_GL_RGBA;
-  if ( this->glModeBits & SO_GLX_STEREO )
+  if ( this->glModeBits & SO_GL_STEREO )
     glAttributes[i++] = GDK_GL_STEREO;
+
+  glAttributes[i++] = GDK_GL_STENCIL_SIZE;
+  glAttributes[i++] = 1;
 
   glAttributes[i++] = GDK_GL_NONE;
 
@@ -638,5 +643,22 @@ SoGtkGLWidget::glFlushBuffer(
 {
   glFlush();
 } // glFlushBuffer()
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkGLWidget::eventHandler(
+  GtkWidget * widget,
+  void * closure,
+  GdkEvent * event,
+  bool * )
+{
+  assert( closure != NULL );
+  SoGtkGLWidget * component = (SoGtkGLWidget *) closure;
+  component->processEvent( event );
+} // eventHandler()
 
 // *************************************************************************

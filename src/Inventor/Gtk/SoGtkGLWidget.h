@@ -64,6 +64,7 @@ protected:
   GtkWidget * buildWidget( GtkWidget * parent );
 
   GtkWidget * getGtkGLArea(void);
+  GtkWidget * getGLWidget(void) { return getGtkGLArea(); }
 
   virtual void redraw(void) = 0;
 
@@ -89,6 +90,8 @@ protected:
   virtual void glRender(void);
 
   SbBool waitForExpose;
+
+  static void eventHandler( GtkWidget *, void *, GdkEvent *, bool * );
 
 private:
   GtkWidget * glParent;

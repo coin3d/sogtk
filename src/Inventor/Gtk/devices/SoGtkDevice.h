@@ -63,6 +63,8 @@ private:
 
 }; // class SoGtkDevice
 
+typedef void (*SoGtkEventHandlerPtr)( GtkWidget *, void *, GdkEvent *, bool * );
+
 // *************************************************************************
 
 #endif // ! SOGTK_DEVICE_H
