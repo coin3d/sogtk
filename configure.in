@@ -330,6 +330,9 @@ AC_CONFIG_SUBDIRS(data)
 # **************************************************************************
 # FIXME: avoid the shift magic
 
+# this will depend on platform in a while (Window will use sogtk$major)
+SOGTK_LIBNAME=-lSoGtk
+
 SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_CPPFLAGS, -I$includedir $SOGTK_EXTRA_CPPFLAGS)
 set : $SOGTK_EXTRA_CPPFLAGS
 shift
