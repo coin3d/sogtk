@@ -624,25 +624,20 @@ SoGtkExaminerViewer::setCursorRepresentation(int mode)
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
-
+// Documented in superclass.
 void
-SoGtkExaminerViewer::afterRealizeHook(// virtual
-  void)
+SoGtkExaminerViewer::afterRealizeHook(void)
 {
-  this->setCursorRepresentation(this->currentmode);
   inherited::afterRealizeHook();
-} // afterRealizeHook()
+  this->setCursorRepresentation(this->currentmode);
+}
 
 // *************************************************************************
 //
 //  Private implementation
 //
 
-SoGtkExaminerViewerP::SoGtkExaminerViewerP(
-  SoGtkExaminerViewer * publ)
+SoGtkExaminerViewerP::SoGtkExaminerViewerP(SoGtkExaminerViewer * publ)
 {
   this->pub = publ;
 

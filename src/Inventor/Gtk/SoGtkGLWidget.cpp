@@ -698,16 +698,12 @@ SoGtkGLWidget::glFlushBuffer(void)
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
-
+// Documented in superclass.
 void
-SoGtkGLWidget::afterRealizeHook(// virtual, protected
-  void)
+SoGtkGLWidget::afterRealizeHook(void)
 {
   inherited::afterRealizeHook();
-} // afterRealizeHook()
+}
 
 // *************************************************************************
 

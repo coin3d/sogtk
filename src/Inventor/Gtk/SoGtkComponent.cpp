@@ -304,7 +304,11 @@ SoGtkComponent::setBaseWidget(GtkWidget * widget)
   PRIVATE(this)->widget = widget;
 
   if (PRIVATE(this)->widget) {
-    gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->widget), "realize",
+    // We connect to the "map" signal instead of the "realize" event,
+    // so the widget will have a window when the afterRealizeHook()
+    // method is invoked. (Which again is necessary for being able to
+    // set a cursor on the widget in that callback.)
+    gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->widget), "map",
                        GTK_SIGNAL_FUNC(SoGtkComponentP::realizeHandlerCB),
                        (gpointer) this);
   }
@@ -850,7 +854,8 @@ SoGtkComponent::getComponent(GtkWidget * const widget)
 // *************************************************************************
 
 /*!
-  FIXME: write doc
+  A function "hook" / callback invoked just after the window for the
+  component has been realized.
 */
 void
 SoGtkComponent::afterRealizeHook(void)
@@ -1102,7 +1107,7 @@ SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
       static SbBool first = TRUE;
       if (first) {
         SoDebugError::postWarning("SoGtkComponent::setWidgetCursor",
-                                  "widget %x: NO WINDOW\n", (int) w);
+                                  "widget %p: NO WINDOW\n", w);
         first = FALSE;
       }
     }
@@ -1116,7 +1121,7 @@ SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
       static SbBool first = TRUE;
       if (first) {
         SoDebugError::postWarning("SoGtkComponent::setWidgetCursor",
-                                  "widget %x: widget->window == 0\n", (int) w);
+                                  "widget %p: widget->window == 0\n", w);
         first = FALSE;
       }
     }
