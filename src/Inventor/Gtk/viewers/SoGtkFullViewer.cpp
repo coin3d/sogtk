@@ -680,8 +680,7 @@ void
 SoGtkFullViewer::setViewing(
   SbBool enable )
 {
-  if ( ( enable && this->isViewing() ) ||
-       ( ! enable && ! this->isViewing() ) ) {
+  if ( enable == this->isViewing() ) {
 #if SOGTK_DEBUG
     SoDebugError::postWarning( "SoGtkFullViewer::setViewing",
                                "view mode already %sset", enable ? "" : "un");
@@ -987,7 +986,6 @@ SoGtkFullViewer::buildViewerButtons(
 {
   GtkWidget * buttons = gtk_vbox_new( FALSE, FALSE );
 
-  PRIVATE(this)->viewerButtons = new SbPList;
   this->createViewerButtons( buttons, PRIVATE(this)->viewerButtons );
 
   const int num = PRIVATE(this)->viewerButtons->getLength();

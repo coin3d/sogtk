@@ -376,8 +376,11 @@ SoGtk::getShellWidget(
   }
 #endif // SOGTK_DEBUG
 
-//  return gtk_widget_get_toplevel( widget );
-  return (GtkWidget *) NULL;
+  GtkWidget *w = gtk_widget_get_toplevel( GTK_WIDGET(widget) );
+  if ( GTK_WIDGET_TOPLEVEL(w) )
+    return w;
+  return (GtkWidget*) 0;
+  
 } // getShellWidget()
 
 // *************************************************************************
@@ -471,8 +474,7 @@ SoGtk::getWidgetSize(
     return SbVec2s(0, 0);
   }
 #endif // SOGTK_DEBUG
-  SOGTK_STUB();
-  return SbVec2s( 0, 0 ); // gtk_widget_width( widget ), gtk_widget_height( widget ) );
+  return SbVec2s( widget->allocation.width, widget->allocation.height );
 } // getWidgetSize()
 
 // *************************************************************************

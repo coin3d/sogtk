@@ -64,7 +64,7 @@ protected:
     GtkWidget * const parent = (GtkWidget *) NULL,
     const char * const name = (char *) NULL,
     const SbBool embed = TRUE,
-    const int glModes = SO_GLX_RGB,
+    const int glModes = SO_GL_RGB,
     const SbBool build = TRUE);
   virtual ~SoGtkGLWidget(void);
 

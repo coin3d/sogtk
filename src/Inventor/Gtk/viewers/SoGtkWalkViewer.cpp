@@ -320,7 +320,7 @@ SoGtkWalkViewer::buildLeftTrim( // virtual
 
   GtkWidget *uleftWheel = gtk_thumbwheel_new( 1 );   
   gtk_misc_set_padding( GTK_MISC(uleftWheel), 2, 2 );
-  gtk_box_pack_end( GTK_BOX(trim), uleftWheel, FALSE, TRUE, FALSE );
+  gtk_box_pack_end( GTK_BOX(trim), uleftWheel, FALSE, TRUE, 0 );
   gtk_widget_show(uleftWheel);
 
 #if NOTYET
