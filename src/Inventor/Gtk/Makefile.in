@@ -104,7 +104,7 @@ install_sh = @install_sh@
 sim_ac_conf_cmd = @sim_ac_conf_cmd@
 
 
-SUBDIRS = common devices widgets
+SUBDIRS = common devices widgets viewers
 
 INCLUDES = -I$(top_srcdir)/src
 
@@ -124,6 +124,7 @@ libSoGtk_la_SOURCES = \
 libSoGtk_la_LIBADD = \
         common/libSoCommon.la \
         devices/libSoGtkDevices.la \
+	viewers/libSoGtkViewers.la \
         widgets/libSoGtkWidgets.la
 
 subdir = src/Inventor/Gtk
@@ -143,7 +144,8 @@ X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtk_la_LDFLAGS = 
 libSoGtk_la_DEPENDENCIES =  common/libSoCommon.la \
-devices/libSoGtkDevices.la widgets/libSoGtkWidgets.la
+devices/libSoGtkDevices.la viewers/libSoGtkViewers.la \
+widgets/libSoGtkWidgets.la
 am_libSoGtk_la_OBJECTS =  SoGtk.lo SoGtkComponent.lo SoGtkGLWidget.lo \
 SoGtkRenderArea.lo
 libSoGtk_la_OBJECTS =  $(am_libSoGtk_la_OBJECTS)

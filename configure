@@ -3300,7 +3300,7 @@ if test "${with_inventor+set}" = set; then
   withval="$with_inventor"
   :
 else
-  with_inventor=no
+  with_inventor=yes
 fi
 
 
@@ -4326,6 +4326,33 @@ else
 fi
 
 
+if false; then
+  HAVE_PLANEVIEWER_TRUE=
+  HAVE_PLANEVIEWER_FALSE='#'
+else
+  HAVE_PLANEVIEWER_TRUE='#'
+  HAVE_PLANEVIEWER_FALSE=
+fi
+
+
+if false; then
+  HAVE_WALKVIEWER_TRUE=
+  HAVE_WALKVIEWER_FALSE='#'
+else
+  HAVE_WALKVIEWER_TRUE='#'
+  HAVE_WALKVIEWER_FALSE=
+fi
+
+
+if false; then
+  HAVE_FLYVIEWER_TRUE=
+  HAVE_FLYVIEWER_FALSE='#'
+else
+  HAVE_FLYVIEWER_TRUE='#'
+  HAVE_FLYVIEWER_FALSE=
+fi
+
+
 test -d src || mkdir src
 test -d src/Inventor || mkdir src/Inventor
 test -d src/Inventor/Gtk || mkdir src/Inventor/Gtk
@@ -4417,7 +4444,9 @@ config_files="\\
     src/Inventor/Gtk/common/Makefile src/Inventor/Gtk/devices/Makefile
     src/Inventor/Gtk/viewers/Makefile src/Inventor/Gtk/widgets/Makefile
     examples/Makefile examples/widgets/Makefile examples/components/Makefile
-    examples/components/renderarea.cpp"
+    examples/components/renderarea.cpp examples/components/examinerviewer.cpp
+    examples/components/planeviewer.cpp examples/components/walkviewer.cpp
+    examples/components/flyviewer.cpp"
 config_headers="\\
     config.h"
 
@@ -4472,6 +4501,10 @@ do
   'examples/widgets/Makefile' ) CONFIG_FILES="\$CONFIG_FILES examples/widgets/Makefile" ;;
   'examples/components/Makefile' ) CONFIG_FILES="\$CONFIG_FILES examples/components/Makefile" ;;
   'examples/components/renderarea.cpp' ) CONFIG_FILES="\$CONFIG_FILES examples/components/renderarea.cpp" ;;
+  'examples/components/examinerviewer.cpp' ) CONFIG_FILES="\$CONFIG_FILES examples/components/examinerviewer.cpp" ;;
+  'examples/components/planeviewer.cpp' ) CONFIG_FILES="\$CONFIG_FILES examples/components/planeviewer.cpp" ;;
+  'examples/components/walkviewer.cpp' ) CONFIG_FILES="\$CONFIG_FILES examples/components/walkviewer.cpp" ;;
+  'examples/components/flyviewer.cpp' ) CONFIG_FILES="\$CONFIG_FILES examples/components/flyviewer.cpp" ;;
   'config.h' ) CONFIG_HEADERS="\$CONFIG_HEADERS config.h" ;;
   # This is an error.
   *) echo "$CONFIG_STATUS: invalid argument: \$ac_option"; exit 1 ;;
@@ -4600,6 +4633,12 @@ s%@HAVE_RENDERAREA_TRUE@%$HAVE_RENDERAREA_TRUE%;t t
 s%@HAVE_RENDERAREA_FALSE@%$HAVE_RENDERAREA_FALSE%;t t
 s%@HAVE_EXAMINERVIEWER_TRUE@%$HAVE_EXAMINERVIEWER_TRUE%;t t
 s%@HAVE_EXAMINERVIEWER_FALSE@%$HAVE_EXAMINERVIEWER_FALSE%;t t
+s%@HAVE_PLANEVIEWER_TRUE@%$HAVE_PLANEVIEWER_TRUE%;t t
+s%@HAVE_PLANEVIEWER_FALSE@%$HAVE_PLANEVIEWER_FALSE%;t t
+s%@HAVE_WALKVIEWER_TRUE@%$HAVE_WALKVIEWER_TRUE%;t t
+s%@HAVE_WALKVIEWER_FALSE@%$HAVE_WALKVIEWER_FALSE%;t t
+s%@HAVE_FLYVIEWER_TRUE@%$HAVE_FLYVIEWER_TRUE%;t t
+s%@HAVE_FLYVIEWER_FALSE@%$HAVE_FLYVIEWER_FALSE%;t t
 CEOF
 
 EOF
@@ -4915,6 +4954,5 @@ trap 'exit 1' 1 2 15
 
 
 test "$no_create" = yes || $SHELL $CONFIG_STATUS || exit 1
-
 
 

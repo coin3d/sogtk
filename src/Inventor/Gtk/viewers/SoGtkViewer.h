@@ -54,8 +54,8 @@ class SoGtkViewer;
 
 typedef void SoGtkViewerCB( void * data, SoGtkViewer * viewer );
 typedef void SoGtkViewerFPSCB( float fps, void * data, SoGtkViewer * viewer );
-typedef void SoGtkViewerDecimationPercentageCB( float percentage, void * data,
-                                                SoGtkViewer * viewer );
+typedef void SoGtkViewerDecimationPercentageCB(
+                 float percentage, void * data, SoGtkViewer * viewer );
 
 // *************************************************************************
 
@@ -101,7 +101,7 @@ public:
     BUFFER_INTERACTIVE
   };
 
-  virtual void setCamera( SoCamera * cam );
+  virtual void setCamera( SoCamera * camera );
   SoCamera * getCamera(void) const;
 
   virtual void setCameraType( SoType type );
@@ -112,12 +112,12 @@ public:
   virtual void saveHomePosition(void);
   virtual void resetToHomePosition(void);
 
-  virtual void setHeadlight( SbBool on );
+  virtual void setHeadlight( SbBool enable );
   SbBool isHeadlight(void) const;
   SoDirectionalLight * getHeadlight(void) const;
 
-  virtual void setDrawStyle( SoGtkViewer::DrawType type,
-                             SoGtkViewer::DrawStyle style );
+  virtual void setDrawStyle(
+              SoGtkViewer::DrawType type, SoGtkViewer::DrawStyle style );
   SoGtkViewer::DrawStyle getDrawStyle( const SoGtkViewer::DrawType type ) const;
 
   virtual void setBufferingType( SoGtkViewer::BufferType type );
@@ -135,7 +135,7 @@ public:
   virtual void setStereoViewing( SbBool enable );
   virtual SbBool isStereoViewing(void) const;
 
-  void setStereoOffset( const float dist );
+  void setStereoOffset( const float distance );
   float getStereoOffset(void) const;
 
   void setDetailSeek( const SbBool enable );
@@ -175,8 +175,8 @@ public:
   void setNumSamples( const int numFrames );
   int getNumSamples(void) const;
 
-  void setDecimationPercentageCallback( SoGtkViewerDecimationPercentageCB * cb,
-                                        void * data = NULL );
+  void setDecimationPercentageCallback(
+      SoGtkViewerDecimationPercentageCB * cb, void * data = NULL );
   float getCurrentDecimationPercentage(void) const;
 
   virtual void setDoubleBuffer( SbBool enable );
@@ -186,7 +186,7 @@ public:
 
 protected:
   SoGtkViewer( GtkWidget * parent, const char * name, SbBool buildInsideParent,
-               Type type, SbBool buildNow );
+      Type type, SbBool buildNow );
   ~SoGtkViewer(void);
 
   virtual void setSeekMode( SbBool enable );
@@ -209,63 +209,64 @@ protected:
 
 private:
   // Seek functionality
-  SoTimerSensor * seeksensor;
-  static void seeksensorCB( void * data, SoSensor * );
-  float seekperiod;
-  SbBool inseekmode;
+  SoTimerSensor * seekSensor;
+  static void seekSensorCB( void * data, SoSensor * );
+  float seekPeriod;
+  SbBool inSeekMode;
   SbBool seektopoint;
-  SbVec3f camerastartposition, cameraendposition;
-  float seekdistance;
-  SbBool seekdistanceabs;
+  SbVec3f cameraStartPosition, cameraEndPosition;
+  float seekDistance;
+  SbBool seekDistanceAbs;
 
   // Camera handling
   SoCamera * camera;
-  SbBool deletecamera;
-  SbVec3f storedposition;
-  SbRotation storedorientation;
-  float storedheightval;
+  SbBool deleteCamera;
+  SbVec3f storedPosition;
+  SbRotation storedOrientation;
+  float storedHeightVal;
 
   // Headlight handling
-  SbBool lighton;
-  SoGroup * lightroot;
+  SbBool lightOn;
+  SoGroup * lightRoot;
 
   // Drawstyles
-  DrawStyle drawstyles[2];
+  DrawStyle drawStyles[2];
   SbBool drawInteractiveAsStill(void) const;
   SbBool drawAsHiddenLine(void) const;
   SoGtkViewer::DrawStyle currentDrawStyle(void) const;
   void changeDrawStyle( SoGtkViewer::DrawStyle style );
-  SoSwitch * drawstyleroot, * hiddenlineroot, * polygonoffsetparent;
-  SoBaseColor * sobasecolor;
-  SoComplexity * socomplexity;
-  SoDrawStyle * sodrawstyle;
-  SoLightModel * solightmodel;
-  SoMaterialBinding * somaterialbinding;
-  SoPolygonOffset * sopolygonoffset;
+
+  SoSwitch * drawStyleRoot, * hiddenLineRoot, * polygonOffsetParent;
+  SoBaseColor * baseColor;
+  SoComplexity * complexity;
+  SoDrawStyle * drawStyle;
+  SoLightModel * lightModel;
+  SoMaterialBinding * materialBinding;
+  SoPolygonOffset * polygonOffset;
 
   // Automatic setting of clipping planes
-  SbBool adjustclipplanes;
+  SbBool adjustClipPlanes;
   void setClippingPlanes(void);
-  SoGetBoundingBoxAction * autoclipbox;
+  SoGetBoundingBoxAction * autoClipBox;
 
   // Misc
-  Type viewertype;
-  SoType cameratype;
-  SbBool viewmode;
-  SbBool cursoron;
+  Type viewerType;
+  SoType cameraType;
+  SbBool viewMode;
+  SbBool cursorOn;
 
-  SoCallbackList * interactionstartCallbacks, * interactionendCallbacks;
+  SoCallbackList * interactionStartCallbacks, * interactionEndCallbacks;
 
-  static void interactivestartCB( void *, SoGtkViewer * thisp );
-  static void interactiveendCB( void *, SoGtkViewer * thisp );
-  int interactionnesting;
+  static void interactiveStartCB( void *, SoGtkViewer * thisp );
+  static void interactiveEndCB( void *, SoGtkViewer * thisp );
+  int interactionNesting;
 
-  BufferType buffertype;
+  BufferType bufferType;
 
   void moveCameraScreen( const SbVec2f & screenpos );
 
-  SoSeparator * viewerroot;
-  SoNode * userroot;
+  SoSeparator * viewerRoot;
+  SoNode * userRoot;
 
 }; // class SoGtkViewer
 

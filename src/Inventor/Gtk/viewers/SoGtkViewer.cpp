@@ -22,8 +22,12 @@ static const char rcsid[] =
 
 #include <assert.h>
 
-#include <Inventor/SoDB.h>
+#include <GL/gl.h>
 
+#include <gtkgl/gtkglarea.h>
+
+#include <Inventor/SoDB.h>
+#include <Inventor/SbBasic.h>
 #include <Inventor/nodes/SoBaseColor.h>
 #include <Inventor/nodes/SoComplexity.h>
 #include <Inventor/nodes/SoDirectionalLight.h>
@@ -38,11 +42,9 @@ static const char rcsid[] =
 #include <Inventor/nodes/SoRotation.h>
 #include <Inventor/nodes/SoSeparator.h>
 #include <Inventor/nodes/SoSwitch.h>
-
 #include <Inventor/actions/SoGetBoundingBoxAction.h>
 #include <Inventor/actions/SoSearchAction.h>
 #include <Inventor/actions/SoRayPickAction.h>
-
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/misc/SoCallbackList.h>
 #include <Inventor/sensors/SoTimerSensor.h>
@@ -218,16 +220,18 @@ static const char rcsid[] =
 */
 
 static inline SoGroup *
-getParentOfNode(SoNode * root, SoNode * node)
+getParentOfNode(
+  SoNode * root,
+  SoNode * node )
 {
   SoSearchAction search;
-  assert(node);
+  assert( node != NULL );
   search.setNode(node);
-  assert(root);
+  assert( root != NULL );
   search.apply(root);
-  assert(search.getPath());
-  return (SoGroup *) ((SoFullPath *)search.getPath())->getNodeFromTail(1);
-}
+  assert( search.getPath() != NULL );
+  return (SoGroup *) ((SoFullPath *)search.getPath())->getNodeFromTail( 1 );
+} // getParentOfNode()
  
 // *************************************************************************
 
@@ -238,100 +242,100 @@ getParentOfNode(SoNode * root, SoNode * node)
 */
 
 SoGtkViewer::SoGtkViewer(
-  QWidget * parent,
+  GtkWidget * parent,
   const char * name,
   SbBool buildInsideParent,
-  SoGtkViewer::Type t,
+  SoGtkViewer::Type type,
   SbBool buildNow )
 : inherited( parent, name, buildInsideParent, TRUE, TRUE, FALSE )
 {
-  this->viewertype = t;
-  this->viewmode = TRUE;
-  this->cursoron = TRUE;
+  this->viewerType = type;
+  this->viewMode = TRUE;
+  this->cursorOn = TRUE;
 
-  this->cameratype = SoPerspectiveCamera::getClassTypeId();
+  this->cameraType = SoPerspectiveCamera::getClassTypeId();
   this->camera = NULL;
-  this->deletecamera = FALSE;
-  this->buffertype = this->isDoubleBuffer() ? BUFFER_DOUBLE : BUFFER_SINGLE;
+  this->deleteCamera = FALSE;
+  this->bufferType = this->isDoubleBuffer() ? BUFFER_DOUBLE : BUFFER_SINGLE;
 
-  this->interactionstartCallbacks = new SoCallbackList;
-  this->interactionendCallbacks = new SoCallbackList;
-  this->interactionnesting = 0;
+  this->interactionStartCallbacks = new SoCallbackList;
+  this->interactionEndCallbacks = new SoCallbackList;
+  this->interactionNesting = 0;
 
-  this->seekdistance = 50.0f;
-  this->seekdistanceabs = TRUE;
+  this->seekDistance = 50.0f;
+  this->seekDistanceAbs = TRUE;
   this->seektopoint = TRUE;
-  this->seekperiod = 2.0f;
-  this->inseekmode = FALSE;
-  this->seeksensor = new SoTimerSensor(SoGtkViewer::seeksensorCB, this);
+  this->seekPeriod = 2.0f;
+  this->inSeekMode = FALSE;
+  this->seekSensor = new SoTimerSensor( SoGtkViewer::seekSensorCB, this );
 
-  this->userroot = NULL;
+  this->userRoot = NULL;
 
-  this->viewerroot = new SoSeparator;
-  this->viewerroot->ref();
-  this->viewerroot->renderCaching.setValue(SoSeparator::OFF);
-  this->viewerroot->renderCulling.setValue(SoSeparator::OFF);
+  this->viewerRoot = new SoSeparator;
+  this->viewerRoot->ref();
+  this->viewerRoot->renderCaching.setValue( SoSeparator::OFF );
+  this->viewerRoot->renderCulling.setValue( SoSeparator::OFF );
 
   // Drawstyle subgraph.
   {
-    this->drawstyleroot = new SoSwitch;
+    this->drawStyleRoot = new SoSwitch;
 
-    this->solightmodel = new SoLightModel;
-    this->solightmodel->setOverride(TRUE);
-    this->solightmodel->model = SoLightModel::BASE_COLOR;
+    this->lightModel = new SoLightModel;
+    this->lightModel->setOverride(TRUE);
+    this->lightModel->model = SoLightModel::BASE_COLOR;
 
-    this->sodrawstyle = new SoDrawStyle;
-    this->sodrawstyle->setOverride(TRUE);
-    this->sodrawstyle->pointSize.setIgnored(TRUE);
-    this->sodrawstyle->lineWidth.setIgnored(TRUE);
-    this->sodrawstyle->linePattern.setIgnored(TRUE);
+    this->drawStyle = new SoDrawStyle;
+    this->drawStyle->setOverride(TRUE);
+    this->drawStyle->pointSize.setIgnored(TRUE);
+    this->drawStyle->lineWidth.setIgnored(TRUE);
+    this->drawStyle->linePattern.setIgnored(TRUE);
 
-    this->socomplexity = new SoComplexity;
-    this->socomplexity->setOverride(TRUE);
-    this->socomplexity->textureQuality = 0.0f;
-    this->socomplexity->value = 0.1f;
+    this->complexity = new SoComplexity;
+    this->complexity->setOverride(TRUE);
+    this->complexity->textureQuality = 0.0f;
+    this->complexity->value = 0.1f;
 
-    this->drawstyleroot->addChild(this->solightmodel);
-    this->drawstyleroot->addChild(this->sodrawstyle);
-    this->drawstyleroot->addChild(this->socomplexity);
-    this->viewerroot->addChild(this->drawstyleroot);
-    this->drawstyleroot->whichChild = SO_SWITCH_NONE;
+    this->drawStyleRoot->addChild(this->lightModel);
+    this->drawStyleRoot->addChild(this->drawStyle);
+    this->drawStyleRoot->addChild(this->complexity);
+    this->viewerRoot->addChild(this->drawStyleRoot);
+    this->drawStyleRoot->whichChild = SO_SWITCH_NONE;
   }
 
   // Hidden line rendering subgraph.
   {
-    this->hiddenlineroot = new SoSwitch;
+    this->hiddenLineRoot = new SoSwitch;
 
-    this->sobasecolor = new SoBaseColor;
-    this->sobasecolor->setOverride(TRUE);
-    this->hiddenlineroot->addChild(this->sobasecolor);
+    this->baseColor = new SoBaseColor;
+    this->baseColor->setOverride(TRUE);
+    this->hiddenLineRoot->addChild(this->baseColor);
 
-    this->somaterialbinding = new SoMaterialBinding;
-    this->somaterialbinding->setOverride(TRUE);
-    this->somaterialbinding->value = SoMaterialBinding::OVERALL;
-    this->hiddenlineroot->addChild(this->somaterialbinding);
+    this->materialBinding = new SoMaterialBinding;
+    this->materialBinding->setOverride(TRUE);
+    this->materialBinding->value = SoMaterialBinding::OVERALL;
+    this->hiddenLineRoot->addChild(this->materialBinding);
 
-    this->polygonoffsetparent = new SoSwitch;
-    this->polygonoffsetparent->whichChild = SO_SWITCH_NONE;
-    this->sopolygonoffset = new SoPolygonOffset;
-    this->polygonoffsetparent->addChild(this->sopolygonoffset);
-    this->hiddenlineroot->addChild(this->polygonoffsetparent);
+    this->polygonOffsetParent = new SoSwitch;
+    this->polygonOffsetParent->whichChild = SO_SWITCH_NONE;
+    this->polygonOffset = new SoPolygonOffset;
+    this->polygonOffsetParent->addChild(this->polygonOffset);
+    this->hiddenLineRoot->addChild(this->polygonOffsetParent);
 
-    this->drawstyleroot->addChild(this->hiddenlineroot);
-    this->hiddenlineroot->whichChild = SO_SWITCH_NONE;
+    this->drawStyleRoot->addChild(this->hiddenLineRoot);
+    this->hiddenLineRoot->whichChild = SO_SWITCH_NONE;
   }
 
-  this->drawstyles[STILL] = VIEW_AS_IS;
-  this->drawstyles[INTERACTIVE] = VIEW_SAME_AS_STILL;
+  this->drawStyles[STILL] = VIEW_AS_IS;
+  this->drawStyles[INTERACTIVE] = VIEW_SAME_AS_STILL;
 
-  this->lighton = TRUE;
-  this->lightroot = NULL;
+  this->lightOn = TRUE;
+  this->lightRoot = NULL;
 
-  this->addStartCallback(SoGtkViewer::interactivestartCB);
-  this->addFinishCallback(SoGtkViewer::interactiveendCB);
+  this->addStartCallback(SoGtkViewer::interactiveStartCB);
+  this->addFinishCallback(SoGtkViewer::interactiveEndCB);
 
-  this->adjustclipplanes = TRUE;
-  this->autoclipbox = NULL;
+  this->adjustClipPlanes = TRUE;
+  this->autoClipBox = NULL;
 
   if ( buildNow )
     this->setBaseWidget( this->buildWidget( this->getParentWidget() ) );
@@ -346,16 +350,16 @@ SoGtkViewer::SoGtkViewer(
 SoGtkViewer::~SoGtkViewer( // virtual
   void )
 {
-  delete this->autoclipbox;
+  delete this->autoClipBox;
 
-  delete this->interactionstartCallbacks;
-  delete this->interactionendCallbacks;
+  delete this->interactionStartCallbacks;
+  delete this->interactionEndCallbacks;
 
-  delete this->seeksensor;
+  delete this->seekSensor;
 
-  if (this->userroot) this->setSceneGraph(NULL);
-  if (this->lightroot) this->lightroot->unref();
-  this->viewerroot->unref();
+  if (this->userRoot) this->setSceneGraph(NULL);
+  if (this->lightRoot) this->lightRoot->unref();
+  this->viewerRoot->unref();
 } // ~SoGtkViewer()
 
 // *************************************************************************
@@ -381,10 +385,10 @@ SoGtkViewer::setCamera( // virtual
 
     // If we made the camera, detach it. Otherwise just leave it in
     // the graph.
-    if (this->deletecamera) {
-      SoGroup * cameraparent = getParentOfNode(this->viewerroot, this->camera);
+    if (this->deleteCamera) {
+      SoGroup * cameraparent = getParentOfNode(this->viewerRoot, this->camera);
       cameraparent->removeChild(this->camera);
-      this->deletecamera = FALSE;
+      this->deleteCamera = FALSE;
     }
 
     this->camera->unref();
@@ -449,7 +453,7 @@ SoGtkViewer::setCameraType( // virtual
   }
 #endif // SOGTK_DEBUG
 
-  this->cameratype = t;
+  this->cameraType = t;
 } // setCameraType()
 
 // *************************************************************************
@@ -468,7 +472,7 @@ SoType
 SoGtkViewer::getCameraType(
   void ) const
 {
-  return this->cameratype;
+  return this->cameraType;
 } // getCameraType()
 
 // *************************************************************************
@@ -482,7 +486,7 @@ SoGtkViewer::viewAll( // virtual
   void )
 {
   assert(this->camera);
-  this->camera->viewAll(this->userroot, this->getViewportRegion());
+  this->camera->viewAll(this->userRoot, this->getViewportRegion());
 } // viewAll()
 
 // *************************************************************************
@@ -500,16 +504,16 @@ SoGtkViewer::saveHomePosition( // virtual
 {
   assert(this->camera);
 
-  this->storedorientation = this->camera->orientation.getValue();
-  this->storedposition = this->camera->position.getValue();
+  this->storedOrientation = this->camera->orientation.getValue();
+  this->storedPosition = this->camera->position.getValue();
 
   SoType t = this->camera->getTypeId();
   if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId())) {
-    this->storedheightval =
+    this->storedHeightVal =
       ((SoOrthographicCamera *)this->camera)->height.getValue();
   }
   else if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId())) {
-    this->storedheightval =
+    this->storedHeightVal =
       ((SoPerspectiveCamera *)this->camera)->heightAngle.getValue();
   }
 } // saveHomePosition()
@@ -526,21 +530,21 @@ void
 SoGtkViewer::resetToHomePosition( // virtual
   void )
 {
-  assert(this->camera);
+  assert( this->camera != NULL );
 
-  this->camera->orientation = this->storedorientation;
-  this->camera->position = this->storedposition;
+  this->camera->orientation = this->storedOrientation;
+  this->camera->position = this->storedPosition;
 
-  SoType t = this->camera->getTypeId();
-  if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId()))
-    ((SoOrthographicCamera *)this->camera)->height = this->storedheightval;
-  else if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId()))
-    ((SoPerspectiveCamera *)this->camera)->heightAngle = this->storedheightval;
+  SoType type = this->camera->getTypeId();
+  if ( type.isDerivedFrom( SoOrthographicCamera::getClassTypeId() ) )
+    ((SoOrthographicCamera *)this->camera)->height = this->storedHeightVal;
+  else if ( type.isDerivedFrom( SoPerspectiveCamera::getClassTypeId() ) )
+    ((SoPerspectiveCamera *)this->camera)->heightAngle = this->storedHeightVal;
 
   this->setClippingPlanes();
   this->camera->focalDistance =
     (this->camera->farDistance.getValue() +
-     this->camera->nearDistance.getValue())/2;
+     this->camera->nearDistance.getValue())/2.0;
 } // resetToHomePosition()
 
 // *************************************************************************
@@ -558,7 +562,7 @@ SoGtkViewer::setHeadlight( // virtual
   SbBool on )
 {
 #if SOGTK_DEBUG
-  if (this->lightroot &&
+  if (this->lightRoot &&
       ((on && this->isHeadlight()) || (!on && !this->isHeadlight()))) {
     SoDebugError::postWarning("SoGtkViewer::setHeadlight",
                               "headlight already turned %s",
@@ -570,34 +574,33 @@ SoGtkViewer::setHeadlight( // virtual
   SoSearchAction search;
 
   if (on) {
-    if (!this->lightroot) {
-      this->lightroot = new SoGroup;
-      this->lightroot->ref();
-      this->lightroot->addChild(new SoRotation);
+    if (!this->lightRoot) {
+      this->lightRoot = new SoGroup;
+      this->lightRoot->ref();
+      this->lightRoot->addChild(new SoRotation);
       SoDirectionalLight * dl = new SoDirectionalLight;
       dl->direction.setValue(1, -1, -10);
-      this->lightroot->addChild(dl);
-      this->lightroot->addChild(new SoResetTransform);
+      this->lightRoot->addChild(dl);
+      this->lightRoot->addChild(new SoResetTransform);
     }
 
     assert(this->camera);
-    SoGroup * cameraparent = getParentOfNode(this->viewerroot, this->camera);
+    SoGroup * cameraparent = getParentOfNode(this->viewerRoot, this->camera);
     int idx = cameraparent->findChild(this->camera);
-    cameraparent->insertChild(this->lightroot, idx+1);
+    cameraparent->insertChild(this->lightRoot, idx+1);
 
-    SoRotation * lorient = (SoRotation *) this->lightroot->getChild(0);
+    SoRotation * lorient = (SoRotation *) this->lightRoot->getChild(0);
     lorient->rotation.connectFrom(& this->camera->orientation);
-  }
-  else {
-    assert(this->lightroot);
-    SoGroup * lightparent = getParentOfNode(this->viewerroot, this->lightroot);
-    lightparent->removeChild(this->lightroot);
+  } else {
+    assert(this->lightRoot);
+    SoGroup * lightparent = getParentOfNode(this->viewerRoot, this->lightRoot);
+    lightparent->removeChild(this->lightRoot);
 
-    SoRotation * lorient = (SoRotation *) this->lightroot->getChild(0);
+    SoRotation * lorient = (SoRotation *) this->lightRoot->getChild(0);
     lorient->rotation.disconnect();
   }
 
-  this->lighton = on;
+  this->lightOn = on;
 } // setHeadlight()
 
 // *************************************************************************
@@ -616,7 +619,7 @@ SbBool
 SoGtkViewer::isHeadlight(
   void ) const
 {
-  return this->lighton;
+  return this->lightOn;
 } // isHeadlight()
 
 // *************************************************************************
@@ -634,10 +637,10 @@ SoDirectionalLight *
 SoGtkViewer::getHeadlight(
   void ) const
 {
-  if (!this->lightroot) return NULL;
+  if (!this->lightRoot) return NULL;
 
   SoDirectionalLight * dl =
-    (SoDirectionalLight *) this->lightroot->getChild(1);
+    (SoDirectionalLight *) this->lightRoot->getChild(1);
   assert(dl->isOfType(SoDirectionalLight::getClassTypeId()));
   return dl;
 } // getHeadlight()
@@ -688,7 +691,7 @@ SoGtkViewer::setDrawStyle( // virtual
     return;
   }
 
-  this->drawstyles[type] = style;
+  this->drawStyles[type] = style;
   this->changeDrawStyle(this->currentDrawStyle());
 } // setDrawStyle()
 
@@ -709,10 +712,10 @@ SoGtkViewer::getDrawStyle(
   if ((type != STILL) && (type != INTERACTIVE)) {
     SoDebugError::postWarning("SoGtkViewer::setDrawStyle",
                               "unknown drawstyle type setting 0x%x", type);
-    return this->drawstyles[STILL];
+    return this->drawStyles[STILL];
   }
 #endif // SOGTK_DEBUG
-  return this->drawstyles[type];
+  return this->drawStyles[type];
 } // getDrawStyle()
 
 // *************************************************************************
@@ -730,7 +733,7 @@ SoGtkViewer::setBufferingType( // virtual
   SoGtkViewer::BufferType type )
 {
 #if 0 // SOGTK_DEBUG
-  if (type == this->buffertype) {
+  if (type == this->bufferType) {
     SoDebugError::postWarning("SoGtkViewer::setBufferingType",
                               "buffer type 0x%x already set", type);
     return;
@@ -745,7 +748,7 @@ SoGtkViewer::setBufferingType( // virtual
   }
 #endif // SOGTK_DEBUG
 
-  this->buffertype = type;
+  this->bufferType = type;
   inherited::setDoubleBuffer(type == BUFFER_DOUBLE ? TRUE : FALSE);
 } // setBufferingType()
 
@@ -761,7 +764,7 @@ SoGtkViewer::BufferType
 SoGtkViewer::getBufferingType(
   void ) const
 {
-  return this->buffertype;
+  return this->bufferType;
 } // getBufferingType()
 
 // *************************************************************************
@@ -784,7 +787,7 @@ SoGtkViewer::setViewing( // virtual
   SbBool on )
 {
 #if SOGTK_DEBUG
-  if (this->viewmode == on) {
+  if (this->viewMode == on) {
     SoDebugError::postWarning("SoGtkViewer::setViewing", "unnecessary called");
     return;
   }
@@ -797,7 +800,7 @@ SoGtkViewer::setViewing( // virtual
     if (action) SoLocateHighlight::turnOffCurrentHighlight(action);
   }
 
-  this->viewmode = on;
+  this->viewMode = on;
 } // setViewing()
 
 // *************************************************************************
@@ -812,7 +815,7 @@ SbBool
 SoGtkViewer::isViewing(
   void ) const
 {
-  return this->viewmode;
+  return this->viewMode;
 } // isViewing()
 
 // *************************************************************************
@@ -830,7 +833,7 @@ void
 SoGtkViewer::setCursorEnabled( // virtual
   SbBool on )
 {
-  this->cursoron = on;
+  this->cursorOn = on;
 } // setCursorEnabled()
 
 // *************************************************************************
@@ -845,7 +848,7 @@ SbBool
 SoGtkViewer::isCursorEnabled(
   void ) const
 {
-  return this->cursoron;
+  return this->cursorOn;
 } // isCursorEnabled()
 
 // *************************************************************************
@@ -864,13 +867,13 @@ SoGtkViewer::setAutoClipping(
   SbBool on )
 {
 #if SOGTK_DEBUG
-  if (this->adjustclipplanes == on) {
+  if (this->adjustClipPlanes == on) {
     SoDebugError::postWarning("SoGtkViewer::setAutoClipping",
                               "unnecessary called");
     return;
   }
 #endif // SOGTK_DEBUG
-  this->adjustclipplanes = on;
+  this->adjustClipPlanes = on;
   if (on) this->scheduleRedraw();
 } // setAutoClipping()
 
@@ -886,7 +889,7 @@ SbBool
 SoGtkViewer::isAutoClipping(
   void ) const
 {
-  return this->adjustclipplanes;
+  return this->adjustClipPlanes;
 } // isAutoClipping()
 
 // *************************************************************************
@@ -1026,7 +1029,7 @@ SoGtkViewer::setSeekTime(
     return;
   }
 #endif SOGTK_DEBUG
-  this->seekperiod = seconds;
+  this->seekPeriod = seconds;
 } // setSeekTime()
 
 // *************************************************************************
@@ -1041,7 +1044,7 @@ float
 SoGtkViewer::getSeekTime(
   void ) const
 {
-  return this->seekperiod;
+  return this->seekPeriod;
 } // getSeekTime()
 
 // *************************************************************************
@@ -1057,7 +1060,8 @@ SoGtkViewer::addStartCallback(
   SoGtkViewerCB * func,
   void * data )
 {
-  this->interactionstartCallbacks->addCallback((SoCallbackListCB *)func, data);
+  this->interactionStartCallbacks->addCallback(
+    (SoCallbackListCB *) func, data );
 } // addStartCallback()
 
 // *************************************************************************
@@ -1073,7 +1077,7 @@ SoGtkViewer::addFinishCallback(
   SoGtkViewerCB * func,
   void * data )
 {
-  this->interactionendCallbacks->addCallback((SoCallbackListCB *)func, data);
+  this->interactionEndCallbacks->addCallback( (SoCallbackListCB *) func, data );
 } // addFinishCallback()
 
 // *************************************************************************
@@ -1087,8 +1091,8 @@ SoGtkViewer::addFinishCallback(
 void
 SoGtkViewer::removeStartCallback(SoGtkViewerCB * func, void * data)
 {
-  this->interactionstartCallbacks->removeCallback((SoCallbackListCB *)func,
-                                                  data);
+  this->interactionStartCallbacks->removeCallback(
+    (SoCallbackListCB *) func, data );
 }
 
 /*!
@@ -1103,7 +1107,8 @@ SoGtkViewer::removeFinishCallback(
   SoGtkViewerCB * func,
   void * data )
 {
-  this->interactionendCallbacks->removeCallback((SoCallbackListCB *)func, data);
+  this->interactionEndCallbacks->removeCallback(
+    (SoCallbackListCB *) func, data );
 } // removeFinishCallback()
 
 // *************************************************************************
@@ -1425,7 +1430,7 @@ void
 SoGtkViewer::setDoubleBuffer( // virtual
   SbBool on )
 {
-  this->buffertype = on ? BUFFER_DOUBLE : BUFFER_SINGLE;
+  this->bufferType = on ? BUFFER_DOUBLE : BUFFER_SINGLE;
   inherited::setDoubleBuffer(on);
 } // setDoubleBuffer()
 
@@ -1450,26 +1455,29 @@ void
 SoGtkViewer::setSceneGraph( // virtual
   SoNode * root )
 {
-  if (!inherited::getSceneGraph()) inherited::setSceneGraph(this->viewerroot);
+  if ( ! inherited::getSceneGraph() )
+    inherited::setSceneGraph( this->viewerRoot );
 
-  if (this->userroot) {
-    if (this->getCamera()) this->setCamera(NULL);
-    // Release the old user-supplied graph.
-    this->viewerroot->removeChild(this->userroot);
+  if ( this->userRoot ) {
+    if ( this->getCamera() )
+      this->setCamera( NULL );
+    this->viewerRoot->removeChild( this->userRoot );
   }
 
-  this->userroot = root;
-  if (!root) return;
+  this->userRoot = root;
+  if ( ! root )
+    return;
 
-  this->viewerroot->addChild(this->userroot);
+  this->viewerRoot->addChild( this->userRoot );
 
   // Search for a camera already present.
   SoSearchAction search;
-  search.setType(SoCamera::getClassTypeId());
-  search.apply(this->userroot);
+  search.setType( SoCamera::getClassTypeId() );
+  search.apply( this->userRoot );
   SoCamera * scenecamera = NULL;
-  SoFullPath * fullpath = (SoFullPath *)search.getPath();
-  if (fullpath) scenecamera = (SoCamera *)fullpath->getTail();
+  SoFullPath * fullpath = (SoFullPath *) search.getPath();
+  if ( fullpath )
+    scenecamera = (SoCamera *) fullpath->getTail();
 
 #if 0 // debug
   SoDebugError::postInfo("SoGtkViewer::setSceneGraph",
@@ -1478,28 +1486,28 @@ SoGtkViewer::setSceneGraph( // virtual
 #endif // debug
 
   // Make our own camera if none was available.
-  if (!scenecamera) {
-    scenecamera = (SoCamera *)this->cameratype.createInstance();
-    this->deletecamera = TRUE;
+  if ( ! scenecamera ) {
+    scenecamera = (SoCamera *) this->cameraType.createInstance();
+    this->deleteCamera = TRUE;
 
-    if (this->viewertype == SoGtkViewer::BROWSER) {
-      this->viewerroot->insertChild(scenecamera, 1);
+    if (this->viewerType == SoGtkViewer::BROWSER) {
+      this->viewerRoot->insertChild(scenecamera, 1);
     }
     else {
-      if (this->userroot->isOfType(SoGroup::getClassTypeId())) {
-        ((SoGroup *)this->userroot)->insertChild(scenecamera, 0);
+      if (this->userRoot->isOfType(SoGroup::getClassTypeId())) {
+        ((SoGroup *)this->userRoot)->insertChild(scenecamera, 0);
       }
       else {
         SoGroup * g = new SoGroup;
         g->addChild(scenecamera);
-        g->addChild(this->userroot);
-        this->viewerroot->removeChild(this->userroot);
-        this->viewerroot->addChild(g);
-        this->userroot = g;
+        g->addChild(this->userRoot);
+        this->viewerRoot->removeChild(this->userRoot);
+        this->viewerRoot->addChild(g);
+        this->userRoot = g;
       }
     }
 
-    scenecamera->viewAll(this->userroot, this->getViewportRegion());
+    scenecamera->viewAll(this->userRoot, this->getViewportRegion());
   }
 
   // This will set up the headlight
@@ -1520,7 +1528,7 @@ SoNode *
 SoGtkViewer::getSceneGraph( // virtual
   void )
 {
-  return this->userroot;
+  return this->userRoot;
 } // getSceneGraph()
 
 // *************************************************************************
@@ -1541,12 +1549,12 @@ SoGtkViewer::setSeekMode( // virtual
 {
   assert(this->isViewing());
 
-  if (!on && this->seeksensor->isScheduled()) {
-    this->seeksensor->unschedule();
+  if (!on && this->seekSensor->isScheduled()) {
+    this->seekSensor->unschedule();
     this->interactiveCountDec();
   }
 
-  this->inseekmode = on;
+  this->inSeekMode = on;
 } // setSeekMode()
 
 // *************************************************************************
@@ -1561,7 +1569,7 @@ SbBool
 SoGtkViewer::isSeekMode(
   void ) const
 {
-  return this->inseekmode;
+  return this->inSeekMode;
 } // isSeekMode()
 
 // *************************************************************************
@@ -1584,7 +1592,7 @@ SoGtkViewer::seekToPoint(
   SoRayPickAction rpaction(this->getViewportRegion());
   rpaction.setPoint(screenpos);
   rpaction.setRadius(2);
-  rpaction.apply(this->viewerroot);
+  rpaction.apply(this->viewerRoot);
 
   SoPickedPoint * picked = rpaction.getPickedPoint();
   if (!picked) {
@@ -1595,28 +1603,27 @@ SoGtkViewer::seekToPoint(
   SbVec3f hitpoint;
   if (this->seektopoint) {
     hitpoint = picked->getPoint();
-  }
-  else {
+  } else {
     SoGetBoundingBoxAction bbaction(this->getViewportRegion());
     bbaction.apply(picked->getPath());
     SbBox3f bbox = bbaction.getBoundingBox();
     hitpoint = bbox.getCenter();
   }
 
-  this->camerastartposition = this->camera->position.getValue();
+  this->cameraStartPosition = this->camera->position.getValue();
 
-  float fd = this->seekdistance;
-  if (this->seekdistanceabs)
+  float fd = this->seekDistance;
+  if (this->seekDistanceAbs)
     fd *= (hitpoint - this->camera->position.getValue()).length()/100.0f;
   this->camera->focalDistance = fd;
 
   SbVec3f dir;
   this->camera->orientation.getValue().multVec(SbVec3f(0, 0, -1), dir);
-  this->cameraendposition = hitpoint - fd * dir;
+  this->cameraEndPosition = hitpoint - fd * dir;
 
-  if (!this->seeksensor->isScheduled()) {
-    this->seeksensor->setBaseTime(SbTime::getTimeOfDay());
-    this->seeksensor->schedule();
+  if (!this->seekSensor->isScheduled()) {
+    this->seekSensor->setBaseTime(SbTime::getTimeOfDay());
+    this->seekSensor->schedule();
     this->interactiveCountInc();
   }
 
@@ -1638,19 +1645,19 @@ SoGtkViewer::actualRedraw( // virtual
   if (this->isAutoClipping()) this->setClippingPlanes();
 
   if (this->drawAsHiddenLine()) {
-    this->sodrawstyle->style = SoDrawStyle::FILLED;
-    this->somaterialbinding->value.setIgnored(FALSE);
-    this->sobasecolor->rgb.setValue(this->getBackgroundColor());
-    this->sobasecolor->rgb.setIgnored(FALSE);
+    this->drawStyle->style = SoDrawStyle::FILLED;
+    this->materialBinding->value.setIgnored(FALSE);
+    this->baseColor->rgb.setValue(this->getBackgroundColor());
+    this->baseColor->rgb.setIgnored(FALSE);
 
-    this->polygonoffsetparent->whichChild = SO_SWITCH_ALL;
+    this->polygonOffsetParent->whichChild = SO_SWITCH_ALL;
 
     this->getSceneManager()->render(this->isClearBeforeRender(), TRUE);
 
-    this->sodrawstyle->style = SoDrawStyle::LINES;
-    this->somaterialbinding->value.setIgnored(TRUE);
-    this->sobasecolor->rgb.setIgnored(TRUE);
-    this->polygonoffsetparent->whichChild = SO_SWITCH_NONE;
+    this->drawStyle->style = SoDrawStyle::LINES;
+    this->materialBinding->value.setIgnored(TRUE);
+    this->baseColor->rgb.setIgnored(TRUE);
+    this->polygonOffsetParent->whichChild = SO_SWITCH_NONE;
 
     this->getSceneManager()->render(FALSE, FALSE);
 
@@ -1675,10 +1682,12 @@ SoGtkViewer::processCommonEvents(
   GdkEvent * e )
 {
   // Check if the application wants to "steal" the event.
-  if (inherited::invokeAppCB(e)) return TRUE;
+  if ( inherited::invokeAppCB(e) )
+    return TRUE;
 
+/*
   // Hit Escape to toggle between interact and examine viewer modes.
-  if (e->type() == Event_KeyPress) {
+  if ( e->type() == Event_KeyPress ) {
     QKeyEvent * ke = (QKeyEvent *)e;
     if (ke->key() == Key_Escape) {
       this->setViewing(this->isViewing() ? FALSE : TRUE);
@@ -1728,6 +1737,7 @@ SoGtkViewer::processCommonEvents(
     this->moveCameraScreen(pos);
     return TRUE;
   }
+*/
 
   return FALSE;
 } // processCommonEvents()
@@ -1754,15 +1764,15 @@ SoGtkViewer::interactiveCountInc(
   void )
 {
   // Catch problems with missing interactiveCountDec() calls.
-  assert(this->interactionnesting < 100);
+  assert(this->interactionNesting < 100);
 
-  if (++(this->interactionnesting) == 1)
-    this->interactionstartCallbacks->invokeCallbacks(this);
+  if (++(this->interactionNesting) == 1)
+    this->interactionStartCallbacks->invokeCallbacks(this);
 
 #if 0 // debug
   SoDebugError::postInfo("SoGtkViewer::interactiveCountInc", "%d -> %d",
-                         this->interactionnesting - 1,
-                         this->interactionnesting);
+                         this->interactionNesting - 1,
+                         this->interactionNesting);
 #endif // debug
 } // interactiveCountInc()
 
@@ -1789,15 +1799,15 @@ SoGtkViewer::interactiveCountDec(
 {
 #if SOGTK_DEBUG
   // Catch problems with missing interactiveCountInc() calls.
-  assert(this->interactionnesting > 0);
+  assert(this->interactionNesting > 0);
 
-  if (--(this->interactionnesting) == 0) {
-    this->interactionendCallbacks->invokeCallbacks(this);
+  if (--(this->interactionNesting) == 0) {
+    this->interactionEndCallbacks->invokeCallbacks(this);
   }
 #else // no debug
-  if (--(this->interactionnesting) <= 0) {
-    this->interactionendCallbacks->invokeCallbacks(this);
-    this->interactionnesting = 0;
+  if (--(this->interactionNesting) <= 0) {
+    this->interactionEndCallbacks->invokeCallbacks(this);
+    this->interactionNesting = 0;
   }
 #endif // nodebug
 
@@ -1820,7 +1830,7 @@ SoGtkViewer::interactiveCountDec(
 int
 SoGtkViewer::getInteractiveCount(void) const
 {
-  return this->interactionnesting;
+  return this->interactionNesting;
 } // getInteractiveCount()
 
 // *************************************************************************
@@ -1853,7 +1863,7 @@ SoGtkViewer::setSeekDistance(
     return;
   }
 #endif // SOGTK_DEBUG
-  this->seekdistance = distance;
+  this->seekDistance = distance;
 } // setSeekDistance()
 
 // *************************************************************************
@@ -1870,7 +1880,7 @@ float
 SoGtkViewer::getSeekDistance(
   void ) const
 {
-  return this->seekdistance;
+  return this->seekDistance;
 } // getSeekDistance()
 
 // *************************************************************************
@@ -1895,7 +1905,7 @@ SoGtkViewer::setSeekValueAsPercentage(
     return;
   }
 #endif // SOGTK_DEBUG
-  this->seekdistanceabs = on ? FALSE : TRUE;
+  this->seekDistanceAbs = on ? FALSE : TRUE;
 } // getSeekValueAsPercentage()
 
 // *************************************************************************
@@ -1912,7 +1922,7 @@ SbBool
 SoGtkViewer::isSeekValuePercentage(
   void ) const
 {
-  return this->seekdistanceabs ? FALSE : TRUE;
+  return this->seekDistanceAbs ? FALSE : TRUE;
 } // isSeekValuePercentage()
 
 // *************************************************************************
@@ -1954,11 +1964,11 @@ SoGtkViewer::toggleCameraType( // virtual
     assert(0);
   }
 
-  SoGroup * cameraparent = getParentOfNode(this->viewerroot, this->camera);
+  SoGroup * cameraparent = getParentOfNode( this->viewerRoot, this->camera );
   cameraparent->insertChild(newcamera, cameraparent->findChild(this->camera));
-  SoCamera * oldcamera = !this->deletecamera ? this->camera : NULL;
+  SoCamera * oldcamera = (! this->deleteCamera) ? this->camera : NULL;
   this->setCamera(newcamera);
-  this->deletecamera = TRUE;
+  this->deleteCamera = TRUE;
   if (oldcamera) cameraparent->removeChild(oldcamera);
 } // toggleCameraType()
 
@@ -1975,13 +1985,13 @@ SbBool
 SoGtkViewer::drawInteractiveAsStill(
   void ) const
 {
-  SbBool moveasstill = this->drawstyles[INTERACTIVE] == VIEW_SAME_AS_STILL;
+  SbBool moveasstill = this->drawStyles[INTERACTIVE] == VIEW_SAME_AS_STILL;
   if (!moveasstill)
-    moveasstill = this->drawstyles[INTERACTIVE] == this->drawstyles[STILL];
+    moveasstill = this->drawStyles[INTERACTIVE] == this->drawStyles[STILL];
   if (!moveasstill)
     moveasstill =
-      this->drawstyles[INTERACTIVE] == VIEW_NO_TEXTURE &&
-      this->drawstyles[STILL] != VIEW_AS_IS;
+      this->drawStyles[INTERACTIVE] == VIEW_NO_TEXTURE &&
+      this->drawStyles[STILL] != VIEW_AS_IS;
   return moveasstill;
 } // drawInteractiveAsStill()
 
@@ -1999,10 +2009,10 @@ SoGtkViewer::currentDrawStyle(
 {
   SbBool interactivemode = this->getInteractiveCount() > 0 ? TRUE : FALSE;
 
-  if (!interactivemode || this->drawInteractiveAsStill())
-    return this->drawstyles[STILL];
+  if ( ! interactivemode || this->drawInteractiveAsStill())
+    return this->drawStyles[STILL];
   else
-    return this->drawstyles[INTERACTIVE];
+    return this->drawStyles[INTERACTIVE];
 } // currentDrawStyle()
 
 // *************************************************************************
@@ -2036,7 +2046,7 @@ SoGtkViewer::changeDrawStyle(
   SoGtkViewer::DrawStyle style )
 {
   // Turn on/off Z-buffering based on the style setting.
-  gtk_gl_area_makecurrent( GTK_GL_AREA(this->getGLAreaWidget()) );
+  gtk_gl_area_make_current( GTK_GL_AREA(this->getGtkGLArea()) );
 
   DrawStyle s = this->currentDrawStyle();
   if (s & (VIEW_LOW_RES_LINE|VIEW_LOW_RES_POINT|VIEW_BBOX))
@@ -2045,61 +2055,63 @@ SoGtkViewer::changeDrawStyle(
     glEnable(GL_DEPTH_TEST);
 
 
-  this->drawstyleroot->whichChild = SO_SWITCH_NONE;
+  this->drawStyleRoot->whichChild = SO_SWITCH_NONE;
 
   // Render everything as its supposed to be done, don't override
   // any of the settings in the ``real'' graph.
   if (style == VIEW_AS_IS) return;
 
-  this->drawstyleroot->whichChild = SO_SWITCH_ALL;
+  this->drawStyleRoot->whichChild = SO_SWITCH_ALL;
 
   // Further settings for rendering as hidden line will be done in the
   // overloaded actualRedraw().
   if (style == VIEW_HIDDEN_LINE) {
-    this->socomplexity->type.setIgnored(TRUE);
-    this->socomplexity->value.setIgnored(TRUE);
-    this->hiddenlineroot->whichChild = SO_SWITCH_ALL;
+    this->complexity->type.setIgnored(TRUE);
+    this->complexity->value.setIgnored(TRUE);
+    this->hiddenLineRoot->whichChild = SO_SWITCH_ALL;
     return;
   }
 
-  this->hiddenlineroot->whichChild = SO_SWITCH_NONE;
+  this->hiddenLineRoot->whichChild = SO_SWITCH_NONE;
 
   // Set ignore flags.
   SbBool ignored =
     ((VIEW_NO_TEXTURE|VIEW_LOW_COMPLEXITY) & style) ? TRUE : FALSE;
-  this->sodrawstyle->style.setIgnored(ignored);
-  this->solightmodel->model.setIgnored(ignored);
+  this->drawStyle->style.setIgnored(ignored);
+  this->lightModel->model.setIgnored(ignored);
   ignored = ((VIEW_NO_TEXTURE|VIEW_LOW_COMPLEXITY|VIEW_LINE|VIEW_POINT) &
              style) ? TRUE : FALSE;
-  this->socomplexity->type.setIgnored(ignored);
+  this->complexity->type.setIgnored(ignored);
   ignored = ((VIEW_NO_TEXTURE|VIEW_LINE|VIEW_POINT|VIEW_BBOX) & style) ?
     TRUE : FALSE;
-  this->socomplexity->value.setIgnored(ignored);
+  this->complexity->value.setIgnored(ignored);
   ignored = ((VIEW_NO_TEXTURE|VIEW_LOW_COMPLEXITY|VIEW_LINE|VIEW_LOW_RES_LINE|
               VIEW_POINT|VIEW_LOW_RES_POINT|VIEW_BBOX) & style) ? TRUE : FALSE;
 
   // Set draw style.
-  if (!this->sodrawstyle->style.isIgnored()) {
+  if (!this->drawStyle->style.isIgnored()) {
     SoDrawStyle::Style ds;
     if (style & (VIEW_LINE|VIEW_LOW_RES_LINE|VIEW_BBOX))
       ds = SoDrawStyle::LINES;
     else if (style & (VIEW_POINT|VIEW_LOW_RES_POINT))
       ds = SoDrawStyle::POINTS;
-    else assert(0);
+    else
+      assert(0);
 
-    this->sodrawstyle->style = ds;
+    this->drawStyle->style = ds;
   }
 
   // Set rendering complexity type.
-  if (!this->socomplexity->type.isIgnored()) {
+  if (!this->complexity->type.isIgnored()) {
     SoComplexity::Type t;
     if (style & (VIEW_LINE|VIEW_LOW_RES_LINE))
       t = SoComplexity::OBJECT_SPACE;
     else if (style & VIEW_BBOX)
       t = SoComplexity::BOUNDING_BOX;
-    else assert(0);
+    else
+      assert(0);
 
-    this->socomplexity->type = t;
+    this->complexity->type = t;
   }
 
 #if 0 // debug
@@ -2110,14 +2122,14 @@ SoGtkViewer::changeDrawStyle(
                          "\tcomplexity type: 0x%02x, (isIgnored() == %s)\n"
                          "\tcomplexity value: %f, (isIgnored() == %s)\n"
                          "",
-                         this->sodrawstyle->style.getValue(),
-                         this->sodrawstyle->style.isIgnored() ? "T" : "F",
-                         this->solightmodel->model.getValue(),
-                         this->solightmodel->model.isIgnored() ? "T" : "F",
-                         this->socomplexity->type.getValue(),
-                         this->socomplexity->type.isIgnored() ? "T" : "F",
-                         this->socomplexity->value.getValue(),
-                         this->socomplexity->value.isIgnored() ? "T" : "F");
+                         this->drawStyle->style.getValue(),
+                         this->drawStyle->style.isIgnored() ? "T" : "F",
+                         this->lightModel->model.getValue(),
+                         this->lightModel->model.isIgnored() ? "T" : "F",
+                         this->complexity->type.getValue(),
+                         this->complexity->type.isIgnored() ? "T" : "F",
+                         this->complexity->value.getValue(),
+                         this->complexity->value.isIgnored() ? "T" : "F");
 #endif // debug
 } // changeDrawStyle()
 
@@ -2135,14 +2147,14 @@ void
 SoGtkViewer::setClippingPlanes(
   void )
 {
-  if (!this->autoclipbox)
-    this->autoclipbox = new SoGetBoundingBoxAction(this->getViewportRegion());
+  if (!this->autoClipBox)
+    this->autoClipBox = new SoGetBoundingBoxAction(this->getViewportRegion());
   else
-    this->autoclipbox->setViewportRegion(this->getViewportRegion());
+    this->autoClipBox->setViewportRegion(this->getViewportRegion());
 
-  this->autoclipbox->apply(this->viewerroot);
+  this->autoClipBox->apply( this->viewerRoot );
 
-  SbXfBox3f xbox = this->autoclipbox->getXfBoundingBox();
+  SbXfBox3f xbox = this->autoClipBox->getXfBoundingBox();
   SbMatrix mat;
   mat.setTranslate(- this->camera->position.getValue());
   xbox.transform(mat);
@@ -2165,7 +2177,7 @@ SoGtkViewer::setClippingPlanes(
 
   // Disallow negative near clipping plane distance, and make sure the
   // z-buffer depth utilization is kept below a certain threshold.
-  nearval = QMAX(SLACK * farval, nearval);
+  nearval = SbMax(SLACK * farval, nearval);
 
   // Give a bit of slack to avoid artifacts when scene fits exactly
   // inside bounding box.
@@ -2238,17 +2250,15 @@ SoGtkViewer::moveCameraScreen(
 */
 
 void
-SoGtkViewer::interactivestartCB(
+SoGtkViewer::interactiveStartCB(
   void *,
   SoGtkViewer * thisp )
 {
-  // In interactive buffer mode, doublebuffering is used during interaction.
-  if (thisp->buffertype == BUFFER_INTERACTIVE)
+  if ( thisp->bufferType == BUFFER_INTERACTIVE )
     thisp->inherited::setDoubleBuffer(TRUE);
 
-  // Use the dynamic drawstyle.
-  if (!thisp->drawInteractiveAsStill())
-    thisp->changeDrawStyle(thisp->drawstyles[INTERACTIVE]);
+  if ( ! thisp->drawInteractiveAsStill() )
+    thisp->changeDrawStyle( thisp->drawStyles[INTERACTIVE] );
 } // interactivestartCB()
 
 // *************************************************************************
@@ -2261,18 +2271,14 @@ SoGtkViewer::interactivestartCB(
 */
 
 void
-SoGtkViewer::interactiveendCB(
+SoGtkViewer::interactiveEndCB(
   void *,
   SoGtkViewer * thisp )
 {
-  // In interactive buffer mode, doublebuffering is used during
-  // interaction, singelbuffering while the camera is static.
-  if (thisp->buffertype == BUFFER_INTERACTIVE)
-    thisp->inherited::setDoubleBuffer(FALSE);
-
-  // Back to static drawstyle.
-  if (!thisp->drawInteractiveAsStill())
-    thisp->changeDrawStyle(thisp->drawstyles[STILL]);
+  if ( thisp->bufferType == BUFFER_INTERACTIVE )
+    thisp->inherited::setDoubleBuffer( FALSE );
+  if ( ! thisp->drawInteractiveAsStill() )
+    thisp->changeDrawStyle( thisp->drawStyles[STILL] );
 } // interactiveendCB()
 
 // *************************************************************************
@@ -2286,7 +2292,7 @@ SoGtkViewer::interactiveendCB(
 // *************************************************************************
 
 void
-SoGtkViewer::seeksensorCB(
+SoGtkViewer::seekSensorCB(
   void * data,
   SoSensor * s )
 {
@@ -2296,13 +2302,13 @@ SoGtkViewer::seeksensorCB(
   SoTimerSensor * sensor = (SoTimerSensor *)s;
 
   float t =
-    (currenttime - sensor->getBaseTime()).getValue() / thisp->seekperiod;
+    (currenttime - sensor->getBaseTime()).getValue() / thisp->seekPeriod;
   if ((t > 1.0f) || (t + sensor->getInterval().getValue() > 1.0f)) t = 1.0f;
   SbBool end = (t == 1.0f);
 
   t = 0.5f - cos(M_PI * t) * 0.5f;
-  thisp->camera->position = thisp->camerastartposition +
-    (thisp->cameraendposition - thisp->camerastartposition) * t;
+  thisp->camera->position = thisp->cameraStartPosition +
+    (thisp->cameraEndPosition - thisp->cameraStartPosition) * t;
 
   if (end) thisp->setSeekMode(FALSE);
 } // seeksensorCB()

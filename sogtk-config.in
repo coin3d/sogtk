@@ -29,10 +29,10 @@ while test $# -gt 0; do
       echo @SOGTK_VERSION@
       ;;
     --cppflags)
-      echo -I@prefix@@includedir@ @SOGTK_EXTRA_CPPFLAGS@
+      echo -I@includedir@ @SOGTK_EXTRA_CPPFLAGS@
       ;;
     --ldflags)
-      echo -L@prefix@@libdir@ @SOGTK_EXTRA_LDFLAGS@
+      echo -L@libdir@ @SOGTK_EXTRA_LDFLAGS@
       ;;
     --libs)
       echo -lSoGtk @SOGTK_EXTRA_LIBS@
@@ -46,4 +46,3 @@ while test $# -gt 0; do
 done
 
 exit 0
-

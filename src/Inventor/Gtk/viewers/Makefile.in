@@ -112,19 +112,19 @@ INCLUDES = -I$(top_srcdir)/src
 
 libSoGtkViewers_la_SOURCES = \
 	SoGtkViewer.cpp \
-	SoGtkViewer.h \
-	SoGtkFullViewer.cpp \
-	SoGtkFullViewer.h \
-	SoGtkExaminerViewer.cpp \
-	SoGtkExaminerViewer.h
+	SoGtkViewer.h
 
+#	SoGtkFullViewer.cpp \
+#	SoGtkFullViewer.h \
+#	SoGtkExaminerViewer.cpp \
+#	SoGtkExaminerViewer.h \
+#	SoGtkPlaneViewer.cpp \
+#	SoGtkPlaneViewer.h
 
 libSoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
 
 libSoGtkViewersinc_HEADERS = \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkViewer.h
 
 subdir = src/Inventor/Gtk/viewers
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -142,8 +142,7 @@ X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtkViewers_la_LDFLAGS = 
 libSoGtkViewers_la_LIBADD = 
-am_libSoGtkViewers_la_OBJECTS =  SoGtkViewer.lo SoGtkFullViewer.lo \
-SoGtkExaminerViewer.lo
+am_libSoGtkViewers_la_OBJECTS =  SoGtkViewer.lo
 libSoGtkViewers_la_OBJECTS =  $(am_libSoGtkViewers_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -165,8 +164,7 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/SoGtkExaminerViewer.Plo \
-$(DEPDIR)/SoGtkFullViewer.Plo $(DEPDIR)/SoGtkViewer.Plo
+DEP_FILES =  @AMDEP@ $(DEPDIR)/SoGtkViewer.Plo
 SOURCES = $(libSoGtkViewers_la_SOURCES)
 OBJECTS = $(am_libSoGtkViewers_la_OBJECTS)
 
@@ -261,8 +259,6 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 
-@AMDEP@include $(DEPDIR)/SoGtkExaminerViewer.Plo
-@AMDEP@include $(DEPDIR)/SoGtkFullViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkViewer.Plo
 
 mostlyclean-depend:
@@ -367,6 +363,9 @@ all-redirect all-am all install-strip installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
+#	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
+#	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
+#	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
 
 install-libSoGtkViewersincHEADERS: $(libSoGtkViewersinc_HEADERS)
 	@$(NORMAL_INSTALL)

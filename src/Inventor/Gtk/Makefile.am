@@ -1,5 +1,5 @@
 
-SUBDIRS = common devices widgets
+SUBDIRS = common devices widgets viewers
 
 INCLUDES = -I$(top_srcdir)/src
 
@@ -18,5 +18,6 @@ libSoGtk_la_SOURCES = \
 libSoGtk_la_LIBADD = \
         common/libSoCommon.la \
         devices/libSoGtkDevices.la \
+	viewers/libSoGtkViewers.la \
         widgets/libSoGtkWidgets.la
 

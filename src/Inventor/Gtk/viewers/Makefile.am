@@ -7,18 +7,21 @@ INCLUDES = -I$(top_srcdir)/src
 
 libSoGtkViewers_la_SOURCES = \
 	SoGtkViewer.cpp \
-	SoGtkViewer.h \
-	SoGtkFullViewer.cpp \
-	SoGtkFullViewer.h \
-	SoGtkExaminerViewer.cpp \
-	SoGtkExaminerViewer.h
+	SoGtkViewer.h
+#	SoGtkFullViewer.cpp \
+#	SoGtkFullViewer.h \
+#	SoGtkExaminerViewer.cpp \
+#	SoGtkExaminerViewer.h \
+#	SoGtkPlaneViewer.cpp \
+#	SoGtkPlaneViewer.h
 
 libSoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
 
 libSoGtkViewersinc_HEADERS = \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkViewer.h
+#	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
+#	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
+#	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
 
 ## FIXME: this is a temporary workaround for a bug in Automake. The
 ## bug is fixed in the latest Automake CVS, but not in any "official"

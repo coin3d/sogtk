@@ -213,10 +213,13 @@ AC_SUBST(COMPONENTLIBS)
 
 AM_CONDITIONAL(HAVE_RENDERAREA, true)
 AM_CONDITIONAL(HAVE_EXAMINERVIEWER, false)
+AM_CONDITIONAL(HAVE_PLANEVIEWER, false)
+AM_CONDITIONAL(HAVE_WALKVIEWER, false)
+AM_CONDITIONAL(HAVE_FLYVIEWER, false)
 
-dnl *******************************************************************
+dnl ************************************************************************
 dnl * List all makefiles configure must automatically generate.
-dnl *******************************************************************
+dnl ************************************************************************
 dnl * while running autogen, $EXAMPLEMAKEFILES must be substituted for
 dnl * makefile generation
 
@@ -236,9 +239,12 @@ AC_OUTPUT([
 	examples/widgets/Makefile
 	examples/components/Makefile
 	examples/components/renderarea.cpp
+	examples/components/examinerviewer.cpp
+	examples/components/planeviewer.cpp
+	examples/components/walkviewer.cpp
+	examples/components/flyviewer.cpp
 ],[
 	chmod a+x sogtk-config
 ])
 
-dnl 	${EXAMPLEMAKEFILES}
-
+dnl ************************************************************************
