@@ -98,6 +98,12 @@ SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
 void
 SoGtk::init(GtkWidget * toplevelwidget)
 {
+  // Must do this here so SoDebugError is initialized before it could
+  // be attempted used.
+  if (!SoDB::isInitialized()) { SoDB::init(); }
+  SoNodeKit::init();
+  SoInteraction::init();
+
   if (SoGtk::mainWidget != NULL) {
 #if SOGTK_DEBUG
     SoDebugError::postWarning("SoGtk::init",
@@ -106,9 +112,6 @@ SoGtk::init(GtkWidget * toplevelwidget)
     return;
   }
 
-  SoDB::init();
-  SoNodeKit::init();
-  SoInteraction::init();
   SoGtkObject::init();
 
   SoDB::getSensorManager()->setChangedCallback(SoGuiP::sensorQueueChanged,
@@ -126,6 +129,12 @@ GtkWidget *
 SoGtk::init(int & argc, char ** argv,
             const char * appname, const char * classname)
 {
+  // Must do this here so SoDebugError is initialized before it could
+  // be attempted used.
+  if (!SoDB::isInitialized()) { SoDB::init(); }
+  SoNodeKit::init();
+  SoInteraction::init();
+
   if (SoGtk::mainWidget) {
 #if SOGTK_DEBUG
     SoDebugError::postWarning("SoGtk::init",
