@@ -10,22 +10,26 @@ BUILT_SOURCES = \
 	SoAnyFullViewer.cpp \
 	SoAnyFullViewer.h \
 	SoAnyExaminerViewer.cpp \
-	SoAnyExaminerViewer.h
+	SoAnyExaminerViewer.h \
+	SoAnyPlaneViewer.cpp \
+	SoAnyPlaneViewer.h
 
 libSoGtkViewers_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
 	SoGtkExaminerViewer.cpp \
-	SoGtkExaminerViewer.h
+	SoGtkExaminerViewer.h \
+	SoGtkPlaneViewer.cpp \
+	SoGtkPlaneViewer.h
 
 libSoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
 
 libSoGtkViewersinc_HEADERS = \
 	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
 	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
-#	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h \
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
 
 ############################################################################
 

@@ -122,7 +122,9 @@ BUILT_SOURCES = \
 	SoAnyFullViewer.cpp \
 	SoAnyFullViewer.h \
 	SoAnyExaminerViewer.cpp \
-	SoAnyExaminerViewer.h
+	SoAnyExaminerViewer.h \
+	SoAnyPlaneViewer.cpp \
+	SoAnyPlaneViewer.h
 
 
 libSoGtkViewers_la_SOURCES = \
@@ -130,7 +132,9 @@ libSoGtkViewers_la_SOURCES = \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
 	SoGtkExaminerViewer.cpp \
-	SoGtkExaminerViewer.h
+	SoGtkExaminerViewer.h \
+	SoGtkPlaneViewer.cpp \
+	SoGtkPlaneViewer.h
 
 
 libSoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
@@ -138,7 +142,8 @@ libSoGtkViewersincdir = $(includedir)/Inventor/Gtk/viewers
 libSoGtkViewersinc_HEADERS = \
 	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
 	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h \
+	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
 
 subdir = src/Inventor/Gtk/viewers
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -157,7 +162,8 @@ X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtkViewers_la_LDFLAGS = 
 libSoGtkViewers_la_LIBADD = 
 am_libSoGtkViewers_la_OBJECTS =  SoGtkViewer.lo SoAnyFullViewer.lo \
-SoAnyExaminerViewer.lo SoGtkFullViewer.lo SoGtkExaminerViewer.lo
+SoAnyExaminerViewer.lo SoAnyPlaneViewer.lo SoGtkFullViewer.lo \
+SoGtkExaminerViewer.lo SoGtkPlaneViewer.lo
 libSoGtkViewers_la_OBJECTS =  $(am_libSoGtkViewers_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -174,8 +180,9 @@ HEADERS =  $(libSoGtkViewersinc_HEADERS)
 
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/SoAnyExaminerViewer.Plo \
-$(DEPDIR)/SoAnyFullViewer.Plo $(DEPDIR)/SoGtkExaminerViewer.Plo \
-$(DEPDIR)/SoGtkFullViewer.Plo $(DEPDIR)/SoGtkViewer.Plo
+$(DEPDIR)/SoAnyFullViewer.Plo $(DEPDIR)/SoAnyPlaneViewer.Plo \
+$(DEPDIR)/SoGtkExaminerViewer.Plo $(DEPDIR)/SoGtkFullViewer.Plo \
+$(DEPDIR)/SoGtkPlaneViewer.Plo $(DEPDIR)/SoGtkViewer.Plo
 DIST_COMMON =  $(libSoGtkViewersinc_HEADERS) Makefile.am Makefile.in
 
 
@@ -283,8 +290,10 @@ maintainer-clean-tags:
 
 @AMDEP@include $(DEPDIR)/SoAnyExaminerViewer.Plo
 @AMDEP@include $(DEPDIR)/SoAnyFullViewer.Plo
+@AMDEP@include $(DEPDIR)/SoAnyPlaneViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkExaminerViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkFullViewer.Plo
+@AMDEP@include $(DEPDIR)/SoGtkPlaneViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkViewer.Plo
 
 mostlyclean-depend:
@@ -407,7 +416,6 @@ all-redirect all-am all install-strip installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
-#	$(top_srcdir)/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
 
 ############################################################################
 
