@@ -15,7 +15,7 @@ endif
 
 ############################################################################
 
-SUBDIRS = . data src/Inventor/Gtk po $(TESTDIR)
+SUBDIRS = . data src/Inventor/Gtk po intl $(TESTDIR)
 
 BUILT_SOURCES = \
 	sogtkdefs.h \

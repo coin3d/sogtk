@@ -440,6 +440,7 @@ AC_OUTPUT([
 	src/Inventor/Gtk/viewers/Makefile
 	src/Inventor/Gtk/widgets/Makefile
 	po/Makefile.in
+	intl/Makefile
         build/Makefile
         build/sogtk.doxygen
         build/sogtk.spec
