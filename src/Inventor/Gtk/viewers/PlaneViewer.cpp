@@ -34,7 +34,6 @@ static const char rcsid[] =
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
 #include <sogtkdefs.h>
-#include <Inventor/Gtk/viewers/SoAnyPlaneViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkPlaneViewer.h>
 #include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 
@@ -382,8 +381,8 @@ SoGtkPlaneViewer::setSeekMode(// virtual, protected
   inherited::setSeekMode(enable);
 #if 0
   this->setMode(on ?
-    SoAnyPlaneViewer::SEEK_WAIT_MODE :
-    SoAnyPlaneViewer::EXAMINE);
+    SoGtkPlaneViewer::SEEK_WAIT_MODE :
+    SoGtkPlaneViewer::EXAMINE);
 #endif
 } // setSeekMode()
 
@@ -520,24 +519,24 @@ SoGtkPlaneViewer::setCursorRepresentation(int mode)
     return;
   }
 
-  switch ((SoAnyPlaneViewer::PlaneViewerMode) mode) {
-//  case SoAnyPlaneViewer::INTERACT:
-//  case SoAnyPlaneViewer::EXAMINE:
-  case SoAnyPlaneViewer::IDLE_MODE:
+  switch ((SoGtkPlaneViewer::PlaneViewerMode) mode) {
+//  case SoGtkPlaneViewer::INTERACT:
+//  case SoGtkPlaneViewer::EXAMINE:
+  case SoGtkPlaneViewer::IDLE_MODE:
     this->setComponentCursor(SoGtkCursor::getBlankCursor());
     break ;
-  case SoAnyPlaneViewer::DOLLY_MODE:
+  case SoGtkPlaneViewer::DOLLY_MODE:
     this->setComponentCursor(SoGtkCursor(SoGtkCursor::UPARROW));
     break;
-  case SoAnyPlaneViewer::ROTZ_WAIT_MODE:
-  case SoAnyPlaneViewer::ROTZ_MODE:
+  case SoGtkPlaneViewer::ROTZ_WAIT_MODE:
+  case SoGtkPlaneViewer::ROTZ_MODE:
     this->setComponentCursor(SoGtkCursor::getRotateCursor());
     break;
-  case SoAnyPlaneViewer::SEEK_WAIT_MODE:
-  case SoAnyPlaneViewer::SEEK_MODE:
+  case SoGtkPlaneViewer::SEEK_WAIT_MODE:
+  case SoGtkPlaneViewer::SEEK_MODE:
     this->setComponentCursor(SoGtkCursor(SoGtkCursor::CROSSHAIR));
     break;
-  case SoAnyPlaneViewer::TRANSLATE_MODE:
+  case SoGtkPlaneViewer::TRANSLATE_MODE:
     this->setComponentCursor(SoGtkCursor::getPanCursor());
     break;
   default: 
