@@ -3,7 +3,7 @@
 /* Define to enable use of SoMouseButtonEvent::BUTTON5 */
 #undef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
 
-/* Define to enable use of the SoPolygonOffset node */
+/* Define to enable use of the Open Inventor SoPolygonOffset node */
 #undef HAVE_SOPOLYGONOFFSET
 
 /* Name of package */
@@ -11,3 +11,6 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Define if the X Window System is missing or not being used. */
+#undef X_DISPLAY_MISSING
