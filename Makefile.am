@@ -199,6 +199,9 @@ src/Inventor/Gtk/widgets/SoAnyPopupMenu.cpp: \
 
 ############################################################################
 
+doxygen-doc:
+	@( cd build; @sim_ac_doxygen_exe@ so@gui@.doxygen )
+
 doxygen-docs:
 	@( cd build; @sim_ac_doxygen_exe@ so@gui@.doxygen )
 
