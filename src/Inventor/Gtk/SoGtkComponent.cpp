@@ -39,7 +39,7 @@ static const char rcsid[] =
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
 #include <Inventor/Gtk/SoGtkMaterialList.h>
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
-// #include <Inventor/Gtk/SoGtkRoster.h>
+#include <Inventor/Gtk/SoGtkRoster.h>
 
 // *************************************************************************
 
@@ -65,8 +65,8 @@ SoGtkComponent::initClasses( // static
   SoGtkExaminerViewer::initClass();
 //  SoGtkPlaneViewer::initClass();
   SoGtkMaterialList::initClass();
-//  SoGtkRoster::initClass();
   SoGtkGraphEditor::initClass();
+  SoGtkRoster::initClass();
 } // initClasses()
 
 // *************************************************************************
