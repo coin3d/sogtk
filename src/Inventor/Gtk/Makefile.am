@@ -23,7 +23,6 @@ libSoGtk@SUFFIX@_la_SOURCES = \
 	SoGtk.cpp \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.cpp \
-	SoGtkMaterialList.h \
 	SoGtkMaterialList.cpp \
 	SoGtkGraphEditor.h \
 	SoGtkGraphEditor.cpp \
@@ -48,17 +47,17 @@ SoGtkincdir = $(includedir)/Inventor/Gtk
 
 SoGtkinc_HEADERS = \
 	SoGtkGraphEditor.h \
-	SoGtkMaterialList.h \
 	SoGtkRoster.h
 
 nodist_SoGtkinc_HEADERS = \
-	SoGtkBasic.h \
 	SoGtk.h \
+	SoGtkBasic.h \
 	SoGtkObject.h \
 	SoGtkCursor.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
-	SoGtkRenderArea.h
+	SoGtkRenderArea.h \
+	SoGtkMaterialList.h
 
 install-SoGtkincHEADERS: $(SoGtkinc_HEADERS)
 	@$(NORMAL_INSTALL)
