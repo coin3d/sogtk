@@ -1,0 +1,6 @@
+
+void
+SoGtkFlyViewerP::updateCursorRepresentation()
+{
+}
+
