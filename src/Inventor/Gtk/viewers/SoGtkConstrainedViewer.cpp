@@ -27,17 +27,27 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/viewers/SoGtkConstrainedViewer.h>
 
+// ************************************************************************
+
 /*!
   \class SoGtkConstrainedViewer Inventor/Gtk/viewers/SoGtkConstrainedViewer.h
   \brief The SoGtkConstrainedViewer class is yet to be documented...
-  \ingroup sogtkviewers
+  \ingroup components viewers
+
+  - abstract component class
+  - focus on camera constraint
+*/
+
+// ************************************************************************
+
+/*!
+  \var SbVec3f SoGtkConstrainedViewer::upVector
+  FIXME: write doc
 */
 
 // ************************************************************************
 
 SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkConstrainedViewer);
-
-// ************************************************************************
 
 /*!
   Constructor.
@@ -75,6 +85,7 @@ SoGtkConstrainedViewer::~SoGtkConstrainedViewer( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -87,6 +98,7 @@ SoGtkConstrainedViewer::setUpDirection(
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const SbVec3f &
@@ -99,6 +111,7 @@ SoGtkConstrainedViewer::getUpDirection(
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -110,6 +123,7 @@ SoGtkConstrainedViewer::setCamera( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -121,6 +135,7 @@ SoGtkConstrainedViewer::saveHomePosition( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -132,6 +147,7 @@ SoGtkConstrainedViewer::resetToHomePosition( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -157,6 +173,7 @@ SoGtkConstrainedViewer::tiltCamera( // virtual, protected
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -168,6 +185,7 @@ SoGtkConstrainedViewer::bottomWheelMotion( // virtual, protected
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -180,6 +198,7 @@ SoGtkConstrainedViewer::leftWheelMotion( // virtual, protected
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -193,6 +212,7 @@ SoGtkConstrainedViewer::changeCameraValues( // virtual, protected
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -207,6 +227,7 @@ SoGtkConstrainedViewer::findUpDirection(
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -220,6 +241,7 @@ SoGtkConstrainedViewer::checkForCameraUpConstrain(
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void

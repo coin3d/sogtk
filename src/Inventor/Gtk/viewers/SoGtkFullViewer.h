@@ -68,8 +68,8 @@ protected:
     GtkWidget * parent,
     const char * name,
     SbBool embed,
-    BuildFlag flag,
-    Type type,
+    SoGtkFullViewer::BuildFlag flag,
+    SoGtkViewer::Type type,
     SbBool build );
   ~SoGtkFullViewer(void);
 

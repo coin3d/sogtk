@@ -35,7 +35,7 @@ static const char rcsid[] =
 /*!
   \class SoGtkFlyViewer Inventor/Gtk/viewers/SoGtkFlyViewer.h
   \brief The SoGtkFlyViewer class is yet to be documented.
-  \ingroup sogtkviewers
+  \ingroup components viewers
 */
 
 // ************************************************************************
@@ -45,6 +45,7 @@ SOGTK_OBJECT_SOURCE(SoGtkFlyViewer);
 // ************************************************************************
 
 /*!
+  Public constructor.
 */
 
 SoGtkFlyViewer::SoGtkFlyViewer( // public
@@ -62,6 +63,7 @@ SoGtkFlyViewer::SoGtkFlyViewer( // public
 // ************************************************************************
 
 /*!
+  Protected constructor for derivees.
 */
 
 SoGtkFlyViewer::SoGtkFlyViewer( // protected
@@ -118,6 +120,7 @@ SoGtkFlyViewer::constructor( // private
 // ************************************************************************
 
 /*!
+  Destructor.
 */
 
 SoGtkFlyViewer::~SoGtkFlyViewer(
@@ -129,6 +132,7 @@ SoGtkFlyViewer::~SoGtkFlyViewer(
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -140,6 +144,7 @@ SoGtkFlyViewer::setViewing( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -151,6 +156,7 @@ SoGtkFlyViewer::resetToHomePosition( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -162,6 +168,7 @@ SoGtkFlyViewer::setCamera( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -173,6 +180,7 @@ SoGtkFlyViewer::setCursorEnabled( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -184,6 +192,7 @@ SoGtkFlyViewer::setCameraType( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -197,6 +206,7 @@ SoGtkFlyViewer::getDefaultWidgetName( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -210,6 +220,7 @@ SoGtkFlyViewer::getDefaultTitle( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -253,6 +264,7 @@ SoGtkFlyViewer::processEvent( // virtual, protected
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -264,6 +276,7 @@ SoGtkFlyViewer::setSeekMode( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -275,6 +288,7 @@ SoGtkFlyViewer::actualRedraw( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -286,6 +300,7 @@ SoGtkFlyViewer::rightWheelMotion( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -297,6 +312,7 @@ SoGtkFlyViewer::createPrefSheet( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void

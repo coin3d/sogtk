@@ -35,9 +35,9 @@ static const char rcsid[] =
 
 
 /*!
-  \class SoGtkWalkViewer Inventor/Gtk/viewers/SoGtkWalkViewers.h
+  \class SoGtkWalkViewer Inventor/Gtk/viewers/SoGtkWalkViewer.h
   \brief The SoGtkWalkViewer class is yet to be documented...
-  \ingroup sogtkviewers
+  \ingroup components viewers
 */
 
 // ************************************************************************
@@ -134,6 +134,7 @@ SoGtkWalkViewer::~SoGtkWalkViewer(
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -145,6 +146,7 @@ SoGtkWalkViewer::setViewing( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -156,6 +158,7 @@ SoGtkWalkViewer::setCamera( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -167,6 +170,7 @@ SoGtkWalkViewer::setCursorEnabled( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -178,6 +182,7 @@ SoGtkWalkViewer::setCameraType( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -191,6 +196,7 @@ SoGtkWalkViewer::getDefaultWidgetName( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -204,6 +210,7 @@ SoGtkWalkViewer::getDefaultTitle( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 const char *
@@ -247,6 +254,7 @@ SoGtkWalkViewer::processEvent( // virtual, protected
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -258,6 +266,7 @@ SoGtkWalkViewer::setSeekMode( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -269,6 +278,7 @@ SoGtkWalkViewer::actualRedraw( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -280,6 +290,7 @@ SoGtkWalkViewer::rightWheelMotion( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 GtkWidget *
@@ -315,6 +326,7 @@ SoGtkWalkViewer::buildLeftTrim( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void
@@ -326,6 +338,7 @@ SoGtkWalkViewer::createPrefSheet( // virtual
 // ************************************************************************
 
 /*!
+  FIXME: write doc
 */
 
 void

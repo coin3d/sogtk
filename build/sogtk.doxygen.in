@@ -266,6 +266,12 @@ INPUT                 = \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.cpp \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.h \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkWalkViewer.h \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp \
+	@sogtk_dox_src_dir@/src/Inventor/Gtk/viewers/SoGtkFlyViewer.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkGraphEditor.cpp \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkGraphEditor.h \
 	@sogtk_dox_src_dir@/src/Inventor/Gtk/SoGtkRoster.cpp \
