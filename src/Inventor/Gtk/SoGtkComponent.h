@@ -91,8 +91,8 @@ protected:
 
   void openHelpCard( const char * name );
 
-  virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
-  static gint eventHandler( GtkObject * object, GdkEvent * event, gpointer closure );
+  virtual SbBool eventFilter( GtkWidget * object, GdkEvent * event );
+  static gint eventHandler( GtkWidget * object, GdkEvent * event, gpointer closure );
 
 private:
   class SoGtkComponentP * pimpl;

@@ -228,7 +228,7 @@ SoGtkGLWidget::buildWidget(
 
 SbBool
 SoGtkGLWidget::eventFilter(
-  GtkObject * obj,
+  GtkWidget * obj,
   GdkEvent * ev )
 {
   if ( inherited::eventFilter( obj, ev ) ) return TRUE;
@@ -247,7 +247,7 @@ SoGtkGLWidget::eventFilter(
 
 gint
 SoGtkGLWidget::eventHandler( // static, protected
-  GtkObject * object,
+  GtkWidget * object,
   GdkEvent * event,
   gpointer closure )
 {
@@ -316,15 +316,15 @@ SoGtkGLWidget::setDoubleBuffer(
         this->getQGLWidget()->setFormat(format);
       }
 
-      if (this->glwidget->doubleBuffer()) this->glmodebits |= SO_GLX_DOUBLE;
-      else this->glmodebits &= ~SO_GLX_DOUBLE;
+      if (this->glwidget->doubleBuffer()) this->glmodebits |= SO_GL_DOUBLE;
+      else this->glmodebits &= ~SO_GL_DOUBLE;
     }
 */
   } else {
     if ( enable )
-      PRIVATE(this)->glModeBits |= SO_GLX_DOUBLE;
+      PRIVATE(this)->glModeBits |= SO_GL_DOUBLE;
     else
-      PRIVATE(this)->glModeBits &= ~SO_GLX_DOUBLE;
+      PRIVATE(this)->glModeBits &= ~SO_GL_DOUBLE;
   }
 } // setDoubleBuffer()
 

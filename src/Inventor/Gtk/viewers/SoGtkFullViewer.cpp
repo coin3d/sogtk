@@ -746,7 +746,7 @@ SoGtkFullViewer::hide(
 
 SbBool
 SoGtkFullViewer::eventFilter(
-  GtkObject * obj,
+  GtkWidget * obj,
   GdkEvent * ev )
 {
   if ( inherited::eventFilter( obj, ev ) )

@@ -351,7 +351,7 @@ static const char * gdk_event_name( GdkEventType type ) {
 
 SbBool
 SoGtkComponent::eventFilter( // virtual
-  GtkObject * obj,
+  GtkWidget * obj,
   GdkEvent * ev )
 {
   // SoDebugError::postInfo( "SoGtkComponent::eventFilter", "[invoked]" );
@@ -396,7 +396,7 @@ SoGtkComponent::eventFilter( // virtual
 
 gint
 SoGtkComponent::eventHandler( // static, private
-  GtkObject * object,
+  GtkWidget * object,
   GdkEvent * event,
   gpointer closure )
 {

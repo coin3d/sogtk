@@ -36,7 +36,7 @@ class SOGTK_DLL_API SoGtkDevice : public SoGtkObject {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkDevice, SoGtkObject);
 
 public:
-  typedef void SoGtkEventHandler( GtkWidget *, GdkEvent *, gpointer );
+  typedef gint SoGtkEventHandler( GtkWidget *, GdkEvent *, gpointer );
 
   virtual void enable( GtkWidget * widget, SoGtkEventHandler * func,
                        void * closure ) = 0;

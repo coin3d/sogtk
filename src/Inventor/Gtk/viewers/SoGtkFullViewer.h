@@ -69,7 +69,7 @@ protected:
     SbBool build );
   ~SoGtkFullViewer(void);
 
-  virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
+  virtual SbBool eventFilter( GtkWidget * object, GdkEvent * event );
 
   GtkWidget * buildWidget( GtkWidget * parent );
 
