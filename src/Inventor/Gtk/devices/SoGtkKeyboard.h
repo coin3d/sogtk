@@ -52,6 +52,12 @@ private:
   int events;
   SoKeyboardEvent * kbdevent;
 
+private:
+  static gboolean EnterHandler(
+    GtkWidget *widget,
+    GdkEventCrossing *event,
+    gpointer user_data);
+
 }; // class SoGtkKeyboard
 
 // *************************************************************************

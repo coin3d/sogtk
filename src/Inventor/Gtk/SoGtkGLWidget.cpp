@@ -210,13 +210,6 @@ SoGtkGLWidget::buildWidget(
 
   gtk_widget_show( GTK_WIDGET(PRIVATE(this)->glWidget) );
 
-  gtk_widget_add_events( GTK_WIDGET(PRIVATE(this)->glWidget),
-    GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK |
-    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-    GDK_BUTTON_MOTION_MASK | GDK_BUTTON1_MOTION_MASK |
-    GDK_BUTTON2_MOTION_MASK | GDK_BUTTON3_MOTION_MASK |
-    GDK_POINTER_MOTION_MASK );
-
   return PRIVATE(this)->container;
 } // buildWidget()
 
@@ -726,15 +719,6 @@ SoGtkGLWidget::afterRealizeHook( // virtual, protected
   void )
 {
   inherited::afterRealizeHook();
-/*
-  if ( ! GTK_IS_WIDGET(this->glWidget) )
-    return;
-  gtk_widget_add_events( GTK_WIDGET(this->glWidget),
-    GDK_EXPOSURE_MASK |
-    GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK |
-    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-    GDK_POINTER_MOTION_MASK );
-*/
 } // afterRealizeHook()
 
 // *************************************************************************

@@ -84,7 +84,7 @@ SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
 SoGtkKeyboard::SoGtkKeyboard(
   const int eventbits )
 {
-  this->events = eventbits;
+  this->events = eventbits & SoGtkKeyboard::ALL_EVENTS;
   this->kbdevent = new SoKeyboardEvent;
 } // SoGtkKeyboard()
 
@@ -101,6 +101,22 @@ SoGtkKeyboard::~SoGtkKeyboard(
 // *************************************************************************
 
 /*!
+  \internal
+  A Gtk-event handler internally used to automatically grab the keyboard
+  focus, when a mouse pointer enters a widget connected to a SoGtkKeyboard.
+*/
+
+gboolean SoGtkKeyboard::EnterHandler(
+  GtkWidget *widget,
+  GdkEventCrossing *event,
+  gpointer user_data)
+{
+  if ( !GTK_WIDGET_HAS_FOCUS(widget) )
+    gtk_widget_grab_focus(widget);
+  return FALSE;
+}
+
+/*!
   FIXME: write function documentation
 */
 
@@ -111,8 +127,27 @@ SoGtkKeyboard::enable(
   gpointer closure )
 {
   if ( func )
-    gtk_signal_connect(GTK_OBJECT(widget), "event",
-      GTK_SIGNAL_FUNC(func), closure );
+  {
+    if ( this->events & SoGtkKeyboard::KEY_PRESS )
+    {
+      gtk_signal_connect(GTK_OBJECT(widget), "key_press_event",
+        GTK_SIGNAL_FUNC(func), closure );
+      gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_PRESS_MASK );
+    }
+    if ( this->events & SoGtkKeyboard::KEY_RELEASE )
+    {
+      gtk_signal_connect(GTK_OBJECT(widget), "key_release_event",
+        GTK_SIGNAL_FUNC(func), closure );
+      gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_RELEASE_MASK );
+    }
+    if ( this->events & SoGtkKeyboard::ALL_EVENTS )
+    {
+       GTK_WIDGET_SET_FLAGS(GTK_WIDGET(widget),GTK_CAN_FOCUS);
+       gtk_signal_connect(GTK_OBJECT(widget), "enter-notify-event",
+         GTK_SIGNAL_FUNC(&SoGtkKeyboard::EnterHandler), 0 );
+       gtk_widget_add_events(GTK_WIDGET(widget),GDK_ENTER_NOTIFY_MASK );
+    }
+  }
 } // enable()
 
 /*!
