@@ -213,36 +213,8 @@ SoGuiP::sensorQueueChanged(void *)
 
 // *************************************************************************
 
-#if 0 // FIXME: re-code to be run automatically upon exit. 19991107 mortene.
 /*!
-  \internal
-
-  This is provided for convenience when debugging the library.
-  Should make it easier to find memory leaks.
-*/
-
-void
-SoGtk::clean(
-  void)
-{
-  delete SoGtk::mainWidget; SoGtk::mainWidget = NULL;
-//   delete SoGtk::appobject; SoGtk::appobject = NULL;
-
-  delete SoGtk::timerqueuetimer; SoGtk::timerqueuetimer = NULL;
-  delete SoGtk::idletimer; SoGtk::idletimer = NULL;
-  delete SoGtk::delaytimeouttimer; SoGtk::delaytimeouttimer = NULL;
-
-  delete SoGtk::slotobj; SoGtk::slotobj = NULL;
-} // clean()
-#endif // re-code
-
-// *************************************************************************
-
-/*!
-  This is the event dispatch loop. It doesn't return until \a
-  QApplication::quit() or \a QApplication::exit() is called (which is
-  also done automatically by Gtk whenever the user closes an
-  application's main widget).
+  This is the event dispatch loop.
 */
 void
 SoGtk::mainLoop(void)
@@ -251,6 +223,8 @@ SoGtk::mainLoop(void)
   // processed. This is done by installing a global eventFilter
   // here...
   gtk_main();
+
+  SoGtk::done();
 }
 
 /*!
@@ -261,6 +235,14 @@ void
 SoGtk::exitMainLoop(void)
 {
   gtk_main_quit();
+}
+
+// documented in common/SoGuiCommon.cpp.in
+void
+SoGtk::done(void)
+{
+  // FIXME: should clean up all resources stlil dangling
+  // about. 20020624 mortene.
 }
 
 // *************************************************************************
