@@ -1011,17 +1011,22 @@ fi
 # as we can get false positives and/or false negatives when running under
 # Cygwin, using the Microsoft Visual C++ compiler (the configure script will
 # pick the GCC preprocessor).
-AC_DEFUN([SIM_AC_CHECK_HEADER],
-[AC_VAR_PUSHDEF([ac_Header], [ac_cv_header_$1])dnl
-AC_ARG_VAR([CPPFLAGS], [C/C++ preprocessor flags, e.g. -I<include dir> if you ha
-ve headers in a nonstandard directory <include dir>])
-AC_CACHE_CHECK([for $1], ac_Header,
-[AC_TRY_COMPILE([#include <$1>
-], [],
-AC_VAR_SET(ac_Header, yes), AC_VAR_SET(ac_Header, no))])
-AC_SHELL_IFELSE([test AC_VAR_GET(ac_Header) = yes],
-                [$2], [$3])dnl
-AC_VAR_POPDEF([ac_Header])dnl
+
+AC_DEFUN([SIM_AC_CHECK_HEADER], [
+AC_VAR_PUSHDEF([ac_Header], [ac_cv_header_$1])
+AC_ARG_VAR([CPPFLAGS], [C/C++ preprocessor flags, e.g. -I<include dir> if you have headers in a nonstandard directory <include dir>])
+AC_CACHE_CHECK(
+  [for $1],
+  ac_Header,
+  [AC_TRY_COMPILE([#include <$1>],
+  [],
+  [AC_VAR_SET(ac_Header, yes)],
+  [AC_VAR_SET(ac_Header, no)])])
+AS_IFELSE(
+  [test AC_VAR_GET(ac_Header) = yes],
+  [$2],
+  [$3])
+AC_VAR_POPDEF([ac_Header])
 ])# SIM_AC_CHECK_HEADER
 
 
@@ -1031,9 +1036,10 @@ AC_VAR_POPDEF([ac_Header])dnl
 AC_DEFUN([SIM_AC_CHECK_HEADERS],
 [for ac_header in $1
 do
-SIM_AC_CHECK_HEADER($ac_header,
-                    [AC_DEFINE_UNQUOTED(AC_TR_CPP(HAVE_$ac_header)) $2],
-                    [$3])dnl
+SIM_AC_CHECK_HEADER(
+  [$ac_header],
+  [AC_DEFINE_UNQUOTED(AC_TR_CPP(HAVE_$ac_header)) $2],
+  [$3])
 done
 ])# SIM_AC_CHECK_HEADERS
 
@@ -1762,6 +1768,29 @@ else
 fi
 ])
 
+# **************************************************************************
+# SIM_AC_HAVE_GLX_IFELSE( IF-FOUND, IF-NOT-FOUND )
+#
+# Check whether GLX is on the system.
+
+AC_DEFUN([SIM_AC_HAVE_GLX_IFELSE], [
+AC_CACHE_CHECK(
+  [whether GLX is on the system],
+  sim_cv_have_glx,
+  AC_TRY_LINK(
+    [#include <GL/glx.h>],
+    [(void)glXChooseVisual(0L, 0, 0L);],
+    [sim_cv_have_glx=true],
+    [sim_cv_have_glx=false]))
+
+if ${sim_cv_have_glx=false}; then
+  ifelse([$1], , :, [$1])
+else
+  ifelse([$2], , :, [$2])
+fi
+]) # SIM_AC_HAVE_GLX_IFELSE()
+
+
 # Usage:
 #  SIM_AC_CHECK_PTHREAD([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 #
@@ -1990,19 +2019,19 @@ if $sim_ac_want_inventor; then
   AC_CACHE_CHECK(
     [if linking with libimage is possible],
     sim_cv_have_inventor_image,
-    [AC_LANG_PUSH(C)
+    [
     CPPFLAGS="$sim_ac_inventor_image_cppflags $CPPFLAGS"
     LDFLAGS="$sim_ac_inventor_image_ldflags $LDFLAGS"
     LIBS="$sim_ac_inventor_image_libs $LIBS"
     AC_TRY_LINK(
       [],
-      [img_read();],
+      [],
       [sim_cv_have_inventor_image=true],
       [sim_cv_have_inventor_image=false])
     CPPFLAGS="$sim_ac_inventor_image_save_CPPFLAGS"
     LDFLAGS="$sim_ac_inventor_image_save_LDFLAGS"
     LIBS="$sim_ac_inventor_image_save_LIBS"
-    AC_LANG_POP])
+    ])
 
   if $sim_cv_have_inventor_image; then
     ifelse([$1], , :, [$1])
@@ -2224,11 +2253,13 @@ if $sim_ac_coin_desired; then
       CPPFLAGS="$CPPFLAGS $sim_ac_coin_cppflags"
       LDFLAGS="$LDFLAGS $sim_ac_coin_ldflags"
       LIBS="$sim_ac_coin_libs $LIBS"
+      AC_LANG_PUSH(C++)
       AC_TRY_LINK(
         [#include <Inventor/SoDB.h>],
         [SoDB::init();],
         [sim_cv_coin_avail=true],
         [sim_cv_coin_avail=false])
+      AC_LANG_POP
       CPPFLAGS=$sim_ac_save_cppflags
       LDFLAGS=$sim_ac_save_ldflags
       LIBS=$sim_ac_save_libs
@@ -2445,7 +2476,7 @@ main ()
 ])
 
 # Usage:
-#   SIM_COMPILE_DEBUG( ACTION-IF-DEBUG, ACTION-IF-NOT-DEBUG )
+#   SIM_AC_COMPILE_DEBUG([ACTION-IF-DEBUG[, ACTION-IF-NOT-DEBUG]])
 #
 # Description:
 #   Let the user decide if compilation should be done in "debug mode".
@@ -2458,9 +2489,6 @@ main ()
 #   macro arguments following the well-known ACTION-IF / ACTION-IF-NOT
 #   concept.
 #
-#   Note: this macro must be placed after either AC_PROG_CC or AC_PROG_CXX
-#   in the configure.in script.
-#
 # Authors:
 #   Morten Eriksen, <mortene@sim.no>
 #   Lars J. Aas, <larsa@sim.no>
@@ -2470,28 +2498,25 @@ main ()
 #   default-value.
 #
 
-AC_DEFUN([SIM_COMPILE_DEBUG], [
-AC_PREREQ([2.13])
-
+AC_DEFUN([SIM_AC_COMPILE_DEBUG], [
 AC_ARG_ENABLE(
   [debug],
   AC_HELP_STRING([--enable-debug], [compile in debug mode [[default=yes]]]),
   [case "${enableval}" in
-    yes) enable_debug=yes ;;
-    no)  enable_debug=no ;;
+    yes) enable_debug=true ;;
+    no)  enable_debug=false ;;
+    true | false) enable_debug=${enableval} ;;
     *) AC_MSG_ERROR(bad value "${enableval}" for --enable-debug) ;;
   esac],
-  [enable_debug=yes])
+  [enable_debug=true])
 
-if test x"$enable_debug" = x"yes"; then
+if $enable_debug; then
   ifelse([$1], , :, [$1])
 else
-  CFLAGS="$CFLAGS -DNDEBUG"
-  CXXFLAGS="$CXXFLAGS -DNDEBUG"
+  CPPFLAGS="$CPPFLAGS -DNDEBUG"
   $2
 fi
 ])
-
 
 # Usage:
 #   SIM_AC_DEBUGSYMBOLS
