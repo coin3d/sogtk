@@ -17,6 +17,12 @@
  *
  **************************************************************************/
 
+// ************************************************************************
+
+// Class is documented in common/viewers/SoGuiWalkViewer.cpp.in.
+
+// ************************************************************************
+
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif // HAVE_CONFIG_H
@@ -27,14 +33,6 @@
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 #include <Inventor/Gtk/viewers/SoGtkWalkViewer.h>
 #include <Inventor/Gtk/viewers/SoGuiWalkViewerP.h>
-
-// ************************************************************************
-
-/*!
-  \class SoGtkWalkViewer Inventor/Gtk/viewers/SoGtkWalkViewer.h
-  \brief The SoGtkWalkViewer class is yet to be documented...
-  \ingroup components viewers
-*/
 
 // ************************************************************************
 
