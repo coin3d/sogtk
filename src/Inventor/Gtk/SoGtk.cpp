@@ -289,11 +289,11 @@ SoGtk::getTopLevelWidget(void)
 // *************************************************************************
 
 /*!
-  Returns a pointer to the GtkWidget which is the top level widget for
-  the given GtkWidget \a w. This is just a convenience function
+  Returns a pointer to the GtkWidget which is the top level widget
+  for the given GtkWidget \a w. This is just a convenience function
   provided for easier porting of Open Inventor applications based on
-  SoXt components, as you can do the same thing by calling the
-  GtkWidget::topLevelWidget() method directly on \a w.
+  SoXt components, as you can do the same thing by calling the a
+  native Gtk method.
 
   \sa getTopLevelWidget()
 */
@@ -308,7 +308,7 @@ SoGtk::getShellWidget(const GtkWidget * widget)
   }
 #endif // SOGTK_DEBUG
 
-  GtkWidget *w = gtk_widget_get_toplevel(GTK_WIDGET(widget));
+  GtkWidget * w = gtk_widget_get_toplevel(GTK_WIDGET(widget));
   return GTK_WIDGET_TOPLEVEL(w) ? w : (GtkWidget *)0;
 }
 

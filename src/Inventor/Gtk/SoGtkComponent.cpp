@@ -17,10 +17,11 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
+// *************************************************************************
+
+// Class documentation in common/SoGuiComponentCommon.cpp.in.
+
+// *************************************************************************
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -46,14 +47,6 @@ static const char rcsid[] =
 #include <Inventor/Gtk/viewers/SoGtkWalkViewer.h>
 #include <Inventor/errors/SoDebugError.h>
 #include <sogtkdefs.h>
-
-// *************************************************************************
-
-/*!
-  \class SoGtkComponent SoGtkComponent.h Inventor/Gtk/SoGtkComponent.h
-  \brief The SoGtkComponent class is the base class for all SoGtk GUI
-  components.
-*/
 
 // *************************************************************************
 
@@ -527,7 +520,7 @@ SoGtkComponent::getWidget(void) const
   \sa setBaseWidget()
 */
 GtkWidget *
-SoGtkComponent::baseWidget(void) const
+SoGtkComponent::getBaseWidget(void) const
 {
   return PRIVATE(this)->widget;
 }
@@ -569,24 +562,6 @@ SoGtkComponent::isTopLevelShell(void) const
 }
 
 // *************************************************************************
-
-/*!
-  Returns the toplevel shell widget for this component. The toplevel
-  shell is the desktop window which contains the component.
-
-  \sa isTopLevelShell(), getWidget()
-*/
-GtkWidget *
-SoGtkComponent::getShellWidget(void) const
-{
-  if (! PRIVATE(this)->widget) {
-#if SOGTK_DEBUG
-    SoDebugError::postWarning("SoGtkComponent::getShellWidget", "no widget");
-#endif // SOGTK_DEBUG
-    return NULL;
-  }
-  return PRIVATE(this)->widget; // FIXME
-}
 
 /*!
   Returns the widget which is the parent (i.e. contains) this
@@ -699,41 +674,6 @@ const char *
 SoGtkComponent::getClassName(void) const
 {
   return (const char *) PRIVATE(this)->className;
-}
-
-// *************************************************************************
-
-/*!
-  Returns the default name of an SoGtkComponent widget. Should be
-  overloaded by subclasses.
-*/
-const char *
-SoGtkComponent::getDefaultWidgetName(void) const
-{
-  static char defaultWidgetName[] = "SoGtkComponent";
-  return defaultWidgetName;
-}
-
-/*!
-  Returns the default window caption string of this component. Should
-  be overloaded by subclasses.
-*/
-const char *
-SoGtkComponent::getDefaultTitle(void) const
-{
-  static char defaultTitle[] = N_("SoGtk Component");
-  return _(defaultTitle);
-}
-
-/*!
-  Returns the default icon title of this component. Should be
-  overloaded by subclasses.
-*/
-const char *
-SoGtkComponent::getDefaultIconTitle(void) const
-{
-  static char defaultIconTitle[] = N_("Component");
-  return _(defaultIconTitle);
 }
 
 // *************************************************************************
@@ -1170,7 +1110,3 @@ SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
 }
 
 // *************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkComponentRCSId(void) { return rcsid; }
-#endif // SOGTK_DEBUG
