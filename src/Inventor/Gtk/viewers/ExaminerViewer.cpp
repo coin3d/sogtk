@@ -17,6 +17,10 @@
  *
  **************************************************************************/
 
+// Class documentation in common/viewers/SoGuiExaminerViewer.cpp.in.
+
+// *************************************************************************
+
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -37,25 +41,6 @@
 
 #include <Inventor/Gtk/common/pixmaps/ortho.xpm>
 #include <Inventor/Gtk/common/pixmaps/perspective.xpm>
-
-// *************************************************************************
-
-/*!
-  \class SoGtkExaminerViewer Inventor/Gtk/viewers/SoGtkExaminerViewer.h
-  \brief The SoGtkExaminerViewer class is a full-fledged model viewer with
-    functionality for rotation, pan, zoom, etc.
-  \ingroup components viewers
-
-  TODO: more doc
-  ...overview of what this class provides over parent class...
-  ...keyboard combinations...mousebutton combinations...explain pan,
-  rotate, zoom, dolly, seek...explain the fact that we're moving the
-  camera, not the scene...
-  ...viewer modes (examine vs interact) w/ explanation of what they are
-  useful for...
-  ...screenshot...
-  ...example code...
-*/
 
 // *************************************************************************
 
@@ -195,26 +180,12 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer()
 // *************************************************************************
 
 /*!
-  This method overloaded from parent class to make sure the mouse
-  pointer cursor is updated.
-*/
-void
-SoGtkExaminerViewer::setViewing(SbBool enable)
-{
-  this->setMode(enable ?
-                SoGtkExaminerViewer::EXAMINE :
-                SoGtkExaminerViewer::INTERACT);
-  inherited::setViewing(enable);
-}
-
-// *************************************************************************
-
-/*!
   FIXME: write doc
 */
 void
 SoGtkExaminerViewer::setAnimationEnabled(const SbBool enable)
 { // FIXME: make this virtual?  20001230 larsa
+  // FIXME: update pref-sheet widget with the value. 20020603 mortene.
   this->setGenericAnimationEnabled(enable);
 }
  
@@ -229,6 +200,7 @@ SoGtkExaminerViewer::setAnimationEnabled(const SbBool enable)
 void
 SoGtkExaminerViewer::setFeedbackSize(const int size)
 {
+  // FIXME: update pref-sheet widget with the value. 20020603 mortene.
   this->setGenericFeedbackSize(size);
 }
 
@@ -256,68 +228,6 @@ SoGtkExaminerViewer::setCamera(SoCamera * newCamera)
     }
   }
   inherited::setCamera(newCamera);
-}
-
-// *************************************************************************
-
-/*!
-  Overloaded to stop spin animation when wheel is being handled.
-*/
-
-void
-SoGtkExaminerViewer::leftWheelStart(void)
-{
-  if (this->isAnimating())
-    this->stopAnimating();
-  inherited::leftWheelStart();
-}
-
-/*!
-  Overloaded to provide the examiner viewer functionality on the left
-  thumbwheel (x axis rotation).
-*/
-
-void
-SoGtkExaminerViewer::leftWheelMotion(float value)
-{
-  inherited::leftWheelMotion(
-    this->rotXWheelMotion(value, this->getLeftWheelValue()));
-}
-
-/*!
-  Overloaded to stop spin animation when wheel is being handled.
-*/
-
-void
-SoGtkExaminerViewer::bottomWheelStart(void)
-{
-  if (this->isAnimating())
-    this->stopAnimating();
-  inherited::bottomWheelStart();
-}
-
-/*!
-  Overloaded to provide the examiner viewer functionality on the bottom
-  thumbwheel (y axis rotation).
-*/
-
-void
-SoGtkExaminerViewer::bottomWheelMotion(float value)
-{
-  inherited::bottomWheelMotion(
-    this->rotYWheelMotion(value, this->getBottomWheelValue()));
-}
-
-/*!
-  Overloaded to provide the examiner viewer functionality on the left
-  thumbwheel (dolly/zoom).
-*/
-
-void
-SoGtkExaminerViewer::rightWheelMotion(float value)
-{
-  this->zoom(this->getRightWheelValue() - value);
-  inherited::rightWheelMotion(value);
 }
 
 // *************************************************************************
@@ -467,58 +377,6 @@ SoGtkExaminerViewer::createViewerButtons(GtkWidget * parent,
     }
     buttonlist->append(widget);
   }
-}
-
-// *************************************************************************
-
-/*!
-  \internal
-
-  Set cursor graphics according to mode.
-*/
-void
-SoGtkExaminerViewer::setCursorRepresentation(int mode)
-{
-  GtkWidget * w = this->getGLWidget();
-  assert(w);
-
-  if (!this->isCursorEnabled()) {
-    this->setComponentCursor(SoGtkCursor::getBlankCursor());
-    return;
-  }
-
-  switch (mode) {
-  case SoGtkExaminerViewer::INTERACT:
-    this->setComponentCursor(SoGtkCursor(SoGtkCursor::DEFAULT));
-    break;
-  case SoGtkExaminerViewer::EXAMINE:
-  case SoGtkExaminerViewer::DRAGGING:
-    this->setComponentCursor(SoGtkCursor::getRotateCursor());
-    break;
-  case SoGtkExaminerViewer::ZOOMING:
-    this->setComponentCursor(SoGtkCursor::getZoomCursor());
-    break;
-  case SoGtkExaminerViewer::WAITING_FOR_SEEK:
-    this->setComponentCursor(SoGtkCursor(SoGtkCursor::CROSSHAIR));
-    break;
-  case SoGtkExaminerViewer::WAITING_FOR_PAN:
-  case SoGtkExaminerViewer::PANNING:
-    this->setComponentCursor(SoGtkCursor::getPanCursor());
-    break;
-  default: 
-    assert(0); 
-    break;
-  }
-}
-
-// *************************************************************************
-
-// Documented in superclass.
-void
-SoGtkExaminerViewer::afterRealizeHook(void)
-{
-  inherited::afterRealizeHook();
-  this->setCursorRepresentation(this->currentmode);
 }
 
 // *************************************************************************
