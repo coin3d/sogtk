@@ -8,45 +8,6 @@ AC_INIT(src/Inventor/Gtk/SoGtk.h)
 # Check the CVS repository setup
 
 sim_ac_cvs_syncproblem=false;
-sim_ac_examples_check_file=${srcdir}/examples/configure.in
-
-if test ! -f $sim_ac_examples_check_file; then
-  if test "x${with_auto_cvs_update+set}" = "xset"; then
-    echo "Trying to honour the --with-auto-cvs-update option."
-    sim_ac_save_cwd="`pwd`"
-    cd ${srcdir}
-    if test ! -d ./examples -o ! -f ./CVS/Entries; then
-      AC_MSG_ERROR([something failed horribly - can't do auto-cvs-update])
-    fi
-    grep -v "^D/examples/" CVS/Entries > /tmp/SoGtk-CVS-Entries.$$
-    cp /tmp/SoGtk-CVS-Entries.$$ CVS/Entries
-    rm /tmp/SoGtk-CVS-Entries.$$
-    rm -rf examples
-    cvs co SoGtkExamples
-    cd ${sim_ac_save_cwd}
-    echo "Done.  Proceeding..."
-  fi
-fi
-
-if test ! -f $sim_ac_examples_check_file; then
-  echo ""
-  echo "  You appear to have an old setup of the SoGtk source repository."
-  echo "  Parts of it have changed structurally, and you need to do the"
-  echo "  following in the SoGtk source directory:"
-  echo ""
-  echo "    \$ grep -v \"^D/examples/\" CVS/Entries > /tmp/SoGtk-CVS-Entries"
-  echo "    \$ cp /tmp/SoGtk-CVS-Entries CVS/Entries"
-  echo "    \$ rm /tmp/SoGtk-CVS-Entries"
-  echo "    \$ rm -rf examples"
-  echo "    \$ cvs co SoGtkExamples"
-  echo ""
-  echo "  You can also run configure with the option --with-auto-cvs-update"
-  echo "  to allow the configure script to try to take care of this.  This"
-  echo "  option is very experimental and should not be used if you use"
-  echo "  configure in a way that may be considered \"weird\"."
-  echo ""
-  sim_ac_cvs_syncproblem=true
-fi
 
 if test "x$sim_ac_cvs_syncproblem" = "xtrue"; then
   exit
@@ -108,6 +69,8 @@ VERSION=$SOGTK_VERSION
 
 # **************************************************************************
 # Miscellaneous options and initializations.
+
+AC_CANONICAL_SYSTEM
 
 AM_INIT_AUTOMAKE(libSoGtk, $VERSION)
 
@@ -178,17 +141,21 @@ if test x"$with_inventor" = xyes; then
 
 else
 
-  SIM_CHECK_COIN([
+  SIM_AC_HAVE_COIN_IFELSE([
+    CPPFLAGS="$CPPFLAGS $sim_ac_coin_cppflags"
+    LDFLAGS="$CPPFLAGS $sim_ac_coin_ldflags"
+    LIBS="$sim_ac_coin_libs $LIBS"
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_coin_cppflags"
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_coin_ldflags"
     SOGTK_EXTRA_LIBS="$sim_ac_coin_libs $SOGTK_EXTRA_LIBS"
-  ],AC_MSG_ERROR(couldn't compile and link against Coin))
+  ], AC_MSG_ERROR(couldn't compile and link against Coin))
 
 fi
 
 # Check for the availability of this node (it is used in the hidden
 # line rendering), which is not part of older Inventor implementations.
-SIM_HAVE_SOPOLYGONOFFSET
+SIM_AC_HAVE_SOPOLYGONOFFSET
+SIM_AC_HAVE_SOMOUSEBUTTONEVENT_BUTTONS
 
 ### Check for GTK+ #####################################################
 
@@ -264,42 +231,42 @@ SIM_COMPILER_WARNINGS
 # * --with-test-code is a silent option
 AM_CONDITIONAL(BUILD_TESTS, test "x${with_test_code+set}" = "xset")
 
-AC_ARG_WITH(examples,
-  [  --with-examples         compile SoGtk example programs [default=yes]],
-  [case "${withval}" in
-    yes) want_examples=yes ;;
-    no)  want_examples=no ;;
-    *) AC_MSG_ERROR(bad value \"${withval}\" for --with-examples) ;;
-  esac],
-  [want_examples=yes])
-
-
-sim_ac_ivexamples_available=no
-if test -f ${srcdir}/ivexamples/configure.in; then
-  sim_ac_ivexamples_available=yes
-fi
-
-AM_CONDITIONAL(BUILD_EXAMPLES, test x"$want_examples" = xyes)
-AM_CONDITIONAL(BUILD_IV_EXAMPLES, test x"$sim_ac_ivexamples_available" = xyes)
-
-
 # **************************************************************************
 # Variable substitutions for using libSoGtk in the generic code.
 
 . ${srcdir}/libconfigvars.sh
 
-AC_SUBST(GUI)AC_SUBST(lGUI)AC_SUBST(uGUI)
-AC_SUBST(WIDGET)AC_SUBST(WINWIDGET)AC_SUBST(EVENT)
+AC_SUBST(GUI)
+AC_SUBST(Gui)
+AC_SUBST(gui)
+AC_SUBST(EVENT)
+AC_SUBST(WIDGET)
+AC_SUBST(WINWIDGET)
 AC_SUBST(COMPONENTHEADER)
 
 # **************************************************************************
-# Configure the submodule with the examples.
 
-sim_ac_subconfig=examples
-if test x"$sim_ac_ivexamples_available" = xyes; then
-  sim_ac_subconfig="$sim_ac_subconfig ivexamples"
-fi
-AC_CONFIG_SUBDIRS($sim_ac_subconfig)
+SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_CPPFLAGS, -I$includedir $SOGTK_EXTRA_CPPFLAGS)
+set : $SOGTK_EXTRA_CPPFLAGS
+shift
+shift
+SOGTK_EXTRA_CPPFLAGS=$@
+
+SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_LDFLAGS, -L$libdir $SOGTK_EXTRA_LDFLAGS)
+set : $SOGTK_EXTRA_LDFLAGS
+shift
+shift
+SOGTK_EXTRA_LDFLAGS=$@
+
+SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_LIBS, $SOGTK_LIBNAME $SOGTK_EXTRA_LIBS)
+set : $SOGTK_EXTRA_LIBS
+shift
+shift
+SOGTK_EXTRA_LIBS=$@
+
+SIM_AC_UNIQIFY_LIST(CPPFLAGS, $CPPFLAGS)
+SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
+SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
 
 # **************************************************************************
 # List all makefiles configure must automatically generate.
@@ -311,14 +278,12 @@ AC_OUTPUT([
 	src/Inventor/Gtk/devices/Makefile
 	src/Inventor/Gtk/viewers/Makefile
 	src/Inventor/Gtk/widgets/Makefile
-	test-code/Makefile
-	test-code/widgets/Makefile
 ],[
 	chmod a+x sogtk-config
 ])
 
 echo ""
-echo "Now, run 'make install' to build and install SoGtk."
+echo "Now, run 'make install' to build and install So${Gui}."
 echo ""
 
 # **************************************************************************

@@ -1,6 +1,8 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader.  */
-
 #undef HAVE_SOPOLYGONOFFSET
+
+/* Define if you have the `bsd' library (-lbsd). */
+#undef HAVE_LIBBSD
 
 /* Define if you have the `dnet' library (-ldnet). */
 #undef HAVE_LIBDNET
@@ -22,6 +24,9 @@
 
 /* Define if you have the `socket' library (-lsocket). */
 #undef HAVE_LIBSOCKET
+
+/* Define to enable use of SoMouseButtonEvent::BUTTON5 */
+#undef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
 
 /* Name of package */
 #undef PACKAGE

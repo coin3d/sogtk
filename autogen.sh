@@ -18,8 +18,8 @@ fi
 GUI=Gtk
 PROJECT=So${GUI}
 
-SUBPROJECTS="$MACRODIR src/Inventor/${GUI}/common examples/components"
-SUBPROJECTNAMES="$MACRODIR So${GUI}Common So${GUI}Components"
+SUBPROJECTS="$MACRODIR src/Inventor/${GUI}/common"
+SUBPROJECTNAMES="$MACRODIR So${GUI}Common"
 
 MACRODIR=conf-macros
 DIE=false
@@ -47,22 +47,18 @@ fi
 
 echo "Checking the installed configuration tools..."
 
-AUTOCONF_VER=2.14.1-SIM  # Autoconf from CVS @ 2000-01-13.
+AUTOCONF_VER=2.49a
+AUTOMAKE_VER=1.4a
+LIBTOOL_VER=1.3.5
+
 if test -z "`autoconf --version | grep \" $AUTOCONF_VER\" 2> /dev/null`"; then
     echo
     echo "You must have autoconf version $AUTOCONF_VER installed to"
     echo "generate configure information and Makefiles for $PROJECT."
     echo ""
-    echo "The Autoconf version we are using is a development version"
-    echo "\"frozen\" from the CVS repository at 2000-01-13. You can get"
-    echo "it here:"
-    echo ""
-    echo "   ftp://ftp.sim.no/pub/coin/autoconf-2.14.1-coin.tar.gz"
-    echo ""
     DIE=true
 fi
 
-AUTOMAKE_VER=1.4a-SIM-20000531  # Automake from CVS
 if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
     echo
     echo "You must have automake version $AUTOMAKE_VER installed to"
@@ -77,7 +73,6 @@ if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
     DIE=true
 fi
 
-LIBTOOL_VER=1.3.5
 if test -z "`libtool --version | grep \" $LIBTOOL_VER \" 2> /dev/null`"; then
     echo
     echo "You must have libtool version $LIBTOOL_VER installed to"
