@@ -60,7 +60,7 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SbPList * SoGtkComponent::soGtkCompList = NULL;
+//SbPList * SoGtkComponent::soGtkCompList = NULL;
 
 // *************************************************************************
 
@@ -80,25 +80,38 @@ SbPList * SoGtkComponent::soGtkCompList = NULL;
 SoGtkComponent::SoGtkComponent(
   GtkWidget * const parent,
   const char * const name,
-  const SbBool buildInsideParent )
+  const SbBool embed )
 {
   // FIXME: deallocate on exit. 20000311 mortene.
-  if (!SoGtkComponent::soGtkCompList) SoGtkComponent::soGtkCompList = new SbPList;
+//  if (!SoGtkComponent::soGtkCompList) SoGtkComponent::soGtkCompList = new SbPList;
 
-  SoGtkComponent::soGtkCompList->append(this);
+//  SoGtkComponent::soGtkCompList->append(this);
 
   this->parent = parent;
+  this->realized = FALSE;
   this->widget = NULL;
   this->closeCB = NULL;
   this->closeCBdata = NULL;
   this->visibilityChangeCBs = NULL;
 
-  if ( name ) this->widgetName = name;
-  this->className = "SoGtkComponent";
+  this->className = NULL;
+  this->widgetName = NULL;
+  this->captionText = NULL;
+  this->iconText = NULL;
+
+  if ( name )
+    this->widgetName = strcpy( new char [strlen(name)+1], name );
+
+  this->setClassName( "SoGtkComponent" );
 
   this->storeSize.setValue(-1, -1);
 
-  this->buildInside = buildInsideParent;
+  if ( parent == NULL || ! embed ) {
+    this->parent = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+    this->embedded = FALSE;
+  } else {
+    this->embedded = TRUE;
+  }
 } // SoGtkComponent()
 
 // *************************************************************************
@@ -110,9 +123,9 @@ SoGtkComponent::SoGtkComponent(
 SoGtkComponent::~SoGtkComponent( // virtual
   void )
 {
-  int idx = SoGtkComponent::soGtkCompList->find(this);
-  assert(idx != -1);
-  SoGtkComponent::soGtkCompList->remove(idx);
+//  int idx = SoGtkComponent::soGtkCompList->find(this);
+//  assert(idx != -1);
+//  SoGtkComponent::soGtkCompList->remove(idx);
 
 
   delete this->visibilityChangeCBs;
@@ -192,7 +205,12 @@ void
 SoGtkComponent::setClassName(
   const char * const name )
 {
-  this->className = name;
+  if ( this->className ) {
+    delete [] this->className;
+    this->className = NULL;
+  }
+  if ( name )
+    this->className = strcpy( new char [strlen(name)+1], name );
 } // setClassName()
 
 // *************************************************************************
@@ -388,6 +406,7 @@ void
 SoGtkComponent::show( // virtual
   void )
 {
+//  SoDebugError::postInfo( "SoGtkComponent::show", "[invoked]" );
 #if SOGTK_DEBUG
   if(!this->widget) {
     SoDebugError::postWarning("SoGtkComponent::show",
@@ -396,53 +415,31 @@ SoGtkComponent::show( // virtual
   }
 #endif // SOGTK_DEBUG
 
-#if SOGTKCOMP_RESIZE_DEBUG  // debug
-  SoDebugError::postInfo("SoGtkComponent::show-1",
-                         "resizing %p: (%d, %d)",
-                         this->widget,
-                         this->storesize[0], this->storesize[1]);
-#endif // debug
-
-//  this->widget->resize(this->storesize[0], this->storesize[1]);
-
-#if SOGTKCOMP_RESIZE_DEBUG  // debug
-  SoDebugError::postInfo("SoGtkComponent::show-2",
-                         "resized %p: (%d, %d)",
-                         this->widget,
-                         this->widget->size().width(),
-                         this->widget->size().height());
-#endif // debug
-
-  GtkWidget * window = gtk_widget_get_toplevel( this->widget );
-  if ( ! GTK_IS_WINDOW(window) ) {
+  if ( ! this->realized ) {
     // top widget not been hooked to window yet
-    gtk_container_add( GTK_CONTAINER(this->parent), this->widget );
+    if ( ! this->embedded )
+      gtk_container_add( GTK_CONTAINER(this->parent), GTK_WIDGET(this->widget) );
+
     if ( this->storeSize[0] != -1 ) {
-      window = gtk_widget_get_toplevel( this->widget );
-      if ( GTK_IS_WINDOW(window) ) {
-        gtk_window_set_default_size( GTK_WINDOW(window),
-          this->storeSize[0], this->storeSize[1] );
-      }
+      gtk_widget_set_usize( GTK_WIDGET(this->widget), this->storeSize[0], this->storeSize[1] );
+#if 1
+      if ( ! this->embedded )
+        gtk_window_set_default_size( GTK_WINDOW(this->parent), this->storeSize[0], this->storeSize[1] );
+#endif
+      this->sizeChanged( this->storeSize );
     }
   }
-  gtk_widget_show( this->widget );
+  if ( this->embedded )
+    gtk_widget_show( GTK_WIDGET(this->widget) );
+  else
+    gtk_widget_show( GTK_WIDGET(this->parent) );
 
-#if SOGTKCOMP_RESIZE_DEBUG  // debug
-  SoDebugError::postInfo("SoGtkComponent::show-3",
-                         "showed %p: (%d, %d)",
-                         this->widget,
-                         this->widget->size().width(),
-                         this->widget->size().height());
-#endif // debug
-
-//  this->widget->raise();
-#if SOGTKCOMP_RESIZE_DEBUG  // debug
-  SoDebugError::postInfo("SoGtkComponent::show-4",
-                         "raised %p: (%d, %d)",
-                         this->widget,
-                         this->widget->size().width(),
-                         this->widget->size().height());
-#endif // debug
+// FIXME: use event handler for this
+  if ( ! this->realized ) {
+    this->realized = TRUE;
+    this->afterRealizeHook();
+  }
+//  SoDebugError::postInfo( "SoGtkComponent::show", "[exit]" );
 } // show()
 
 // *************************************************************************
@@ -602,12 +599,14 @@ void
 SoGtkComponent::setTitle(
   const char * const title )
 {
-  this->captionText = title;
-  if ( this->widget ) {
-    GtkWidget * window = gtk_widget_get_toplevel( this->widget );
-    assert( window != NULL );
-    gtk_window_set_title( GTK_WINDOW(window), title );
+  if ( this->captionText ) {
+    delete [] this->captionText;
+    this->captionText = NULL;
   }
+  if ( title )
+    this->captionText = strcpy( new char [strlen(title)+1], title );
+  if ( ! this->embedded )
+    gtk_window_set_title( GTK_WINDOW(this->parent), title ? title : "" );
 } // setTitle()
 
 // *************************************************************************
@@ -623,7 +622,7 @@ const char *
 SoGtkComponent::getTitle(
   void ) const
 {
-  return this->captionText.getString();
+  return this->captionText;
 } // getTitle()
 
 // *************************************************************************
@@ -637,10 +636,19 @@ SoGtkComponent::getTitle(
 
 void
 SoGtkComponent::setIconTitle(
-  const char * const newIconTitle )
+  const char * const title )
 {
-  this->iconText = newIconTitle;
-//  if (this->widget) this->getShellWidget()->setIconText(newIconTitle);
+  if ( this->iconText ) {
+    delete [] this->iconText;
+    this->iconText = NULL;
+  }
+  if ( title )
+    this->iconText = strcpy( new char [strlen(title)+1], title );
+//  if ( this->widget ) {
+//    GtkWidget * window = gtk_widget_get_toplevel( this->widget );
+//    assert( window != NULL );
+//    gtk_window_set_icon_title( GTK_WINDOW(window), title ? title : "" );
+//  }
 } // setIconTitle()
 
 // *************************************************************************
@@ -746,6 +754,7 @@ void
 SoGtkComponent::setSize(
   const SbVec2s size )
 {
+//  SoDebugError::postInfo( "SoGtkComponent::setSize", "[invoked]" );
 #if SOGTK_DEBUG
   if((size[0] <= 0) || (size[1] <= 0)) {
     SoDebugError::postWarning("SoGtkComponent::setSize",
@@ -755,22 +764,21 @@ SoGtkComponent::setSize(
   }
 #endif // SOGTK_DEBUG
 
-#if SOGTKCOMP_RESIZE_DEBUG  // debug
-  SoDebugError::postInfo("SoGtkComponent::setSize",
-                         "resize %p: (%d, %d)",
-                         this->widget,
-                         size[0], size[1]);
-#endif // debug
-
   this->storeSize = size;
-  if ( this->widget ) {
+  if ( this->realized ) {
 //    gtk_window_set_default_size( GTK_WINDOW(this->widget), size[0], size[1] );
-    GtkWidget * window = gtk_widget_get_toplevel( GTK_WIDGET(this->widget) );
-    if ( GTK_IS_WINDOW(window) ) {
-      gtk_window_set_default_size( GTK_WINDOW(window), size[0], size[1] );
+//    GtkWidget * window = gtk_widget_get_toplevel( GTK_WIDGET(this->widget) );
+//    if ( GTK_IS_WINDOW(window) ) {
+//      gtk_window_set_default_size( GTK_WINDOW(window), size[0], size[1] );
+//    }
+    if ( ! this->embedded ) {
+      gtk_widget_set_usize( GTK_WIDGET(this->parent), size[0], size[1] );
+    } else {
+      gtk_widget_set_usize( GTK_WIDGET(this->widget), size[0], size[1] );
     }
     this->sizeChanged( size );
   }
+//  SoDebugError::postInfo( "SoGtkComponent::setSize", "[exit]" );
 } // setSize()
 
 // *************************************************************************
@@ -855,12 +863,23 @@ SoGtkComponent *
 SoGtkComponent::getComponent(
   GtkWidget * const widget )
 {
-  for (int i = 0; i < SoGtkComponent::soGtkCompList->getLength(); i++) {
-    SoGtkComponent * c = (SoGtkComponent *)((*SoGtkComponent::soGtkCompList)[i]);
-    if ( c->getWidget() == widget ) return c;
-  }
+//  for (int i = 0; i < SoGtkComponent::soGtkCompList->getLength(); i++) {
+//    SoGtkComponent * c = (SoGtkComponent *)((*SoGtkComponent::soGtkCompList)[i]);
+//    if ( c->getWidget() == widget ) return c;
+//  }
 
   return NULL;
 } // getComponent()
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkComponent::afterRealizeHook( // virtual, protected
+  void )
+{
+} // afterRealizeHook()
 
 // *************************************************************************
