@@ -75,6 +75,7 @@ protected:
 private:
   void constructor( const SbBool build );
 
+  void setCursorRepresentation( int mode );
 private:
   // friends and family
   class SoAnyPlaneViewer * common;

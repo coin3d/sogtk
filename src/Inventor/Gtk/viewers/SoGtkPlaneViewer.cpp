@@ -38,6 +38,7 @@ static const char rcsid[] =
 #include <Inventor/Gtk/viewers/SoAnyPlaneViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkPlaneViewer.h>
 
+#include <Inventor/Gtk/SoGtkCursors.h>
 #include <Inventor/Gtk/common/pixmaps/x.xpm>
 #include <Inventor/Gtk/common/pixmaps/y.xpm>
 #include <Inventor/Gtk/common/pixmaps/z.xpm>
@@ -67,6 +68,10 @@ public:
   static SoGtkViewerButton SoGtkPlaneViewerButtons[];
   GdkPixmap * orthopixmap, * perspectivepixmap;
   GdkBitmap * orthomask, * perspectivemask;
+
+  GdkCursor * pancursor, * rotatecursor;
+  GdkCursor * dollycursor;
+  GdkCursor * arrowcursor, * crosscursor;
 
   GtkWidget * cameratogglebutton;
   static void xbuttonCB( GtkWidget *, gpointer );
@@ -167,8 +172,6 @@ SoGtkPlaneViewer::constructor( // private
   this->pimpl = new SoGtkPlaneViewerP(this);
   this->common = new SoAnyPlaneViewer(this);
 
-  this->common->mode = SoAnyPlaneViewer::IDLE_MODE;
-
   this->addVisibilityChangeCallback( SoGtkPlaneViewerP::visibilityCB, this );
 
   this->setClassName( "SoGtkPlaneViewer" );
@@ -235,7 +238,8 @@ SoGtkPlaneViewer::setCamera( // virtual
 } // setCamera()
 
 /*!
-  FIXME: write doc
+  Decide whether or not the mouse pointer cursor should be visible in the
+  rendering canvas.
 */
 
 void
@@ -243,6 +247,7 @@ SoGtkPlaneViewer::setCursorEnabled( // virtual
   SbBool enable )
 {
   inherited::setCursorEnabled( enable );
+  this->setCursorRepresentation( this->common->mode );
 } // setCursorEnabled()
 
 // *************************************************************************
@@ -380,10 +385,16 @@ SoGtkPlaneViewer::setSeekMode( // virtual, protected
   SbBool enable )
 {
   inherited::setSeekMode( enable );
+#if 0
+  this->common->setMode( on ?
+    SoAnyPlaneViewer::SEEK_WAIT_MODE :
+    SoAnyPlaneViewer::EXAMINE );
+#endif
 } // setSeekMode()
 
 /*!
-  FIXME: write doc
+  Overload this method to be able to draw the rotation graphics in rotation
+  mode.
 */
 
 void
@@ -494,6 +505,113 @@ SoGtkPlaneViewer::openViewerHelpCard( // virtual, protected
   this->openHelpCard( "SoGtkPlaneViewer.help" );
 } // openViewerHelpCard()
 
+// *************************************************************************
+
+/*!
+  \internal
+
+  Set cursor graphics according to mode.
+*/
+
+void
+SoGtkPlaneViewer::setCursorRepresentation(
+  int mode )
+{
+  GtkWidget * w = this->getGLWidget();
+  assert(w);
+
+  if ( ! PRIVATE(this)->arrowcursor ) {
+    if ( GTK_WIDGET_NO_WINDOW(w) )
+    {
+#if SOGTK_DEBUG
+  // FIXME: This should not happen, but there seems to be a bug in 
+  // SoGtk's event handling causing this. 20001219 RC.
+       SoDebugError::postWarning( 
+         "SoGtkPlaneViewer::setCursorRepresentation",
+          "widget %x: NO WINDOW\n", (int) w );
+#endif
+      return ;
+    }
+
+    GdkWindow *window = w->window ;
+    if ( window == (GdkWindow*) 0 ) 
+    {
+#if SOGTK_DEBUG
+  // FIXME: This should not happen, but there seems to be a bug in 
+  // SoGtk's event handling causing this. 20001219 RC.
+       SoDebugError::postWarning( 
+         "SoGtkPlaneViewer::setCursorRepresentation",
+          "widget %x: widget->window == 0\n", (int) w );
+#endif
+      return ;
+    }
+
+    GtkStyle *style = w->style ;
+    GdkColor fg = style->black ;
+    GdkColor bg = style->white ;
+
+    PRIVATE(this)->arrowcursor = gdk_cursor_new( GDK_TOP_LEFT_ARROW );
+    PRIVATE(this)->crosscursor = gdk_cursor_new( GDK_CROSSHAIR );
+    PRIVATE(this)->dollycursor = gdk_cursor_new( GDK_SB_UP_ARROW );
+
+    GdkPixmap *panBtm = 
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_pan_bitmap,
+        so_gtk_pan_width, so_gtk_pan_height);
+    GdkPixmap *panMask =
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_pan_mask_bitmap,
+        so_gtk_pan_width, so_gtk_pan_height);
+    PRIVATE(this)->pancursor = gdk_cursor_new_from_pixmap (
+      panBtm, panMask, 
+      &fg, &bg, 
+      so_gtk_pan_x_hot, so_gtk_pan_y_hot);
+    gdk_pixmap_unref (panBtm);
+    gdk_pixmap_unref (panMask);
+
+    GdkPixmap *rotateBtm = 
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_rotate_bitmap,
+        so_gtk_rotate_width, so_gtk_rotate_height);
+    GdkPixmap *rotateMask =
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_rotate_mask_bitmap,
+        so_gtk_rotate_width, so_gtk_rotate_height);
+    PRIVATE(this)->rotatecursor = gdk_cursor_new_from_pixmap (
+      rotateBtm, rotateMask, 
+      &fg, &bg, 
+      so_gtk_rotate_x_hot, so_gtk_rotate_y_hot);
+    gdk_pixmap_unref (rotateBtm);
+    gdk_pixmap_unref (rotateMask);
+  }
+
+  if ( ! this->isCursorEnabled() ) {
+    gdk_window_set_cursor( w->window, (GdkCursor*) 0 );
+    return;
+  }
+
+  switch ( (SoAnyPlaneViewer::PlaneViewerMode) mode) {
+//  case SoAnyPlaneViewer::INTERACT:
+//  case SoAnyPlaneViewer::EXAMINE:
+  case SoAnyPlaneViewer::IDLE_MODE:
+    gdk_window_set_cursor( w->window, 0 );
+    break ;
+  case SoAnyPlaneViewer::DOLLY_MODE:
+    gdk_window_set_cursor( w->window, PRIVATE(this)->dollycursor);
+    break;
+  case SoAnyPlaneViewer::ROTZ_WAIT_MODE:
+  case SoAnyPlaneViewer::ROTZ_MODE:
+    gdk_window_set_cursor( w->window, PRIVATE(this)->rotatecursor);
+    break;
+  case SoAnyPlaneViewer::SEEK_WAIT_MODE:
+  case SoAnyPlaneViewer::SEEK_MODE:
+    gdk_window_set_cursor( w->window, PRIVATE(this)->crosscursor );
+    break;
+  case SoAnyPlaneViewer::TRANSLATE_MODE:
+    gdk_window_set_cursor( w->window, PRIVATE(this)->pancursor);
+    break;
+  default: 
+    assert(0); 
+    break;
+  }
+} // setCursorRepresentation()
+
 // ************************************************************************
 //
 //  Private implementation
@@ -512,6 +630,13 @@ SoGtkPlaneViewerP::SoGtkPlaneViewerP(
   vv.ortho(-1, 1, -1, 1, -1, 1);
   this->projector->setViewVolume(vv);
 
+  // Cursors.
+  this->rotatecursor = (GdkCursor *) 0;
+  this->pancursor = (GdkCursor *) 0;
+  this->dollycursor = (GdkCursor *) 0;
+  this->crosscursor = (GdkCursor *) 0;
+  this->arrowcursor = (GdkCursor *) 0;
+
   GdkColormap * colormap = gtk_widget_get_colormap (PUBLIC(this)->getParentWidget());
 
   this->orthopixmap =
@@ -528,6 +653,19 @@ SoGtkPlaneViewerP::SoGtkPlaneViewerP(
 
 SoGtkPlaneViewerP::~SoGtkPlaneViewerP(void)
 {
+  // Cursors.
+  if ( this->dollycursor ) 
+    gdk_cursor_destroy( this->dollycursor );
+  if ( this->pancursor )
+    gdk_cursor_destroy( this->pancursor );
+  if ( this->rotatecursor ) 
+    gdk_cursor_destroy( this->rotatecursor );
+  if ( this->arrowcursor ) 
+    gdk_cursor_destroy( this->arrowcursor );
+  if ( this->crosscursor ) 
+    gdk_cursor_destroy( this->crosscursor );
+
+  // Button pixmaps.
   gdk_pixmap_unref( this->orthopixmap );
   gdk_bitmap_unref( this->orthomask );  
   gdk_pixmap_unref( this->perspectivepixmap );
