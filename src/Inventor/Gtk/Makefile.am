@@ -37,6 +37,9 @@ libSoGtk_la_LIBADD = \
 	viewers/libSoGtkViewers.la \
         widgets/libSoGtkWidgets.la
 
+libSoGtk_la_LDFLAGS = \
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+
 libSoGtkincdir = $(includedir)/Inventor/Gtk
 libSoGtkinc_HEADERS = \
 	SoGtkBasic.h \
