@@ -114,8 +114,9 @@ SoGtkMouse::enable(
   SoGtkEventHandler* func,
   gpointer closure)
 {
-  gtk_signal_connect(GTK_OBJECT(widget), "event",
-    GTK_SIGNAL_FUNC(func), closure );
+  if ( func )
+    gtk_signal_connect(GTK_OBJECT(widget), "event",
+      GTK_SIGNAL_FUNC(func), closure );
 } // enable()
 
 /*!
@@ -128,8 +129,9 @@ SoGtkMouse::disable(
   SoGtkEventHandler * func,
   gpointer closure )
 {
-  gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
-    GTK_SIGNAL_FUNC(func), closure );
+  if ( func )
+    gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
+      GTK_SIGNAL_FUNC(func), closure );
 } // disable()
 
 // *************************************************************************
