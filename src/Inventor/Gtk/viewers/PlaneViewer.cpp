@@ -17,6 +17,12 @@
  *
  **************************************************************************/
 
+// *************************************************************************
+
+// Class documentation in common/viewers/SoGuiPlaneViewer.cpp.in.
+
+// *************************************************************************
+
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -37,10 +43,6 @@
 #include <Inventor/Gtk/common/pixmaps/z.xpm>
 #include <Inventor/Gtk/common/pixmaps/perspective.xpm>
 #include <Inventor/Gtk/common/pixmaps/ortho.xpm>
-
-// *************************************************************************
-
-// Class documentation in common/viewers/SoGuiPlaneViewer.cpp.in.
 
 // *************************************************************************
 
@@ -105,10 +107,6 @@ SoGtkPlaneViewerP::SoGtkPlaneViewerButtons[] = {
     perspective_xpm
   }
 }; // SoGtkPlaneViewerButtons[]
-
-// *************************************************************************
-
-SOGTK_OBJECT_SOURCE(SoGtkPlaneViewer);
 
 // *************************************************************************
 
@@ -237,44 +235,6 @@ SoGtkPlaneViewer::buildWidget(// protected
   
   return viewer;
 } // buildWidget()
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewer::bottomWheelMotion(// virtual, protected
-  float value)
-{
-  this->translateX(value - this->getBottomWheelValue());
-  inherited::bottomWheelMotion(value);
-} // bottomWheelMotion()
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewer::leftWheelMotion(// virtual, protected
-  float value)
-{
-  this->translateY(value - this->getLeftWheelValue());
-  inherited::leftWheelMotion(value);
-} // leftWheelMotion()
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewer::rightWheelMotion(// virtual, protected
-  float value)
-{
-  this->zoom(this->getRightWheelValue() - value);
-  inherited::rightWheelMotion(value);
-} // rightWheelMotion()
 
 // *************************************************************************
 
