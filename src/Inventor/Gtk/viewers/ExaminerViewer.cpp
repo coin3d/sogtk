@@ -243,15 +243,14 @@ SoGtkExaminerViewer::setFeedbackSize(const int size)
 
 // *************************************************************************
 
-/*!
-  This method overloaded from parent class to toggle the camera type
-  selection button pixmap and string of the zoom/dolly thumbwheel.
-*/
-
+// Documented in superclass.
 void
-SoGtkExaminerViewer::setCamera(// virtual
-  SoCamera * newCamera)
+SoGtkExaminerViewer::setCamera(SoCamera * newCamera)
 {
+  // This method overloaded from parent class to toggle the camera
+  // type selection button pixmap and string of the zoom/dolly
+  // thumbwheel.
+
   if (newCamera) {
     const SoType camtype(newCamera->getTypeId());
     const SbBool orthotype =
@@ -266,7 +265,7 @@ SoGtkExaminerViewer::setCamera(// virtual
     }
   }
   inherited::setCamera(newCamera);
-} // setCamera()
+}
 
 // *************************************************************************
 

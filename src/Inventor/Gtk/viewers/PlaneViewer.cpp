@@ -201,9 +201,7 @@ SoGtkPlaneViewer::~SoGtkPlaneViewer()
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
+// Documented in superclass.
 void
 SoGtkPlaneViewer::setCamera(SoCamera * newCamera)
 {
@@ -225,9 +223,7 @@ SoGtkPlaneViewer::setCamera(SoCamera * newCamera)
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
+// Documented in superclass.
 GtkWidget *
 SoGtkPlaneViewer::buildWidget(GtkWidget * parent)
 {

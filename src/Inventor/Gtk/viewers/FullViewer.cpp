@@ -695,15 +695,14 @@ SoGtkFullViewer::setViewing(
 
 // *************************************************************************
 
-/*!
-  Overloaded from parent to make sure the user interface indicators on
-  the camera features in the preferences sheet are updated correctly.
-*/
-
+// Documented in superclass.
 void
-SoGtkFullViewer::setCamera(// virtual
-  SoCamera * camera)
+SoGtkFullViewer::setCamera(SoCamera * camera)
 {
+  // Overridden from parent to make sure the user interface indicators
+  // on the camera features in the preferences sheet are updated
+  // correctly.
+
   inherited::setCamera(camera);
 
   if (PRIVATE(this)->prefwindow) {
@@ -755,14 +754,9 @@ SoGtkFullViewer::eventFilter(
 
 // *************************************************************************
 
-/*!
-  This will build the main view widgets, along with the decorations
-  widgets and popup menu if they are enabled.
-*/
-
+// Documented in superclass.
 GtkWidget *
-SoGtkFullViewer::buildWidget(
-  GtkWidget * parent)
+SoGtkFullViewer::buildWidget(GtkWidget * parent)
 {
   GtkWidget * root = gtk_vbox_new(FALSE, 0);
   g_return_val_if_fail(root != NULL, (GtkWidget *) NULL);

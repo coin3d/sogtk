@@ -183,13 +183,9 @@ SoGtkGLWidget::buildGLWidget(void)
   // 20011012 mortene.
 }
 
-/*!
-  FIXME: write function documentation
-*/
-
+// Documented in common/SoGuiGLWidgetCommon.cpp.in.
 GtkWidget *
-SoGtkGLWidget::buildWidget(
-  GtkWidget * parent)
+SoGtkGLWidget::buildWidget(GtkWidget * parent)
 {
   PRIVATE(this)->glParent = parent;
 

@@ -158,16 +158,12 @@ SoGtkWalkViewer::setViewing(// virtual
 
 // ************************************************************************
 
-/*!
-  FIXME: write doc
-*/
-
+// Documented in superclass.
 void
-SoGtkWalkViewer::setCamera(// virtual
-  SoCamera * camera)
+SoGtkWalkViewer::setCamera(SoCamera * camera)
 {
   inherited::setCamera(camera);
-} // setCamera()
+}
 
 // ************************************************************************
 
