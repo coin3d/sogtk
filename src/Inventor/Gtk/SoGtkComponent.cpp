@@ -440,8 +440,9 @@ SoGtkComponent::isVisible(
 {
   if ( ! this->baseWidget() )
     return FALSE;
-  // FIXME - return true visibility state
-  return TRUE;
+  // FIXME - return true visibility state 
+  // Close, but probably still incomplete
+  return GTK_WIDGET_DRAWABLE(this->baseWidget()) ? TRUE : FALSE;
 } // isVisible()
 
 /*!
