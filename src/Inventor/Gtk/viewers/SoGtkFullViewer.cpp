@@ -29,6 +29,7 @@ static const char rcsid[] =
 #include <gtk/gtkhbox.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtkbutton.h>
+#include <gtk/gtktogglebutton.h>
 
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
@@ -471,6 +472,7 @@ void
 SoGtkFullViewer::setViewing(
   SbBool enable )
 {
+//  SoDebugError::postWarning( "SoGtkFullViewer::setViewing", "[%s]", enable ? "TRUE" : "FALSE" );
   if ( ( enable && this->isViewing() ) ||
        ( ! enable && ! this->isViewing() ) ) {
 #if SOGTK_DEBUG
@@ -480,12 +482,33 @@ SoGtkFullViewer::setViewing(
     return;
   }
 
+  if ( this->prefmenu )
+    this->prefmenu->SetMenuItemMarked( EXAMINING_ITEM, enable );
+
+  GtkWidget * interact_button = findButton( "interact" );
+  GtkWidget * view_button = findButton( "view" );
+  GtkWidget * seek_button = findButton( "seek" );
+  assert( interact_button && view_button && seek_button );
+
+  if ( this->isViewing() ) {
+    if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(view_button) ) )
+      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(view_button), FALSE );
+  } else {
+    if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(interact_button) ) )
+      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(interact_button), FALSE );
+  }
+
   inherited::setViewing( enable );
 
-//  if (this->prefmenu)
-//    this->prefMenu->setItemChecked(EXAMINING_ITEM, enable);
-//  VIEWERBUTTON(EXAMINE_BUTTON)->setOn(enable);
-//  VIEWERBUTTON(INTERACT_BUTTON)->setOn(enable ? FALSE : TRUE);
+  // the inverse...
+  if ( this->isViewing() ) {
+    if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(view_button) ) )
+      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(view_button), TRUE );
+  } else {
+    if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(interact_button) ) )
+      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(interact_button), TRUE );
+  }
+
 //  VIEWERBUTTON(SEEK_BUTTON)->setEnabled(enable);
 } // setViewing()
 
@@ -839,60 +862,62 @@ SoGtkFullViewer::buildViewerButtons(
 struct SoGtkViewerButton {
   char * keyword;
   char * label;
-  GtkSignalFunc clicked;
+  GtkSignalFunc pressed;
+  GtkSignalFunc released;
   char ** xpm_data;
   GtkWidget * bwidget;
   GtkWidget * lwidget;
+//  GtkType type;
 };
 
 struct SoGtkViewerButton
 SoGtkFullViewer::SoGtkFullViewerButtons[] = {
   { // interact button
-    "interact",
-    "I",
+    "interact", "I",
     (GtkSignalFunc) SoGtkFullViewer::interactbuttonClickedCB,
+    (GtkSignalFunc) SoGtkFullViewer::interactbuttonClickedRCB,
     pick_xpm,
     NULL, NULL
   },
   { // view
-    "view",
-    "E",
+    "view", "E",
     (GtkSignalFunc) SoGtkFullViewer::viewbuttonClickedCB,
+    (GtkSignalFunc) SoGtkFullViewer::viewbuttonClickedRCB,
     view_xpm,
     NULL, NULL
   },
   { // help
-    "help",
-    "?",
+    "help", "?",
     (GtkSignalFunc) SoGtkFullViewer::helpbuttonClickedCB,
+    NULL,
     help_xpm,
     NULL, NULL
   },
   { // home
-    "home",
-    "h",
+    "home", "h",
     (GtkSignalFunc) SoGtkFullViewer::homebuttonClickedCB,
+    NULL,
     home_xpm,
     NULL, NULL
   },
   { // set home
-    "set_home",
-    "H",
+    "set_home", "H",
     (GtkSignalFunc) SoGtkFullViewer::sethomebuttonClickedCB,
+    NULL,
     set_home_xpm,
     NULL, NULL
   }, 
   { // view all
-    "view_all",
-    "V",
+    "view_all", "V",
     (GtkSignalFunc) SoGtkFullViewer::viewallbuttonClickedCB,
+    NULL,
     view_all_xpm,
     NULL, NULL
   },
   { // seek
-    "seek",
-    "S",
+    "seek", "S",
     (GtkSignalFunc) SoGtkFullViewer::seekbuttonClickedCB,
+    NULL,
     seek_xpm,
     NULL, NULL
   }
@@ -913,18 +938,27 @@ SoGtkFullViewer::createViewerButtons( // virtual
   int button = 0;
   const int buttons = sizeof(SoGtkFullViewerButtons) / sizeof(SoGtkViewerButton);
   while ( button < buttons ) {
-    GtkWidget * widget = gtk_button_new();
-    SoGtkFullViewerButtons[button].bwidget = widget;
+    GtkWidget * widget = GTK_WIDGET(button < 2 ? gtk_toggle_button_new() : gtk_button_new());
+    if ( button == 0 && ! this->isViewing() )
+      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(widget), TRUE );
+    if ( button == 1 && this->isViewing() )
+      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(widget), TRUE );
 
     GtkWidget * label = gtk_label_new( SoGtkFullViewerButtons[button].label );
     gtk_widget_show( label );
     SoGtkFullViewerButtons[button].lwidget = label;
 
     gtk_container_add( GTK_CONTAINER(widget), GTK_WIDGET(label) );
-    if ( SoGtkFullViewerButtons[button].clicked != NULL )
-      gtk_signal_connect( GTK_OBJECT(widget), "clicked",
-        GTK_SIGNAL_FUNC(SoGtkFullViewerButtons[button].clicked),
+    if ( SoGtkFullViewerButtons[button].pressed != NULL )
+      gtk_signal_connect( GTK_OBJECT(widget), "pressed",
+        GTK_SIGNAL_FUNC(SoGtkFullViewerButtons[button].pressed),
         (gpointer) this );
+    if ( SoGtkFullViewerButtons[button].released != NULL )
+      gtk_signal_connect( GTK_OBJECT(widget), "released",
+        GTK_SIGNAL_FUNC(SoGtkFullViewerButtons[button].released),
+        (gpointer) this );
+
+    SoGtkFullViewerButtons[button].bwidget = widget;
     buttonlist->append( widget );
     button++;
   } // while ( button < buttons )
@@ -954,7 +988,7 @@ void
 SoGtkFullViewer::buildPopupMenu(
   void )
 {
-//  this->prefmenu = common->buildStandardPopupMenu();
+  this->prefmenu = common->setupStandardPopupMenu();
 } // buildPopupMenu()
 
 // *************************************************************************
@@ -983,8 +1017,11 @@ void
 SoGtkFullViewer::openPopupMenu(
   const SbVec2s position )
 {
-  SOGTK_STUB();
-}
+  if ( ! this->prefmenu && this->menuEnabled )
+    this->buildPopupMenu();
+  if ( this->prefmenu )
+    this->prefmenu->PopUp( this->getGLWidget(), position[0], position[1] );
+} // openPopupMenu()
 
 // *************************************************************************
 
@@ -1271,14 +1308,17 @@ SoGtkFullViewer::setRightWheelString(
 
 /*!
   Overload this method to provide functionality when the user clicks
-  the Help button. Default implementation does nothing.
+  the Help button.
 */
 
 void
-SoGtkFullViewer::openViewerHelpCard(void)
+SoGtkFullViewer::openViewerHelpCard( // virtual
+  void )
 {
-  SOGTK_STUB();
-}
+  const char * classname = this->getClassName();
+  if ( classname && strlen(classname) > 0 )
+    SoGtkComponent::openHelpCard( classname );
+} // openViewerHelpCard()
 
 // *************************************************************************
 
@@ -1298,6 +1338,13 @@ SoGtkFullViewer::showDecorationWidgets(
 
   assert(this->viewerWidget);
   assert(this->canvasParent);
+
+/*
+  if ( enable )
+    gtk_widget_show( GTK_WIDGET(this->rightDecoration) );
+  else
+    gtk_widget_hide( GTK_WIDGET(this->rightDecoration) );
+*/
 
 /*
   if (onOff) {
@@ -1507,36 +1554,6 @@ SoGtkFullViewer::setZoomFieldString(float zoom)
   this->zoomField->setText(s);
 */
 }
-
-// *************************************************************************
-
-/*!
-  \internal
-  Qt slot.
-*/
-
-/*
-void
-SoGtkFullViewer::interactbuttonToggled(bool flag)
-{
-  this->setViewing(!flag);
-}
-*/
-
-// *************************************************************************
-
-/*!
-  \internal
-  Qt slot.
-*/
-
-/*
-void
-SoGtkFullViewer::viewbuttonToggled(bool flag)
-{
-  this->setViewing(flag);
-}
-*/
 
 // *************************************************************************
 
@@ -2115,11 +2132,13 @@ void
 SoGtkFullViewer::interactbuttonClicked(
   void )
 {
-  if ( this->isViewing() )
-    this->setViewing( FALSE );
-  GtkWidget * interact_button = findButton( "interact" );
-  GtkWidget * view_button = findButton( "view" );
-}
+  if ( ! this->isViewing() )
+    return;
+  this->setViewing( FALSE );
+} // interactbuttonClicked()
+
+/*!
+*/
 
 void
 SoGtkFullViewer::interactbuttonClickedCB( // static
@@ -2131,26 +2150,65 @@ SoGtkFullViewer::interactbuttonClickedCB( // static
   viewer->interactbuttonClicked();
 } // interactbuttonClickedCB()
 
-// *************************************************************************
+/*!
+*/
 
 void
-SoGtkFullViewer::viewbuttonClicked(
-  void )
-{
-  if ( ! this->isViewing() )
-    this->setViewing( TRUE );
-  GtkWidget * interact_button = findButton( "interact" );
-  GtkWidget * view_button = findButton( "view" );
-}
-
-void
-SoGtkFullViewer::viewbuttonClickedCB( // static
+SoGtkFullViewer::interactbuttonClickedRCB( // static
   GtkWidget *,
   gpointer closure )
 {
   assert( closure != NULL );
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
+  if ( ! viewer->isViewing() ) {
+    GtkWidget * button = viewer->findButton( "interact" );
+    if ( ! gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(button) ) )
+      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(button), TRUE );
+  }
+} // interactbuttonClickedCB()
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkFullViewer::viewbuttonClicked(
+  void )
+{
+  if ( this->isViewing() )
+    return;
+  this->setViewing( TRUE );
+} // viewbuttonClicked()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::viewbuttonClickedCB( // static
+  GtkWidget * w,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
   viewer->viewbuttonClicked();
+} // viewbuttonClickedCB()
+
+/*!
+*/
+
+void
+SoGtkFullViewer::viewbuttonClickedRCB( // static
+  GtkWidget * w,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
+  if ( viewer->isViewing() ) {
+    GtkWidget * button = viewer->findButton( "view" );
+    if ( ! gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(button) ) )
+      gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(button), TRUE );
+  }
 } // viewbuttonClickedCB()
 
 // *************************************************************************
