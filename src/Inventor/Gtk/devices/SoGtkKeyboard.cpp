@@ -251,7 +251,8 @@ SoGtkKeyboard::translateEvent( // virtual
       SbTime stamp;
       stamp.setMsecValue( event->time );
       this->kbdevent->setTime( stamp );
-      // SoGtkEvent::setEventPosition( this->kbdevent, event->x, event->y );
+      const SbVec2s pos = SoGtkDevice::getLastEventPosition();
+      SoGtkDevice::setEventPosition( this->kbdevent, pos[0], pos[1] );
       this->kbdevent->setKey( getKeyForKeyCode( event->keyval ) );
       this->kbdevent->setState( SoButtonEvent::DOWN );
       this->kbdevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
@@ -267,7 +268,8 @@ SoGtkKeyboard::translateEvent( // virtual
       SbTime stamp;
       stamp.setMsecValue( event->time );
       this->kbdevent->setTime( stamp );
-      // SoGtkEvent::setEventPosition( this->kbdevent, event->x, event->y );
+      const SbVec2s pos = SoGtkDevice::getLastEventPosition();
+      SoGtkDevice::setEventPosition( this->kbdevent, pos[0], pos[1] );
       this->kbdevent->setKey( getKeyForKeyCode( event->keyval ) );
       this->kbdevent->setState( SoButtonEvent::UP );
       this->kbdevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
