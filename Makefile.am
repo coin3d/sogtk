@@ -2,6 +2,8 @@
 ## SoGtk/Makefile.am
 ## $Id$
 
+ACLOCAL_AMFLAGS = -I cfg/m4
+
 ############################################################################
 # Automake conditional stuff
 

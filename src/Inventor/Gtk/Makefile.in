@@ -106,9 +106,6 @@ WIDGET = @WIDGET@
 gui = @gui@
 install_sh = @install_sh@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
-sogtk_build_dir = @sogtk_build_dir@
-sogtk_data_dir = @sogtk_data_dir@
-sogtk_src_dir = @sogtk_src_dir@
 
 
 SUBDIRS = devices widgets viewers
