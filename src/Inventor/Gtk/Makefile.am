@@ -8,7 +8,7 @@ INCLUDES = -I$(top_srcdir)/src -I$(top_builddir)/data
 lib_LTLIBRARIES = libSoGtk@SUFFIX@.la
 
 BUILT_SOURCES = \
-	$(SoGuiAllBuiltSources)
+	$(SoGuiAllBuiltFiles)
 
 CLEANFILES = \
 	$(SoGui_src_Inventor_Gui_BuiltFiles)
