@@ -245,10 +245,6 @@ void
 SoGtkWalkViewer::processEvent(// virtual, protected
   GdkEvent * event)
 {
-  // SoDebugError::postInfo("SoGtkWalkViewer::processEvent", "[invoked]");
-  if (SoGtkViewer::processCommonEvents(event))
-    return;
-
   inherited::processEvent(event);
 } // processEvent()
 

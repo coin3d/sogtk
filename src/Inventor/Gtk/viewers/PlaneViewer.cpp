@@ -246,20 +246,6 @@ SoGtkPlaneViewer::buildWidget(GtkWidget * parent)
   FIXME: write doc
 */
 void
-SoGtkPlaneViewer::processEvent(GdkEvent * event)
-{
-  if (SoGtkViewer::processCommonEvents(event))
-    return;
-
-  inherited::processEvent(event);
-}
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-void
 SoGtkPlaneViewer::createViewerButtons(GtkWidget * parent,
                                       SbPList * buttonlist)
 {
