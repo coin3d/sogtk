@@ -65,9 +65,9 @@ struct _GtkThumbWheel {
   gint downpos;
   gfloat value, tempvalue;
 
-  int img ; 		// index of the bitmap to be shown
+  int img; 		/* index of the bitmap to be shown */
   guchar *bitmap ;
-  void * wheel; 	// SoAnyThumbWheel class instance
+  void * wheel; 	/* SoAnyThumbWheel class instance */
 }; // GtkThumbWheel
 
 struct _GtkThumbWheelClass {
