@@ -37,18 +37,24 @@ BUILT_SOURCES = \
 	src/Inventor/Gtk/viewers/SoAnyExaminerViewer.cpp \
 	src/Inventor/Gtk/viewers/SoAnyPlaneViewer.h \
 	src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp \
+	src/Inventor/Gtk/viewers/SoAnyFlyViewer.h \
+	src/Inventor/Gtk/viewers/SoAnyFlyViewer.cpp \
+	src/Inventor/Gtk/viewers/SoAnyWalkViewer.h \
+	src/Inventor/Gtk/viewers/SoAnyWalkViewer.cpp \
 	src/Inventor/Gtk/widgets/SoAnyThumbWheel.h \
 	src/Inventor/Gtk/widgets/SoAnyThumbWheel.cpp \
 	src/Inventor/Gtk/widgets/SoAnyPopupMenu.h \
 	src/Inventor/Gtk/widgets/SoAnyPopupMenu.cpp
 
-bin_SCRIPTS = sogtk-config
+bin_SCRIPTS = so@gui@-config
 
-EXTRA_DIST = cfg/m4/sogtk.m4
+EXTRA_DIST = cfg/m4/so@gui@.m4
 
 Makefile: $(BUILT_SOURCES)
 
 ############################################################################
+
+built-sources: $(BUILT_SOURCES)
 
 sogtkdefs.h: $(top_srcdir)/sogtkdefs.h.in
 	@./config.status --file=$@:sogtkdefs.h.in
@@ -126,6 +132,22 @@ src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp: \
   $(srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
 
+src/Inventor/Gtk/viewers/SoAnyFlyViewer.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyFlyViewer.h.in
+
+src/Inventor/Gtk/viewers/SoAnyFlyViewer.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyFlyViewer.cpp.in
+
+src/Inventor/Gtk/viewers/SoAnyWalkViewer.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyWalkViewer.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyWalkViewer.h.in
+
+src/Inventor/Gtk/viewers/SoAnyWalkViewer.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyWalkViewer.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyWalkViewer.cpp.in
+
 src/Inventor/Gtk/widgets/SoAnyThumbWheel.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoAnyThumbWheel.h.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyThumbWheel.h.in
@@ -145,5 +167,5 @@ src/Inventor/Gtk/widgets/SoAnyPopupMenu.cpp: \
 ############################################################################
 
 doxygen-docs:
-	@( cd build; @sim_ac_doxygen_exe@ sogtk.doxygen )
+	@( cd build; @sim_ac_doxygen_exe@ so@gui@.doxygen )
 
