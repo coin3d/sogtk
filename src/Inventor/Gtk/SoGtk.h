@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef __SOGTK_H__
-#define __SOGTK_H__
+#ifndef SOGTK_H
+#define SOGTK_H
 
 #include <math.h>
 
@@ -80,4 +80,4 @@ private:
 
 // *************************************************************************
 
-#endif // ! __SOGTK_H__
+#endif // ! SOGTK_H

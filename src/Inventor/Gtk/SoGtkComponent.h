@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef __SOGTK_COMPONENT_H__
-#define __SOGTK_COMPONENT_H__
+#ifndef SOGTK_COMPONENT_H
+#define SOGTK_COMPONENT_H
 
 #include <Inventor/SbLinear.h>
 #include <Inventor/SbString.h>
@@ -74,7 +74,7 @@ protected:
 
   void subclassInitialized(void);
 
-  virtual const char * componentClassName(void) const = 0;
+//  virtual const char * componentClassName(void) const = 0;
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
@@ -107,4 +107,4 @@ private:
 
 // *************************************************************************
 
-#endif // ! __SOGTK_COMPONENT_H__
+#endif // ! SOGTK_COMPONENT_H

@@ -19,11 +19,11 @@
 
 //  $Id$
 
-#ifndef __SOGTK_CURSORS_H__
-#define __SOGTK_CURSORS_H__
+#ifndef SOGTK_CURSORS_H
+#define SOGTK_CURSORS_H
 
 // *************************************************************************
 
 // *************************************************************************
 
-#endif // ! __SOGTK_CURSORS_H__
+#endif // ! SOGTK_CURSORS_H

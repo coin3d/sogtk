@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef __SOGTK_GLWIDGET_H__
-#define __SOGTK_GLWIDGET_H__
+#ifndef SOGTK_GLWIDGET_H
+#define SOGTK_GLWIDGET_H
 
 #include <gtk/gtk.h>
 
@@ -28,11 +28,13 @@
 
 #include <Inventor/Gtk/SoGtkComponent.h>
 
-#define SO_GLX_RGB      0x01
-#define SO_GLX_DOUBLE   0x02
-#define SO_GLX_ZBUFFER  0x04
-#define SO_GLX_OVERLAY  0x08
-#define SO_GLX_STEREO   0x10
+enum glModes {
+  SO_GL_RGB      = 0x01, SO_GLX_RGB      = SO_GL_RGB,
+  SO_GL_DOUBLE   = 0x02, SO_GLX_DOUBLE   = SO_GL_DOUBLE,
+  SO_GL_ZBUFFER  = 0x04, SO_GLX_ZBUFFER  = SO_GL_ZBUFFER,
+  SO_GL_OVERLAY  = 0x08, SO_GLX_OVERLAY  = SO_GL_OVERLAY,
+  SO_GL_STEREO   = 0x10, SO_GLX_STEREO   = SO_GL_STEREO
+};
 
 // *************************************************************************
 
@@ -69,10 +71,22 @@ protected:
   virtual void widgetChanged(void);
 
   void setGlxSize( const SbVec2s newSize );
+  void setGLSize( const SbVec2s newSize );
   const SbVec2s getGlxSize(void) const;
+  const SbVec2s getGLSize(void) const;
   float getGlxAspectRatio(void) const;
+  float getGLAspectRatio(void) const;
 
   virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
+
+  void glLock(void);
+  void glUnlock(void);
+  void glSwapBuffers(void);
+  void glFlushBuffer(void);
+
+  virtual void glInit(void);
+  virtual void glReshape(int width, int height);
+  virtual void glRender(void);
 
 private:
   GtkWidget * glParent;
@@ -92,9 +106,12 @@ private:
   gint glDraw( GtkWidget * widget, GdkEventExpose * event );
   static gint sGLDraw( GtkWidget * widget, GdkEventExpose * event,
     void * userData );
+  gint glReshape( GtkWidget * widget, GdkEventConfigure * event );
+  static gint sGLReshape( GtkWidget * widget, GdkEventConfigure * event,
+    void * userData );
 
 }; // class SoGtkGLWidget
 
 // *************************************************************************
 
-#endif // ! __SOGTK_GLWIDGET_H__
+#endif // ! SOGTK_GLWIDGET_H
