@@ -144,6 +144,24 @@ AC_ARG_ENABLE(
 
 if $sim_ac_build_library; then
 
+AC_ARG_WITH(
+  [alternate],
+  [AC_HELP_STRING([--with-alternate=string],
+                  [specify name of alternate configuration])],
+  [CONFIG=$withval],
+  [CONFIG=default])
+
+AC_SUBST(CONFIG)
+
+AC_ARG_WITH(
+  [suffix],
+  [AC_HELP_STRING([--with-suffix=string],
+                  [specify library name suffix (e.g. "_g")])],
+  [SUFFIX=$withval],
+  [SUFFIX=])
+
+AC_SUBST(SUFFIX)
+
 # **************************************************************************
 
 if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
@@ -202,8 +220,8 @@ if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
   ])
   SIM_AC_CONFIGURATION_SETTING([Open Inventor brand], [SGI/TGS Inventor])
 else
-  SIM_AC_CHECK_HEADER_GL()
-  SIM_AC_CHECK_HEADER_GLU()
+  SIM_AC_CHECK_HEADER_GL([CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"])
+  # SIM_AC_CHECK_HEADER_GLU()
 
   SIM_AC_HAVE_COIN_IFELSE([
     CPPFLAGS="$CPPFLAGS $sim_ac_coin_cppflags"
@@ -456,7 +474,7 @@ SIM_AC_CONFIGURATION_SETTING([Install Prefix], [$prefix])
 # List all makefiles configure must automatically generate.
 
 AC_OUTPUT([
-	sogtk-config
+	sogtk-$CONFIG.cfg:sogtk.cfg.in
 	Makefile
 	src/Inventor/Gtk/Makefile
 	src/Inventor/Gtk/devices/Makefile

@@ -3,6 +3,8 @@ SUBDIRS = devices widgets viewers
 
 INCLUDES = -I$(top_srcdir)/src -I$(top_builddir)/data
 
+lib_LTLIBRARIES = libSoGtk@SUFFIX@.la
+
 BUILT_SOURCES = \
 	SoAny.h \
 	SoAny.cpp \
@@ -17,9 +19,9 @@ BUILT_SOURCES = \
 	SoAnyMaterialList.cpp \
 	SoAnyMaterialListBuiltins.cpp
 
-lib_LTLIBRARIES = libSoGtk.la
+############################################################################
 
-libSoGtk_la_SOURCES = \
+libSoGtk@SUFFIX@_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	SoGtk.h \
 	SoGtk.cpp \
@@ -34,12 +36,12 @@ libSoGtk_la_SOURCES = \
 	SoGtkRoster.h \
 	SoGtkRoster.cpp
 
-libSoGtk_la_LIBADD = \
+libSoGtk@SUFFIX@_la_LIBADD = \
         devices/libSoGtkDevices.la \
 	viewers/libSoGtkViewers.la \
         widgets/libSoGtkWidgets.la
 
-libSoGtk_la_LDFLAGS = \
+libSoGtk@SUFFIX@_la_LDFLAGS = \
 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 libSoGtkincdir = $(includedir)/Inventor/Gtk

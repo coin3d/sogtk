@@ -69,6 +69,12 @@ EXTRA_DIST = \
 m4datadir = $(datadir)/aclocal
 m4data_DATA = so@gui@.m4
 
+cfgdatadir = $(datadir)/Coin/conf
+cfgdata_DATA = sogtk-@CONFIG@.cfg
+
+sogtk-@CONFIG@.cfg: $(srcdir)/sogtk.cfg.in Makefile config.status
+	@$(SHELL) config.status --file=$@:sogtk.cfg.in
+
 Makefile: $(BUILT_SOURCES)
 
 ############################################################################
