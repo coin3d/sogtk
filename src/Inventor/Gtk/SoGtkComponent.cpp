@@ -67,6 +67,8 @@ public:
   ~SoGtkComponentP(void);
 
   static gint realizeHandlerCB(GtkObject * object, gpointer closure);
+  static GdkCursor * getNativeCursor(GtkWidget * w,
+                                     const SoGtkCursor::CustomCursor * cc);
 
   GtkWidget * widget;
   GtkWidget * parent;
@@ -82,15 +84,20 @@ public:
   SbPList * visibilityChangeCBs;
   SbVec2s storeSize;
 
+  static GdkCursor * arrowcursor;
+  static GdkCursor * crosscursor;
+
 private:
   SoGtkComponent * pub;
-
+  static SbDict * cursordict;
 }; // class SoGtkComponentP
+
+GdkCursor * SoGtkComponentP::arrowcursor = NULL;
+GdkCursor * SoGtkComponentP::crosscursor = NULL;
+SbDict * SoGtkComponentP::cursordict = NULL;
 
 #define PUBLIC(ptr) (ptr->pub)
 #define PRIVATE(ptr) (ptr->pimpl)
-
-#define THIS (PRIVATE(this))
 
 // *************************************************************************
 
@@ -970,7 +977,7 @@ SoGtkComponentP::realizeHandlerCB(// static
 SbBool
 SoGtkComponent::setFullScreen(const SbBool onoff)
 {
-  if (onoff == THIS->fullscreen) { return TRUE; }
+  if (onoff == PRIVATE(this)->fullscreen) { return TRUE; }
   SOGTK_STUB();
   return FALSE;
 }
@@ -981,7 +988,43 @@ SoGtkComponent::setFullScreen(const SbBool onoff)
 SbBool 
 SoGtkComponent::isFullScreen(void) const
 {
-  return THIS->fullscreen;
+  return PRIVATE(this)->fullscreen;
+}
+
+// Converts from the common generic cursor format to a Win32 HCURSOR
+// instance.
+GdkCursor *
+SoGtkComponentP::getNativeCursor(GtkWidget * w,
+                                 const SoGtkCursor::CustomCursor * cc)
+{
+  if (SoGtkComponentP::cursordict == NULL) { // first call, initialize
+    SoGtkComponentP::cursordict = new SbDict; // FIXME: mem leak. 20011121 mortene.
+  }
+
+  void * qc;
+  SbBool b = SoGtkComponentP::cursordict->find((unsigned long)cc, qc);
+  if (b) { return (GdkCursor *)qc; }
+
+  GtkStyle * style = w->style;
+  GdkColor fg = style->black;
+  GdkColor bg = style->white;
+
+  GdkPixmap * bitmap = 
+    gdk_bitmap_create_from_data(NULL, (const gchar *)cc->bitmap,
+                                cc->dim[0], cc->dim[1]);
+  GdkPixmap *mask =
+    gdk_bitmap_create_from_data(NULL, (const gchar *)cc->mask,
+                                cc->dim[0], cc->dim[1]);
+
+  // FIXME: plug memleak. 20011126 mortene.
+  GdkCursor * cursor =
+    gdk_cursor_new_from_pixmap(bitmap, mask, &fg, &bg,
+                               cc->hotspot[0], cc->hotspot[1]);
+  gdk_pixmap_unref(bitmap);
+  gdk_pixmap_unref(mask);
+
+  SoGtkComponentP::cursordict->enter((unsigned long)cc, cursor);
+  return cursor;
 }
 
 /*!
@@ -999,7 +1042,45 @@ SoGtkComponent::setComponentCursor(const SoGtkCursor & cursor)
 void
 SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
 {
-  SOGTK_STUB();
+  if (cursor.getShape() == SoGtkCursor::CUSTOM_BITMAP) {
+    const SoGtkCursor::CustomCursor * cc = &cursor.getCustomCursor();
+    gdk_window_set_cursor(w->window, SoGtkComponentP::getNativeCursor(w, cc));
+  }
+  else {
+    switch (cursor.getShape()) {
+    case SoGtkCursor::DEFAULT:
+      if (!SoGtkComponentP::arrowcursor) {
+        // FIXME: plug memleak with gdk_cursor_destroy(). 20011126 mortene.
+        SoGtkComponentP::arrowcursor = gdk_cursor_new(GDK_TOP_LEFT_ARROW);
+      }
+      gdk_window_set_cursor(w->window, SoGtkComponentP::arrowcursor);
+      break;
+
+    case SoGtkCursor::BUSY:
+      SOGTK_STUB();
+      break;
+
+    case SoGtkCursor::BLANK:
+      gdk_window_set_cursor(w->window, (GdkCursor *)NULL);
+      break;
+
+    case SoGtkCursor::CROSSHAIR:
+      if (!SoGtkComponentP::crosscursor) {
+        // FIXME: plug memleak. 20011126 mortene.
+        SoGtkComponentP::crosscursor = gdk_cursor_new(GDK_CROSSHAIR);
+      }
+      gdk_window_set_cursor(w->window, SoGtkComponentP::crosscursor);
+      break;
+
+    case SoGtkCursor::UPARROW:
+      SOGTK_STUB();
+      break;
+
+    default:
+      assert(FALSE && "unsupported cursor shape type");
+      break;
+    }
+  }
 }
 
 // *************************************************************************
