@@ -17,10 +17,12 @@
  *
  **************************************************************************/
 
+/* $Id$ */
+
 #ifndef SO@GUI@_INTERNALDEFS_H
 #define SO@GUI@_INTERNALDEFS_H
 
-// *************************************************************************
+/* ********************************************************************** */
 
 #ifdef __FILE__
 #define SO@GUI@_STUB_FILE __FILE__
@@ -44,13 +46,18 @@
 #endif
 #endif
 
-// SO@GUI@_STUB(): this is the method which prints out stub
-// information. Used where there is functionality missing.
+/*
+  SO@GUI@_STUB(): this is the method which prints out stub
+  information. Used where there is functionality missing.
+*/
 
-#include <stdio.h> // fprintf()
+#include <stdio.h> /* fprintf() */
 
-// This stupid thing is here to silence some compilers that complain on
-// constant if-expressions.
+/*
+  This stupid thing is here to silence some compilers that complain on
+  constant if-expressions.
+*/
+
 inline int _not_null( const void * arg ) { return (arg != NULL) ? 1 : 0; }
 
 #define SO@GUI@_STUB() \
@@ -83,6 +90,6 @@ inline int _not_null( const void * arg ) { return (arg != NULL) ? 1 : 0; }
     } \
   } while (0)
 
-// *************************************************************************
+/* ********************************************************************** */
 
-#endif // ! SO@GUI@_INTERNALDEFS_H
+#endif /* ! SO@GUI@_INTERNALDEFS_H */
