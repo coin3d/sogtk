@@ -158,10 +158,10 @@ SoGtkMouse::translateEvent(
         this->buttonevent->setButton( SoMouseButtonEvent::BUTTON1 );
         break;
       case 2:
-        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON3 );
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON2 );
         break;
       case 3:
-        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON2 );
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON3 );
         break;
 #ifdef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
       case 4:
@@ -196,10 +196,10 @@ SoGtkMouse::translateEvent(
         this->buttonevent->setButton( SoMouseButtonEvent::BUTTON1 );
         break;
       case 2:
-        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON3 );
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON2 );
         break;
       case 3:
-        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON2 );
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON3 );
         break;
 #ifdef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
       case 4:
