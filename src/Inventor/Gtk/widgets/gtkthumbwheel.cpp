@@ -189,7 +189,6 @@ gtk_thumbwheel_init(
 
   SoAnyThumbWheel * wheel = new SoAnyThumbWheel;
   wheel->setMovement(SoAnyThumbWheel::UNIFORM);
-  wheel->setBoundaryHandling(SoAnyThumbWheel::ACCUMULATE);
   wheel->setGraphicsByteOrder(SoAnyThumbWheel::ABGR);
 
   thumbwheel->wheel = (void *) wheel;

@@ -227,13 +227,7 @@ SoGtkPlaneViewer::setCamera(SoCamera * newCamera)
 GtkWidget *
 SoGtkPlaneViewer::buildWidget(GtkWidget * parent)
 {
-  GtkWidget * viewer = inherited::buildWidget(parent);
-  gtk_thumbwheel_set_range_boundary_handling(
-     GTK_THUMBWHEEL(this->leftWheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE);
-  gtk_thumbwheel_set_range_boundary_handling(
-     GTK_THUMBWHEEL(this->rightWheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE);
-  
-  return viewer;
+  return inherited::buildWidget(parent);
 }
 
 // *************************************************************************
