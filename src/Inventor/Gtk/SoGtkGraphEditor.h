@@ -25,6 +25,7 @@
 #include <Inventor/Gtk/SoGtkComponent.h>
 
 class SoNode;
+class SoField;
 
 // *************************************************************************
 
@@ -40,8 +41,9 @@ public:
   };
 
   SoGtkGraphEditor(GtkWidget * const parent = (GtkWidget *) NULL,
-    const char * const name = (char *) NULL, const SbBool embed = TRUE,
-    const int parts = EVERYTHING);
+                   const char * const name = (char *) NULL,
+                   const SbBool embed = TRUE,
+                   const int parts = EVERYTHING);
   ~SoGtkGraphEditor(void);
 
   virtual void setSceneGraph(SoNode * root);
@@ -49,7 +51,7 @@ public:
 
 protected:
   SoGtkGraphEditor(GtkWidget * const parent, const char * const name,
-    const SbBool embed, const int parts, const SbBool build);
+                   const SbBool embed, const int parts, const SbBool build);
 
   GtkWidget * buildWidget(GtkWidget * parent);
   virtual GtkWidget * buildMenuBarWidget(GtkWidget * parent);
@@ -81,7 +83,6 @@ private:
 
   GtkWidget * buildSubGraph(GtkWidget * parent, SoNode * node);
 
-private:
   SoNode * scenegraph;
 
   int buildflags;
