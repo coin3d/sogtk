@@ -78,7 +78,7 @@ public:
   char * className;
   char * widgetName;
   char * captionText;
-  char * iconText; 
+  char * iconText;
   SoGtkComponentCB * closeCB;
   void * closeCBdata;
   SbPList * visibilityChangeCBs;
@@ -87,6 +87,11 @@ public:
   static GdkCursor * arrowcursor;
   static GdkCursor * crosscursor;
   static GdkCursor * uparrowcursor;
+
+  struct NonFull {
+    gint x, y, w, h;
+  };
+  NonFull nonfull;
 
 private:
   SoGtkComponent * pub;
@@ -183,8 +188,11 @@ SoGtkComponent::~SoGtkComponent(// virtual
   void)
 {
   SoGtk::componentDestruction(this);
-  if (PRIVATE(this)->widget)
-    gtk_widget_destroy(PRIVATE(this)->widget);
+
+  // FIXME: this is tmp disabled as it causes a
+  // segfault. Investigate. 20020107 mortene.
+  // if (PRIVATE(this)->widget) { gtk_widget_destroy(PRIVATE(this)->widget); }
+
   delete PRIVATE(this);
 } // ~SoGtkComponent()
 
@@ -379,8 +387,16 @@ SoGtkComponent::eventFilter(// virtual
     if(GTK_WIDGET_REALIZED(this->baseWidget())){
       GdkEventConfigure * event = (GdkEventConfigure *) ev;
       SbVec2s size(event->width, event->height);
+      PRIVATE(this)->storeSize.setValue(event->width, event->height);
       this->sizeChanged(size);
     }
+    break;
+
+  case GDK_DELETE:
+    if (PRIVATE(this)->closeCB) {
+      PRIVATE(this)->closeCB(PRIVATE(this)->closeCBdata, this);
+    }
+    SoGtk::exitMainLoop();
     break;
 
   default:
@@ -425,7 +441,7 @@ SoGtkComponent::isVisible(
 {
   if (! this->baseWidget())
     return FALSE;
-  // FIXME - return true visibility state 
+  // FIXME - return true visibility state
   // Close, but probably still incomplete
   return GTK_WIDGET_DRAWABLE(this->baseWidget()) ? TRUE : FALSE;
 } // isVisible()
@@ -457,18 +473,24 @@ SoGtkComponent::show(// virtual
   if (! widget->parent)
     gtk_container_add(GTK_CONTAINER(parent), widget);
 
-  if (PRIVATE(this)->storeSize != SbVec2s(-1, -1) && GTK_IS_WINDOW(parent))
+  if (PRIVATE(this)->storeSize != SbVec2s(-1, -1) && GTK_IS_WINDOW(parent)) {
     gtk_window_set_default_size(GTK_WINDOW(parent),
-      PRIVATE(this)->storeSize[0], PRIVATE(this)->storeSize[1]);
+                                PRIVATE(this)->storeSize[0],
+                                PRIVATE(this)->storeSize[1]);
+  }
 
   if (PRIVATE(this)->shelled) {
     if (! GTK_WIDGET_REALIZED(this->baseWidget())) {
       gtk_widget_show(widget);
     }
     gtk_widget_show(parent);
-  } else {
+  }
+  else {
     gtk_widget_show(widget);
   }
+
+  this->sizeChanged(PRIVATE(this)->storeSize);
+
   // fprintf(stderr, "widget shown\n");
 } // show()
 
@@ -587,7 +609,7 @@ SoGtkComponent::getShellWidget(
   }
   return PRIVATE(this)->widget; // FIXME
 } // getShellWidget()
- 
+
 /*!
   Returns the widget which is the parent (i.e. contains) this component's
   base widget.
@@ -772,21 +794,19 @@ SoGtkComponent::setSize(
     return;
   }
 
-  PRIVATE(this)->storeSize = size;
-
   if (! PRIVATE(this)->embedded) {
     if (PRIVATE(this)->parent) {
       GtkRequisition req = { size[0], size[1] };
       gtk_widget_size_request(GTK_WIDGET(PRIVATE(this)->parent), &req);
     }
-  } else {
-    if (PRIVATE(this)->widget) {
-      GtkRequisition req = { size[0], size[1] };
-      gtk_widget_size_request(GTK_WIDGET(PRIVATE(this)->widget), &req);
-    }
   }
-  if (PRIVATE(this)->widget && GTK_WIDGET_REALIZED(PRIVATE(this)->widget)) 
-    this->sizeChanged(size);
+  else if (PRIVATE(this)->widget) {
+    GtkRequisition req = { size[0], size[1] };
+    gtk_widget_size_request(GTK_WIDGET(PRIVATE(this)->widget), &req);
+  }
+
+  PRIVATE(this)->storeSize = size;
+  this->sizeChanged(size);
 
 //  SoDebugError::postInfo("SoGtkComponent::setSize", "[exit]");
 } // setSize()
@@ -980,14 +1000,75 @@ SbBool
 SoGtkComponent::setFullScreen(const SbBool onoff)
 {
   if (onoff == PRIVATE(this)->fullscreen) { return TRUE; }
-  SOGTK_STUB();
-  return FALSE;
+
+  GtkWidget * w = SoGtk::getTopLevelWidget();
+  if (!GTK_WIDGET_REALIZED(GTK_WIDGET(w))) {
+    gtk_widget_realize(GTK_WIDGET(w));
+  }
+
+  GdkWindow * gdk_window = GTK_WIDGET(w)->window;
+
+  if (onoff) {
+    // Store current window position and geometry for later resetting.
+    { 
+      // FIXME: does this work as expected if setFullScreen() is
+      // called before the window has been realized?
+      // Investigate. 20020107 mortene.
+      gdk_window_get_root_origin(gdk_window,
+                                 &PRIVATE(this)->nonfull.x,
+                                 &PRIVATE(this)->nonfull.y);
+      gdk_window_get_size(gdk_window,
+                          &PRIVATE(this)->nonfull.w,
+                          &PRIVATE(this)->nonfull.h);
+    }
+
+#ifdef HAVE_XINERAMA
+    // FIXME: from the galeon sourcecode, we've gleamed that if the
+    // user has Xinerama (ie multi-headed X11 server) installed, there
+    // need to be some code here to (quote:) "adjust the area and
+    // positioning of the fullscreen window so it's not occupying any
+    // dead area or covering all of the heads".
+    //
+    // Can't fix and test properly before we lay our hands on a
+    // multi-head display system.
+    //
+    // (Note that the HAVE_XINERAMA define is just a dummy at the
+    // moment, there's no configure-check for it yet.)
+    // 
+    // 20020107 mortene.
+#endif // HAVE_XINERAMA
+
+    gdk_window_hide(gdk_window);
+    gdk_window_set_decorations(gdk_window, (GdkWMDecoration) 0);
+    gdk_window_show(gdk_window);
+    gdk_window_move_resize(gdk_window, 0, 0,
+                           gdk_screen_width(), gdk_screen_height());
+  }
+  else {
+    gdk_window_hide(gdk_window);
+    gdk_window_set_decorations(gdk_window, GDK_DECOR_ALL);
+    gdk_window_show(gdk_window);
+
+    // Restore initial position and size.
+    gdk_window_move_resize(gdk_window,
+                           PRIVATE(this)->nonfull.x,
+                           PRIVATE(this)->nonfull.y,
+                           PRIVATE(this)->nonfull.w,
+                           PRIVATE(this)->nonfull.h);
+  }
+
+  // FIXME: is this really necessary? 20020107 mortene.
+  PRIVATE(this)->storeSize.setValue(PRIVATE(this)->nonfull.w,
+                                    PRIVATE(this)->nonfull.h);
+
+  PRIVATE(this)->fullscreen = onoff;
+  return TRUE;
 }
 
 /*!
-  Returns if this widget/component is in full screen mode.
+  Returns if this widget / component is in full screen mode.
 */
-SbBool 
+SbBool
 SoGtkComponent::isFullScreen(void) const
 {
   return PRIVATE(this)->fullscreen;
@@ -1011,7 +1092,7 @@ SoGtkComponentP::getNativeCursor(GtkWidget * w,
   GdkColor fg = style->black;
   GdkColor bg = style->white;
 
-  GdkPixmap * bitmap = 
+  GdkPixmap * bitmap =
     gdk_bitmap_create_from_data(NULL, (const gchar *)cc->bitmap,
                                 cc->dim[0], cc->dim[1]);
   GdkPixmap *mask =
@@ -1032,7 +1113,7 @@ SoGtkComponentP::getNativeCursor(GtkWidget * w,
 /*!
   Sets the cursor for this component.
 */
-void 
+void
 SoGtkComponent::setComponentCursor(const SoGtkCursor & cursor)
 {
   SoGtkComponent::setWidgetCursor(this->getWidget(), cursor);
@@ -1119,4 +1200,3 @@ SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
 #if SOGTK_DEBUG
 static const char * getSoGtkComponentRCSId(void) { return rcsid; }
 #endif // SOGTK_DEBUG
-
