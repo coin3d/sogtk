@@ -35,6 +35,9 @@
 /* Define if you have the `getcwd' function. */
 #undef HAVE_GETCWD
 
+/* Define to use GetEnvironmentVariable() instead of getenv() */
+#undef HAVE_GETENVIRONMENTVARIABLE
+
 /* Define if you have the `getpagesize' function. */
 #undef HAVE_GETPAGESIZE
 
