@@ -30,3 +30,9 @@ nodist_libSoGtkWidgets_la_SOURCES = \
 libSoGtkWidgets_la_LIBADD = 
 
 ############################################################################
+
+SoGtkWidgetsincdir = $(includedir)/Inventor/Gtk/widgets
+SoGtkWidgetsinc_HEADERS =
+nodist_SoGtkWidgetsinc_HEADERS = SoGtkPopupMenu.h
+
+############################################################################
