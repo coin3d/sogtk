@@ -515,6 +515,7 @@ void
 SoGtkGLWidget::glInit(
   void )
 {
+  glEnable( GL_DEPTH_TEST );
 } // glInit()
 
 /*!
