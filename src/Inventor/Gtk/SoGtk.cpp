@@ -148,6 +148,35 @@ SoGtk::init(
 
 // *************************************************************************
 
+gint
+SoGtk::timerSensorCB( // static, private
+  gpointer data )
+{
+  SoDB::getSensorManager()->processTimerQueue();
+  SoGtk::sensorQueueChanged( NULL );
+  return 0; // FIXME: wild guess.. 20000319 mortene.
+} // timerSensorCB()
+
+gint
+SoGtk::idleSensorCB( // static, private
+  gpointer data )
+{
+  SoDB::getSensorManager()->processDelayQueue(TRUE);
+  SoGtk::sensorQueueChanged( NULL );
+  return 0; // FIXME: wild guess.. 20000319 mortene.
+} // idleSensorCB()
+
+gint
+SoGtk::delaySensorCB( // static, private
+  gpointer data)
+{
+  SoDB::getSensorManager()->processDelayQueue(FALSE);
+  SoGtk::sensorQueueChanged( NULL );
+  return 0; // FIXME: wild guess.. 20000319 mortene.
+}
+
+// *************************************************************************
+
 /*!
   \internal
 
@@ -162,7 +191,34 @@ SoGtk::sensorQueueChanged(
 {
   SoSensorManager * sm = SoDB::getSensorManager();
 
-  // Allocate timers and stuff on first call.
+  // FIXME: the timer stuff below (and the timer callback functions
+  // above) is just a quick hack. I didn't even read any GTK
+  // docs. Needs to be done properly. 20000319 mortene.
+
+  static guint timerid = 0;
+  static guint idleid = 0;
+  static guint delayid = 0;
+
+  if (timerid) gtk_timeout_remove(timerid); timerid = 0;
+  if (idleid) gtk_idle_remove(idleid); idleid = 0;
+  if (delayid) gtk_timeout_remove(delayid); delayid = 0;
+
+  // Set up timer queue timeout if necessary.
+
+  SbTime t;
+  if (sm->isTimerSensorPending(t)) {
+    SbTime interval = t - SbTime::getTimeOfDay();
+    timerid = gtk_timeout_add(int(interval.getValue() * 1000.0),
+                              SoGtk::timerSensorCB, NULL);
+  }
+
+  // Set up idle notification for delay queue processing if necessary.
+
+  if (sm->isDelaySensorPending()) {
+    idleid = gtk_idle_add(SoGtk::idleSensorCB, NULL);
+    delayid = gtk_timeout_add(SoDB::getDelaySensorTimeout().getMsecValue(), SoGtk::delaySensorCB, NULL);
+  }
+
 } // sensorQueueChanged()
 
 // *************************************************************************

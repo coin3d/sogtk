@@ -68,6 +68,9 @@ protected:
 
 private:
   static void sensorQueueChanged( void * cbdata );
+  static gint timerSensorCB( gpointer data );
+  static gint idleSensorCB( gpointer data );
+  static gint delaySensorCB( gpointer data );
 
   static GtkWidget * mainWidget;
 //  static GtkApplication * appobject;
