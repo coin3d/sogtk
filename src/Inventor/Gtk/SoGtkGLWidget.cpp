@@ -130,7 +130,8 @@ SoGtkGLWidget::buildWidget(
 
   this->glWidget = gtk_gl_area_new( glAttributes );
   assert( this->glWidget != NULL );
-  gtk_widget_set_usize( this->glWidget, 100, 100 );
+  GtkRequisition req = { 100, 100 };
+  gtk_widget_size_request( this->glWidget, &req );
   
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "realize",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLInit), (void *) this );

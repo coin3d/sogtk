@@ -388,8 +388,10 @@ SoGtkComponent::realizeHandler( // private
 {
   assert( ! this->realized );
   this->realized = TRUE;
-  if ( this->storeSize != SbVec2s(-1, -1) )
-    gtk_widget_set_usize( this->baseWidget(), this->storeSize[0], this->storeSize[1] );
+  if ( this->storeSize != SbVec2s(-1, -1) ) {
+    GtkRequisition req = { this->storeSize[0], this->storeSize[1] };
+    gtk_widget_size_request( this->baseWidget(), &req );
+  }
   SbVec2s size( this->baseWidget()->allocation.width, this->baseWidget()->allocation.height );
   this->sizeChanged( size );
   this->afterRealizeHook();
@@ -443,30 +445,30 @@ SoGtkComponent::show( // virtual
   void )
 {
   // SoDebugError::postInfo( "SoGtkComponent::show", "[invoked]" );
-#if SOGTK_DEBUG
   if( ! this->baseWidget() || ! GTK_IS_WIDGET(this->baseWidget()) ) {
+#if SOGTK_DEBUG
     SoDebugError::postWarning( "SoGtkComponent::show",
       this->baseWidget() ? "not a widget" : "no widget" );
+#endif // SOGTK_DEBUG
     return;
   }
-#endif // SOGTK_DEBUG
   GtkWidget * parent = this->getParentWidget();
   GtkWidget * widget = this->baseWidget();
   assert( parent != NULL );
   assert( widget != NULL );
 
-  if ( ! widget->parent ) {
+  if ( ! widget->parent )
     gtk_container_add( GTK_CONTAINER(parent), widget );
-    if ( this->shelled )
-      gtk_widget_show( widget );
-    if ( this->storeSize != SbVec2s(-1,-1) )
-      gtk_widget_set_usize( parent, this->storeSize[0], this->storeSize[1] );
-  }
+
+  if ( this->storeSize != SbVec2s( -1, -1 ) && GTK_IS_WINDOW(parent) )
+    gtk_window_set_default_size( GTK_WINDOW(parent), this->storeSize[0], this->storeSize[1] );
 
   if ( this->shelled ) {
-    gtk_signal_connect( GTK_OBJECT(this->getParentWidget()), "event",
-      GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
-    gtk_widget_show( widget );
+    if ( ! this->realized ) {
+      gtk_signal_connect( GTK_OBJECT(this->getParentWidget()), "event",
+        GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
+      gtk_widget_show( widget );
+    }
     gtk_widget_show( parent );
   } else {
     gtk_widget_show( widget );
@@ -754,31 +756,31 @@ void
 SoGtkComponent::setSize(
   const SbVec2s size )
 {
-//  SoDebugError::postInfo( "SoGtkComponent::setSize", "[invoked]" );
+  // SoDebugError::postInfo( "SoGtkComponent::setSize", "[invoked (%d, %d)]", size[0], size[1] );
+  if ( size[0] <= 0 || size[1] <= 0 ) {
 #if SOGTK_DEBUG
-  if((size[0] <= 0) || (size[1] <= 0)) {
     SoDebugError::postWarning("SoGtkComponent::setSize",
-                              "Invalid size setting: <%d, %d>.",
-                              size[0], size[1]);
+      "Invalid size setting: <%d, %d>.", size[0], size[1]);
+#endif // SOGTK_DEBUG
     return;
   }
-#endif // SOGTK_DEBUG
 
   this->storeSize = size;
-  if ( this->realized ) {
-//    gtk_window_set_default_size( GTK_WINDOW(this->widget), size[0], size[1] );
-//    GtkWidget * window = gtk_widget_get_toplevel( GTK_WIDGET(this->widget) );
-//    if ( GTK_IS_WINDOW(window) ) {
-//      gtk_window_set_default_size( GTK_WINDOW(window), size[0], size[1] );
-//    }
-    if ( ! this->embedded ) {
-      gtk_widget_set_usize( GTK_WIDGET(this->parent), size[0], size[1] );
-    } else {
-      gtk_widget_set_usize( GTK_WIDGET(this->widget), size[0], size[1] );
+
+  if ( ! this->embedded ) {
+    if ( this->parent ) {
+      GtkRequisition req = { size[0], size[1] };
+      gtk_widget_size_request( GTK_WIDGET(this->parent), &req );
     }
-    if ( this->realized )
-      this->sizeChanged( size );
+  } else {
+    if ( this->widget ) {
+      GtkRequisition req = { size[0], size[1] };
+      gtk_widget_size_request( GTK_WIDGET(this->widget), &req );
+    }
   }
+  if ( this->realized )
+    this->sizeChanged( size );
+
 //  SoDebugError::postInfo( "SoGtkComponent::setSize", "[exit]" );
 } // setSize()
 
