@@ -45,6 +45,8 @@ static const char rcsid[] =
 
 // *************************************************************************
 
+// Class documentation in common/SoGuiCommon.cpp.in.
+
 /*!
   \mainpage
 
@@ -52,16 +54,15 @@ static const char rcsid[] =
   used on top of Open Inventor from SGI and TGS.  The API is based on the
   InventorXt API originally from SGI.
 
+  GTK+ is a multi-platform toolkit written in the C programming
+  language for creating graphical user interfaces. So far it works
+  with the X Window System, with several ports under way.
+
+  For more information on the GTK+ toolkit, see the project's web site
+  at <http://www.gtk.org>.
+
   The corresponding documentation for Coin is located at
-  http://doc.coin3d.org/Coin/
-*/
-
-/*!
-  \class SoGtk SoGtk.h Inventor/Gtk/SoGtk.h
-  \brief The SoGtk class takes care of Gtk initialization and event dispatching.
-  \ingroup misc
-
-  \sa SoGtkComponent
+  <URL:http://doc.coin3d.org/Coin/>.
 */
 
 // *************************************************************************
