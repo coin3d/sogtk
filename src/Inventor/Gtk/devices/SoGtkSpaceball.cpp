@@ -36,13 +36,11 @@
 
 // *************************************************************************
 
-/*¡
-  TODO:
-  - not implemented yet! no spaceball available
-  - idea: maybe we could make device classes for other available cheap
-  PC equipment? wheel mice, joysticks, ....
-  - implement XInput support
-*/
+// FIXME:
+//  - not implemented yet! no spaceball available
+//  - idea: maybe we could make device classes for other available cheap
+//    PC equipment? wheel mice, joysticks, ....
+//  - implement XInput support
 
 /*!
   \enum SoGtkSpaceball::Events
@@ -71,6 +69,18 @@
 
 // *************************************************************************
 
+class SoGtkSpaceballP {
+public:
+  int events;
+  float rotationscale;
+  float translationscale;
+  SbBool focustowindow;
+};
+
+#define PRIVATE(p) (p->pimpl)
+
+// *************************************************************************
+
 SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
 
 // *************************************************************************
@@ -79,23 +89,23 @@ SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
   Constructor.
 */
 
-SoGtkSpaceball::SoGtkSpaceball(
-  int eventbits)
+SoGtkSpaceball::SoGtkSpaceball(int eventbits)
 {
-  this->events = eventbits;
-  this->rotationscale = 0.006f;
-  this->translationscale = 0.006f;
-  this->focustowindow = FALSE;
-} // SoGtkSpaceball()
+  PRIVATE(this) = new SoGtkSpaceballP;
+  PRIVATE(this)->events = eventbits;
+  PRIVATE(this)->rotationscale = 0.006f;
+  PRIVATE(this)->translationscale = 0.006f;
+  PRIVATE(this)->focustowindow = FALSE;
+}
 
 /*!
   Destructor.
 */
 
-SoGtkSpaceball::~SoGtkSpaceball(
-  void)
+SoGtkSpaceball::~SoGtkSpaceball()
 {
-} // ~SoGtkSpaceball()
+  delete PRIVATE(this);
+}
 
 // *************************************************************************
 
@@ -104,30 +114,28 @@ SoGtkSpaceball::~SoGtkSpaceball(
 */
 
 void
-SoGtkSpaceball::enable(
-  GtkWidget * widget,
-  SoGtkEventHandler * func,
-  gpointer closure)
+SoGtkSpaceball::enable(GtkWidget * widget,
+                       SoGtkEventHandler * func,
+                       gpointer closure)
 {
   if (func)
     gtk_signal_connect(GTK_OBJECT(widget), "event",
       GTK_SIGNAL_FUNC(func), closure);
-} // enable()
+}
 
 /*!
   FIXME: write function documentation
 */
 
 void
-SoGtkSpaceball::disable(
-  GtkWidget * widget,
-  SoGtkEventHandler * func,
-  gpointer closure)
+SoGtkSpaceball::disable(GtkWidget * widget,
+                        SoGtkEventHandler * func,
+                        gpointer closure)
 {
   if (func)
     gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
       GTK_SIGNAL_FUNC(func), closure);
-} // disable()
+}
 
 // *************************************************************************
 
@@ -136,12 +144,11 @@ SoGtkSpaceball::disable(
 */
 
 const SoEvent *
-SoGtkSpaceball::translateEvent(
-  GdkEvent * /*event*/)
+SoGtkSpaceball::translateEvent(GdkEvent * /*event*/)
 {
   // TODO: implement
   return NULL;
-} // translateEvent()
+}
 
 // *************************************************************************
 
@@ -150,77 +157,70 @@ SoGtkSpaceball::translateEvent(
 */
 
 void
-SoGtkSpaceball::setRotationScaleFactor(
-  float f)
+SoGtkSpaceball::setRotationScaleFactor(float f)
 {
-  this->rotationscale = f;
-} // setRotationScaleFactor()
+  PRIVATE(this)->rotationscale = f;
+}
 
 /*!
   FIXME: write function documentation
 */
 
 float
-SoGtkSpaceball::getRotationScaleFactor(
-  void) const
+SoGtkSpaceball::getRotationScaleFactor(void) const
 {
-  return this->rotationscale;
-} // getRotationScaleFactor()
+  return PRIVATE(this)->rotationscale;
+}
 
 /*!
   FIXME: write function documentation
 */
 
 void
-SoGtkSpaceball::setTranslationScaleFactor(
-  float f)
+SoGtkSpaceball::setTranslationScaleFactor(float f)
 {
-  this->translationscale = f;
-} // setTranslationScaleFactor()
+  PRIVATE(this)->translationscale = f;
+}
 
 /*!
   FIXME: write function documentation
 */
 
 float
-SoGtkSpaceball::getTranslationScaleFactor(
-  void) const
+SoGtkSpaceball::getTranslationScaleFactor(void) const
 {
-  return this->translationscale;
-} // getTranslationScaleFactor()
+  return PRIVATE(this)->translationscale;
+}
 
 /*!
   FIXME: write function documentation
 */
 
 SbBool
-SoGtkSpaceball::exists(// static
-  void)
+SoGtkSpaceball::exists(void)
 {
   // TODO: implement
   return FALSE;
-} // exists()
+}
 
 /*!
   FIXME: write function documentation
 */
 
 void
-SoGtkSpaceball::setFocusToWindow(
-  SbBool flag)
+SoGtkSpaceball::setFocusToWindow(SbBool flag)
 {
-  this->focustowindow = flag;
-} // setFocusToWindow()
+  PRIVATE(this)->focustowindow = flag;
+}
 
 /*!
   FIXME: write function documentation
 */
 
 SbBool
-SoGtkSpaceball::isFocusToWindow(
-  void) const
+SoGtkSpaceball::isFocusToWindow(void) const
 {
-  return this->focustowindow;
-} // isFocusToWindow()
+  return PRIVATE(this)->focustowindow;
+}
 
 // *************************************************************************
