@@ -691,6 +691,10 @@ SoGtkFullViewer::setViewing(
 
   inherited::setViewing( enable );
 
+  // FIXME: I believe we need to check that buttons have been built
+  // before we attempt this. 20010821 mortene.
+  // FIXME: shouldn't we change the state of the "view" and "pick"
+  // buttons aswell? 20010821 mortene.
   gtk_widget_set_sensitive( PRIVATE(this)->seekbutton, enable ? TRUE : FALSE );
 } // setViewing()
 
