@@ -1443,14 +1443,25 @@ dnl TODO:
 dnl * [larsa:20000222] more warnings on potential problems
 dnl
 
+define([m4_noquote],
+[changequote(,)$1changequote([,])])
+
+define([LF],
+[
+])
+
+define([TAB],
+[	])
+
 AC_DEFUN([SIM_AC_PML_WARNING],
 [errprint([SIM_PARSE_MODIFIER_LIST: $1
   (file "]__file__[", line ]__line__[)
 ])])
 
+dnl * this is an unquoted string compaction - words in string must expand to
+dnl * nothing before compaction starts...
 AC_DEFUN([SIM_AC_PML_STRING_COMPACT],
-[patsubst(patsubst([[$1]],[[
-	 ]+],[ ]),[^ \| $],[])])
+[patsubst(patsubst([$1],m4_noquote([[TAB LF]+]),[ ]),[^ \| $],[])])
 
 AC_DEFUN([SIM_AC_PML_STRING_WORDCOUNT_COMPACT],
 [m4_eval((1+len(patsubst([[$1]],[[^ ]+],[_])))/2)])
@@ -1504,8 +1515,8 @@ AC_DEFUN([SIM_AC_PML_PARSE_MODIFIER_LIST],
 [popdef([wordcount])]dnl
 [SIM_AC_PML_PUSHDEF_MODIFIERS([$3])]dnl
 [ifelse(SIM_AC_PML_STRING_COMPACT([$1]), [],
-        [ifelse([$4], , [], [$4])],
-        [ifelse([$5], ,
+        [ifelse([$4], [], [], [$4])],
+        [ifelse([$5], [],
                 [SIM_AC_PML_WARNING([modifier(s) parse error: "]SIM_AC_PML_STRING_COMPACT([$1])")],
                 [$5])])]dnl
 [SIM_AC_PML_POPDEF_MODIFIERS([$3])])
@@ -1963,8 +1974,8 @@ if test "x$enable_profile" = "xyes"; then
 fi
 ])
 
-dnl  Let the user decide if compilation should be done with all compiler
-dnl  warnings turned on.
+dnl  Take care of making a sensible selection of warning messages
+dnl  to turn on or off.
 dnl
 dnl  Note: this macro must be placed after either AC_PROG_CC or AC_PROG_CXX
 dnl  in the configure.in script.
@@ -1972,22 +1983,16 @@ dnl
 dnl  Author: Morten Eriksen, <mortene@sim.no>.
 dnl
 dnl  TODO:
-dnl    * [mortene:19991114] make this work with compilers other than gcc/g++
 dnl    * [mortene:19991114] find out how to get GCC's
 dnl      -Werror-implicit-function-declaration option to work as expected
-dnl    * [larsa:19991126] use -Wno-multichar under BeOS only (BeOS system
-dnl      header files emit lots of warnings due to multichar definitions)
 dnl
 
-
-dnl SIM_COMPILER_WARNINGS( )
 AC_DEFUN(SIM_COMPILER_WARNINGS,
 [
 dnl Autoconf is a developer tool, so don't bother to support older versions.
-AC_PREREQ([2.13])
+AC_PREREQ([2.14])
 AC_ARG_ENABLE(warnings,
-  [  --enable-warnings       (GCC only) turn on warnings when compiling
-                          [default=yes]],
+  AC_HELP_STRING([--enable-warnings], [turn on warnings when compiling [default=yes]]),
   [case "${enableval}" in
     yes) enable_warnings=yes ;;
     no)  enable_warnings=no ;;
@@ -2009,6 +2014,9 @@ if test x"$enable_warnings" = xyes; then
         _warn_flags=
         # Turn on all warnings.
         SIM_COMPILER_OPTION(-fullwarn, _warn_flags="$_warn_flags -fullwarn")
+        # Turn off ``type qualifiers are meaningless in this declaration''
+        # warnings.
+        SIM_COMPILER_OPTION(-woff 3115, _warn_flags="$_warn_flags -woff 3115")
         # Turn off warnings on unused variables.
         SIM_COMPILER_OPTION(-woff 3262, _warn_flags="$_warn_flags -woff 3262")
 
