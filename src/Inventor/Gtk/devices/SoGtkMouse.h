@@ -46,17 +46,15 @@ public:
   SoGtkMouse( SoGtkMouseEventMask mask = SO_GTK_ALL_MOUSE_EVENTS );
   virtual ~SoGtkMouse(void);
 
-  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func,
-                       void * data );
-  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func,
-                        void * data );
+  virtual void enable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
+  virtual void disable( GtkWidget * widget, SoGtkEventHandler * func, void * data );
 
   virtual const SoEvent * translateEvent( GdkEvent * event );
 
 private:
+  SoGtkMouseEventMask eventmask;
   SoMouseButtonEvent * buttonevent;
   SoLocation2Event * locationevent;
-  SoGtkMouseEventMask eventmask;
 
 }; // class SoGtkMouse
 

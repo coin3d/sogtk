@@ -30,12 +30,20 @@ static const char rcsid[] =
 
 #include <assert.h>
 
+#include <gdk/gdktypes.h>
+
+#include <Inventor/errors/SoDebugError.h>
 #include <Inventor/events/SoMouseButtonEvent.h>
 #include <Inventor/events/SoLocation2Event.h>
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkMouse.h>
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
+// *************************************************************************
 
 /*!
   \enum SoGtkMouse::SoGtkMouseEventMask
@@ -62,124 +70,159 @@ static const char rcsid[] =
   FIXME: write documentation for enum definition
 */
 
+// *************************************************************************
 
 /*!
   Constructor.
 */
+
 SoGtkMouse::SoGtkMouse(
-  SoGtkMouseEventMask mask)
+  SoGtkMouseEventMask mask )
 {
   this->eventmask = mask;
-  this->buttonevent = NULL;
-  this->locationevent = NULL;
-}
+
+  this->buttonevent = new SoMouseButtonEvent;
+  this->locationevent = new SoLocation2Event;
+} // SoGtkMouse()
 
 /*!
   Destructor.
 */
-SoGtkMouse::~SoGtkMouse(void)
+
+SoGtkMouse::~SoGtkMouse(
+  void )
 {
   delete this->buttonevent;
   delete this->locationevent;
-}
+} // ~SoGtkMouse()
+
+// *************************************************************************
 
 /*!
   FIXME: write function documentation
 */
+
 void
-SoGtkMouse::enable(GtkWidget * /*w*/, SoGtkEventHandler /*f*/, void * /*data*/)
+SoGtkMouse::enable(
+  GtkWidget *, // w,
+  SoGtkEventHandler, // f,
+  void * ) // data )
 {
   // TODO: implement
-}
+} // enable()
 
 /*!
   FIXME: write function documentation
 */
+
 void
-SoGtkMouse::disable(GtkWidget * /*w*/, SoGtkEventHandler /*f*/, void * /*data*/)
+SoGtkMouse::disable(
+  GtkWidget *, // w,
+  SoGtkEventHandler, // f,
+  void * ) // data )
 {
   // TODO: implement
-}
+} // disable()
+
+// *************************************************************************
 
 /*!
   FIXME: write function documentation
 */
+
 const SoEvent *
-SoGtkMouse::translateEvent(GdkEvent * event)
+SoGtkMouse::translateEvent(
+  GdkEvent * ev )
 {
-/*
   SoEvent * super = NULL;
-  QMouseEvent * mouseevent = (QMouseEvent *)event;
-
-
-  // Check for mousebutton press/release. Note that mousebutton
-  // doubleclick events are ignored, as double clicks also generate 2
-  // pairs of press and release events. In other words: it's the
-  // user's responsibility to translate pairs of singleclicks to
-  // doubleclicks, if doubleclicks have a special meaning.
-
-  // FIXME: check if the above statement is actually correct, as Qt
-  // sends this series of events upon dblclick:
-  // press,release,dblclick,release. Reported to Troll Tech as a
-  // possible bug. 19991001 mortene.
-  if (((event->type() == Event_MouseButtonPress) ||
-       (event->type() == Event_MouseButtonRelease)) &&
-      (this->eventmask & (SoGtkMouse::ButtonPressMask |
-                          SoGtkMouse::ButtonReleaseMask))) {
-
-    // Allocate system-neutral event object once and reuse.
-    if (!this->buttonevent) this->buttonevent = new SoMouseButtonEvent;
-
-    // Which button?
-    switch (mouseevent->button()) {
-    case LeftButton:
-      this->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
-      break;
-    case MidButton:
-      this->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
-      break;
-    case RightButton:
-      this->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
-      break;
-    default:
-      assert(0);
-      break;
-    }
-
-    // Press or release?
-    if (mouseevent->button() & mouseevent->state())
-      this->buttonevent->setState(SoButtonEvent::UP);
-    else
+  switch ( ev->type ) {
+  case GDK_BUTTON_PRESS:
+    do {
+      GdkEventButton * event = (GdkEventButton *) ev;
       this->buttonevent->setState(SoButtonEvent::DOWN);
-
+      this->buttonevent->setShiftDown( event->state & GDK_SHIFT_MASK );
+      this->buttonevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
+      this->buttonevent->setAltDown( event->state & GDK_MOD1_MASK );
+      SoGtkDevice::setEventPosition( this->buttonevent, event->x, event->y );
+      switch ( event->button ) {
+      case 1:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
+        break;
+      case 2:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
+        break;
+      case 3:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
+        break;
+#ifdef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
+      case 4:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON4);
+        break;
+      case 5:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON5);
+        break;
+#endif // HAVE_SOMOUSEBUTTONEVENT_BUTTONS
+      default:
+        this->buttonevent->setButton(SoMouseButtonEvent::ANY);
+        break;
+      }
+    } while ( FALSE );
     super = this->buttonevent;
-  }
+    break;
 
+  case GDK_BUTTON_RELEASE:
+    do {
+      GdkEventButton * event = (GdkEventButton *) ev;
+      this->buttonevent->setState(SoButtonEvent::UP);
+      this->buttonevent->setShiftDown( event->state & GDK_SHIFT_MASK );
+      this->buttonevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
+      this->buttonevent->setAltDown( event->state & GDK_MOD1_MASK );
+      SoGtkDevice::setEventPosition( this->buttonevent, event->x, event->y );
+      switch ( event->button ) {
+      case 1:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
+        break;
+      case 2:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
+        break;
+      case 3:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
+        break;
+#ifdef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
+      case 4:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON4);
+        break;
+      case 5:
+        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON5);
+        break;
+#endif // HAVE_SOMOUSEBUTTONEVENT_BUTTONS
+      default:
+        this->buttonevent->setButton(SoMouseButtonEvent::ANY);
+        break;
+      }
+    } while ( FALSE );
+    super = this->buttonevent;
+    break;
 
-  // Check for mouse movement.
-  if ((event->type() == Event_MouseMove) &&
-      (this->eventmask & (SoGtkMouse::PointerMotionMask |
-                          SoGtkMouse::ButtonMotionMask))) {
-    // Allocate system-neutral event object once and reuse.
-    if (!this->locationevent) this->locationevent = new SoLocation2Event;
-
+  case GDK_MOTION_NOTIFY:
+    do {
+      GdkEventMotion * event = (GdkEventMotion *) ev;
+      this->locationevent->setShiftDown( event->state & GDK_SHIFT_MASK );
+      this->locationevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
+      this->locationevent->setAltDown( event->state & GDK_MOD1_MASK );
+      SoGtkDevice::setEventPosition( this->locationevent, event->x, event->y );
+    } while ( 0 );
     super = this->locationevent;
-  }
+    break;
 
+  default:
+    return (SoEvent *) NULL;
 
-  // Common settings for SoEvent superclass.
-  if (super) {
-    // Modifiers
-    super->setShiftDown(mouseevent->state() & ShiftButton);
-    super->setCtrlDown(mouseevent->state() & ControlButton);
-    super->setAltDown(mouseevent->state() & AltButton);
+  } // switch ( ev->type )
 
-    this->setEventPosition(super, mouseevent->x(), mouseevent->y());
-    // FIXME: should be time of Qt event. 990211 mortene.
+  if ( super )
     super->setTime(SbTime::getTimeOfDay());
-  }
-
   return super;
-*/
-  return NULL;
-}
+} // translateEvent()
+
+// *************************************************************************
