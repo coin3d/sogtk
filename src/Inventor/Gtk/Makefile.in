@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4a-SIM-20000531 from Makefile.am
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
 
 # Copyright (C) 1994, 1995-9, 2000 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -57,8 +57,12 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 
 @SET_MAKE@
+build_alias = @build_alias@
+build_triplet = @build@
 host_alias = @host_alias@
 host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
 AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AS = @AS@
@@ -70,10 +74,12 @@ CXX = @CXX@
 CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+EVENT = @EVENT@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
 GUI = @GUI@
+Gui = @Gui@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LT_AGE = @LT_AGE@
@@ -96,8 +102,10 @@ SOGTK_MINOR_VERSION = @SOGTK_MINOR_VERSION@
 SOGTK_VERSION = @SOGTK_VERSION@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
+WINWIDGET = @WINWIDGET@
+gui = @gui@
 install_sh = @install_sh@
-sim_ac_conf_cmd = @sim_ac_conf_cmd@
+sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
 
 
 SUBDIRS = devices widgets viewers
@@ -119,14 +127,22 @@ libSoGtk_la_SOURCES = \
 	SoGtkComponent.cpp \
 	SoGtkComponent.h \
 	SoGtkGLWidget.cpp \
-	SoGtkGLWidget.h \
-	SoGtkRenderAreaExtra.cpp
+	SoGtkGLWidget.h
 
 
 libSoGtk_la_LIBADD = \
         devices/libSoGtkDevices.la \
 	viewers/libSoGtkViewers.la \
         widgets/libSoGtkWidgets.la
+
+
+libSoGtkincdir = $(includedir)/Inventor/Gtk
+libSoGtkinc_HEADERS = \
+	SoGtkBasic.h \
+	SoGtk.h \
+	SoGtkComponent.h \
+	SoGtkGLWidget.h \
+	SoGtkRenderArea.h
 
 subdir = src/Inventor/Gtk
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -147,7 +163,7 @@ libSoGtk_la_LDFLAGS =
 libSoGtk_la_DEPENDENCIES =  devices/libSoGtkDevices.la \
 viewers/libSoGtkViewers.la widgets/libSoGtkWidgets.la
 am_libSoGtk_la_OBJECTS =  SoGtkRenderArea.lo SoGtk.lo SoGtkComponent.lo \
-SoGtkGLWidget.lo SoGtkRenderAreaExtra.lo
+SoGtkGLWidget.lo
 libSoGtk_la_OBJECTS =  $(am_libSoGtk_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -160,11 +176,12 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES =  $(libSoGtk_la_SOURCES)
+HEADERS =  $(libSoGtkinc_HEADERS)
+
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/SoGtk.Plo $(DEPDIR)/SoGtkComponent.Plo \
-$(DEPDIR)/SoGtkGLWidget.Plo $(DEPDIR)/SoGtkRenderArea.Plo \
-$(DEPDIR)/SoGtkRenderAreaExtra.Plo
-DIST_COMMON =  Makefile.am Makefile.in
+$(DEPDIR)/SoGtkGLWidget.Plo $(DEPDIR)/SoGtkRenderArea.Plo
+DIST_COMMON =  $(libSoGtkinc_HEADERS) Makefile.am Makefile.in
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -232,6 +249,24 @@ maintainer-clean-libtool:
 
 libSoGtk.la: $(libSoGtk_la_OBJECTS) $(libSoGtk_la_DEPENDENCIES)
 	$(CXXLINK) -rpath $(libdir) $(libSoGtk_la_LDFLAGS) $(libSoGtk_la_OBJECTS) $(libSoGtk_la_LIBADD) $(LIBS)
+
+install-libSoGtkincHEADERS: $(libSoGtkinc_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(libSoGtkincdir)
+	@list='$(libSoGtkinc_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkincdir)/$$f"; \
+	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkincdir)/$$f; \
+	done
+
+uninstall-libSoGtkincHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(libSoGtkinc_HEADERS)'; for p in $$list; do \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " rm -f $(DESTDIR)$(libSoGtkincdir)/$$f"; \
+	  rm -f $(DESTDIR)$(libSoGtkincdir)/$$f; \
+	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -328,7 +363,6 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/SoGtkComponent.Plo
 @AMDEP@include $(DEPDIR)/SoGtkGLWidget.Plo
 @AMDEP@include $(DEPDIR)/SoGtkRenderArea.Plo
-@AMDEP@include $(DEPDIR)/SoGtkRenderAreaExtra.Plo
 
 mostlyclean-depend:
 
@@ -388,21 +422,21 @@ installcheck: installcheck-recursive
 install-exec-am: install-libLTLIBRARIES
 install-exec: install-exec-recursive
 
-install-data-am:
+install-data-am: install-libSoGtkincHEADERS
 install-data: install-data-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-recursive
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-libLTLIBRARIES uninstall-libSoGtkincHEADERS
 uninstall: uninstall-recursive
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 all-redirect: all-recursive
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
 installdirs: installdirs-recursive
 installdirs-am:
-	$(mkinstalldirs)  $(DESTDIR)$(libdir)
+	$(mkinstalldirs)  $(DESTDIR)$(libdir) $(DESTDIR)$(libSoGtkincdir)
 
 
 mostlyclean-generic:
@@ -448,7 +482,8 @@ clean-libLTLIBRARIES maintainer-clean-libLTLIBRARIES \
 uninstall-libLTLIBRARIES install-libLTLIBRARIES mostlyclean-compile \
 distclean-compile clean-compile maintainer-clean-compile \
 mostlyclean-libtool distclean-libtool clean-libtool \
-maintainer-clean-libtool install-recursive uninstall-recursive \
+maintainer-clean-libtool uninstall-libSoGtkincHEADERS \
+install-libSoGtkincHEADERS install-recursive uninstall-recursive \
 install-data-recursive uninstall-data-recursive install-exec-recursive \
 uninstall-exec-recursive installdirs-recursive uninstalldirs-recursive \
 all-recursive check-recursive installcheck-recursive info-recursive \

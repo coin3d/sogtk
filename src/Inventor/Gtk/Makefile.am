@@ -17,13 +17,20 @@ libSoGtk_la_SOURCES = \
 	SoGtkComponent.cpp \
 	SoGtkComponent.h \
 	SoGtkGLWidget.cpp \
-	SoGtkGLWidget.h \
-	SoGtkRenderAreaExtra.cpp
+	SoGtkGLWidget.h
 
 libSoGtk_la_LIBADD = \
         devices/libSoGtkDevices.la \
 	viewers/libSoGtkViewers.la \
         widgets/libSoGtkWidgets.la
+
+libSoGtkincdir = $(includedir)/Inventor/Gtk
+libSoGtkinc_HEADERS = \
+	SoGtkBasic.h \
+	SoGtk.h \
+	SoGtkComponent.h \
+	SoGtkGLWidget.h \
+	SoGtkRenderArea.h
 
 ############################################################################
 

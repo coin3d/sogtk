@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4a-SIM-20000531 from Makefile.am
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
 
 # Copyright (C) 1994, 1995-9, 2000 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -57,8 +57,12 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 
 @SET_MAKE@
+build_alias = @build_alias@
+build_triplet = @build@
 host_alias = @host_alias@
 host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
 AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AS = @AS@
@@ -70,10 +74,12 @@ CXX = @CXX@
 CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+EVENT = @EVENT@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
 GUI = @GUI@
+Gui = @Gui@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LT_AGE = @LT_AGE@
@@ -96,8 +102,10 @@ SOGTK_MINOR_VERSION = @SOGTK_MINOR_VERSION@
 SOGTK_VERSION = @SOGTK_VERSION@
 VERSION = @VERSION@
 WIDGET = @WIDGET@
+WINWIDGET = @WINWIDGET@
+gui = @gui@
 install_sh = @install_sh@
-sim_ac_conf_cmd = @sim_ac_conf_cmd@
+sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
 
 
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
@@ -116,7 +124,6 @@ BUILT_SOURCES = \
 
 libSoGtkViewers_la_SOURCES = \
 	$(BUILT_SOURCES) \
-	SoGtkViewerExtra.cpp \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
 	SoGtkExaminerViewer.cpp \
@@ -147,8 +154,7 @@ X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtkViewers_la_LDFLAGS = 
 libSoGtkViewers_la_LIBADD = 
 am_libSoGtkViewers_la_OBJECTS =  SoGtkViewer.lo SoAnyFullViewer.lo \
-SoAnyExaminerViewer.lo SoGtkViewerExtra.lo SoGtkFullViewer.lo \
-SoGtkExaminerViewer.lo
+SoAnyExaminerViewer.lo SoGtkFullViewer.lo SoGtkExaminerViewer.lo
 libSoGtkViewers_la_OBJECTS =  $(am_libSoGtkViewers_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -166,8 +172,7 @@ HEADERS =  $(libSoGtkViewersinc_HEADERS)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/SoAnyExaminerViewer.Plo \
 $(DEPDIR)/SoAnyFullViewer.Plo $(DEPDIR)/SoGtkExaminerViewer.Plo \
-$(DEPDIR)/SoGtkFullViewer.Plo $(DEPDIR)/SoGtkViewer.Plo \
-$(DEPDIR)/SoGtkViewerExtra.Plo
+$(DEPDIR)/SoGtkFullViewer.Plo $(DEPDIR)/SoGtkViewer.Plo
 DIST_COMMON =  $(libSoGtkViewersinc_HEADERS) Makefile.am Makefile.in
 
 
@@ -220,6 +225,24 @@ maintainer-clean-libtool:
 libSoGtkViewers.la: $(libSoGtkViewers_la_OBJECTS) $(libSoGtkViewers_la_DEPENDENCIES)
 	$(CXXLINK)  $(libSoGtkViewers_la_LDFLAGS) $(libSoGtkViewers_la_OBJECTS) $(libSoGtkViewers_la_LIBADD) $(LIBS)
 
+install-libSoGtkViewersincHEADERS: $(libSoGtkViewersinc_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(libSoGtkViewersincdir)
+	@list='$(libSoGtkViewersinc_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkViewersincdir)/$$f"; \
+	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkViewersincdir)/$$f; \
+	done
+
+uninstall-libSoGtkViewersincHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(libSoGtkViewersinc_HEADERS)'; for p in $$list; do \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " rm -f $(DESTDIR)$(libSoGtkViewersincdir)/$$f"; \
+	  rm -f $(DESTDIR)$(libSoGtkViewersincdir)/$$f; \
+	done
+
 tags: TAGS
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
@@ -258,7 +281,6 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/SoGtkExaminerViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkFullViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkViewer.Plo
-@AMDEP@include $(DEPDIR)/SoGtkViewerExtra.Plo
 
 mostlyclean-depend:
 
@@ -423,26 +445,6 @@ SoAnyPlaneViewer.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
 	@( cd $(top_builddir);
 	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp )
-
-############################################################################
-
-install-libSoGtkViewersincHEADERS: $(libSoGtkViewersinc_HEADERS)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(libSoGtkViewersincdir)
-	@list='$(libSoGtkViewersinc_HEADERS)'; for p in $$list; do \
-	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
-	  f="`echo $$p | sed -e 's|^.*/||'`"; \
-	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkViewersincdir)/$$f"; \
-	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkViewersincdir)/$$f; \
-	done
-
-uninstall-libSoGtkViewersincHEADERS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(libSoGtkViewersinc_HEADERS)'; for p in $$list; do \
-	  f="`echo $$p | sed -e 's|^.*/||'`"; \
-	  echo " rm -f $(DESTDIR)$(libSoGtkViewersincdir)/$$f"; \
-	  rm -f $(DESTDIR)$(libSoGtkViewersincdir)/$$f; \
-	done
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
