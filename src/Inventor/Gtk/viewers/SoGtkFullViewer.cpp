@@ -142,45 +142,6 @@ enum {
   SEEK_BUTTON,
 };
 
-// Menu id values.
-enum {
-  MENUTITLE_ITEM,
-
-  FUNCTIONS_ITEM,
-  HELP_ITEM,
-  HOME_ITEM,
-  SET_HOME_ITEM,
-  VIEW_ALL_ITEM,
-  SEEK_ITEM,
-  COPY_VIEW_ITEM,
-  PASTE_VIEW_ITEM,
-
-  DRAWSTYLES_ITEM,
-  AS_IS_ITEM,
-  HIDDEN_LINE_ITEM,
-  NO_TEXTURE_ITEM,
-  LOW_RESOLUTION_ITEM,
-  WIREFRAME_ITEM,
-  POINTS_ITEM,
-  BOUNDING_BOX_ITEM,
-  MOVE_SAME_AS_STILL_ITEM,
-  MOVE_NO_TEXTURE_ITEM,
-  MOVE_LOW_RES_ITEM,
-  MOVE_WIREFRAME_ITEM,
-  MOVE_LOW_RES_WIREFRAME_ITEM,
-  MOVE_POINTS_ITEM,
-  MOVE_LOW_RES_POINTS_ITEM,
-  MOVE_BOUNDING_BOX_ITEM,
-  SINGLE_BUFFER_ITEM,
-  DOUBLE_BUFFER_ITEM,
-  INTERACTIVE_BUFFER_ITEM,
-
-  EXAMINING_ITEM,
-  DECORATION_ITEM,
-  HEADLIGHT_ITEM,
-  PREFERENCES_ITEM
-};
-
 // *************************************************************************
 
 /*!
@@ -199,6 +160,7 @@ SoGtkFullViewer::SoGtkFullViewer(
   SoGtkViewer::Type type,
   SbBool buildNow )
 : inherited( parent, name, buildInsideParent, type, FALSE )
+, SoAnyFullViewer( this )
 {
   this->viewerWidget = NULL;
   this->canvas = NULL;
@@ -2860,5 +2822,25 @@ SoGtkFullViewer::farclipEditPressed(
   }
 } // farclipEditPressed()
 */
+
+// *************************************************************************
+
+void
+SoGtkFullViewer::selectedPrefs(
+  void )
+{
+}
+
+void
+SoGtkFullViewer::seekbuttonClicked(
+  void )
+{
+}
+
+void
+SoGtkFullViewer::drawstyleActivated(
+  int )
+{
+}
 
 // *************************************************************************

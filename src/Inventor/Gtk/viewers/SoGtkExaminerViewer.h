@@ -19,12 +19,13 @@
 
 //  $Id$
 
-#ifndef __SOGTK_EXAMINERVIEWER_H__
-#define __SOGTK_EXAMINERVIEWER_H__
+#ifndef SOGTK_EXAMINERVIEWER_H
+#define SOGTK_EXAMINERVIEWER_H
 
 #include <Inventor/SbLinear.h>
 
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
+#include <Inventor/Gtk/viewers/SoAnyExaminerViewer.h>
 
 class SbSphereSheetProjector;
 class SoTimerSensor;
@@ -35,8 +36,12 @@ class SoScale;
 
 // *************************************************************************
 
-class SoGtkExaminerViewer : public SoGtkFullViewer {
+class SoGtkExaminerViewer :
+  public SoGtkFullViewer,
+  public SoAnyExaminerViewer
+{
   typedef SoGtkFullViewer inherited;
+  friend class SoAnyExaminerViewer;
 
 public:
   SoGtkExaminerViewer(
@@ -47,29 +52,18 @@ public:
     SoGtkViewer::Type type = BROWSER );
   ~SoGtkExaminerViewer(void);
 
-  void setFeedbackVisibility(const SbBool on);
-  SbBool isFeedbackVisible(void) const;
-
-  void setFeedbackSize(const int size);
-  int getFeedbackSize(void) const;
-
-  void setAnimationEnabled(SbBool on);
-  SbBool isAnimationEnabled(void);
-
-  void stopAnimating(void);
-  SbBool isAnimating(void);
-
   virtual void setViewing(SbBool on);
   virtual void setCamera(SoCamera * cam);
   virtual void setCursorEnabled(SbBool on);
 
 protected:
-  SoGtkExaminerViewer(GtkWidget * parent,
-                     const char * name,
-                     SbBool buildInsideParent,
-                     SoGtkFullViewer::BuildFlag flag,
-                     SoGtkViewer::Type type,
-                     SbBool buildNow);
+  SoGtkExaminerViewer(
+    GtkWidget * parent,
+    const char * name,
+    SbBool buildInsideParent,
+    SoGtkFullViewer::BuildFlag flag,
+    SoGtkViewer::Type type,
+    SbBool buildNow );
 
   virtual void leftWheelMotion(float val);
   virtual void bottomWheelMotion(float val);
@@ -99,20 +93,8 @@ private:
 
   ViewerMode currentMode;
 
-  void reorientCamera(const SbRotation & rot);
-  void zoom(const float diffvalue);
-  void zoomByCursor(const SbVec2f & mousepos);
-  void spin(const SbVec2f & mousepos);
-  void pan(const SbVec2f & mousepos);
-
   void setMode(const ViewerMode mode);
   void setModeFromState(const unsigned int state);
-
-  void drawAxisCross(void);
-  void drawArrow(void);
-
-  SbBool axisCrossOn;
-  int axisCrossSize;
 
   struct {
     GtkWidget * orthogonal;
@@ -123,21 +105,10 @@ private:
   static void visibilityCB(void * data, SbBool visible);
 
 //  QTimer * spinDetectTimer;
-  SbBool spinAnimating, animatingAllowed;
-  SoTimerSensor * timerTrigger;
-  static void timertriggeredCB(void * data, SoSensor *);
-
-  SbSphereSheetProjector * projector;
 
   void setCursorRepresentation(const ViewerMode mode);
 //  QCursor * panCursor, * rotateCursor;
 //  QCursor * defaultCursor, * zoomCursor;
-
-  SbVec2f prevMousePosition;
-  SbPlane panningPlane;
-
-  SbRotation spinIncrement;
-  int spinSampleCounter;
 
   GtkWidget * cameraToggleButton;
   GtkWidget * feedbackLabel1, * feedbackLabel2;
@@ -160,4 +131,4 @@ private: // slots:
 
 // *************************************************************************
 
-#endif // ! __SOGTK_EXAMINERVIEWER_H__
+#endif // ! SOGTK_EXAMINERVIEWER_H

@@ -19,15 +19,20 @@
 
 //  $Id$
 
-#ifndef __SOGTK_FULLVIEWER_H__
-#define __SOGTK_FULLVIEWER_H__
+#ifndef SOGTK_FULLVIEWER_H
+#define SOGTK_FULLVIEWER_H
 
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
+#include <Inventor/Gtk/viewers/SoAnyFullViewer.h>
 
 // *************************************************************************
 
-class SoGtkFullViewer : public SoGtkViewer {
+class SoGtkFullViewer :
+  public SoGtkViewer,
+  public SoAnyFullViewer
+{
   typedef SoGtkViewer inherited;
+  friend class SoAnyFullViewer;
 
 public:
   enum BuildFlag {
@@ -231,8 +236,13 @@ private: //  slots:
   void increaseInteractiveCount(void);
   void decreaseInteractiveCount(void);
 
+private:
+  void selectedPrefs(void);
+  void seekbuttonClicked(void);
+  void drawstyleActivated(int drawstyle);
+
 }; // class SoGtkFullViewer
 
 // *************************************************************************
 
-#endif // ! __SOGTK_FULLVIEWER_H__
+#endif // ! SOGTK_FULLVIEWER_H

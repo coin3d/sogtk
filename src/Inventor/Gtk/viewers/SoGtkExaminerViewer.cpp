@@ -42,18 +42,6 @@ static const char rcsid[] =
 #include "icons/ortho.xpm"
 #include "icons/perspective.xpm"
 
-// Bitmap representations of an "X", a "Y" and a "Z" for the axis cross.
-static GLubyte xbmp[] = { 0x11,0x11,0x0a,0x04,0x0a,0x11,0x11 };
-static GLubyte ybmp[] = { 0x04,0x04,0x04,0x04,0x0a,0x11,0x11 };
-static GLubyte zbmp[] = { 0x1f,0x10,0x08,0x04,0x02,0x01,0x1f };
-
-// Inlined convenience methods.
-template <class Type>
-inline Type exvMin( const Type A, const Type B ) { return (A < B) ? A : B; }
-template <class Type>
-inline void exvSwap( Type & A, Type & B ) { Type T; T = A; A = B; B = T; }
-
-
 ///////// FIXME start //////////////////////////////////////////////////
 // Do something clever about this Qt layout assistant code.. (the code
 // for expandSize() is inside SoGtkFullViewer.cpp). 990222 mortene.
@@ -93,11 +81,14 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
   Calling this constructor will make sure the examiner viewer widget
   will be built immediately.
 */
-SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent, const char * name,
-                                       SbBool buildInsideParent,
-                                       SoGtkFullViewer::BuildFlag b,
-                                       SoGtkViewer::Type t)
-  : inherited(parent, name, buildInsideParent, b, t, FALSE)
+SoGtkExaminerViewer::SoGtkExaminerViewer(
+  GtkWidget * parent,
+  const char * name,
+  SbBool buildInsideParent,
+  SoGtkFullViewer::BuildFlag b,
+  SoGtkViewer::Type t )
+: inherited(parent, name, buildInsideParent, b, t, FALSE)
+, SoAnyExaminerViewer( this )
 {
   this->constructor(TRUE);
 }
@@ -106,12 +97,15 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent, const char * name,
 /*!
   Constructor. See parent class for explanation of arguments.
 */
-SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent, const char * name,
-                                       SbBool buildInsideParent,
-                                       SoGtkFullViewer::BuildFlag b,
-                                       SoGtkViewer::Type t,
-                                       SbBool buildNow)
-  : inherited(parent, name, buildInsideParent, b, t, FALSE)
+SoGtkExaminerViewer::SoGtkExaminerViewer(
+  GtkWidget * parent,
+  const char * name,
+  SbBool buildInsideParent,
+  SoGtkFullViewer::BuildFlag b,
+  SoGtkViewer::Type t,
+  SbBool buildNow )
+: inherited(parent, name, buildInsideParent, b, t, FALSE)
+, SoAnyExaminerViewer( this )
 {
   this->constructor(buildNow);
 }
@@ -131,10 +125,6 @@ SoGtkExaminerViewer::constructor(
   // FIXME: use a smaller sphere than the default one to have a larger
   // area close to the borders that gives us "z-axis rotation"?
   // 990425 mortene.
-  this->projector = new SbSphereSheetProjector;
-  SbViewVolume vv;
-  vv.ortho(-1, 1, -1, 1, -1, 1);
-  this->projector->setViewVolume(vv);
 
   this->currentMode = EXAMINE;
 //  this->defaultcursor = NULL;
@@ -146,15 +136,7 @@ SoGtkExaminerViewer::constructor(
 //  this->pixmaps.perspective = new QPixmap((const char **)perspective_xpm);
 //  assert(this->poxmaps.orthogonal->size() == this->pixmaps.perspective->size());
 
-  this->animatingAllowed = TRUE;
-  this->spinAnimating = FALSE;
 //  this->spinDetectTimer = NULL;
-  this->spinSampleCounter = 0;
-  this->spinIncrement = SbRotation::identity();
-  this->timerTrigger =
-    new SoTimerSensor(SoGtkExaminerViewer::timertriggeredCB, this);
-  // FIXME: should set equal to vertical refresh rate? 990425 mortene.
-  this->timerTrigger->setInterval(1.0/30.0);
 
   this->setClassName("SoGtkExaminerViewer");
 
@@ -164,9 +146,6 @@ SoGtkExaminerViewer::constructor(
   this->setPrefSheetString("Examiner Viewer Preference Sheet");
   this->setLeftWheelString("Rotx");
   this->setBottomWheelString("Roty");
-
-  this->axisCrossOn = FALSE;
-  this->axisCrossSize = 25;
 
   if ( buildNow )
     this->setBaseWidget( this->buildWidget( this->getParentWidget() ) );
@@ -190,158 +169,29 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer(
   delete this->pixmaps.perspective;
 
   // Variables used in the spin animation code.
-  delete this->timerTrigger;
 //  delete this->spinDetectTimer;
-  delete this->projector;
 }
 
 // *************************************************************************
-/*!
-  Set the flag deciding whether or not to show the axis cross.
 
-  \sa isFeedbackVisible, getFeedbackSize, setFeedbackSize
-*/
-void
-SoGtkExaminerViewer::setFeedbackVisibility(const SbBool on)
-{
-#if SOGTK_DEBUG
-  if (on == this->axisCrossOn) {
-    SoDebugError::postWarning("SoGtkExaminerViewer::setFeedbackVisibility",
-                              "feedback visibility already set to %s",
-                              on ? "TRUE" : "FALSE");
-    return;
-  }
-#endif // SOGTK_DEBUG
-  this->axisCrossOn = on;
-  if ( this->isViewing() )
-    this->scheduleRedraw();
-}
-
-// *************************************************************************
-/*!
-  Check if the feedback axis cross is visible.
-
-  \sa setFeedbackVisibility, getFeedbackSize, setFeedbackSize
-*/
-SbBool
-SoGtkExaminerViewer::isFeedbackVisible(void) const
-{
-  return this->axisCrossOn;
-}
-
-// *************************************************************************
-/*!
-  Set the size of the feedback axiscross. The value is interpreted as
-  an approximate percentage chunk of the dimensions of the total canvas.
-
-  \sa getFeedbackSize, isFeedbackVisible, setFeedbackVisibility
-*/
-void
-SoGtkExaminerViewer::setFeedbackSize(const int size)
-{
-#if SOGTK_DEBUG
-  if (size < 1) {
-    SoDebugError::postWarning("SoGtkExaminerViewer::setFeedbackSize",
-                              "the size setting should be larger than 0");
-    return;
-  }
-#endif // SOGTK_DEBUG
-
-  this->axisCrossSize = size;
-  if (this->isFeedbackVisible() && this->isViewing())
-    this->scheduleRedraw();
-}
-
-// *************************************************************************
-/*!
-  Return the size of the feedback axis cross. Default is 25.
-
-  \sa setFeedbackSize, isFeedbackVisible, setFeedbackVisibility
-*/
-int
-SoGtkExaminerViewer::getFeedbackSize(void) const
-{
-  return this->axisCrossSize;
-}
-
-// *************************************************************************
-/*!
-  Decide if it should be possible to start a spin animation of the model in
-  the viewer by releasing the mouse button while dragging.
-
-  If the \c on flag is \c FALSE and we're currently animating, the spin
-  will be stopped.
-
-  \sa isAnimationEnabled
-*/
-void
-SoGtkExaminerViewer::setAnimationEnabled(SbBool on)
-{
-  this->animatingAllowed = on;
-  if (!on && this->isAnimating()) this->stopAnimating();
-}
-
-// *************************************************************************
-/*!
-  Query whether or not it is possible to start a spinning animation by
-  releasing the left mouse button while dragging the mouse.
-
-  \sa setAnimationEnabled
-*/
-SbBool
-SoGtkExaminerViewer::isAnimationEnabled(void)
-{
-  return this->animatingAllowed;
-}
-
-// *************************************************************************
-/*!
-  Stop the model from spinning.
-*/
-void
-SoGtkExaminerViewer::stopAnimating(void)
-{
-  if (this->spinAnimating) {
-    this->timerTrigger->unschedule();
-    this->interactiveCountDec();
-    this->spinAnimating = FALSE;
-  }
-#if SOGTK_DEBUG
-  else {
-    SoDebugError::postWarning("SoGtkExaminerViewer::stopAnimating",
-                              "not animating");
-  }
-#endif // SOT_DEBUG
-}
-
-// *************************************************************************
-/*!
-  Query whether the model in the viewer is currently in spinning mode after
-  a user drag.
-*/
-SbBool
-SoGtkExaminerViewer::isAnimating(void)
-{
-  return this->spinAnimating;
-}
-
-// *************************************************************************
 /*!
   This method overloaded from parent class to make sure the mouse
   pointer cursor is updated.
 */
+
 void
 SoGtkExaminerViewer::setViewing(SbBool on)
 {
   this->setMode(on ? EXAMINE : INTERACT);
   inherited::setViewing(on);
-}
+} // setViewing()
 
 // *************************************************************************
 /*!
   This method overloaded from parent class to toggle the camera type
   selection button pixmap and string of the zoom/dolly thumbwheel.
 */
+
 void
 SoGtkExaminerViewer::setCamera(
   SoCamera * newCamera )
@@ -821,7 +671,7 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
     break;
 
   case DRAGGING:
-    this->projector->project(this->prevMousePosition);
+    this->spinprojector->project(this->lastmouseposition);
     break;
 
   case PANNING:
@@ -831,7 +681,7 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
       // operation, so we should calculate this value here.
       SoCamera * cam = this->getCamera();
       SbViewVolume vv = cam->getViewVolume(this->getGlxAspectRatio());
-      this->panningPlane = vv.getPlane(cam->focalDistance.getValue());
+      this->panningplane = vv.getPlane(cam->focalDistance.getValue());
     }
     break;
 
@@ -915,362 +765,7 @@ SoGtkExaminerViewer::setCursorRepresentation(const ViewerMode mode)
 }
 
 // *************************************************************************
-/*!
-  \internal
 
-  Draw an arrow for the axis representation directly through OpenGL.
-*/
-void
-SoGtkExaminerViewer::drawArrow(void)
-{
-  glBegin(GL_LINES);
-  glVertex3f(0, 0, 0);
-  glVertex3f(1, 0, 0);
-  glEnd();
-  glDisable(GL_CULL_FACE);
-  glBegin(GL_TRIANGLES);
-  glVertex3f(1.0, 0, 0);
-  glVertex3f(1.0-1.0/3, +0.5/4, 0);
-  glVertex3f(1.0-1.0/3, -0.5/4, 0);
-  glVertex3f(1.0, 0, 0);
-  glVertex3f(1.0-1.0/3, 0, +0.5/4);
-  glVertex3f(1.0-1.0/3, 0, -0.5/4);
-  glEnd();
-  glBegin(GL_QUADS);
-  glVertex3f(1.0-1.0/3, +0.5/4, 0);
-  glVertex3f(1.0-1.0/3, 0, +0.5/4);
-  glVertex3f(1.0-1.0/3, -0.5/4, 0);
-  glVertex3f(1.0-1.0/3, 0, -0.5/4);
-  glEnd();
-}
-
-// *************************************************************************
-/*!
-  \internal
-
-  Draw an axis cross directly through OpenGL.
-*/
-void
-SoGtkExaminerViewer::drawAxisCross(void)
-{
-  // Store GL state information for the variables that we modify.
-  glPushAttrib(GL_LIGHTING_BIT|GL_DEPTH_BUFFER_BIT|GL_TRANSFORM_BIT|
-               GL_VIEWPORT_BIT|GL_LINE_BIT|GL_ENABLE_BIT);
-  GLfloat depthrange[2];
-  glGetFloatv(GL_DEPTH_RANGE, depthrange);
-  GLdouble projectionmatrix[16];
-  glGetDoublev(GL_PROJECTION_MATRIX, projectionmatrix);
-
-  glDepthFunc(GL_ALWAYS);
-  glDepthMask(GL_TRUE);
-  glDepthRange(0, 0);
-  glEnable(GL_DEPTH_TEST);
-  glDisable(GL_LIGHTING);
-  glEnable(GL_COLOR_MATERIAL);
-
-
-  // Set the viewport in the OpenGL canvas. Dimensions are calculated
-  // as a percentage of the total canvas size.
-  SbVec2s view = this->getGlxSize();
-  const int pixelarea =
-    int(float(this->axisCrossSize)/100.0f * exvMin(view[0], view[1]));
-#if 0 // middle of canvas
-  SbVec2s origin(view[0]/2 - pixelarea/2, view[1]/2 - pixelarea/2);
-#endif // middle of canvas
-#if 1 // lower right of canvas
-  SbVec2s origin(view[0] - pixelarea, 0);
-#endif // lower right of canvas
-  glViewport(origin[0], origin[1], pixelarea, pixelarea);
-
-
-  // Set up the projection matrix.
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  const float NEARVAL = 0.1f;
-  const float FARVAL = 10.0f;
-  const float dim = NEARVAL * tan(M_PI/8.0f); // FOV is 45° (45/360 = 1/8)
-  glFrustum(-dim, dim, -dim, dim, NEARVAL, FARVAL);
-
-
-  // Set up the model matrix.
-  glMatrixMode(GL_MODELVIEW);
-  glPushMatrix();
-  SbMatrix mx;
-  mx = this->getCamera()->orientation.getValue();
-  mx = mx.inverse();
-  mx[3][2] = -3.5; // Translate away from the projection point (along z axis).
-  glLoadMatrixf((float *)mx);
-
-
-  // Find unit vector end points.
-  SbMatrix px;
-  glGetFloatv(GL_PROJECTION_MATRIX, (float *)px);
-  SbMatrix comb = mx.multRight(px);
-
-  SbVec3f xpos;
-  comb.multVecMatrix(SbVec3f(1,0,0), xpos);
-  xpos[0] = (1 + xpos[0]) * view[0]/2;
-  xpos[1] = (1 + xpos[1]) * view[1]/2;
-  SbVec3f ypos;
-  comb.multVecMatrix(SbVec3f(0,1,0), ypos);
-  ypos[0] = (1 + ypos[0]) * view[0]/2;
-  ypos[1] = (1 + ypos[1]) * view[1]/2;
-  SbVec3f zpos;
-  comb.multVecMatrix(SbVec3f(0,0,1), zpos);
-  zpos[0] = (1 + zpos[0]) * view[0]/2;
-  zpos[1] = (1 + zpos[1]) * view[1]/2;
-
-
-  // Render the cross.
-  {
-    glLineWidth(2.0);
-
-    // FIXME: the code which makes sure we render in the correct order
-    // (which we have to do, as Z-buffering is dysfunctional at this
-    // stage) is _really_ lousy. A virtual beer to the first hacker
-    // who improves this code. 990424 mortene.
-
-    // Bubble sort.. :-}
-    float minval = xpos[2];
-    float midval = ypos[2];
-    float maxval = zpos[2];
-    if (minval > midval) exvSwap(minval, midval);
-    if (midval > maxval) exvSwap(midval, maxval);
-    if (minval > midval) exvSwap(minval, midval);
-    assert((minval <= midval) && (midval <= maxval)); // Just checking..
-
-    // Find the order of rendering. Furthest away should render first,
-    // so we sort in back-to-front order.
-    int xturn = (xpos[2] == minval) ? 2 : ((xpos[2] == midval) ? 1 : 0);
-    int yturn = (ypos[2] == minval) ? 2 : ((ypos[2] == midval) ? 1 : 0);
-    int zturn = (zpos[2] == minval) ? 2 : ((zpos[2] == midval) ? 1 : 0);
-
-    // In case any of the three planes defined by the axes were
-    // parallel with the viewing plane.
-    if (yturn == xturn) yturn++;
-    if (zturn == xturn) zturn++;
-    if (zturn == yturn) zturn++;
-
-    // The code is uglier than Valgerd Svarstad Haugland, but it'd
-    // be even more embarrassing if it didn't work correctly.
-    assert(xturn != yturn);
-    assert(xturn != zturn);
-    assert(yturn != zturn);
-
-    for (int i=0; i < 3; i++) {
-      glPushMatrix();
-      if (xturn == i) {
-        // X axis.
-        glColor3fv(SbVec3f(0.500f, 0.125f, 0.125f).getValue());
-        this->drawArrow();
-      }
-      else if (yturn == i) {
-        // Y axis.
-        glRotatef(90, 0, 0, 1);
-        glColor3fv(SbVec3f(0.125f, 0.500f, 0.125f).getValue());
-        this->drawArrow();
-      }
-      else {
-        // Z axis.
-        glRotatef(-90, 0, 1, 0);
-        glColor3fv(SbVec3f(0.125f, 0.125f, 0.500f).getValue());
-        this->drawArrow();
-      }
-      glPopMatrix();
-    }
-  }
-
-  // Render axis notation letters ("X", "Y", "Z").
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(0, view[0], 0, view[1], -1, 1);
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-
-  GLint unpack;
-  glGetIntegerv(GL_UNPACK_ALIGNMENT, &unpack);
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-  glColor3fv(SbVec3f(0.8f, 0.8f, 0.0f).getValue());
-
-  glRasterPos2d(xpos[0], xpos[1]);
-  glBitmap(8, 7, 0, 0, 0, 0, xbmp);
-  glRasterPos2d(ypos[0], ypos[1]);
-  glBitmap(8, 7, 0, 0, 0, 0, ybmp);
-  glRasterPos2d(zpos[0], zpos[1]);
-  glBitmap(8, 7, 0, 0, 0, 0, zbmp);
-
-  glPixelStorei(GL_UNPACK_ALIGNMENT, unpack);
-  glPopMatrix();
-
-
-  // Reset original state.
-  glDepthRange(depthrange[0], depthrange[1]);
-  glMatrixMode(GL_PROJECTION);
-  glLoadMatrixd(projectionmatrix);
-  glPopAttrib();
-}
-
-// *************************************************************************
-/*!
-  \internal
-
-  Rotate the camera by the given amount, then reposition it so we're still
-  pointing at the same focal point.
-*/
-void
-SoGtkExaminerViewer::reorientCamera(const SbRotation & rot)
-{
-  SoCamera * cam = this->getCamera();
-  assert(cam);
-
-  // Find global coordinates of focal point.
-  SbVec3f direction;
-  cam->orientation.getValue().multVec(SbVec3f(0, 0, -1), direction);
-  SbVec3f focalpoint =
-    cam->position.getValue() + cam->focalDistance.getValue() * direction;
-
-  // Set new orientation value by accumulating the new rotation.
-  cam->orientation = rot * cam->orientation.getValue();
-
-  // Reposition camera so we are still pointing at the same old focal
-  // point.
-  cam->orientation.getValue().multVec(SbVec3f(0, 0, -1), direction);
-  cam->position = focalpoint - cam->focalDistance.getValue() * direction;
-}
-
-// *************************************************************************
-/*!
-  \internal
-
-  Move scene parallel with the plane orthogonal to the camera
-  direction vector.
-*/
-void
-SoGtkExaminerViewer::pan(const SbVec2f & mousepos)
-{
-  SoCamera * cam = this->getCamera();
-  assert(cam);
-
-  // Find projection points for the last and current mouse
-  // coordinates.
-  SbViewVolume vv = cam->getViewVolume(this->getGlxAspectRatio());
-  SbLine line;
-  vv.projectPointToLine(mousepos, line);
-  SbVec3f current_planept;
-  this->panningPlane.intersect(line, current_planept);
-  vv.projectPointToLine(this->prevMousePosition, line);
-  SbVec3f old_planept;
-  this->panningPlane.intersect(line, old_planept);
-
-  // Reposition camera according to the vector difference between the
-  // projected points.
-  cam->position = cam->position.getValue() - (current_planept - old_planept);
-}
-
-// *************************************************************************
-/*!
-  \internal
-
-  Uses the sphere sheet projector to map the mouseposition unto
-  a 3D point and find a rotation from this and the last calculated point.
-*/
-void
-SoGtkExaminerViewer::spin(const SbVec2f & mousepos)
-{
-  assert(this->projector);
-
-  SbRotation r;
-  this->projector->projectAndGetRotation(mousepos, r);
-#if 0 // debug
-  // FIXME: Trying to track down an annoying (non-critical) bug.
-  // 990501 mortene.
-  if (r == SbRotation::identity()) {
-    SoDebugError::postWarning("SoGtkExaminerViewer::spin",
-                              "rotation equals identity");
-  }
-#endif // debug
-  r.invert();
-  this->reorientCamera(r);
-
-
-  // Calculate an average angle magnitude value to make the transition
-  // to a possible spin animation mode appear smooth.
-
-  SbVec3f dummy_axis, newaxis;
-  float acc_angle, newangle;
-  this->spinIncrement.getValue(dummy_axis, acc_angle);
-  acc_angle *= this->spinSampleCounter; // weight
-  r.getValue(newaxis, newangle);
-  acc_angle += newangle;
-
-  this->spinSampleCounter++;
-  acc_angle /= this->spinSampleCounter;
-
-  // FIXME: accumulate and average axis vectors aswell? 990501 mortene.
-  this->spinIncrement.setValue(newaxis, acc_angle);
-
-  // Don't carry too much baggage, as that'll give unwanted results
-  // when the user quickly trigger (as in "click-drag-release") a spin
-  // animation.
-  if (this->spinSampleCounter > 3) this->spinSampleCounter = 3;
-}
-
-// *************************************************************************
-/*!
-  \internal
-
-  Dependent on the camera type this will either shrink or expand
-  the height of the viewport (orthogonal camera) or move the
-  camera closer or further away from the focal point in the scene.
-*/
-void
-SoGtkExaminerViewer::zoom(const float diffvalue)
-{
-  SoCamera * cam = this->getCamera();
-  assert(cam);
-  SoType t = cam->getTypeId();
-
-  // This will be in the range of <0, ->>.
-  float multiplicator = exp(diffvalue);
-
-  if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId())) {
-    SoOrthographicCamera * oc = (SoOrthographicCamera *)cam;
-    oc->height = oc->height.getValue() * multiplicator;
-  }
-  else if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId())) {
-    float oldfocaldist = cam->focalDistance.getValue();
-    cam->focalDistance = oldfocaldist * multiplicator;
-
-    SbVec3f direction;
-    cam->orientation.getValue().multVec(SbVec3f(0, 0, -1), direction);
-    cam->position =
-      cam->position.getValue() +
-      (cam->focalDistance.getValue() - oldfocaldist) * -direction;
-  }
-  else {
-    assert(0);
-  }
-}
-
-// *************************************************************************
-/*!
-  \internal
-
-  Calculate a zoom/dolly factor from the difference of the current
-  cursor position and the last.
-*/
-void
-SoGtkExaminerViewer::zoomByCursor(const SbVec2f & mousepos)
-{
-  // There is no "geometrically correct" value, 20 just seems to give
-  // about the right "feel".
-  this->zoom((mousepos[1] - this->prevMousePosition[1]) * 20.0f);
-}
-
-// *************************************************************************
 /*!
   \internal
 */
@@ -1289,6 +784,7 @@ SoGtkExaminerViewer::setEnableFeedbackControls(const SbBool flag)
 
   This is the regularly called code which makes the spin animation run.
 */
+/*
 void
 SoGtkExaminerViewer::timertriggeredCB(void * data, SoSensor *)
 {
@@ -1313,7 +809,7 @@ SoGtkExaminerViewer::timertriggeredCB(void * data, SoSensor *)
 
   thisp->reorientCamera(thisp->spinIncrement);
 }
-
+*/
 
 // *************************************************************************
 /*!
