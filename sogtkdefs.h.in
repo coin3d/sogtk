@@ -36,10 +36,10 @@
 #define SO@GUI@_STUB_LINE 0
 #endif
 
-#if HAVE_VAR___PRETTY_FUNCTION__
+#ifdef HAVE_VAR___PRETTY_FUNCTION__
 #define SO@GUI@_STUB_FUNC __PRETTY_FUNCTION__
 #else
-#if HAVE_VAR___FUNCTION__
+#ifdef HAVE_VAR___FUNCTION__
 #define SO@GUI@_STUB_FUNC __FUNCTION__
 #else
 #define SO@GUI@_STUB_FUNC ((char *)0L)
@@ -89,6 +89,21 @@ inline int _not_null( const void * arg ) { return (arg != NULL) ? 1 : 0; }
       (void)fprintf(stderr, "\n"); \
     } \
   } while (0)
+
+/*
+  GETTEXT support
+*/
+
+#if ENABLE_NLS && defined(HAVE_GETTEXT)
+#include <libintl.h>
+#define _(String) dgettext (PACKAGE, String)
+#define N_(String) (String)
+#else
+#define _(String) (String)
+#define N_(String) (String)
+#define textdomain(Domain) 
+#define bindtextdomain(Package, Directory)
+#endif /* HAVE_GETTEXT && ENABLE_NLS */
 
 /* ********************************************************************** */
 
