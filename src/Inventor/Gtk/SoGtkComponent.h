@@ -101,7 +101,6 @@ private:
   SbVec2s storeSize;
 
   static SbPList * soGtkCompList;
-  static SbPList * gtkWidgetList;
 
 }; // class SoGtkComponent
 
