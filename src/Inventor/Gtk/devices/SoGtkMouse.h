@@ -29,7 +29,7 @@ class SoLocation2Event;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkMouse : public SoGtkDevice {
+class SOGTK_DLL_API SoGtkMouse : public SoGtkDevice {
   SOGTK_OBJECT_HEADER(SoGtkMouse, SoGtkDevice);
 
 public:

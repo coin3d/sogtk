@@ -30,7 +30,7 @@ class SoKeyboardEvent;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkKeyboard : public SoGtkDevice {
+class SOGTK_DLL_API SoGtkKeyboard : public SoGtkDevice {
   SOGTK_OBJECT_HEADER(SoGtkKeyboard, SoGtkDevice);
 
 public:

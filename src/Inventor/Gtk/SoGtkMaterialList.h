@@ -31,7 +31,7 @@ typedef void SoGtkMaterialListCB( void * closure, const SoMaterial * material );
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkMaterialList : public SoGtkComponent {
+class SOGTK_DLL_API SoGtkMaterialList : public SoGtkComponent {
   SOGTK_OBJECT_HEADER(SoGtkMaterialList, SoGtkComponent);
 
 public:

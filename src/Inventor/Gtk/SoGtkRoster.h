@@ -27,7 +27,7 @@
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkRoster : public SoGtkComponent {
+class SOGTK_DLL_API SoGtkRoster : public SoGtkComponent {
   SOGTK_OBJECT_HEADER(SoGtkRoster, SoGtkComponent);
 
 public:

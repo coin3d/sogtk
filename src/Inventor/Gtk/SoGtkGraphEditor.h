@@ -28,7 +28,7 @@ class SoNode;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkGraphEditor : public SoGtkComponent {
+class SOGTK_DLL_API SoGtkGraphEditor : public SoGtkComponent {
   SOGTK_OBJECT_HEADER(SoGtkGraphEditor, SoGtkComponent);
 
 public:

@@ -38,7 +38,7 @@ enum glModes {
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkGLWidget : public SoGtkComponent {
+class SOGTK_DLL_API SoGtkGLWidget : public SoGtkComponent {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkGLWidget, SoGtkComponent);
 
 public:

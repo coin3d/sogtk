@@ -36,7 +36,7 @@ typedef void SoGtkComponentVisibilityCB( void * userData, SbBool visibleFlag );
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkComponent : public SoGtkObject {
+class SOGTK_DLL_API SoGtkComponent : public SoGtkObject {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkComponent, SoGtkObject);
 
 public:

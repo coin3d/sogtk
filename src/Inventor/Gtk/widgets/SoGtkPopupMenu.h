@@ -30,7 +30,7 @@ struct ItemRecord;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkPopupMenu : public SoAnyPopupMenu {
+class SOGTK_DLL_API SoGtkPopupMenu : public SoAnyPopupMenu {
 public:
   SoGtkPopupMenu(void);
   ~SoGtkPopupMenu(void);

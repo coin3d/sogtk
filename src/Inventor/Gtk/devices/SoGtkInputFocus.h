@@ -26,7 +26,7 @@
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkInputFocus : public SoGtkDevice {
+class SOGTK_DLL_API SoGtkInputFocus : public SoGtkDevice {
   SOGTK_OBJECT_HEADER(SoGtkInputFocus, SoGtkDevice);
 
 public:

@@ -30,7 +30,7 @@ struct SoGtkViewerButton;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkFullViewer : public SoGtkViewer {
+class SOGTK_DLL_API SoGtkFullViewer : public SoGtkViewer {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkFullViewer, SoGtkViewer);
   friend class SoAnyFullViewer;
 

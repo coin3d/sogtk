@@ -36,7 +36,7 @@ class SoEvent;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkDevice : public SoGtkObject {
+class SOGTK_DLL_API SoGtkDevice : public SoGtkObject {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkDevice, SoGtkObject);
 
 public:

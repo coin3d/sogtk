@@ -37,7 +37,7 @@ class SoGtkComponent;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtk {
+class SOGTK_DLL_API SoGtk {
   friend class SoGtkComponent;
 
 public:

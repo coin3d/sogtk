@@ -29,7 +29,7 @@ struct SoGtkViewerButton;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkPlaneViewer : public SoGtkFullViewer {
+class SOGTK_DLL_API SoGtkPlaneViewer : public SoGtkFullViewer {
   SOGTK_OBJECT_HEADER(SoGtkPlaneViewer, SoGtkFullViewer);
   friend class SoAnyPlaneViewer;
 

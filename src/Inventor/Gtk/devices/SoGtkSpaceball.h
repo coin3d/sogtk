@@ -26,7 +26,7 @@
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkSpaceball : public SoGtkDevice {
+class SOGTK_DLL_API SoGtkSpaceball : public SoGtkDevice {
   SOGTK_OBJECT_HEADER(SoGtkSpaceball, SoGtkDevice);
 
 public:
