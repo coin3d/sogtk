@@ -30,6 +30,7 @@ class SoAnyPopupMenu;
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkFullViewer : public SoGtkViewer {
+  SOGTK_TYPED_ABSTRACT_OBJECT_HEADER(SoGtkFullViewer);
   typedef SoGtkViewer inherited;
   friend class SoAnyFullViewer;
 

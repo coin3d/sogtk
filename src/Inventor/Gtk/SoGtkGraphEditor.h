@@ -29,6 +29,7 @@ class SoNode;
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkGraphEditor : public SoGtkComponent {
+  SOGTK_TYPED_OBJECT_HEADER(SoGtkGraphEditor);
   typedef SoGtkComponent inherited;
 
 public:

@@ -34,9 +34,17 @@ static const char rcsid[] =
 
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
 
+// *************************************************************************
+
 /*!
   \class SoGtkGraphEditor Inventor/Gtk/SoGtkGraphEditor.h
+  \brief The SoGtkGraphEditor class is a component for viewing and editing
+  the Inventor scene graph of a model.
 */
+
+// *************************************************************************
+
+SOGTK_TYPED_OBJECT_SOURCE(SoGtkGraphEditor, SoGtkComponent);
 
 // *************************************************************************
 

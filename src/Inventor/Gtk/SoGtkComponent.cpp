@@ -28,6 +28,12 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkComponent.h>
+#include <Inventor/Gtk/SoGtkGLWidget.h>
+#include <Inventor/Gtk/SoGtkRenderArea.h>
+#include <Inventor/Gtk/viewers/SoGtkViewer.h>
+#include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
+#include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
+#include <Inventor/Gtk/SoGtkGraphEditor.h>
 
 // *************************************************************************
 
@@ -35,6 +41,23 @@ static const char rcsid[] =
   \class SoGtkComponent SoGtkComponent.h Inventor/Gtk/SoGtkComponent.h
   \brief The SoGtkComponent class is the base class for all GUI components.
 */
+
+// *************************************************************************
+
+SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(SoGtkComponent, SoGtkTypedObject);
+
+void
+SoGtkComponent::initClasses(
+  void )
+{
+  SoGtkComponent::initClass();
+  SoGtkGLWidget::initClass();
+  SoGtkRenderArea::initClass();
+  SoGtkViewer::initClass();
+  SoGtkFullViewer::initClass();
+  SoGtkExaminerViewer::initClass();
+  SoGtkGraphEditor::initClass();
+} // initClasses()
 
 // *************************************************************************
 

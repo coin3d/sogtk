@@ -27,7 +27,7 @@
 #include <Inventor/SbLinear.h>
 #include <Inventor/SoLists.h>
 
-#include <Inventor/Gtk/SoGtkBasic.h>
+#include <Inventor/Gtk/SoGtkTypedObject.h>
 
 class SoGtkComponent;
 
@@ -36,8 +36,9 @@ typedef void SoGtkComponentVisibilityCB( void * userData, SbBool visibleFlag );
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkComponent
-{
+class SOGTK_DLL_EXPORT SoGtkComponent : public SoGtkTypedObject {
+  SOGTK_TYPED_ABSTRACT_OBJECT_HEADER(SoGtkObject);
+
 public:
   virtual ~SoGtkComponent(void);
 
@@ -64,6 +65,8 @@ public:
   static SoGtkComponent * getComponent( GtkWidget * const widget );
   const char * getWidgetName(void) const;
   const char * getClassName(void) const;
+
+  static void initClasses(void);
 
 protected:
   SoGtkComponent( GtkWidget * const parent = NULL,

@@ -40,6 +40,10 @@ static const char rcsid[] =
 
 // *************************************************************************
 
+SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(SoGtkGLWidget, SoGtkComponent);
+
+// *************************************************************************
+
 /*!
   \fn virtual void SoGtkGLWidget::redraw(void)
   This method will be called when we need a redraw. It must be overloaded in

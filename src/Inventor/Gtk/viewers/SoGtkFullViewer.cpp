@@ -70,6 +70,12 @@ static const char rcsid[] =
   \sa SoGtkConstrainedViewer, SoGtkExaminerViewer, SoGtkPlaneViewer
 */
 
+// *************************************************************************
+
+SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(SoGtkFullViewer, SoGtkViewer);
+
+// *************************************************************************
+
 /*¡
   SoGtkFullViewer is missing the class description documentation.
 

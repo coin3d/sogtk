@@ -73,6 +73,10 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
 
 // *************************************************************************
 
+SOGTK_TYPED_OBJECT_SOURCE(SoGtkExaminerViewer, SoGtkFullViewer);
+
+// *************************************************************************
+
 /*!
   Constructor. See parent class for explanation of arguments.
   Calling this constructor will make sure the examiner viewer widget

@@ -14,6 +14,8 @@ libSoGtk_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	SoGtk.h \
 	SoGtk.cpp \
+	SoGtkTypedObject.h \
+	SoGtkTypedObject.cpp \
 	SoGtkComponent.h \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.h \
@@ -30,6 +32,7 @@ libSoGtkincdir = $(includedir)/Inventor/Gtk
 libSoGtkinc_HEADERS = \
 	SoGtkBasic.h \
 	SoGtk.h \
+	SoGtkTypedObject.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
 	SoGtkRenderArea.h \
