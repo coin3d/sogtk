@@ -27,6 +27,8 @@ if test x"$@" = x"" -a ! -f cfg/mkinstalldirs; then
   shift
 fi
 
+libtoolize=false
+
 for arg in $@; do
   case "$arg" in
   -v | --verbose)
@@ -36,12 +38,13 @@ for arg in $@; do
     ( $verbose && set -x;
       rm -f aclocal.m4 config.h.in configure stamp-h*
       rm -f cfg/{config.guess,config.sub,depcomp,install-sh,ltconfig,ltmain.sh,missing,mkinstalldirs}
-      find . -name Makefile.in -print | xargs rm -f
+      find . -name Makefile.in -print | grep -v ^./data/ | xargs rm -f
     )
     exit 0
     ;;
   --add)
     AUTOMAKE_ADD="--add-missing --copy"
+    libtoolize=true
     ;;
   *)
     echo >&2 "$me: error: don't understand argument \"$arg\""
@@ -136,6 +139,13 @@ ${DIE=false} && echo "" && echo "$me: faking the bootstrap process..." &&
 
 # **************************************************************************
 
+if $libtoolize; then
+  echo "Running libtoolize..."
+  ( $verbose && set -x;
+    libtoolize -c -f --automake
+  )
+fi
+
 # generate aclocal.m4 (must be done before gettextize)
 echo "Running aclocal..."
 ( $verbose && set -x;
@@ -169,6 +179,12 @@ echo "Running gettextize..."
   grep -v '^the directory ' \
 ) 3>&1 1>&2 2>&3
 
+# generate configure script
+echo "Running autoconf..."
+( $verbose && set -x;
+  autoconf
+)
+
 # generate config.h.in template
 echo "Running autoheader..."
 ( ( $verbose && set -x;
@@ -180,10 +196,3 @@ echo "Running automake..."
 ( ( $verbose && set -x;
   automake $AUTOMAKE_ADD
 ) 3>&1 1>&2 2>&3 | grep -v 'directory should not' ) 3>&1 1>&2 2>&3
-
-# generate configure script
-echo "Running autoconf..."
-( $verbose && set -x;
-  autoconf
-)
-
