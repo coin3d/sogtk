@@ -5,6 +5,8 @@
 AC_INIT(src/Inventor/Gtk/SoGtk.h)
 AC_CONFIG_AUX_DIR(cfg)
 
+SIM_AC_MSVC_SUPPORT
+
 # **************************************************************************
 # Make sure the given source repository is in sync with the master source
 # repository.
@@ -23,41 +25,27 @@ SIM_AC_CVS_CHANGES([
 ])
 
 # **************************************************************************
-# Library version control.
-
-#  Making releases:
-#    SOGTK_MICRO_VERSION += 1;
-#    SOGTK_INTERFACE_AGE += 1;
-#    SOGTK_BINARY_AGE += 1;
-#  if any functions have been added, set SOGTK_INTERFACE_AGE to 0.
-#  if backwards compatibility has been broken,
-#  set SOGTK_BINARY_AGE _and_ SOGTK_INTERFACE_AGE to 0.
+# Library versioning
 
 SOGTK_MAJOR_VERSION=0
-SOGTK_MINOR_VERSION=8
-SOGTK_MICRO_VERSION=0
-SOGTK_INTERFACE_AGE=0
-SOGTK_BINARY_AGE=0
+SOGTK_MINOR_VERSION=9
+SOGTK_MICRO_VERSION=99
 SOGTK_VERSION=$SOGTK_MAJOR_VERSION.$SOGTK_MINOR_VERSION.$SOGTK_MICRO_VERSION
+VERSION=$SOGTK_VERSION
 
 AC_SUBST(SOGTK_MAJOR_VERSION)
 AC_SUBST(SOGTK_MINOR_VERSION)
 AC_SUBST(SOGTK_MICRO_VERSION)
 AC_SUBST(SOGTK_VERSION)
-AC_SUBST(SOGTK_INTERFACE_AGE)
-AC_SUBST(SOGTK_BINARY_AGE)
 
-#  libtool versioning
-LT_RELEASE=$SOGTK_MAJOR_VERSION.$SOGTK_MINOR_VERSION
-LT_CURRENT=`expr $SOGTK_MICRO_VERSION - $SOGTK_INTERFACE_AGE`
-LT_REVISION=$SOGTK_INTERFACE_AGE
-LT_AGE=`expr $SOGTK_BINARY_AGE - $SOGTK_INTERFACE_AGE`
-AC_SUBST(LT_RELEASE)
+# libtool versioning
+LT_CURRENT=$SOGTK_MAJOR_VERSION
+LT_AGE=0
+LT_REVISION=`expr $SOGTK_MINOR_VERSION \* 100 + $SOQT_MICRO_VERSION`
+
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
-
-VERSION=$SOGTK_VERSION
 
 # The following are set up in Inventor/Gtk/SoGtkBasic.h
 AC_DEFINE_UNQUOTED([SOGTK_MAJOR_VERSION], [$SOGTK_MAJOR_VERSION],
@@ -96,6 +84,12 @@ AM_DISABLE_STATIC
 #  Turn off default maintainer make-rules -- use ./autogen.sh instead.
 AM_MAINTAINER_MODE
 
+# ranlib is a cygwin gcc tool, and we don't support cygwin gcc
+if $BUILD_WITH_MSVC; then
+  RANLIB=true
+  export RANLIB
+fi
+
 # IRIX has 'ar' problems with libtool 1.3.5
 case "$host_os" in
   irix*)
@@ -103,14 +97,16 @@ case "$host_os" in
       AR="CC -ar"
       AR_FLAGS=
       export AR AR_FLAGS
+      echo "overriding the libtool '\$AR' setting with 'CC -ar'"
     fi
-    echo "overriding the libtool '\$AR' setting with 'CC -ar'"
     ;;
   *) ;;
 esac
 
 #  Initialize libtool
 AC_PROG_LIBTOOL
+AC_LANG(C)
+AC_LANG(C++)
 
 #  These are used for constructing the sogtk-config file.
 SOGTK_EXTRA_CPPFLAGS=
@@ -121,6 +117,8 @@ AC_SUBST(SOGTK_EXTRA_LDFLAGS)
 AC_SUBST(SOGTK_EXTRA_LIBS)
 
 SIM_EXPAND_DIR_VARS
+
+AC_CHECK_HEADERS([windows.h dirent.h unistd.h])
 
 # **************************************************************************
 # If you just want to generate docs, ignore all the build-related tests
