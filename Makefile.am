@@ -79,7 +79,9 @@ if BUILD_LIBRARY
 bin_SCRIPTS = so@gui@-config
 
 m4datadir = $(datadir)/aclocal
-m4data_DATA = so@gui@.m4
+# Don't replace "gtk" with "@gui@" here, as it will pøkk up
+# for ``make dist''.
+dist_m4data_DATA = sogtk.m4
 
 cfgdatadir = $(datadir)/Coin/conf
 cfgdata_DATA = so@gui@-@CONFIG@.cfg
