@@ -28,6 +28,7 @@ static const char rcsid[] =
 #include <GL/gl.h>
 
 #include <gtkgl/gtkglarea.h>
+#include <gdk/gdk.h>
 
 #include <Inventor/errors/SoDebugError.h>
 
@@ -38,6 +39,7 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
 #include <Inventor/Gtk/SoAny.h>
+
 
 // *************************************************************************
 
@@ -185,9 +187,13 @@ SoGtkGLWidget::buildWidget(
 {
   PRIVATE(this)->glParent = parent;
 
-  // FIXME!!!! Get X Display and Screen from somewhere. pederb, 2001-06-29
-  void * display = NULL;
-  void * screen = NULL;
+  // FIXME: Not tested, but I think it just might work. Use SbName to
+  // map the display name into a constant and global pointer. Screen
+  // is probably coded into the display string. pederb, 2001-06-29
+  SbName displayname(gdk_get_display());
+
+  void * display = (void*) displayname.getString();
+  void * screen = NULL; // I think this is ok
   
   SoGtkGLWidget * sharewidget = (SoGtkGLWidget*) SoAny::si()->getSharedGLContext(display, screen);
 
