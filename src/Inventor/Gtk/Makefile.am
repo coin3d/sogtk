@@ -56,7 +56,6 @@ nodist_SoGtkinc_HEADERS = \
 	SoGtk.h \
 	SoGtkObject.h \
 	SoGtkCursor.h \
-	SoGtkCursors.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
 	SoGtkRenderArea.h
