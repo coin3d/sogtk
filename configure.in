@@ -124,12 +124,12 @@ if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
     SOGTK_EXTRA_LIBS="$sim_ac_dl_libs $SOGTK_EXTRA_LIBS"
   ])
 
-  SIM_CHECK_X11([
+  SIM_AC_CHECK_X11([
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_x11_cppflags"
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_x11_ldflags"
     SOGTK_EXTRA_LIBS="$sim_ac_x11_libs $SOGTK_EXTRA_LIBS"
 
-    SIM_CHECK_X11SHMEM([
+    SIM_AC_CHECK_X11SHMEM([
       SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_x11shmem_cppflags"
       SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_x11shmem_ldflags"
       SOGTK_EXTRA_LIBS="$sim_ac_x11shmem_libs $SOGTK_EXTRA_LIBS"
