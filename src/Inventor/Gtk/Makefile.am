@@ -28,7 +28,9 @@ libSoGtk_la_SOURCES = \
 	SoGtkMaterialList.h \
 	SoGtkMaterialList.cpp \
 	SoGtkGraphEditor.h \
-	SoGtkGraphEditor.cpp
+	SoGtkGraphEditor.cpp \
+	SoGtkRoster.h \
+	SoGtkRoster.cpp
 
 libSoGtk_la_LIBADD = \
         devices/libSoGtkDevices.la \
@@ -45,7 +47,8 @@ libSoGtkinc_HEADERS = \
 	SoGtkGLWidget.h \
 	SoGtkRenderArea.h \
 	SoGtkGraphEditor.h \
-	SoGtkMaterialList.h
+	SoGtkMaterialList.h \
+	SoGtkRoster.h
 
 ############################################################################
 
