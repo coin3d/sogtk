@@ -66,13 +66,6 @@ static const char rcsid[] =
   dimensions (an operation which is usually triggered by the user).
 */
 
-/*!
-  \var GtkWidget * SoGtkComponent::widget
-
-  Pointer to the Gtk widget. This member must be set from all component
-  classes which inherits SoGtkComponent directly.
-*/
-
 // *************************************************************************
 
 class SoGtkComponentP {

@@ -148,6 +148,7 @@ SoGtkGLWidget::SoGtkGLWidget(
 } // SoGtkGLWidget()
 
 /*!
+  The destructor.
 */
 
 SoGtkGLWidget::~SoGtkGLWidget(
