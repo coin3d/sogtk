@@ -140,7 +140,7 @@ SoGtkComponent::SoGtkComponent(
   } else {
     this->embedded = TRUE;
   }
-  SoGtk::componentCreation( this );
+  gtk_idle_add( (GtkFunction) SoGtk::componentCreation, (gpointer) this );
 } // SoGtkComponent()
 
 /*!
@@ -150,6 +150,7 @@ SoGtkComponent::SoGtkComponent(
 SoGtkComponent::~SoGtkComponent( // virtual
   void )
 {
+  SoGtk::componentDestruction( this );
   if ( this->widget )
     gtk_widget_destroy( this->widget );
   delete this->visibilityChangeCBs;
@@ -157,7 +158,6 @@ SoGtkComponent::~SoGtkComponent( // virtual
   delete [] this->className;
   delete [] this->captionText;
   delete [] this->iconText;
-  SoGtk::componentDestruction( this );
 } // ~SoGtkComponent()
 
 // *************************************************************************
