@@ -2020,7 +2020,7 @@ void
 SoGtkFullViewer::setCameraZoom(const float val)
 {
   SoCamera * cam = this->getCamera();
-  assert(cam);
+  if ( cam == NULL ) return; // can happen if scenegraph is empty
 
   SoType t = cam->getTypeId();
 
@@ -2041,7 +2041,7 @@ float
 SoGtkFullViewer::getCameraZoom(void)
 {
   SoCamera * cam = this->getCamera();
-  assert(cam);
+  if ( cam == NULL ) return 0.0f; // can happen if scenegraph is empty
 
   SoType t = cam->getTypeId();
 
