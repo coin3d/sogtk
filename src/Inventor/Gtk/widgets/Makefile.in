@@ -385,6 +385,10 @@ SoQt_ExtraBuiltMetaFiles = \
   $(top_builddir)/src/Inventor/Qt/widgets/moc_SoQtGLArea.cpp
 
 
+# Remove any linklibraries detected by configure, as they are not
+# needed in the submodules -- only in the toplevel library linkage.
+LIBS = 
+
 INCLUDES = -I$(top_srcdir)/src
 
 BUILT_SOURCES = \
@@ -445,7 +449,6 @@ DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)/src
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
-LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/@meta_prefix@@Gui@NativePopupMenu.Plo \
 @AMDEP_TRUE@	$(DEPDIR)/@meta_prefix@So@Gui@GLArea.Plo \

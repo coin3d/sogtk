@@ -3,6 +3,10 @@
 
 include ../common/Makefile.common
 
+# Remove any linklibraries detected by configure, as they are not
+# needed in the submodules -- only in the toplevel library linkage.
+LIBS = 
+
 INCLUDES = -I$(top_srcdir)/src
 
 BUILT_SOURCES = \
