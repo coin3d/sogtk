@@ -177,13 +177,20 @@ SoGtkFullViewer::SoGtkFullViewer(
 
   this->leftWheel = NULL;
   this->leftWheelLabel = NULL;
-  this->leftWheelStr = strcpy( new char [9], "Motion Y" );
+  this->leftWheelStr = NULL;
+  this->leftWheelVal = 0.0f;
   this->bottomWheel = NULL;
   this->bottomWheelLabel = NULL;
-  this->bottomWheelStr = strcpy( new char [9], "Motion X" );
+  this->bottomWheelStr = NULL;
+  this->bottomWheelVal = 0.0f;
   this->rightWheel = NULL;
   this->rightWheelLabel = NULL;
-  this->rightWheelStr = strcpy( new char [9], "Motion Z" );
+  this->rightWheelStr = NULL;
+  this->rightWheelVal = 0.0f;
+
+  this->setLeftWheelString( "Motion Y" );
+  this->setBottomWheelString( "Motion X" );
+  this->setRightWheelString( "Motion Z" );
 
   this->zoomRange = SbVec2f( 1.0f, 140.0f );
 
@@ -224,6 +231,10 @@ SoGtkFullViewer::~SoGtkFullViewer(
 {
   delete this->viewerButtons;
   delete this->appButtonList;
+
+  delete [] this->leftWheelStr;
+  delete [] this->bottomWheelStr;
+  delete [] this->rightWheelStr;
 } // ~SoGtkFullViewer()
 
 // *************************************************************************
@@ -458,22 +469,24 @@ SoGtkFullViewer::getRenderAreaWidget(
 
 void
 SoGtkFullViewer::setViewing(
-  SbBool on )
+  SbBool enable )
 {
-  if ((on && this->isViewing()) || (!on && !this->isViewing())) {
+  if ( ( enable && this->isViewing() ) ||
+       ( ! enable && ! this->isViewing() ) ) {
 #if SOGTK_DEBUG
-    SoDebugError::postWarning("SoGtkFullViewer::setViewing",
-                              "view mode already %s", on ? "on" : "off");
+    SoDebugError::postWarning( "SoGtkFullViewer::setViewing",
+                               "view mode already %sset", enable ? "" : "un");
 #endif // SOGTK_DEBUG
     return;
   }
 
-  inherited::setViewing(on);
+  inherited::setViewing( enable );
+
 //  if (this->prefmenu)
-//    this->prefMenu->setItemChecked(EXAMINING_ITEM, on);
-//  VIEWERBUTTON(EXAMINE_BUTTON)->setOn(on);
-//  VIEWERBUTTON(INTERACT_BUTTON)->setOn(on ? FALSE : TRUE);
-//  VIEWERBUTTON(SEEK_BUTTON)->setEnabled(on);
+//    this->prefMenu->setItemChecked(EXAMINING_ITEM, enable);
+//  VIEWERBUTTON(EXAMINE_BUTTON)->setOn(enable);
+//  VIEWERBUTTON(INTERACT_BUTTON)->setOn(enable ? FALSE : TRUE);
+//  VIEWERBUTTON(SEEK_BUTTON)->setEnabled(enable);
 } // setViewing()
 
 // *************************************************************************
@@ -520,21 +533,10 @@ void
 SoGtkFullViewer::setBufferingType(
   SoGtkViewer::BufferType type )
 {
-  inherited::setBufferingType(type);
+  inherited::setBufferingType( type );
 
-  if (this->prefmenu) {
-/*
-    QMenuData * m;
-    this->prefMenu->findItem(AS_IS_ITEM, &m);
-    assert(m);
-
-    m->setItemChecked(SINGLE_BUFFER_ITEM,
-                      type == SoGtkViewer::BUFFER_SINGLE ? TRUE : FALSE);
-    m->setItemChecked(DOUBLE_BUFFER_ITEM,
-                      type == SoGtkViewer::BUFFER_DOUBLE ? TRUE : FALSE);
-    m->setItemChecked(INTERACTIVE_BUFFER_ITEM,
-                      type == SoGtkViewer::BUFFER_INTERACTIVE ? TRUE : FALSE);
-*/
+  if ( this->prefmenu ) {
+    //
   }
 }
 
@@ -546,19 +548,20 @@ SoGtkFullViewer::setBufferingType(
 */
 
 void
-SoGtkFullViewer::setCamera(SoCamera * newCamera)
+SoGtkFullViewer::setCamera( // virtual
+  SoCamera * camera )
 {
-  inherited::setCamera(newCamera);
+  inherited::setCamera( camera );
 
   if (this->prefWindow) {
     this->setZoomSliderPosition(this->getCameraZoom());
     this->setZoomFieldString(this->getCameraZoom());
 
-    SbBool on = newCamera ? TRUE : FALSE;
-//    this->zoomSlider->setEnabled(on);
-//    this->zoomField->setEnabled(on);
-//    this->zoomRangeFrom->setEnabled(on);
-//    this->zoomRangeTo->setEnabled(on);
+    const SbBool enable = camera ? TRUE : FALSE;
+//    this->zoomSlider->setEnabled(enable);
+//    this->zoomField->setEnabled(enable);
+//    this->zoomRangeFrom->setEnabled(enable);
+//    this->zoomRangeTo->setEnabled(enable);
   }
 }
 
@@ -593,82 +596,6 @@ SoGtkFullViewer::eventFilter(
   GtkObject * obj,
   GdkEvent * event )
 {
-/*
-#if 0 // debug
-  switch (e->type()) {
-  case Event_MouseButtonPress:
-//      SoDebugError::postInfo("SoGtkFullViewer::eventFilter", "button press");
-    break;
-  case Event_MouseButtonRelease:
-//      SoDebugError::postInfo("SoGtkFullViewer::eventFilter", "button release");
-    break;
-  case Event_MouseButtonDblClick:
-//      SoDebugError::postInfo("SoGtkFullViewer::eventFilter", "dbl click");
-    break;
-  case Event_MouseMove:
-//      SoDebugError::postInfo("SoGtkFullViewer::eventFilter", "mousemove");
-    break;
-  case Event_Paint:
-    SoDebugError::postInfo("SoGtkFullViewer::eventFilter", "paint");
-    break;
-  case Event_Resize:
-    SoDebugError::postInfo("SoGtkFullViewer::eventFilter", "resize");
-    break;
-  case Event_FocusIn:
-  case Event_FocusOut:
-  case Event_Enter:
-  case Event_Leave:
-  case Event_Move:
-  case Event_LayoutHint:
-  case Event_ChildInserted:
-  case Event_ChildRemoved:
-    // ignored
-    break;
-  default:
-    SoDebugError::postInfo("SoGtkFullViewer::eventFilter", "type %d", e->type());
-    break;
-  }
-#endif // debug
-
-  inherited::eventFilter( obj, e );
-
-  // Convert dblclick events to press events to get the "correct"
-  // sequence of two press+release pairs under Qt 1.xx and Qt
-  // 2.xx. (It has been confirmed with the Trolls that this Qt
-  // behavior is actually a feature, not a bug.)
-#if QT_VERSION < 200
-  int eventtype = e->type();
-#else // Qt 2.0
-  GdkEvent::Type eventtype = e->type();
-#endif // Qt 2.0
-  eventtype = (eventtype == Event_MouseButtonDblClick ?
-               Event_MouseButtonPress : eventtype);
-
-  // Catch close events to avoid anything actually being destroyed.
-  if (obj == this->prefwindow) {
-    if (eventtype == Event_Close) {
-      ((QCloseEvent *)e)->ignore();
-      this->prefwindow->hide();
-      return TRUE;
-    }
-  }
-
-  // Show the popup menu when we detect rmb pressed on top of the
-  // render area canvas.
-  if (this->menuenabled && obj == this->getRenderAreaWidget() &&
-      eventtype == Event_MouseButtonPress) {
-    QMouseEvent * me = (QMouseEvent *)e;
-    if (me->button() == RightButton) {
-      if (!this->prefmenu) this->buildPopupMenu();
-#if (QT_VERSION > 140)
-      this->prefmenu->popup(me->globalPos());
-#else
-      this->prefmenu->popup(me->pos());
-#endif
-    }
-  }
-
-*/
   return FALSE;
 }
 
@@ -684,8 +611,8 @@ SoGtkFullViewer::buildWidget(
   GtkWidget * parent )
 {
   GtkWidget * root = gtk_vbox_new( FALSE, 0 ); 
-  GtkWidget * croot = gtk_hbox_new( FALSE, 0 ); 
   g_return_val_if_fail( root != NULL, NULL );
+  GtkWidget * croot = gtk_hbox_new( FALSE, 0 ); 
   g_return_val_if_fail( croot != NULL, NULL );
 
   this->canvas = inherited::buildWidget( croot );
@@ -752,38 +679,17 @@ SoGtkFullViewer::buildLeftTrim(
 {
   GtkWidget * trim = gtk_vbox_new( FALSE, TRUE );
   g_return_val_if_fail( trim != NULL, NULL );
-  gtk_widget_set_usize( trim, 30, 0 );
+  gtk_widget_set_usize( GTK_WIDGET(trim), 30, 0 );
   // set background color
 
-  GtkWidget * wheel = gtk_thumbwheel_new( 1 );
-  g_return_val_if_fail( wheel != NULL, NULL );
+  this->leftWheel = gtk_thumbwheel_new( 1 );
+  g_return_val_if_fail( this->leftWheel != NULL, NULL );
+//  gtk_misc_set_padding( GTK_MISC(this->leftWheel), 2, 0 );
 
-  gtk_box_pack_end( GTK_BOX(trim), wheel, FALSE, FALSE, TRUE );
-  gtk_widget_show( wheel );
+  gtk_box_pack_end( GTK_BOX(trim), GTK_WIDGET(this->leftWheel), FALSE, FALSE, TRUE );
+  gtk_widget_show( GTK_WIDGET(this->leftWheel) );
 
   return trim;
-/*
-  QGridLayout * gl = new QGridLayout(w, 3, 1, 2, -1 ); // , 0, -1);
-  gl->addWidget(this->buildAppButtons(w), 0, 0);
-
-  QtThumbwheel * t = this->wheels[LEFTDECORATION] =
-    new QtThumbwheel(QtThumbwheel::Vertical, w);
-//  t->adjustSize();
-//  QSize rect = t->size();
-//  rect.setWidth( 30 );
-  t->setFixedSize( QSize( 24, 88 ) );
-  QObject::connect(t, SIGNAL(wheelMoved(float)),
-                   this, SLOT(leftWheelChanged(float)));
-  QObject::connect(t, SIGNAL(wheelPressed()),
-                   this, SLOT(leftWheelPressed()));
-  QObject::connect(t, SIGNAL(wheelReleased()),
-                   this, SLOT(leftWheelReleased()));
-
-  this->wheelvalues[LEFTDECORATION] = t->value();
-
-  gl->addWidget(t, 2, 0, AlignBottom|AlignHCenter);
-  gl->activate();
-*/
 } // buildLeftTrim()
 
 // *************************************************************************
@@ -801,63 +707,32 @@ SoGtkFullViewer::buildBottomTrim(
   g_return_val_if_fail( trim != NULL, NULL );
   gtk_widget_set_usize( trim, 0, 30 );
 
-  GtkWidget * l1, * l2, * l3;
-  l1 = gtk_label_new( "Roty" );
-  g_return_val_if_fail( l1 != NULL, NULL );
-  gtk_misc_set_padding( GTK_MISC(l1), 3, 0 );
-  l2 = gtk_label_new( "Rotx" );
-  g_return_val_if_fail( l2 != NULL, NULL );
-  gtk_misc_set_padding( GTK_MISC(l2), 3, 0 );
-  l3 = gtk_label_new( "Dolly" );
-  g_return_val_if_fail( l3 != NULL, NULL );
-  gtk_misc_set_padding( GTK_MISC(l3), 3, 0 );
+  this->leftWheelLabel = gtk_label_new( this->leftWheelStr );
+  g_return_val_if_fail( this->leftWheelLabel != NULL, NULL );
+  gtk_misc_set_padding( GTK_MISC(this->leftWheelLabel), 3, 0 );
 
-  GtkWidget * wheel = gtk_thumbwheel_new( 0 );
-  g_return_val_if_fail( wheel != NULL, NULL );
+  this->bottomWheelLabel = gtk_label_new( this->bottomWheelStr );
+  g_return_val_if_fail( this->bottomWheelLabel != NULL, NULL );
+  gtk_misc_set_padding( GTK_MISC(this->bottomWheelLabel), 3, 0 );
 
-  gtk_box_pack_start( GTK_BOX(trim), l1, FALSE, TRUE, FALSE );
-  gtk_box_pack_start( GTK_BOX(trim), l2, FALSE, TRUE, FALSE );
-  gtk_box_pack_start( GTK_BOX(trim), wheel, FALSE, TRUE, TRUE );
-  gtk_box_pack_end( GTK_BOX(trim), l3, FALSE, TRUE, FALSE );
-  gtk_widget_show( l1 );
-  gtk_widget_show( l2 );
-  gtk_widget_show( wheel );
-  gtk_widget_show( l3 );
+  this->rightWheelLabel = gtk_label_new( this->rightWheelStr );
+  g_return_val_if_fail( this->rightWheelLabel != NULL, NULL );
+  gtk_misc_set_padding( GTK_MISC(this->rightWheelLabel), 3, 0 );
+
+  this->bottomWheel = gtk_thumbwheel_new( 0 );
+  g_return_val_if_fail( this->bottomWheel != NULL, NULL );
+//  gtk_misc_set_padding( GTK_MISC(this->bottomWheel), 0, 2 );
+
+  gtk_box_pack_start( GTK_BOX(trim), GTK_WIDGET(this->leftWheelLabel), FALSE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(trim), GTK_WIDGET(this->bottomWheelLabel), FALSE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(trim), GTK_WIDGET(this->bottomWheel), FALSE, TRUE, TRUE );
+  gtk_box_pack_end( GTK_BOX(trim), GTK_WIDGET(this->rightWheelLabel), FALSE, TRUE, FALSE );
+  gtk_widget_show( GTK_WIDGET(this->leftWheelLabel) );
+  gtk_widget_show( GTK_WIDGET(this->bottomWheelLabel) );
+  gtk_widget_show( GTK_WIDGET(this->bottomWheel) );
+  gtk_widget_show( GTK_WIDGET(this->rightWheelLabel) );
 
   return trim;
-/*
-  GtkWidget * w = new GtkWidget(parent);
-  w->setFixedHeight( 30 );
-
-  int alignments[] = { AlignLeft|AlignTop, AlignRight|AlignVCenter,
-                       AlignRight|AlignTop, };
-  for (int i = FIRSTDECORATION; i <= LASTDECORATION; i++) {
-    this->wheellabels[i] = new QLabel(this->wheelstrings[i], w);
-    this->wheellabels[i]->adjustSize();
-    this->wheellabels[i]->setAlignment(alignments[i - FIRSTDECORATION]);
-  }
-
-  QtThumbwheel * t = this->wheels[BOTTOMDECORATION] =
-    new QtThumbwheel(QtThumbwheel::Horizontal, w);
-  t->setFixedSize( QSize( 88, 24 ) );
-//  t->adjustSize();
-//  t->setFixedSize(t->size());
-  QObject::connect(t, SIGNAL(wheelMoved(float)),
-                   this, SLOT(bottomWheelChanged(float)));
-  QObject::connect(t, SIGNAL(wheelPressed()),
-                   this, SLOT(bottomWheelPressed()));
-  QObject::connect(t, SIGNAL(wheelReleased()),
-                   this, SLOT(bottomWheelReleased()));
-
-  this->wheelvalues[BOTTOMDECORATION] = t->value();
-
-  QGridLayout * gl = new QGridLayout(w, 1, 5);
-  gl->addWidget(this->wheellabels[RIGHTDECORATION], 0, 4, AlignRight);
-  gl->addWidget(this->wheellabels[LEFTDECORATION], 0, 0, AlignLeft);
-  gl->addWidget(this->wheellabels[BOTTOMDECORATION], 0, 1);
-  gl->addWidget(t, 0, 2);
-  gl->activate();
-*/
 } // buildBottomTrim()
 
 // *************************************************************************
@@ -880,12 +755,14 @@ SoGtkFullViewer::buildRightTrim(
   gtk_widget_set_usize( buttons, 30, 0 );
   gtk_widget_show( buttons );
 
-  GtkWidget * wheel = gtk_thumbwheel_new( 1 );
-  g_return_val_if_fail( wheel != NULL, NULL );
+  this->rightWheel = gtk_thumbwheel_new( 1 );
+  g_return_val_if_fail( this->rightWheel != NULL, NULL );
+//  gtk_misc_set_padding( GTK_MISC(this->rightWheel), 2, 0 );
 
-  gtk_box_pack_start( GTK_BOX(trim), buttons, FALSE, TRUE, TRUE );
-  gtk_box_pack_end( GTK_BOX(trim), wheel, FALSE, TRUE, TRUE );
-  gtk_widget_show( wheel );
+  gtk_box_pack_start( GTK_BOX(trim), GTK_WIDGET(buttons), FALSE, TRUE, TRUE );
+  gtk_box_pack_end( GTK_BOX(trim), GTK_WIDGET(this->rightWheel), FALSE, TRUE, TRUE );
+
+  gtk_widget_show( GTK_WIDGET(this->rightWheel) );
 
   return trim;
 } // buildRightTrim()
@@ -939,47 +816,64 @@ SoGtkFullViewer::buildViewerButtons(
 // *************************************************************************
 
 struct SoGtkViewerButton {
+  char * keyword;
   char * label;
   GtkSignalFunc clicked;
   char ** xpm_data;
+  GtkWidget * bwidget;
+  GtkWidget * lwidget;
 };
 
 struct SoGtkViewerButton
 SoGtkFullViewer::SoGtkFullViewerButtons[] = {
   { // interact button
+    "interact",
     "I",
     (GtkSignalFunc) SoGtkFullViewer::interactbuttonClickedCB,
-    pick_xpm
+    pick_xpm,
+    NULL, NULL
   },
-  { // examine
+  { // view
+    "view",
     "E",
     (GtkSignalFunc) SoGtkFullViewer::viewbuttonClickedCB,
-    view_xpm
+    view_xpm,
+    NULL, NULL
   },
   { // help
+    "help",
     "?",
     (GtkSignalFunc) SoGtkFullViewer::helpbuttonClickedCB,
-    help_xpm
+    help_xpm,
+    NULL, NULL
   },
   { // home
+    "home",
     "h",
     (GtkSignalFunc) SoGtkFullViewer::homebuttonClickedCB,
-    home_xpm
+    home_xpm,
+    NULL, NULL
   },
   { // set home
+    "set_home",
     "H",
     (GtkSignalFunc) SoGtkFullViewer::sethomebuttonClickedCB,
-    set_home_xpm
+    set_home_xpm,
+    NULL, NULL
   }, 
   { // view all
+    "view_all",
     "V",
     (GtkSignalFunc) SoGtkFullViewer::viewallbuttonClickedCB,
-    view_all_xpm
+    view_all_xpm,
+    NULL, NULL
   },
   { // seek
+    "seek",
     "S",
     (GtkSignalFunc) SoGtkFullViewer::seekbuttonClickedCB,
-    seek_xpm
+    seek_xpm,
+    NULL, NULL
   }
 }; // SoGtkFullViewerButtons[]
 
@@ -999,9 +893,13 @@ SoGtkFullViewer::createViewerButtons( // virtual
   const int buttons = sizeof(SoGtkFullViewerButtons) / sizeof(SoGtkViewerButton);
   while ( button < buttons ) {
     GtkWidget * widget = gtk_button_new();
+    SoGtkFullViewerButtons[button].bwidget = widget;
+
     GtkWidget * label = gtk_label_new( SoGtkFullViewerButtons[button].label );
     gtk_widget_show( label );
-    gtk_container_add( GTK_CONTAINER(widget), label );
+    SoGtkFullViewerButtons[button].lwidget = label;
+
+    gtk_container_add( GTK_CONTAINER(widget), GTK_WIDGET(label) );
     if ( SoGtkFullViewerButtons[button].clicked != NULL )
       gtk_signal_connect( GTK_OBJECT(widget), "clicked",
         GTK_SIGNAL_FUNC(SoGtkFullViewerButtons[button].clicked),
@@ -1010,6 +908,20 @@ SoGtkFullViewer::createViewerButtons( // virtual
     button++;
   } // while ( button < buttons )
 } // createViewerButtons()
+
+/*!
+*/
+
+GtkWidget *
+SoGtkFullViewer::findButton( // private
+  const char * const keyword )
+{
+  const int buttons = sizeof(SoGtkFullViewerButtons) / sizeof(SoGtkViewerButton);
+  for ( int i = 0; i < buttons; i++ )
+    if ( strcmp( keyword, SoGtkFullViewerButtons[i].keyword ) == 0 )
+      return SoGtkFullViewerButtons[i].bwidget;
+  return (GtkWidget *) NULL;
+}
 
 // *************************************************************************
 
@@ -1305,19 +1217,23 @@ void SoGtkFullViewer::rightWheelReleased(void) { this->rightWheelFinish(); }
 // *************************************************************************
 
 /*!
-  Set label of the left thumbwheel.
+  Set label for the left thumbwheel.
 */
 
 void
 SoGtkFullViewer::setLeftWheelString(
-  const char * str )
+  const char * string )
 {
-/*
-  this->wheelStrings[LEFTDECORATION] = str ? str : "";
-  QLabel * l = this->wheellabels[LEFTDECORATION];
-  if (l) l->setText(this->wheelstrings[LEFTDECORATION]);
-*/
-}
+  if ( this->leftWheelStr ) {
+    delete [] this->leftWheelStr;
+    this->leftWheelStr = NULL;
+  }
+  if ( string )
+    this->leftWheelStr = strcpy( new char [strlen(string)+1], string );
+  if ( this->leftWheelLabel )
+    gtk_label_set_text( GTK_LABEL(this->leftWheelLabel),
+      this->leftWheelStr ? this->leftWheelStr : "" );
+} // setLeftWheelString()
 
 // *************************************************************************
 
@@ -1326,14 +1242,19 @@ SoGtkFullViewer::setLeftWheelString(
 */
 
 void
-SoGtkFullViewer::setBottomWheelString(const char * str)
+SoGtkFullViewer::setBottomWheelString(
+  const char * string )
 {
-/*
-  this->wheelstrings[BOTTOMDECORATION] = str ? str : "";
-  QLabel * l = this->wheellabels[BOTTOMDECORATION];
-  if (l) l->setText(this->wheelstrings[BOTTOMDECORATION]);
-*/
-}
+  if ( this->bottomWheelStr ) {
+    delete [] this->bottomWheelStr;
+    this->bottomWheelStr = NULL;
+  }
+  if ( string )
+    this->bottomWheelStr = strcpy( new char [strlen(string)+1], string );
+  if ( this->bottomWheelLabel )
+    gtk_label_set_text( GTK_LABEL(this->bottomWheelLabel),
+      this->bottomWheelStr ? this->bottomWheelStr : "" );
+} // setBottomWheelString()
 
 // *************************************************************************
 
@@ -1342,14 +1263,19 @@ SoGtkFullViewer::setBottomWheelString(const char * str)
 */
 
 void
-SoGtkFullViewer::setRightWheelString(const char * str)
+SoGtkFullViewer::setRightWheelString(
+  const char * string )
 {
-/*
-  this->wheelstrings[RIGHTDECORATION] = str ? str : "";
-  QLabel * l = this->wheellabels[RIGHTDECORATION];
-  if (l) l->setText(this->wheelstrings[RIGHTDECORATION]);
-*/
-}
+  if ( this->rightWheelStr ) {
+    delete [] this->rightWheelStr;
+    this->rightWheelStr = NULL;
+  }
+  if ( string )
+    this->rightWheelStr = strcpy( new char [strlen(string)+1], string );
+  if ( this->rightWheelLabel )
+    gtk_label_set_text( GTK_LABEL(this->rightWheelLabel),
+      this->rightWheelStr ? this->rightWheelStr : "" );
+} // setRightWheelString()
 
 // *************************************************************************
 
@@ -1361,6 +1287,7 @@ SoGtkFullViewer::setRightWheelString(const char * str)
 void
 SoGtkFullViewer::openViewerHelpCard(void)
 {
+  SOGTK_STUB();
 }
 
 // *************************************************************************
@@ -1428,24 +1355,6 @@ void
 SoGtkFullViewer::layoutAppButtons(
   GtkWidget * form )
 {
-/*
-  delete this->appButtonLayout;
-  this->appButtonLayout = NULL;
-
-  int nrbuttons = this->appbuttonlist->getLength();
-  if (nrbuttons == 0) return;
-
-  this->appbuttonlayout = new QGridLayout(form, nrbuttons, 1);
-
-  for (int i=0; i < nrbuttons; i++) {
-    GtkWidget * button = (GtkWidget *)((*(this->appbuttonlist))[i]);
-    button->setFixedSize(button->size());
-    button->show();
-    ((QGridLayout *)this->appbuttonlayout)->addWidget(button, i, 0);
-  }
-
-  this->appbuttonlayout->activate();
-*/
 }
 
 // *************************************************************************
@@ -1458,30 +1367,6 @@ GtkWidget *
 SoGtkFullViewer::makePreferencesWindow(
   void )
 {
-/*
-  GtkWidget * top = new GtkWidget(NULL);
-  top->setCaption(this->prefwindowtitle.getString());
-  top->setIconText(this->prefwindowtitle.getString());
-
-  QVBoxLayout * layout = new QVBoxLayout(top, 10);
-
-  GtkWidget * w;
-  w = this->makeSeekPreferences(top);
-  if (w) layout->addWidget(w, w->height());
-  w = this->makeSeekDistancePreferences(top);
-  if (w) layout->addWidget(w, w->height());
-  w = this->makeZoomPreferences(top);
-  if (w) layout->addWidget(w, w->height());
-  w = this->makeAutoclipPreferences(top);
-  if (w) layout->addWidget(w, w->height());
-
-  w = this->makeSubPreferences(top);
-  if (w) layout->addWidget(w, w->height());
-
-  layout->activate();
-  top->adjustSize();
-  return top;
-*/
   return NULL;
 }
 
@@ -1496,97 +1381,6 @@ GtkWidget *
 SoGtkFullViewer::makeSeekPreferences(
   GtkWidget * parent )
 {
-/*
-  // FIXME: it'd be nice to show separation in the prefs sheet, but
-  // this code doesn't work for some reason (because of the
-  // layout objects?). 990221 mortene.
-#if 0
-  QFrame * w = new QFrame(parent);
-  w->setFrameStyle(QFrame::Box | QFrame::Plain);
-  w->setLineWidth(1);
-#else
-  GtkWidget * w = new GtkWidget(parent);
-#endif
-
-  // Initialize objects keeping track of geometry data.
-
-  QSize tmpsize(0, 0);
-  QSize totalsize(0, 0);
-
-  QVBoxLayout * toplayout = new QVBoxLayout(w);
-
-  // First, do the three widgets on the uppermost row (label,
-  // lineedit, label).
-
-  QLabel * l1 = new QLabel("Seek animation time:", w);
-  l1->adjustSize();
-  expandSize(tmpsize, l1->size(), LayoutHorizontal);
-
-  QLineEdit * le = new QLineEdit(w);
-#if QT_VERSION < 200 // Qt 2.xx
-  QObject::connect(le, SIGNAL(textChanged(const char *)),
-                   this, SLOT(seekAnimationTimeChanged(const char *)));
-#else // Qt 1.xx
-  QObject::connect(le, SIGNAL(textChanged(const QString &)),
-                   this, SLOT(seekAnimationTimeChanged(const QString &)));
-#endif // Qt 1.xx
-  QString s;
-  s.setNum(this->getSeekTime(), 'f', 2);
-  le->setText(s);
-  le->adjustSize();
-  expandSize(tmpsize, le->size(), LayoutHorizontal);
-
-  QLabel * l2 = new QLabel("seconds", w);
-  l2->adjustSize();
-  expandSize(tmpsize, l2->size(), LayoutHorizontal);
-
-  // Layout row 1.
-  QBoxLayout * layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(l1, l1->width());
-  layout->addWidget(le, le->width());
-  layout->addWidget(l2, l2->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-
-  // Do the three widgets on the second row (label, radiobutton,
-  // radiobutton).
-
-  tmpsize = QSize(0, 0);
-
-  QLabel * l3 = new QLabel("Seek to:", w);
-  l3->adjustSize();
-  expandSize(tmpsize, l3->size(), LayoutHorizontal);
-
-  QButtonGroup * bg = new QButtonGroup;
-  QRadioButton * r1 = new QRadioButton("point", w);
-  r1->setChecked(this->isDetailSeek());
-  r1->adjustSize();
-  expandSize(tmpsize, r1->size(), LayoutHorizontal);
-  bg->insert(r1);
-
-  QRadioButton * r2 = new QRadioButton("object", w);
-  r2->setChecked(!this->isDetailSeek());
-  r2->adjustSize();
-  expandSize(tmpsize, r2->size(), LayoutHorizontal);
-  bg->insert(r2);
-
-  bg->setExclusive(TRUE);
-  QObject::connect(bg, SIGNAL(clicked(int)),
-                   this, SLOT(seekDetailToggled(int)));
-
-  // Layout row 2.
-  layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(l3, l3->width());
-  layout->addWidget(r1, r1->width());
-  layout->addWidget(r2, r2->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-  w->resize(totalsize);
-  toplayout->activate();
-  return w;
-*/
   return NULL;
 }
 
@@ -1601,84 +1395,6 @@ GtkWidget *
 SoGtkFullViewer::makeSeekDistancePreferences(
   GtkWidget * parent )
 {
-/*
-  GtkWidget * w = new GtkWidget(parent);
-
-  // Initialize objects keeping track of geometry data.
-
-  QSize tmpsize(0, 0);
-  QSize totalsize(0, 0);
-
-  QVBoxLayout * toplayout = new QVBoxLayout(w);
-
-  // First, do the three widgets on the uppermost row (label,
-  // thumbwheel, lineedit).
-
-  QLabel * l = new QLabel("Seek distance:", w);
-  l->adjustSize();
-  expandSize(tmpsize, l->size(), LayoutHorizontal);
-
-  this->seekdistancewheel = new QtThumbwheel(QtThumbwheel::Horizontal, w);
-  this->seekdistancewheel->setRangeBoundaryHandling( QtThumbwheel::ACCUMULATE );
-  this->seekdistancewheel->setValue(sqrt(this->getSeekDistance()));
-  this->seekdistancewheel->adjustSize();
-  expandSize(tmpsize, this->seekdistancewheel->size(),
-                             LayoutHorizontal);
-  QObject::connect(this->seekdistancewheel, SIGNAL(wheelMoved(float)),
-                   this, SLOT(seekDistanceWheelChanged(float)));
-
-  this->seekdistancefield = new QLineEdit(w);
-  QString s;
-  s.setNum(this->getSeekDistance(), 'f', 2);
-  this->seekdistancefield->setText(s);
-  this->seekdistancefield->adjustSize();
-  expandSize(tmpsize, this->seekdistancefield->size(),
-                             LayoutHorizontal);
-  QObject::connect(this->seekdistancefield, SIGNAL(returnPressed()),
-                   this, SLOT(seekDistanceEdit()));
-
-  // Layout row 1.
-  QBoxLayout * layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(l, l->width());
-  layout->addWidget(this->seekdistancewheel, this->seekdistancewheel->width());
-  layout->addWidget(this->seekdistancefield, this->seekdistancefield->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-
-  // Do the two widgets on the second row (radiobutton, radiobutton).
-
-  tmpsize = QSize(0, 0);
-
-  QButtonGroup * bg = new QButtonGroup;
-  QRadioButton * r1 = new QRadioButton("percentage", w);
-  r1->setChecked(this->isSeekValuePercentage());
-  r1->adjustSize();
-  expandSize(tmpsize, r1->size(), LayoutHorizontal);
-  bg->insert(r1);
-
-  QRadioButton * r2 = new QRadioButton("absolute", w);
-  r2->setChecked(!this->isSeekValuePercentage());
-  r2->adjustSize();
-  expandSize(tmpsize, r2->size(), LayoutHorizontal);
-  bg->insert(r2);
-
-  bg->setExclusive(TRUE);
-  QObject::connect(bg, SIGNAL(clicked(int)),
-                   this, SLOT(seekDistanceTypeToggle(int)));
-
-  // Layout row 2.
-  layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(r1, r1->width());
-  layout->addWidget(r2, r2->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-  w->resize(totalsize);
-  toplayout->activate();
-
-  return w;
-*/
   return NULL;
 }
 
@@ -1693,108 +1409,6 @@ GtkWidget *
 SoGtkFullViewer::makeZoomPreferences(
   GtkWidget * parent )
 {
-/*
-  GtkWidget * w = new GtkWidget(parent);
-
-  // Initialize objects keeping track of geometry data.
-
-  QSize tmpsize(0, 0);
-  QSize totalsize(0, 0);
-
-  QVBoxLayout * toplayout = new QVBoxLayout(w);
-
-  // First, do the three widgets on the uppermost row (label,
-  // slider, lineedit).
-
-  QLabel * l1 = new QLabel("Camera zoom", w);
-  l1->adjustSize();
-  expandSize(tmpsize, l1->size(), LayoutHorizontal);
-
-  this->zoomslider = new QSlider(0, ZOOMSLIDERRESOLUTION,
-                                 1, 0, QSlider::Horizontal, w);
-  this->zoomslider->adjustSize();
-  expandSize(tmpsize, this->zoomslider->size(), LayoutHorizontal);
-  QObject::connect(this->zoomslider, SIGNAL(sliderPressed()),
-                   this, SLOT(increaseInteractiveCount()));
-  QObject::connect(this->zoomslider, SIGNAL(valueChanged(int)),
-                   this, SLOT(zoomSliderMoved(int)));
-  QObject::connect(this->zoomslider, SIGNAL(sliderReleased()),
-                   this, SLOT(decreaseInteractiveCount()));
-
-  this->zoomfield = new QLineEdit(w);
-  this->zoomfield->adjustSize();
-  expandSize(tmpsize, this->zoomfield->size(), LayoutHorizontal);
-  QObject::connect(this->zoomfield, SIGNAL(returnPressed()),
-                   this, SLOT(zoomFieldChanged()));
-
-
-  // Layout row 1.
-  QBoxLayout * layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(l1, l1->width());
-  layout->addWidget(this->zoomslider, this->zoomslider->width());
-  layout->addWidget(this->zoomfield, this->zoomfield->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-
-  // Do the four widgets on the second row (label, lineedit, label,
-  // lineedit).
-
-  tmpsize = QSize(0, 0);
-
-  QLabel * l2 = new QLabel("Zoom slider ranges from:", w);
-  l2->adjustSize();
-  expandSize(tmpsize, l2->size(), LayoutHorizontal);
-
-  this->zoomrangefrom = new QLineEdit(w);
-  QString s;
-  s.setNum(this->zoomrange[0], 'f', 1);
-  this->zoomrangefrom->setText(s);
-  this->zoomrangefrom->adjustSize();
-  expandSize(tmpsize, this->zoomrangefrom->size(), LayoutHorizontal);
-  QObject::connect(this->zoomrangefrom, SIGNAL(returnPressed()),
-                   this, SLOT(zoomRangeChanged1()));
-
-  QLabel * l3 = new QLabel("to:", w);
-  l3->adjustSize();
-  expandSize(tmpsize, l3->size(), LayoutHorizontal);
-
-  this->zoomrangeto = new QLineEdit(w);
-  s.setNum(this->zoomrange[1], 'f', 1);
-  this->zoomrangeto->setText(s);
-  this->zoomrangeto->adjustSize();
-  expandSize(tmpsize, this->zoomrangeto->size(), LayoutHorizontal);
-  QObject::connect(this->zoomrangeto, SIGNAL(returnPressed()),
-                   this, SLOT(zoomRangeChanged2()));
-
-
-  // Layout row 2.
-  layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(l2, l2->width());
-  layout->addWidget(this->zoomrangefrom, this->zoomrangefrom->width());
-  layout->addWidget(l3, l3->width());
-  layout->addWidget(this->zoomrangeto, this->zoomrangeto->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-
-  SoCamera * cam = this->getCamera();
-  if (cam) {
-    this->setZoomSliderPosition(this->getCameraZoom());
-    this->setZoomFieldString(this->getCameraZoom());
-  }
-  else {
-    this->zoomslider->setEnabled(FALSE);
-    this->zoomfield->setEnabled(FALSE);
-    this->zoomrangefrom->setEnabled(FALSE);
-    this->zoomrangeto->setEnabled(FALSE);
-  }
-
-  w->resize(totalsize);
-  toplayout->activate();
-
-  return w;
-*/
   return NULL;
 }
 
@@ -1809,26 +1423,6 @@ void
 SoGtkFullViewer::setEnabledClippingWidgets(
   SbBool flag )
 {
-/*
-  this->nearclippinglabel->setEnabled(flag);
-  this->nearclippingwheel->setEnabled(flag);
-  this->nearclippingedit->setEnabled(flag);
-  this->farclippinglabel->setEnabled(flag);
-  this->farclippingwheel->setEnabled(flag);
-  this->farclippingedit->setEnabled(flag);
-
-  SoCamera * cam = this->getCamera();
-  if (!cam) return;
-
-  this->nearclippingwheel->setValue(cam->nearDistance.getValue());
-  this->farclippingwheel->setValue(cam->farDistance.getValue());
-
-  QString s;
-  s.setNum(cam->nearDistance.getValue(), 'f', 3);
-  this->nearclippingedit->setText(s);
-  s.setNum(cam->farDistance.getValue(), 'f', 3);
-  this->farclippingedit->setText(s);
-*/
 }
 
 // *************************************************************************
@@ -1842,110 +1436,6 @@ GtkWidget *
 SoGtkFullViewer::makeAutoclipPreferences(
   GtkWidget * dialog )
 {
-/*
-  GtkWidget * w = new GtkWidget(dialog);
-
-  // Initialize objects keeping track of geometry data.
-
-  QSize totalsize(0, 0);
-
-  QVBoxLayout * toplayout = new QVBoxLayout(w);
-
-  // First, do the checkbutton widget.
-
-  QCheckBox * c = new QCheckBox("Auto clipping planes", w);
-  c->adjustSize();
-  c->setChecked(this->isAutoClipping());
-  QObject::connect(c, SIGNAL(toggled(bool)),
-                   this, SLOT(clippingToggled(bool)));
-
-  // Layout row 1.
-  toplayout->addWidget(c, c->height());
-  expandSize(totalsize, c->size(), LayoutVertical);
-
-  // Do the three widgets on the second row (label, thumbwheel,
-  // lineedit).
-
-  QSize tmpsize = QSize(0, 0);
-
-  this->nearclippinglabel = new QLabel("near plane", w);
-  this->nearclippinglabel->adjustSize();
-  expandSize(tmpsize, this->nearclippinglabel->size(), LayoutHorizontal);
-
-  this->nearclippingwheel = new QtThumbwheel(QtThumbwheel::Horizontal, w);
-  this->nearclippingwheel->adjustSize();
-  this->nearclippingwheel->setEnabled( false );
-  expandSize(tmpsize, this->nearclippingwheel->size(), LayoutHorizontal);
-  QObject::connect(this->nearclippingwheel, SIGNAL(wheelPressed()),
-                   this, SLOT(increaseInteractiveCount()));
-  QObject::connect(this->nearclippingwheel, SIGNAL(wheelMoved(float)),
-                   this, SLOT(nearclippingwheelMoved(float)));
-  QObject::connect(this->nearclippingwheel, SIGNAL(wheelReleased()),
-                   this, SLOT(decreaseInteractiveCount()));
-
-  this->nearclippingedit = new QLineEdit(w);
-  this->nearclippingedit->adjustSize();
-  expandSize(tmpsize, this->nearclippingedit->size(), LayoutHorizontal);
-  QObject::connect(this->nearclippingedit, SIGNAL(returnPressed()),
-                   this, SLOT(nearclipEditPressed()));
-
-
-  // Layout row 2.
-  QBoxLayout * layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(this->nearclippinglabel, this->nearclippinglabel->width());
-  layout->addWidget(this->nearclippingwheel, this->nearclippingwheel->width());
-  layout->addWidget(this->nearclippingedit, this->nearclippingedit->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-
-  // Do the three widgets on the third row (label, thumbwheel,
-  // lineedit).
-
-  tmpsize = QSize(0, 0);
-
-  this->farclippinglabel = new QLabel("far plane", w);
-  this->farclippinglabel->adjustSize();
-  expandSize(tmpsize,
-             QSize(QMAX(this->nearclippinglabel->width(),
-                        this->farclippinglabel->width()),
-                   this->farclippinglabel->height()),
-             LayoutHorizontal);
-
-  this->farclippingwheel = new QtThumbwheel(QtThumbwheel::Horizontal, w);
-  this->farclippingwheel->adjustSize();
-  this->farclippingwheel->setEnabled( false );
-  expandSize(tmpsize, this->farclippingwheel->size(), LayoutHorizontal);
-  QObject::connect(this->farclippingwheel, SIGNAL(wheelPressed()),
-                   this, SLOT(increaseInteractiveCount()));
-  QObject::connect(this->farclippingwheel, SIGNAL(wheelMoved(float)),
-                   this, SLOT(farclippingwheelMoved(float)));
-  QObject::connect(this->farclippingwheel, SIGNAL(wheelReleased()),
-                   this, SLOT(decreaseInteractiveCount()));
-
-  this->farclippingedit = new QLineEdit(w);
-  this->farclippingedit->adjustSize();
-  expandSize(tmpsize, this->farclippingedit->size(), LayoutHorizontal);
-  QObject::connect(this->farclippingedit, SIGNAL(returnPressed()),
-                   this, SLOT(farclipEditPressed()));
-
-  // Layout row 3.
-  layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(this->farclippinglabel,
-                    QMAX(this->nearclippinglabel->width(),
-                         this->farclippinglabel->width()));
-  layout->addWidget(this->farclippingwheel, this->farclippingwheel->width());
-  layout->addWidget(this->farclippingedit, this->farclippingedit->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-  this->setEnabledClippingWidgets(!this->isAutoClipping());
-
-  w->resize(totalsize);
-  toplayout->activate();
-
-  return w;
-*/
   return NULL;
 }
 
@@ -2056,73 +1546,6 @@ SoGtkFullViewer::viewbuttonToggled(bool flag)
 {
   this->setViewing(flag);
 }
-*/
-
-// *************************************************************************
-
-/*!
-  \internal
-  Qt slot.
-*/
-
-/*
-void
-SoGtkFullViewer::helpbuttonClicked()
-{
-  this->openViewerHelpCard();
-}
-*/
-
-// *************************************************************************
-
-/*!
-  \internal
-  Qt slot.
-*/
-
-/*
-void
-SoGtkFullViewer::homebuttonClicked()
-{
-  this->resetToHomePosition();
-}
-*/
-
-// *************************************************************************
-
-/*!
-  \internal
-  Qt slot.
-*/
-
-/*
-void
-SoGtkFullViewer::sethomebuttonClicked()
-{
-  this->saveHomePosition();
-}
-*/
-
-// *************************************************************************
-
-/*!
-  \internal
-  Qt slot.
-*/
-
-/*
-void
-SoGtkFullViewer::viewallbuttonClicked()
-{
-  this->viewAll();
-}
-*/
-
-// *************************************************************************
-
-/*!
-  \internal
-  Qt slot.
 */
 
 // *************************************************************************
@@ -2695,17 +2118,22 @@ SoGtkFullViewer::processSoEvent(
 
 // *************************************************************************
 
+/*!
+*/
+
 void
 SoGtkFullViewer::interactbuttonClicked(
   void )
 {
-  SoDebugError::postInfo( "SoGtkFullViewer::interactbuttonClicked", "[invoked]" );
+  if ( this->isViewing() )
+    this->setViewing( FALSE );
+  GtkWidget * interact_button = findButton( "interact" );
+  GtkWidget * view_button = findButton( "view" );
 }
 
 void
 SoGtkFullViewer::interactbuttonClickedCB( // static
   GtkWidget *,
-  GdkEvent *,
   gpointer closure )
 {
   assert( closure != NULL );
@@ -2719,13 +2147,15 @@ void
 SoGtkFullViewer::viewbuttonClicked(
   void )
 {
-  SoDebugError::postInfo( "SoGtkFullViewer::viewbuttonClicked", "[invoked]" );
+  if ( ! this->isViewing() )
+    this->setViewing( TRUE );
+  GtkWidget * interact_button = findButton( "interact" );
+  GtkWidget * view_button = findButton( "view" );
 }
 
 void
 SoGtkFullViewer::viewbuttonClickedCB( // static
   GtkWidget *,
-  GdkEvent *,
   gpointer closure )
 {
   assert( closure != NULL );
@@ -2739,13 +2169,12 @@ void
 SoGtkFullViewer::helpbuttonClicked(
   void )
 {
-  SoDebugError::postInfo( "SoGtkFullViewer::helpbuttonClicked", "[invoked]" );
+  this->openViewerHelpCard();
 }
 
 void
 SoGtkFullViewer::helpbuttonClickedCB( // static
   GtkWidget *,
-  GdkEvent *,
   gpointer closure )
 {
   assert( closure != NULL );
@@ -2759,13 +2188,12 @@ void
 SoGtkFullViewer::homebuttonClicked(
   void )
 {
-  SoDebugError::postInfo( "SoGtkFullViewer::homebuttonClicked", "[invoked]" );
+  this->resetToHomePosition();
 }
 
 void
 SoGtkFullViewer::homebuttonClickedCB( // static
   GtkWidget *,
-  GdkEvent *,
   gpointer closure )
 {
   assert( closure != NULL );
@@ -2779,13 +2207,12 @@ void
 SoGtkFullViewer::sethomebuttonClicked(
   void )
 {
-  SoDebugError::postInfo( "SoGtkFullViewer::sethomebuttonClicked", "[invoked]" );
+  this->saveHomePosition();
 }
 
 void
 SoGtkFullViewer::sethomebuttonClickedCB( // static
   GtkWidget *,
-  GdkEvent *,
   gpointer closure )
 {
   assert( closure != NULL );
@@ -2799,13 +2226,12 @@ void
 SoGtkFullViewer::viewallbuttonClicked(
   void )
 {
-  SoDebugError::postInfo( "SoGtkFullViewer::viewallbuttonClicked", "[invoked]" );
+  this->viewAll();
 }
 
 void
 SoGtkFullViewer::viewallbuttonClickedCB( // static
   GtkWidget *,
-  GdkEvent *,
   gpointer closure )
 {
   assert( closure != NULL );
@@ -2819,15 +2245,12 @@ void
 SoGtkFullViewer::seekbuttonClicked(
   void )
 {
-  SoDebugError::postInfo( "SoGtkFullViewer::seekbuttonClicked",
-    "[invoked] [this = %p]", this );
-  // this->setSeekMode( this->isSeekMode() ? FALSE : TRUE );
+  this->setSeekMode( this->isSeekMode() ? FALSE : TRUE );
 }
 
 void
 SoGtkFullViewer::seekbuttonClickedCB( // static
   GtkWidget *,
-  GdkEvent *,
   gpointer closure )
 {
   assert( closure != NULL );

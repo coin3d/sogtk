@@ -237,21 +237,23 @@ private:
 
   static struct SoGtkViewerButton SoGtkFullViewerButtons[];
 
+  GtkWidget * findButton( const char * const keyword );
+
   void interactbuttonClicked(void);
-  static void interactbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  static void interactbuttonClickedCB( GtkWidget *, gpointer );
   void viewbuttonClicked(void);
-  static void viewbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  static void viewbuttonClickedCB( GtkWidget *, gpointer );
 
   void helpbuttonClicked(void);
-  static void helpbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  static void helpbuttonClickedCB( GtkWidget *, gpointer );
   void homebuttonClicked(void);
-  static void homebuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  static void homebuttonClickedCB( GtkWidget *, gpointer );
   void sethomebuttonClicked(void);
-  static void sethomebuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  static void sethomebuttonClickedCB( GtkWidget *, gpointer );
   void viewallbuttonClicked(void);
-  static void viewallbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  static void viewallbuttonClickedCB( GtkWidget *, gpointer );
   void seekbuttonClicked(void);
-  static void seekbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  static void seekbuttonClickedCB( GtkWidget *, gpointer );
 
 private:
   SoAnyFullViewer * const common;
