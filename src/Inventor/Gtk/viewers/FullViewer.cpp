@@ -17,6 +17,23 @@
  *
  **************************************************************************/
 
+/*!
+  \class SoGtkFullViewer Inventor/Gtk/viewers/SoGtkFullViewer.h
+  \brief The SoGtkFullViewer class adds decorations to the parent viewer class.
+
+  \ingroup viewers
+
+  TODO: more doc
+  ...overview of what this class provides over parent class...
+  ...keyboard combinations...mousebutton combinations...explain pan,
+  rotate, zoom, dolly, seek...explain the fact that we're moving the
+  camera, not the scene...
+  ...viewer modes (examine vs interact) w/ explanation of what they are
+  useful for...
+*/
+
+// *************************************************************************
+
 // this stops IRIX build from crashing
 // #define NO_THUMBWHEELS
 
@@ -26,7 +43,6 @@
 
 #include <string.h>
 
-#include <gtk/gtk.h>
 #include <gtk/gtkvbox.h>
 #include <gtk/gtkhbox.h>
 #include <gtk/gtklabel.h>
@@ -43,7 +59,7 @@
 #include <Inventor/Gtk/widgets/SoGtkPopupMenu.h>
 
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
-#include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
+#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 
 // Button icons.
 #include <Inventor/Gtk/common/pixmaps/pick.xpm>
@@ -53,23 +69,6 @@
 #include <Inventor/Gtk/common/pixmaps/set_home.xpm>
 #include <Inventor/Gtk/common/pixmaps/view_all.xpm>
 #include <Inventor/Gtk/common/pixmaps/seek.xpm>
-
-// *************************************************************************
-
-/*!
-  \class SoGtkFullViewer Inventor/Gtk/viewers/SoGtkFullViewer.h
-  \brief The SoGtkFullViewer class adds decorations to the parent viewer class.
-
-  \ingroup viewers
-
-  TODO: more doc
-  ...overview of what this class provides over parent class...
-  ...keyboard combinations...mousebutton combinations...explain pan,
-  rotate, zoom, dolly, seek...explain the fact that we're moving the
-  camera, not the scene...
-  ...viewer modes (examine vs interact) w/ explanation of what they are
-  useful for...
-*/
 
 // *************************************************************************
 
@@ -198,125 +197,6 @@
 
 // *************************************************************************
 
-class SoGtkFullViewerP {
-public:
-  SoGtkFullViewerP(SoGtkFullViewer * publ);
-  ~SoGtkFullViewerP(void);
-
-  GtkWidget * makePreferencesWindow(void);
-  GtkWidget * makeSeekPreferences(GtkWidget * parent);
-  GtkWidget * makeSeekDistancePreferences(GtkWidget * parent);
-  GtkWidget * makeZoomPreferences(GtkWidget * parent);
-  GtkWidget * makeAutoclipPreferences(GtkWidget * parent);
-  GtkWidget * makeStereoPreferences(GtkWidget * parent);
-
-  GtkWidget * viewerWidget, * canvasParent, * canvas;
-  GtkWidget * interactbutton, * viewbutton, * seekbutton;
-
-  SbBool decorations;
-
-  SbBool menuEnabled;
-
-  GtkWidget * mainLayout;
-  void showDecorationWidgets(SbBool enable);
-
-  GtkWidget * appButtonLayout;
-  GtkWidget * appButtonForm;
-  SbPList * appButtonList;
-  void layoutAppButtons(GtkWidget * form);
-
-  SbPList * viewerButtons;
-
-  GtkWidget * prefwindow;
-  SbString prefwindowtitle;
-
-  GtkWidget * zoomslider;
-  GtkWidget * zoomfield, * zoomrangefrom, * zoomrangeto;
-  SbVec2f zoomrange;
-
-  void setCameraZoom(const float zoom);
-  float getCameraZoom(void);
-  void setZoomSliderPosition(float zoom);
-  void setZoomFieldString(float zoom);
-
-  GtkWidget * seekdistancewheel;
-  GtkWidget * seekdistancefield;
-
-  GtkWidget * clippingtable;
-  GtkWidget * nearclippinglabel, * farclippinglabel;
-  GtkWidget * nearclippingwheel, * farclippingwheel;
-  GtkWidget * nearclippingedit, * farclippingedit;
-
-  void setEnabledClippingWidgets(SbBool flag);
-
-  // Thumbwheels.
-  void leftWheelPressed(void);
-  void leftWheelChanged(float value);
-  void leftWheelReleased(void);
-  void rightWheelPressed(void);
-  void rightWheelChanged(float value);
-  void rightWheelReleased(void);
-  void bottomWheelPressed(void);
-  void bottomWheelChanged(float value);
-  void bottomWheelReleased(void);
-
-  // Pref sheet.
-  static void preferencesDestroyed(GtkObject *, gpointer);
-
-  //  seek settings
-  static void seekAnimationTimeChanged(GtkEditable *, gpointer);
-  static void seekDetailToggled(GtkToggleButton *, gpointer);
-  static void seekDistanceWheelChanged(GtkWidget *, gpointer);
-  static void seekDistanceEdit(GtkEditable *, gpointer);
-  static void seekDistanceTypeToggle(GtkToggleButton *, gpointer);
-
-  //  zoom settings
-  static void zoomSliderMoved(GtkAdjustment *, gpointer);
-  static void zoomFieldChanged(GtkEditable *, gpointer);
-  static void zoomRangeChanged1(GtkEditable *, gpointer);
-  static void zoomRangeChanged2(GtkEditable *, gpointer);
-
-  //  clipping settings
-  static void clippingToggled(GtkToggleButton *, gpointer);
-  static void nearclippingwheelMoved(GtkWidget *, gpointer);
-  static void farclippingwheelMoved(GtkWidget *, gpointer);
-  static void nearclipEditPressed(GtkWidget *, gpointer);
-  static void farclipEditPressed(GtkWidget *, gpointer);
-
-  // Stereo settings
-  static void stereoToggled(GtkToggleButton *, gpointer);
-
-  // Generic Signal Handlers.
-  static void increaseInteractiveCount(GtkWidget *, gpointer);
-  static void decreaseInteractiveCount(GtkWidget *, gpointer);
-
-  static SoGtkViewerButton SoGtkFullViewerButtons[];
-
-  static void interactbuttonClickedCB(GtkWidget *, gpointer);
-  static void viewbuttonClickedCB(GtkWidget *, gpointer);
-  static void helpbuttonClickedCB(GtkWidget *, gpointer);
-  static void homebuttonClickedCB(GtkWidget *, gpointer);
-  static void sethomebuttonClickedCB(GtkWidget *, gpointer);
-  static void viewallbuttonClickedCB(GtkWidget *, gpointer);
-  static void seekbuttonClickedCB(GtkWidget *, gpointer);
-
-  static void leftwheelPressedCB(GtkWidget *, gpointer);
-  static void leftwheelMovedCB(GtkWidget *, gpointer);
-  static void leftwheelReleasedCB(GtkWidget *, gpointer);
-  static void bottomwheelPressedCB(GtkWidget *, gpointer);
-  static void bottomwheelMovedCB(GtkWidget *, gpointer);
-  static void bottomwheelReleasedCB(GtkWidget *, gpointer);
-  static void rightwheelPressedCB(GtkWidget *, gpointer);
-  static void rightwheelMovedCB(GtkWidget *, gpointer);
-  static void rightwheelReleasedCB(GtkWidget *, gpointer);
-
-private:
-  SoGtkFullViewer * pub;
-
-}; // class SoGtkFullViewerP
-
-// *************************************************************************
-
 #define PUBLIC(ptr) (ptr->pub)
 #define PRIVATE(ptr) (ptr->pimpl)
 
@@ -398,16 +278,15 @@ SoGtkFullViewerP::SoGtkFullViewerButtons[] = {
   canvas after other setup tasks has been performed.
 */
 
-SoGtkFullViewer::SoGtkFullViewer(
-  GtkWidget * parent,
-  const char * name,
-  SbBool embed,
-  SoGtkFullViewer::BuildFlag buildFlag,
-  SoGtkViewer::Type type,
-  SbBool build)
+SoGtkFullViewer::SoGtkFullViewer(GtkWidget * parent,
+                                 const char * name,
+                                 SbBool embed,
+                                 SoGtkFullViewer::BuildFlag buildFlag,
+                                 SoGtkViewer::Type type,
+                                 SbBool build)
   : inherited(parent, name, embed, type, FALSE)
 {
-  this->pimpl = new SoGtkFullViewerP(this);
+  PRIVATE(this) = new SoGtkFullViewerP(this);
 
   this->leftDecoration = (GtkWidget *) NULL;
   this->leftWheel = (GtkWidget *) NULL;
@@ -446,13 +325,12 @@ SoGtkFullViewer::SoGtkFullViewer(
   Destructor.
 */
 
-SoGtkFullViewer::~SoGtkFullViewer(
-  void)
+SoGtkFullViewer::~SoGtkFullViewer()
 {
   delete [] this->leftWheelStr;
   delete [] this->bottomWheelStr;
   delete [] this->rightWheelStr;
-  delete this->pimpl;
+  delete PRIVATE(this);
 }
 
 // *************************************************************************
@@ -464,8 +342,7 @@ SoGtkFullViewer::~SoGtkFullViewer(
 */
 
 void
-SoGtkFullViewer::setDecoration(
-  const SbBool enable)
+SoGtkFullViewer::setDecoration(const SbBool enable)
 {
 #if SOGTK_DEBUG
   if ((enable && this->isDecoration()) || (!enable && !this->isDecoration())) {
@@ -488,8 +365,7 @@ SoGtkFullViewer::setDecoration(
 */
 
 SbBool
-SoGtkFullViewer::isDecoration(
-  void) const
+SoGtkFullViewer::isDecoration(void) const
 {
   return PRIVATE(this)->decorations;
 }
@@ -505,8 +381,7 @@ SoGtkFullViewer::isDecoration(
 */
 
 void
-SoGtkFullViewer::setPopupMenuEnabled(
-  const SbBool on)
+SoGtkFullViewer::setPopupMenuEnabled(const SbBool on)
 {
 #if SOGTK_DEBUG
   if ((on && this->isPopupMenuEnabled()) ||
@@ -528,8 +403,7 @@ SoGtkFullViewer::setPopupMenuEnabled(
 */
 
 SbBool
-SoGtkFullViewer::isPopupMenuEnabled(
-  void) const
+SoGtkFullViewer::isPopupMenuEnabled(void) const
 {
   return PRIVATE(this)->menuEnabled;
 }
@@ -545,8 +419,7 @@ SoGtkFullViewer::isPopupMenuEnabled(
 */
 
 GtkWidget *
-SoGtkFullViewer::getAppPushButtonParent(
-  void) const
+SoGtkFullViewer::getAppPushButtonParent(void) const
 {
   return PRIVATE(this)->appButtonForm;
 }
@@ -562,8 +435,7 @@ SoGtkFullViewer::getAppPushButtonParent(
 */
 
 void
-SoGtkFullViewer::addAppPushButton(
-  GtkWidget * button)
+SoGtkFullViewer::addAppPushButton(GtkWidget * button)
 {
   PRIVATE(this)->appButtonList->append(button);
   PRIVATE(this)->layoutAppButtons(this->getAppPushButtonParent());
@@ -577,9 +449,8 @@ SoGtkFullViewer::addAppPushButton(
 */
 
 void
-SoGtkFullViewer::insertAppPushButton(
-  GtkWidget * newButton,
-  int index)
+SoGtkFullViewer::insertAppPushButton(GtkWidget * newButton,
+                                     int index)
 {
 #if SOGTK_DEBUG
   if ((index < 0) || (index > this->lengthAppPushButton())) {
@@ -599,8 +470,7 @@ SoGtkFullViewer::insertAppPushButton(
 */
 
 void
-SoGtkFullViewer::removeAppPushButton(
-  GtkWidget * oldButton)
+SoGtkFullViewer::removeAppPushButton(GtkWidget * oldButton)
 {
   int idx = PRIVATE(this)->appButtonList->find(oldButton);
 
@@ -624,8 +494,7 @@ SoGtkFullViewer::removeAppPushButton(
 */
 
 int
-SoGtkFullViewer::findAppPushButton(
-  GtkWidget * button) const
+SoGtkFullViewer::findAppPushButton(GtkWidget * button) const
 {
   return PRIVATE(this)->appButtonList->find(button);
 }
@@ -637,8 +506,7 @@ SoGtkFullViewer::findAppPushButton(
 */
 
 int
-SoGtkFullViewer::lengthAppPushButton(
-  void) const
+SoGtkFullViewer::lengthAppPushButton(void) const
 {
   return PRIVATE(this)->appButtonList->getLength();
 }
@@ -718,8 +586,7 @@ SoGtkFullViewer::setCamera(SoCamera * camera)
 */
 
 void
-SoGtkFullViewer::hide(
-  void)
+SoGtkFullViewer::hide(void)
 {
   if (PRIVATE(this)->prefwindow)
     gtk_widget_hide(PRIVATE(this)->prefwindow);
@@ -736,9 +603,8 @@ SoGtkFullViewer::hide(
 */
 
 SbBool
-SoGtkFullViewer::eventFilter(
-  GtkWidget * obj,
-  GdkEvent * ev)
+SoGtkFullViewer::eventFilter(GtkWidget * obj,
+                             GdkEvent * ev)
 {
   if (inherited::eventFilter(obj, ev))
     return TRUE;
@@ -794,8 +660,7 @@ SoGtkFullViewer::buildWidget(GtkWidget * parent)
 */
 
 void
-SoGtkFullViewer::buildDecoration(
-  GtkWidget * parent)
+SoGtkFullViewer::buildDecoration(GtkWidget * parent)
 {
   this->leftDecoration   = this->buildLeftTrim(parent);
   this->bottomDecoration = this->buildBottomTrim(parent);
@@ -815,8 +680,7 @@ SoGtkFullViewer::buildDecoration(
 */
 
 GtkWidget *
-SoGtkFullViewer::buildLeftTrim(
-  GtkWidget * parent)
+SoGtkFullViewer::buildLeftTrim(GtkWidget * parent)
 {
   GtkWidget * trim = gtk_vbox_new(FALSE, TRUE);
   g_return_val_if_fail(trim != NULL, (GtkWidget *) NULL);
@@ -850,8 +714,7 @@ SoGtkFullViewer::buildLeftTrim(
 */
 
 GtkWidget *
-SoGtkFullViewer::buildBottomTrim(
-  GtkWidget * parent)
+SoGtkFullViewer::buildBottomTrim(GtkWidget * parent)
 {
   GtkWidget * trim = gtk_hbox_new(FALSE, TRUE);
   g_return_val_if_fail(trim != NULL, (GtkWidget *) NULL);
@@ -906,8 +769,7 @@ SoGtkFullViewer::buildBottomTrim(
 */
 
 GtkWidget *
-SoGtkFullViewer::buildRightTrim(
-  GtkWidget * parent)
+SoGtkFullViewer::buildRightTrim(GtkWidget * parent)
 {
   GtkWidget * trim = gtk_vbox_new(FALSE, TRUE);
   g_return_val_if_fail(trim != NULL, (GtkWidget *) NULL);
@@ -968,8 +830,7 @@ SoGtkFullViewer::buildAppButtons(GtkWidget * parent)
 */
 
 GtkWidget *
-SoGtkFullViewer::buildViewerButtons(
-  GtkWidget * parent)
+SoGtkFullViewer::buildViewerButtons(GtkWidget * parent)
 {
   GtkWidget * buttons = gtk_vbox_new(FALSE, FALSE);
 
@@ -1060,10 +921,9 @@ SoGtkFullViewer::createViewerButtons(GtkWidget * parent,
 */
 
 void
-SoGtkFullViewer::buildPopupMenu(
-  void)
+SoGtkFullViewer::buildPopupMenu(void)
 {
-  this->prefmenu = this->setupStandardPopupMenu();
+  this->prefmenu = PRIVATE(this)->setupStandardPopupMenu();
 }
 
 // *************************************************************************
@@ -1073,13 +933,12 @@ SoGtkFullViewer::buildPopupMenu(
 */
 
 void
-SoGtkFullViewer::openPopupMenu(
-  const SbVec2s position)
+SoGtkFullViewer::openPopupMenu(const SbVec2s position)
 {
   if (! this->prefmenu && PRIVATE(this)->menuEnabled)
     this->buildPopupMenu();
   if (this->prefmenu) {
-    this->prepareMenu(this->prefmenu);
+    PRIVATE(this)->prepareMenu(this->prefmenu);
     this->prefmenu->popUp(this->getGLWidget(), position[0], position[1]);
   }
 }
@@ -1092,8 +951,7 @@ SoGtkFullViewer::openPopupMenu(
 */
 
 GtkWidget *
-SoGtkFullViewer::makeSubPreferences(
-  GtkWidget *) // parent)
+SoGtkFullViewer::makeSubPreferences(GtkWidget *)
 {
   return (GtkWidget *) NULL;
 }
@@ -1105,8 +963,7 @@ SoGtkFullViewer::makeSubPreferences(
 */
 
 void
-SoGtkFullViewer::setPrefSheetString(
-  const char * title)
+SoGtkFullViewer::setPrefSheetString(const char * title)
 {
   PRIVATE(this)->prefwindowtitle = title ? title : "";
   if (PRIVATE(this)->prefwindow)
@@ -1140,8 +997,7 @@ SoGtkFullViewer::setLeftWheelString(
 */
 
 void
-SoGtkFullViewer::setBottomWheelString(
-  const char * const string)
+SoGtkFullViewer::setBottomWheelString(const char * const string)
 {
   delete [] this->bottomWheelStr;
   this->bottomWheelStr = (char *) NULL;
@@ -1159,8 +1015,7 @@ SoGtkFullViewer::setBottomWheelString(
 */
 
 void
-SoGtkFullViewer::setRightWheelString(
-  const char * const string)
+SoGtkFullViewer::setRightWheelString(const char * const string)
 {
   delete [] this->rightWheelStr;
   this->rightWheelStr = (char *) NULL;
@@ -1248,8 +1103,7 @@ SoGtkFullViewer::selectedPrefs(void)
 */
 
 void
-SoGtkFullViewer::interactbuttonClicked(
-  void)
+SoGtkFullViewer::interactbuttonClicked(void)
 {
   if (! this->isViewing()) {
     GtkWidget * button = PRIVATE(this)->interactbutton ;
@@ -1266,8 +1120,7 @@ SoGtkFullViewer::interactbuttonClicked(
 */
 
 void
-SoGtkFullViewer::viewbuttonClicked(
-  void)
+SoGtkFullViewer::viewbuttonClicked(void)
 {
 
   if (this->isViewing()) {
@@ -1285,8 +1138,7 @@ SoGtkFullViewer::viewbuttonClicked(
 */
 
 void
-SoGtkFullViewer::helpbuttonClicked(
-  void)
+SoGtkFullViewer::helpbuttonClicked(void)
 {
   this->openViewerHelpCard();
 }
@@ -1296,8 +1148,7 @@ SoGtkFullViewer::helpbuttonClicked(
 */
 
 void
-SoGtkFullViewer::homebuttonClicked(
-  void)
+SoGtkFullViewer::homebuttonClicked(void)
 {
   this->resetToHomePosition();
 }
@@ -1307,8 +1158,7 @@ SoGtkFullViewer::homebuttonClicked(
 */
 
 void
-SoGtkFullViewer::sethomebuttonClicked(
-  void)
+SoGtkFullViewer::sethomebuttonClicked(void)
 {
   this->saveHomePosition();
 }
@@ -1318,8 +1168,7 @@ SoGtkFullViewer::sethomebuttonClicked(
 */
 
 void
-SoGtkFullViewer::viewallbuttonClicked(
-  void)
+SoGtkFullViewer::viewallbuttonClicked(void)
 {
   this->viewAll();
 }
@@ -1329,8 +1178,7 @@ SoGtkFullViewer::viewallbuttonClicked(
 */
 
 void
-SoGtkFullViewer::seekbuttonClicked(
-  void)
+SoGtkFullViewer::seekbuttonClicked(void)
 {
   this->setSeekMode(this->isSeekMode() ? FALSE : TRUE);
 }
@@ -1343,11 +1191,9 @@ SoGtkFullViewer::seekbuttonClicked(
 /*
 */
 
-SoGtkFullViewerP::SoGtkFullViewerP(
-  SoGtkFullViewer * publ)
+SoGtkFullViewerP::SoGtkFullViewerP(SoGtkFullViewer * publ)
+  : SoGuiFullViewerP(publ)
 {
-  this->pub = publ;
-
   this->viewerWidget = (GtkWidget *) NULL;
   this->canvas = (GtkWidget *) NULL;
   this->canvasParent = (GtkWidget *) NULL;
@@ -1366,14 +1212,12 @@ SoGtkFullViewerP::SoGtkFullViewerP(
   this->viewerButtons = new SbPList;
   this->appButtonList = new SbPList;
   this->appButtonForm = (GtkWidget *) NULL;
-
 }
 
 /*
 */
 
-SoGtkFullViewerP::~SoGtkFullViewerP(
-  void)
+SoGtkFullViewerP::~SoGtkFullViewerP()
 {
   delete this->viewerButtons;
   delete this->appButtonList;
@@ -1415,8 +1259,7 @@ SoGtkFullViewerP::showDecorationWidgets(SbBool enable)
 */
 
 void
-SoGtkFullViewerP::layoutAppButtons(
-  GtkWidget * form)
+SoGtkFullViewerP::layoutAppButtons(GtkWidget * form)
 {
 }
 
@@ -1437,8 +1280,7 @@ SoGtkFullViewer::createPrefSheet(void)
 */
 
 GtkWidget *
-SoGtkFullViewerP::makePreferencesWindow(
-  void)
+SoGtkFullViewerP::makePreferencesWindow(void)
 {
   this->prefwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (this->prefwindow),
@@ -1469,9 +1311,8 @@ SoGtkFullViewerP::makePreferencesWindow(
 */
 
 void
-SoGtkFullViewerP::preferencesDestroyed(
-  GtkObject * object,
-  gpointer closure)
+SoGtkFullViewerP::preferencesDestroyed(GtkObject * object,
+                                       gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   PRIVATE(viewer)->prefwindow = (GtkWidget *) NULL;
@@ -1485,8 +1326,7 @@ SoGtkFullViewerP::preferencesDestroyed(
 */
 
 GtkWidget *
-SoGtkFullViewerP::makeSeekPreferences(
-  GtkWidget * parent)
+SoGtkFullViewerP::makeSeekPreferences(GtkWidget * parent)
 {
   GSList *rbg1 = (GSList *) NULL;
 
@@ -1562,8 +1402,7 @@ SoGtkFullViewerP::makeSeekPreferences(
 */
 
 GtkWidget *
-SoGtkFullViewerP::makeSeekDistancePreferences(
-  GtkWidget * parent)
+SoGtkFullViewerP::makeSeekDistancePreferences(GtkWidget * parent)
 {
   GSList * bg = (GSList *) NULL;
 
@@ -1639,8 +1478,7 @@ SoGtkFullViewerP::makeSeekDistancePreferences(
 */
 
 GtkWidget *
-SoGtkFullViewerP::makeZoomPreferences(
-  GtkWidget * parent)
+SoGtkFullViewerP::makeZoomPreferences(GtkWidget * parent)
 {
   char buffer[16] ;
 
@@ -1737,8 +1575,7 @@ SoGtkFullViewerP::makeZoomPreferences(
 */
 
 void
-SoGtkFullViewerP::setEnabledClippingWidgets(
-  SbBool flag)
+SoGtkFullViewerP::setEnabledClippingWidgets(SbBool flag)
 {
 #if 1
   gtk_widget_set_sensitive(this->clippingtable, flag);
@@ -1788,8 +1625,7 @@ SoGtkFullViewerP::setEnabledClippingWidgets(
 */
 
 GtkWidget *
-SoGtkFullViewerP::makeAutoclipPreferences(
-  GtkWidget * dialog)
+SoGtkFullViewerP::makeAutoclipPreferences(GtkWidget * dialog)
 {
   GtkWidget *form = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (form);
@@ -1878,8 +1714,7 @@ SoGtkFullViewerP::makeAutoclipPreferences(
 */
 
 GtkWidget *
-SoGtkFullViewerP::makeStereoPreferences(
-  GtkWidget * dialog)
+SoGtkFullViewerP::makeStereoPreferences(GtkWidget * dialog)
 {
   GtkWidget *form = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (form);
@@ -1905,8 +1740,7 @@ SoGtkFullViewerP::makeStereoPreferences(
 */
 
 void
-SoGtkFullViewerP::setCameraZoom(
-  const float val)
+SoGtkFullViewerP::setCameraZoom(const float val)
 {
   SoCamera * cam = PUBLIC(this)->getCamera();
   if (cam == NULL) return; // can happen if scenegraph is empty
@@ -1929,8 +1763,7 @@ SoGtkFullViewerP::setCameraZoom(
 */
 
 float
-SoGtkFullViewerP::getCameraZoom(
-  void)
+SoGtkFullViewerP::getCameraZoom(void)
 {
   SoCamera * cam = PUBLIC(this)->getCamera();
   if (cam == NULL) return 0.0f; // can happen if scenegraph is empty
@@ -1956,8 +1789,7 @@ SoGtkFullViewerP::getCameraZoom(
 */
 
 void
-SoGtkFullViewerP::setZoomSliderPosition(
-  float zoom)
+SoGtkFullViewerP::setZoomSliderPosition(float zoom)
 {
   if (!this->prefwindow) return;
 
@@ -1975,8 +1807,7 @@ SoGtkFullViewerP::setZoomSliderPosition(
 */
 
 void
-SoGtkFullViewerP::setZoomFieldString(
-  float zoom)
+SoGtkFullViewerP::setZoomFieldString(float zoom)
 {
   if (!this->prefwindow) return;
 
@@ -1993,9 +1824,8 @@ SoGtkFullViewerP::setZoomFieldString(
 */
 
 void
-SoGtkFullViewerP::seekAnimationTimeChanged(
-  GtkEditable * editable,
-  gpointer closure)
+SoGtkFullViewerP::seekAnimationTimeChanged(GtkEditable * editable,
+                                           gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   char * s = gtk_editable_get_chars(editable, 0, -1);
@@ -2017,9 +1847,8 @@ SoGtkFullViewerP::seekAnimationTimeChanged(
 */
 
 void
-SoGtkFullViewerP::seekDetailToggled(
-  GtkToggleButton * button,
-  gpointer closure)
+SoGtkFullViewerP::seekDetailToggled(GtkToggleButton * button,
+                                    gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->setDetailSeek(gtk_toggle_button_get_active(button) ?
@@ -2034,9 +1863,8 @@ SoGtkFullViewerP::seekDetailToggled(
 */
 
 void
-SoGtkFullViewerP::seekDistanceWheelChanged(
-  GtkWidget * wheel,
-  gpointer closure)
+SoGtkFullViewerP::seekDistanceWheelChanged(GtkWidget * wheel,
+                                           gpointer closure)
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
   gfloat val = gtk_thumbwheel_get_value(GTK_THUMBWHEEL(wheel));
@@ -2060,9 +1888,8 @@ SoGtkFullViewerP::seekDistanceWheelChanged(
 */
 
 void
-SoGtkFullViewerP::seekDistanceEdit(
-  GtkEditable * editable,
-  gpointer closure)
+SoGtkFullViewerP::seekDistanceEdit(GtkEditable * editable,
+                                   gpointer closure)
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
   char *s = gtk_editable_get_chars(editable,0,-1);
@@ -2092,9 +1919,8 @@ SoGtkFullViewerP::seekDistanceEdit(
 */
 
 void
-SoGtkFullViewerP::seekDistanceTypeToggle(
-  GtkToggleButton * button,
-  gpointer closure)
+SoGtkFullViewerP::seekDistanceTypeToggle(GtkToggleButton * button,
+                                         gpointer closure)
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
 
@@ -2111,9 +1937,8 @@ SoGtkFullViewerP::seekDistanceTypeToggle(
 */
 
 void
-SoGtkFullViewerP::zoomSliderMoved(
-  GtkAdjustment * adjustment,
-  gpointer closure)
+SoGtkFullViewerP::zoomSliderMoved(GtkAdjustment * adjustment,
+                                  gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
 
@@ -2132,9 +1957,8 @@ SoGtkFullViewerP::zoomSliderMoved(
 */
 
 void
-SoGtkFullViewerP::zoomFieldChanged(
-  GtkEditable * editable,
-  gpointer closure)
+SoGtkFullViewerP::zoomFieldChanged(GtkEditable * editable,
+                                   gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
 
@@ -2164,9 +1988,8 @@ SoGtkFullViewerP::zoomFieldChanged(
 */
 
 void
-SoGtkFullViewerP::zoomRangeChanged1(
-  GtkEditable * editable,
-  gpointer closure)
+SoGtkFullViewerP::zoomRangeChanged1(GtkEditable * editable,
+                                    gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
 
@@ -2194,9 +2017,8 @@ SoGtkFullViewerP::zoomRangeChanged1(
 */
 
 void
-SoGtkFullViewerP::zoomRangeChanged2(
-  GtkEditable * editable,
-  gpointer closure)
+SoGtkFullViewerP::zoomRangeChanged2(GtkEditable * editable,
+                                    gpointer closure)
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer *) closure;
 
@@ -2226,9 +2048,8 @@ SoGtkFullViewerP::zoomRangeChanged2(
 */
 
 void
-SoGtkFullViewerP::clippingToggled(
-  GtkToggleButton * toggle_button,
-  gpointer closure)
+SoGtkFullViewerP::clippingToggled(GtkToggleButton * toggle_button,
+                                  gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   bool flag = gtk_toggle_button_get_active (toggle_button);
@@ -2245,9 +2066,8 @@ SoGtkFullViewerP::clippingToggled(
 */
 
 void
-SoGtkFullViewerP::increaseInteractiveCount(
-  GtkWidget * w,
-  gpointer closure)
+SoGtkFullViewerP::increaseInteractiveCount(GtkWidget * w,
+                                           gpointer closure)
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure;
   viewer->interactiveCountInc();
@@ -2261,9 +2081,8 @@ SoGtkFullViewerP::increaseInteractiveCount(
 */
 
 void
-SoGtkFullViewerP::decreaseInteractiveCount(
-  GtkWidget * w,
-  gpointer closure)
+SoGtkFullViewerP::decreaseInteractiveCount(GtkWidget * w,
+                                           gpointer closure)
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure;
   viewer->interactiveCountDec();
@@ -2277,9 +2096,8 @@ SoGtkFullViewerP::decreaseInteractiveCount(
 */
 
 void
-SoGtkFullViewerP::nearclippingwheelMoved(
-  GtkWidget * w,
-  gpointer closure)
+SoGtkFullViewerP::nearclippingwheelMoved(GtkWidget * w,
+                                         gpointer closure)
 {
   GtkThumbWheel * nearwheel = (GtkThumbWheel *) w;
   SoGtkFullViewer* viewer = (SoGtkFullViewer *) closure;
@@ -2317,9 +2135,8 @@ SoGtkFullViewerP::nearclippingwheelMoved(
 */
 
 void
-SoGtkFullViewerP::farclippingwheelMoved(
-  GtkWidget * w,
-  gpointer closure)
+SoGtkFullViewerP::farclippingwheelMoved(GtkWidget * w,
+                                        gpointer closure)
 {
   GtkThumbWheel * farwheel = (GtkThumbWheel *) w;
   SoGtkFullViewer* viewer = (SoGtkFullViewer *) closure;
@@ -2353,9 +2170,8 @@ SoGtkFullViewerP::farclippingwheelMoved(
 */
 
 void
-SoGtkFullViewerP::nearclipEditPressed(
-  GtkWidget	*w,
-  gpointer	closure)
+SoGtkFullViewerP::nearclipEditPressed(GtkWidget *w,
+                                      gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure ;
 
@@ -2388,9 +2204,8 @@ SoGtkFullViewerP::nearclipEditPressed(
 */
 
 void
-SoGtkFullViewerP::farclipEditPressed(
-  GtkWidget * w,
-  gpointer closure)
+SoGtkFullViewerP::farclipEditPressed(GtkWidget * w,
+                                     gpointer closure)
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure ;
 
@@ -2422,9 +2237,8 @@ SoGtkFullViewerP::farclipEditPressed(
 */
 
 void
-SoGtkFullViewerP::stereoToggled(
-  GtkToggleButton *toggle_button,
-  gpointer         closure)
+SoGtkFullViewerP::stereoToggled(GtkToggleButton *toggle_button,
+                                gpointer closure)
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
   bool flag = gtk_toggle_button_get_active (toggle_button);
