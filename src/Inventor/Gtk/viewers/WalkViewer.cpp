@@ -30,7 +30,6 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
-#include <Inventor/Gtk/viewers/SoAnyWalkViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkWalkViewer.h>
 
 // ************************************************************************
