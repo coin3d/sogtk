@@ -118,34 +118,33 @@ protected:
   SoAnyPopupMenu * prefmenu;
 
 protected:
+  GtkWidget * leftDecoration;
   GtkWidget * leftWheel;
   GtkWidget * leftWheelLabel;
+  char * leftWheelStr;
+  float leftWheelVal;
+
+  GtkWidget * bottomDecoration;
+  GtkWidget * bottomWheel;
+  GtkWidget * bottomWheelLabel;
+  char * bottomWheelStr;
+  float bottomWheelVal;
+
+  GtkWidget * rightDecoration;
+  GtkWidget * rightWheel;
+  GtkWidget * rightWheelLabel;
+  char * rightWheelStr;
+  float rightWheelVal;
 
 private:
-  enum {
-    LEFTDECORATION,
-    BOTTOMDECORATION,
-    RIGHTDECORATION,
-
-    FIRSTDECORATION = LEFTDECORATION,
-    LASTDECORATION = RIGHTDECORATION,
-    NUMDECORATIONS = LASTDECORATION - FIRSTDECORATION + 1
-  };
-
   GtkWidget * makePreferencesWindow(void);
   GtkWidget * makeSeekPreferences( GtkWidget * parent );
   GtkWidget * makeSeekDistancePreferences( GtkWidget * parent );
   GtkWidget * makeZoomPreferences( GtkWidget * parent );
   GtkWidget * makeAutoclipPreferences( GtkWidget * parent );
 
-
   GtkWidget * viewerWidget, * canvasParent, * canvas;
   SbBool decorations;
-  float wheelValues[NUMDECORATIONS];
-  GtkWidget * wheelStrings[NUMDECORATIONS];
-  GtkWidget * wheels[NUMDECORATIONS];
-  GtkWidget * wheelLabels[NUMDECORATIONS];
-  GtkWidget * decorForm[NUMDECORATIONS];
 
   SbString menuTitle;
   SbBool menuEnabled;

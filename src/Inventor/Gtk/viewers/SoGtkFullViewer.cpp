@@ -175,13 +175,15 @@ SoGtkFullViewer::SoGtkFullViewer(
   this->canvas = NULL;
   this->canvasParent = NULL;
 
-  char axisindicator[] = { 'Y', 'X', 'Z' };
-  for (int i = FIRSTDECORATION; i <= LASTDECORATION; i++) {
-//    this->wheelStrings[i] = "Motion ";
-//    this->wheelStrings[i] += axisindicator[i - FIRSTDECORATION];
-    this->decorForm[i] = NULL;
-    this->wheelLabels[i] = NULL;
-  }
+  this->leftWheel = NULL;
+  this->leftWheelLabel = NULL;
+  this->leftWheelStr = strcpy( new char [9], "Motion Y" );
+  this->bottomWheel = NULL;
+  this->bottomWheelLabel = NULL;
+  this->bottomWheelStr = strcpy( new char [9], "Motion X" );
+  this->rightWheel = NULL;
+  this->rightWheelLabel = NULL;
+  this->rightWheelStr = strcpy( new char [9], "Motion Z" );
 
   this->zoomRange = SbVec2f( 1.0f, 140.0f );
 
@@ -688,7 +690,6 @@ SoGtkFullViewer::buildWidget(
 
   this->canvas = inherited::buildWidget( croot );
 
-
   this->viewerWidget = croot;
   this->canvasParent = parent;
 
@@ -697,24 +698,18 @@ SoGtkFullViewer::buildWidget(
 //    this->showDecorationWidgets( TRUE );
   }
 
-  gtk_box_pack_start(
-    GTK_BOX(croot), this->decorForm[LEFTDECORATION], FALSE, TRUE, FALSE );
-  gtk_box_pack_start(
-    GTK_BOX(croot), this->canvas, TRUE, TRUE, FALSE );
-  gtk_box_pack_start(
-    GTK_BOX(croot), this->decorForm[RIGHTDECORATION], FALSE, TRUE, FALSE );
-  gtk_box_pack_start(
-    GTK_BOX(root), GTK_WIDGET(croot), TRUE, TRUE, FALSE );
-  gtk_box_pack_start(
-    GTK_BOX(root), GTK_WIDGET(this->decorForm[BOTTOMDECORATION]), FALSE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(croot), GTK_WIDGET(this->leftDecoration), FALSE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(croot), GTK_WIDGET(this->canvas), TRUE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(croot), GTK_WIDGET(this->rightDecoration), FALSE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(root), GTK_WIDGET(croot), TRUE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(root), GTK_WIDGET(this->bottomDecoration), FALSE, TRUE, FALSE );
   gtk_container_add( GTK_CONTAINER(parent), GTK_WIDGET(root) );
 
-  gtk_widget_show( this->decorForm[ LEFTDECORATION ] );
-  gtk_widget_show( this->canvas );
-  gtk_widget_show( this->decorForm[ RIGHTDECORATION ] );
-  gtk_widget_show( croot );
-
-  gtk_widget_show( this->decorForm[ BOTTOMDECORATION ] );
+  gtk_widget_show( GTK_WIDGET(this->leftDecoration) );
+  gtk_widget_show( GTK_WIDGET(this->canvas) );
+  gtk_widget_show( GTK_WIDGET(this->rightDecoration) );
+  gtk_widget_show( GTK_WIDGET(croot) );
+  gtk_widget_show( GTK_WIDGET(this->bottomDecoration) );
 
   if ( this->menuEnabled )
     this->buildPopupMenu();
@@ -734,9 +729,9 @@ void
 SoGtkFullViewer::buildDecoration(
   GtkWidget * parent )
 {
-  this->decorForm[ LEFTDECORATION ]    = this->buildLeftTrim( parent );
-  this->decorForm[ BOTTOMDECORATION ]  = this->buildBottomTrim( parent );
-  this->decorForm[ RIGHTDECORATION ]   = this->buildRightTrim( parent );
+  this->leftDecoration   = this->buildLeftTrim( parent );
+  this->bottomDecoration = this->buildBottomTrim( parent );
+  this->rightDecoration  = this->buildRightTrim( parent );
 } // buildDecoration()
 
 // *************************************************************************
@@ -1120,7 +1115,7 @@ void
 SoGtkFullViewer::leftWheelMotion(
   float value )
 {
-  this->wheelValues[LEFTDECORATION] = value;
+  this->leftWheelVal = value;
 }
 
 // *************************************************************************
@@ -1153,7 +1148,7 @@ float
 SoGtkFullViewer::getLeftWheelValue(
   void ) const
 {
-  return this->wheelValues[LEFTDECORATION];
+  return this->leftWheelVal;
 }
 
 // *************************************************************************
@@ -1189,7 +1184,7 @@ void
 SoGtkFullViewer::bottomWheelMotion(
   float value )
 {
-  this->wheelValues[BOTTOMDECORATION] = value;
+  this->bottomWheelVal = value;
 }
 
 // *************************************************************************
@@ -1222,7 +1217,7 @@ float
 SoGtkFullViewer::getBottomWheelValue(
   void ) const
 {
-  return this->wheelValues[ BOTTOMDECORATION ];
+  return this->bottomWheelVal;
 }
 
 // *************************************************************************
@@ -1258,7 +1253,7 @@ void
 SoGtkFullViewer::rightWheelMotion(
   float value )
 {
-  this->wheelValues[ RIGHTDECORATION ] = value;
+  this->rightWheelVal = value;
 }
 
 // *************************************************************************
@@ -1291,7 +1286,7 @@ float
 SoGtkFullViewer::getRightWheelValue(
   void ) const
 {
-  return this->wheelValues[ RIGHTDECORATION ];
+  return this->rightWheelVal;
 }
 
 // *************************************************************************
