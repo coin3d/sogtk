@@ -711,35 +711,6 @@ SoGtkExaminerViewer::setCursorRepresentation(int mode)
   GtkWidget * w = this->getGLWidget();
   assert(w);
 
-  if (GTK_WIDGET_NO_WINDOW(w)) {
-    if (SOGTK_DEBUG) {
-      // FIXME: This should not happen, but there seems to be a bug in
-      // SoGtk's event handling causing this. 20001219 RC.
-      static SbBool first = TRUE;
-      if (first) {
-        SoDebugError::postWarning("SoGtkExaminerViewer::setCursorRepresentation",
-                                  "widget %x: NO WINDOW\n", (int) w);
-        first = FALSE;
-      }
-    }
-    return;
-  }
-
-  GdkWindow * window = w->window;
-  if (window == (GdkWindow *)NULL) {
-    if (SOGTK_DEBUG) {
-      // FIXME: This should not happen, but there seems to be a bug in
-      // SoGtk's event handling causing this. 20001219 RC.
-      static SbBool first = TRUE;
-      if (first) {
-        SoDebugError::postWarning("SoGtkExaminerViewer::setCursorRepresentation",
-                                  "widget %x: widget->window == 0\n", (int) w);
-        first = FALSE;
-      }
-    }
-    return;
-  }
-
   if (!this->isCursorEnabled()) {
     this->setComponentCursor(SoGtkCursor(SoGtkCursor::BLANK));
     return;
