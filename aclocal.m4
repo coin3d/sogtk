@@ -1650,37 +1650,37 @@ saved_CFLAGS="$CFLAGS"
 
 # test for plain OpenGL
 AC_MSG_CHECKING([GL])
-LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGL -lGLU"
-AC_TRY_LINK([#include <GL/gl.h>] ,[glBegin(GL_VERTEX_ARRAY);], have_GL=yes, have_GL=no)
+LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lGLU -lGL"
+AC_TRY_LINK([#include <GL/gl.h>], [glBegin(GL_POLYGON);], have_GL=yes, have_GL=no)
 AC_MSG_RESULT($have_GL)
 
 if test x$have_GL = xyes; then
 
- GL_LIBS="-lGL -lGLU"
+ GL_LIBS="-lGLU -lGL"
 
 else
 
  # test for Mesa
  AC_MSG_CHECKING([Mesa])
- LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lMesaGLU"
- AC_TRY_LINK([#include <GL/gl.h>], [glBegin(GL_VERTEX_ARRAY);], have_Mesa=yes, have_Mesa=no)
+ LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGLU -lMesaGL"
+ AC_TRY_LINK( [char glBegin();] ,[glBegin(GL_POLYGON);], have_Mesa=yes, have_Mesa=no)
  AC_MSG_RESULT($have_Mesa)
 
  if test x$have_Mesa = xyes; then
 
-  GL_LIBS="-lMesaGL -lMesaGLU"
+  GL_LIBS="-lMesaGLU -lMesaGL"
 
  else
 
   # test for Mesa with threads
   AC_MSG_CHECKING([Mesa with pthreads])
-  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGL -lMesaGLU -lpthread"
-  AC_TRY_LINK([#include <GL/gl.h>], [glBegin(GL_VERTEX_ARRAY);], have_Mesa_pthread=yes, have_Mesa_pthread=no)
+  LIBS="$saved_LIBS $GTK_LIBS $GL_LDOPTS -lMesaGLU -lMesaGL -lpthread"
+  AC_TRY_LINK([#include <GL/gl.h>], [glBegin(GL_POLYGON);], have_Mesa_pthread=yes, have_Mesa_pthread=no)
   AC_MSG_RESULT($have_Mesa_pthread)
 
   if test x$have_Mesa_pthread = xyes; then
     
-    GL_LIBS="-lMesaGL -lMesaGLU -lpthread"
+    GL_LIBS="-lMesaGLU -lMesaGL -lpthread"
 
   else
 
@@ -1705,8 +1705,8 @@ else
 fi
 
 AC_MSG_CHECKING([GtkGLArea])
-LIBS="$save_LIBS $GTK_LIBS $GL_LDOPTS $GL_LIBS $GTKGL_LDOPTS -lgtkgl"
-AC_TRY_LINK([#include <gtkgl/gtkglarea.h>], [gtk_gl_area_new((void *)0L);], have_gtkgl=yes, have_gtkgl=no)
+LIBS="$save_LIBS -lgtkgl $GTK_LIBS $GL_LDOPTS $GL_LIBS $GTKGL_LDOPTS"
+AC_TRY_LINK([#include <gtkgl/gtkglarea.h>], [gtk_gl_area_new(0L);], have_gtkgl=yes, have_gtkgl=no)
 AC_MSG_RESULT($have_gtkgl)
 
 if test x$have_gtkgl = xyes; then
@@ -1731,6 +1731,7 @@ AC_SUBST(GTKGL_CFLAGS)
 AC_SUBST(GTKGL_LIBS)
 
 ])
+
 
 dnl  Let the user decide if compilation should be done in "debug mode".
 dnl  If compilation is not done in debug mode, all assert()'s in the code

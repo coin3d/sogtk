@@ -141,12 +141,15 @@ fi
 dnl * Set up necessary stuff to use Open Inventor or Coin.
 
 dnl Check for GTK+
+AC_LANG_SAVE
+AC_LANG_C
 AM_PATH_GTK(1.2.6,,
   AC_MSG_ERROR(Test for GTK+ failed.  See the file 'INSTALL' for help.))
 
 dnl Check for GtkGLArea
 AM_PATH_GTKGL(,
   AC_MSG_ERROR(Test for GtkGLArea failed.  See the file 'INSTALL' for help.))
+AC_LANG_RESTORE
 
 dnl SIM_CHECK_GTK([
 dnl   SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gtk_cppflags"
