@@ -3,9 +3,9 @@ NEWS
 
 2000-12-21 larsa:
 
-	* You now have to `bootstrap' the source archive.  There is a failsafe
-	  fallback on pregenerated files if your toolset doesn't qualify for
-	  bootstrapping.
+	* You now have to `bootstrap' (with --add) the source archive.  There
+	  is a failsafe fallback on pregenerated files if your toolset doesn't
+	  qualify for bootstrapping.
 
 2000-08-31 larsa:
 

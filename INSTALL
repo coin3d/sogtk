@@ -3,7 +3,7 @@ Cookbook Procedure
 
   1) run `bootstrap'
 
-    $ ./bootstrap
+    $ ./bootstrap --add
 
   2) set up and enter a build directory
 
