@@ -560,7 +560,7 @@ SbBool
 SoGtkExaminerViewer::processSoEvent(// virtual
   const SoEvent * const event)
 {
-  if (this->processSoEvent(event))
+  if (this->processGenericSoEvent(event))
     return TRUE;
   return inherited::processSoEvent(event);
 } // processSoEvent()
@@ -613,7 +613,7 @@ void
 SoGtkExaminerViewer::actualRedraw(
   void)
 {
-  this->actualRedraw();
+  this->actualGenericRedraw();
   inherited::actualRedraw();
   if (this->isFeedbackVisible())
     this->drawAxisCross();
