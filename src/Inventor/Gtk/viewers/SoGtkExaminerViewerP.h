@@ -47,19 +47,6 @@ public:
   GdkBitmap * orthomask, * perspectivemask;
 
   GtkWidget * cameratogglebutton;
-  GtkWidget * feedbacklabel1;
-  GtkWidget * feedbacklabel2;
-  GtkWidget * feedbackwheel;
-  GtkWidget * feedbackedit;
-  void setEnableFeedbackControls(const SbBool flag);
-
-  // Pref sheet.
-  static void spinAnimationToggled(GtkToggleButton *, gpointer);
-  static void feedbackVisibilityToggled(GtkToggleButton *, gpointer);
-  static void feedbackEditPressed(GtkEntry *, gpointer);
-  static void feedbackWheelPressed(GtkWidget *, gpointer);
-  static void feedbackSizeChanged(GtkWidget *, gpointer);
-  static void feedbackWheelReleased(GtkWidget *, gpointer);
 
   // Button row.
   static void camerabuttonCB(GtkWidget *, gpointer);

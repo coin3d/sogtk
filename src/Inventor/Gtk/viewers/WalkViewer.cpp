@@ -105,7 +105,6 @@ SoGtkWalkViewer::constructor(const SbBool build)
 //  this->addVisibilityChangeCallback(SoGtkWalkViewer::visibilityCB, this);
 
   this->setPopupMenuString(_("Walk Viewer"));
-  this->setPrefSheetString(_("Walk Viewer Preference Sheet"));
 
   this->setLeftWheelString(_("Tilt"));
   this->setBottomWheelString(_("Rotate"));
@@ -294,57 +293,12 @@ SoGtkWalkViewer::buildLeftTrim(GtkWidget * parent)
 */
 
 void
-SoGtkWalkViewer::createPrefSheet(void)
-{
-}
-
-// ************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-void
 SoGtkWalkViewer::openViewerHelpCard(void)
 {
   this->openHelpCard("SoGtkWalkViewer.help");
 }
 
 // ************************************************************************
-
-/*!
-  Overloaded to add preferences settings for fly viewer
-  specific stuff.
-*/
-
-GtkWidget *
-SoGtkWalkViewer::makeSubPreferences(GtkWidget * parent)
-{
-  GtkWidget* hbox = gtk_hbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (parent), hbox);
-
-  GtkWidget *label1 = gtk_label_new(_("Walking speed:"));
-  gtk_box_pack_start (GTK_BOX (hbox), label1, FALSE, FALSE, 0);
-
-  GtkWidget *incbutton = gtk_button_new_with_label(_("increase"));
-  gtk_box_pack_start (GTK_BOX (hbox), incbutton, FALSE, FALSE, 0);
-
-  GtkWidget *decbutton = gtk_button_new_with_label(_("decrease"));
-  gtk_box_pack_start (GTK_BOX (hbox), decbutton, FALSE, FALSE, 0);
-
-#if NOTYET
-  gtk_signal_connect(GTK_OBJECT(incbutton), "activate",
-    GTK_SIGNAL_FUNC(SoGtkWalkViewer::increaseCB), this);
-  gtk_signal_connect(GTK_OBJECT(decbutton), "activate",
-    GTK_SIGNAL_FUNC(SoGtkWalkViewer::decreaseCB), this);
-#endif
-
-  gtk_widget_show_all(hbox);
-
-  return hbox;
-}
-
-// *************************************************************************
 //
 //  Private implementation
 //

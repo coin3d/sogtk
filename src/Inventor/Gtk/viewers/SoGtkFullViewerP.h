@@ -44,13 +44,6 @@ public:
 
   static void setThumbWheelValue(void * wheel, float val);
 
-  GtkWidget * makePreferencesWindow(void);
-  GtkWidget * makeSeekPreferences(GtkWidget * parent);
-  GtkWidget * makeSeekDistancePreferences(GtkWidget * parent);
-  GtkWidget * makeZoomPreferences(GtkWidget * parent);
-  GtkWidget * makeAutoclipPreferences(GtkWidget * parent);
-  GtkWidget * makeStereoPreferences(GtkWidget * parent);
-
   GtkWidget * viewerWidget, * canvasParent, * canvas;
   GtkWidget * interactbutton, * viewbutton, * seekbutton;
 
@@ -68,27 +61,8 @@ public:
 
   SbPList * viewerButtons;
 
-  GtkWidget * prefwindow;
-  SbString prefwindowtitle;
-
-  GtkWidget * zoomslider;
-  GtkWidget * zoomfield, * zoomrangefrom, * zoomrangeto;
-  SbVec2f zoomrange;
-
   void setCameraZoom(const float zoom);
   float getCameraZoom(void);
-  void setZoomSliderPosition(float zoom);
-  void setZoomFieldString(float zoom);
-
-  GtkWidget * seekdistancewheel;
-  GtkWidget * seekdistancefield;
-
-  GtkWidget * clippingtable;
-  GtkWidget * nearclippinglabel, * farclippinglabel;
-  GtkWidget * nearclippingwheel, * farclippingwheel;
-  GtkWidget * nearclippingedit, * farclippingedit;
-
-  void setEnabledClippingWidgets(SbBool flag);
 
   // Thumbwheels.
   void leftWheelPressed(void);
@@ -100,32 +74,6 @@ public:
   void bottomWheelPressed(void);
   void bottomWheelChanged(float value);
   void bottomWheelReleased(void);
-
-  // Pref sheet.
-  static void preferencesDestroyed(GtkObject *, gpointer);
-
-  //  seek settings
-  static void seekAnimationTimeChanged(GtkEditable *, gpointer);
-  static void seekDetailToggled(GtkToggleButton *, gpointer);
-  static void seekDistanceWheelChanged(GtkWidget *, gpointer);
-  static void seekDistanceEdit(GtkEditable *, gpointer);
-  static void seekDistanceTypeToggle(GtkToggleButton *, gpointer);
-
-  //  zoom settings
-  static void zoomSliderMoved(GtkAdjustment *, gpointer);
-  static void zoomFieldChanged(GtkEditable *, gpointer);
-  static void zoomRangeChanged1(GtkEditable *, gpointer);
-  static void zoomRangeChanged2(GtkEditable *, gpointer);
-
-  //  clipping settings
-  static void clippingToggled(GtkToggleButton *, gpointer);
-  static void nearclippingwheelMoved(GtkWidget *, gpointer);
-  static void farclippingwheelMoved(GtkWidget *, gpointer);
-  static void nearclipEditPressed(GtkWidget *, gpointer);
-  static void farclipEditPressed(GtkWidget *, gpointer);
-
-  // Stereo settings
-  static void stereoToggled(GtkToggleButton *, gpointer);
 
   // Generic Signal Handlers.
   static void increaseInteractiveCount(GtkWidget *, gpointer);
@@ -152,7 +100,6 @@ public:
   static void rightwheelReleasedCB(GtkWidget *, gpointer);
 
   // menu selections
-  void selectedPrefs(void);
   void selectedViewing(void);
   void selectedDecoration(void);
   void selectedHeadlight(void);

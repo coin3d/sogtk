@@ -1,0 +1,1566 @@
+This file contains the big diff resulting when killing off all the
+native toolkit specific code for handling the preference sheets. It
+has been added to the CVS repository in case someone (important)
+loudly complains about me ripping out the prefsheet support.
+
+The common template diff can be found in
+src/Inventor/@Gui@/common/viewers/.
+
+20020606 mortene.
+
+
+Index: ExaminerViewer.cpp
+===================================================================
+RCS file: /export/cvsroot/SoGtk/src/Inventor/Gtk/viewers/ExaminerViewer.cpp,v
+retrieving revision 1.14
+diff -u -r1.14 ExaminerViewer.cpp
+--- ExaminerViewer.cpp	4 Jun 2002 14:51:35 -0000	1.14
++++ ExaminerViewer.cpp	6 Jun 2002 18:24:06 -0000
+@@ -117,7 +117,6 @@
+ //  this->addVisibilityChangeCallback(SoGtkExaminerViewerP::visibilityCB, this);
+ 
+   PUBLIC(this)->setPopupMenuString(_("Examiner Viewer"));
+-  PUBLIC(this)->setPrefSheetString(_("Examiner Viewer Preference Sheet"));
+ 
+   PUBLIC(this)->setLeftWheelString(_("Rotx"));
+   PUBLIC(this)->setBottomWheelString(_("Roty"));
+@@ -146,7 +145,6 @@
+ void
+ SoGtkExaminerViewer::setAnimationEnabled(const SbBool enable)
+ { // FIXME: make this virtual?  20001230 larsa
+-  // FIXME: update pref-sheet widget with the value. 20020603 mortene.
+   PRIVATE(this)->setGenericAnimationEnabled(enable);
+ }
+  
+@@ -161,7 +159,6 @@
+ void
+ SoGtkExaminerViewer::setFeedbackSize(const int size)
+ {
+-  // FIXME: update pref-sheet widget with the value. 20020603 mortene.
+   PRIVATE(this)->setGenericFeedbackSize(size);
+ }
+ 
+@@ -193,94 +190,6 @@
+ 
+ // *************************************************************************
+ 
+-/*!
+-  Overloaded to add preferences settings for examiner viewer
+-  specific stuff (enable/disable possible spin animation,
+-  enable/disable/configure axis cross graphics).
+-*/
+-
+-GtkWidget *
+-SoGtkExaminerViewer::makeSubPreferences(GtkWidget * parent)
+-{
+-  GtkWidget* form1 = gtk_vbox_new (FALSE, 0);
+-  gtk_widget_show (form1);
+-  gtk_container_add (GTK_CONTAINER (parent), form1);
+-
+-  GtkWidget *checkbutton1 = gtk_check_button_new_with_label (
+-                                                             _("Enable spin animation"));
+-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
+-                               this->isAnimationEnabled());
+-  gtk_widget_show (checkbutton1);
+-  gtk_box_pack_start (GTK_BOX (form1), checkbutton1, FALSE, FALSE, 0);
+-  gtk_signal_connect(GTK_OBJECT(checkbutton1), "toggled", 
+-                     GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::spinAnimationToggled), this);
+-
+-  // Do the single widget on the second row (a checkbutton).
+-  GtkWidget *checkbutton2 = gtk_check_button_new_with_label (
+-                                                             _("Show point of rotation axes"));
+-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton2), 
+-                               this->isFeedbackVisible());
+-  gtk_widget_show (checkbutton2);
+-  gtk_box_pack_start (GTK_BOX (form1), checkbutton2, FALSE, FALSE, 0);
+-  gtk_signal_connect(GTK_OBJECT(checkbutton2), "toggled", 
+-                     GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackVisibilityToggled), this);
+-
+-  GtkWidget* hbox = gtk_hbox_new (FALSE, 0);
+-  gtk_container_add (GTK_CONTAINER (parent), hbox);
+-
+-  // Do the four widgets on the third row (label, thumbwheel,
+-  // lineedit, label).
+-
+-  PRIVATE(this)->feedbacklabel1 = gtk_label_new(_("axes size"));
+-  gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbacklabel1, FALSE, FALSE, 0);
+-
+-  PRIVATE(this)->feedbackwheel = gtk_thumbwheel_new(0);
+-  gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbackwheel, FALSE, FALSE, 0);
+-  gtk_thumbwheel_set_range_boundary_handling(GTK_THUMBWHEEL(PRIVATE(this)->feedbackwheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE);
+-
+-  gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->feedbackwheel), "attached",
+-                     GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackWheelPressed), this);
+-  gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->feedbackwheel), "value_changed",
+-                     GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackSizeChanged), this);
+-  gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->feedbackwheel), "released",
+-                     GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackWheelReleased), this);
+-
+-  gtk_thumbwheel_set_value(GTK_THUMBWHEEL(PRIVATE(this)->feedbackwheel),
+-                           float(this->getFeedbackSize())/10.0f);
+-
+-  PRIVATE(this)->feedbackedit = gtk_entry_new();
+-  gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbackedit, FALSE, FALSE, 0);
+-  gtk_widget_set_usize (PRIVATE(this)->feedbackedit, 48, 24);
+-
+-  gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->feedbackedit), "activate",
+-                     GTK_SIGNAL_FUNC(SoGtkExaminerViewerP::feedbackEditPressed), this);
+-
+-  char buffer[16] ;
+-  sprintf(buffer, "%d", this->getFeedbackSize());
+-  gtk_entry_set_text(GTK_ENTRY(PRIVATE(this)->feedbackedit), buffer);
+-
+-  PRIVATE(this)->feedbacklabel2 = gtk_label_new(_("pixels"));
+-  gtk_box_pack_start (GTK_BOX (hbox), PRIVATE(this)->feedbacklabel2, FALSE, FALSE, 0);
+-
+-  gtk_widget_show_all(hbox);
+-
+-  PRIVATE(this)->setEnableFeedbackControls(this->isFeedbackVisible());
+-
+-  return form1;
+-}
+-
+-// *************************************************************************
+-
+-// Documented in superclass.
+-void
+-SoGtkExaminerViewer::createPrefSheet(void)
+-{
+-  // FIXME: not implemented according to correct API yet. 20020603 mortene.
+-  inherited::createPrefSheet();
+-}
+-
+-// *************************************************************************
+-
+ // Documented in superclass. Overridden so we can append the camera
+ // type switch button in the rightside button column.
+ void
+@@ -384,145 +293,6 @@
+   gdk_pixmap_unref(this->perspectivepixmap);
+   gdk_bitmap_unref(this->perspectivemask);
+ 
+-}
+-
+-// *************************************************************************
+-
+-/*
+-  internal
+-*/
+-
+-void
+-SoGtkExaminerViewerP::setEnableFeedbackControls(const SbBool flag)
+-{
+-  gtk_widget_set_sensitive(this->feedbacklabel1, flag);
+-  gtk_widget_set_sensitive(this->feedbacklabel2, flag);
+-  gtk_widget_set_sensitive(this->feedbackwheel, flag);
+-  gtk_widget_set_sensitive(this->feedbackedit, flag);
+-}
+-
+-// *************************************************************************
+-
+-/*
+-  internal
+-*/
+-
+-void
+-SoGtkExaminerViewerP::spinAnimationToggled(GtkToggleButton * w,  
+-                                           gpointer closure)
+-{
+-  assert(closure != NULL);
+-  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
+-  SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE;
+-
+-  viewer->setAnimationEnabled(flag);
+-}
+-
+-// *************************************************************************
+-
+-/*
+-  internal
+-*/
+-
+-void
+-SoGtkExaminerViewerP::feedbackVisibilityToggled(GtkToggleButton * w,  
+-                                                gpointer closure)
+-{
+-  assert(closure != NULL);
+-  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
+-  SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE;
+-
+-  viewer->setFeedbackVisibility(flag);
+-  PRIVATE(viewer)->setEnableFeedbackControls(flag);
+-}
+-
+-// *************************************************************************
+-
+-/*
+-  internal
+-*/
+-
+-void
+-SoGtkExaminerViewerP::feedbackEditPressed(GtkEntry * w,
+-                                          gpointer closure)
+-{
+-  assert(closure != NULL);
+-  SoGtkExaminerViewer	*viewer = (SoGtkExaminerViewer*) closure;
+-
+-  char *s = gtk_editable_get_chars(GTK_EDITABLE(w), 0, -1);
+-  int val;
+-  if ((sscanf(s, "%d", &val) == 1) && (val > 0)) {
+-    gtk_thumbwheel_set_value(GTK_THUMBWHEEL(PRIVATE(viewer)->feedbackwheel), 
+-                             float(val)/10.0f);
+-    viewer->setFeedbackSize(val);
+-  }
+-  g_free(s);
+-
+-  /* else */
+-  {
+-    char buffer[16];
+-    sprintf(buffer, "%d", viewer->getFeedbackSize());
+-    gtk_entry_set_text(GTK_ENTRY(w), buffer);
+-  }
+-}
+-
+-// *************************************************************************
+-
+-/*
+-  internal
+-*/
+-
+-void
+-SoGtkExaminerViewerP::feedbackWheelPressed(GtkWidget * w,
+-                                           gpointer closure)
+-{
+-  assert(closure != NULL);
+-  GtkThumbWheel *thumbwheel = (GtkThumbWheel *) w;
+-  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
+-  viewer->interactiveCountInc();
+-}
+-
+-// *************************************************************************
+-
+-/*
+-  internal
+-*/
+-
+-void
+-SoGtkExaminerViewerP::feedbackWheelReleased(GtkWidget * w,
+-                                            gpointer closure)
+-{
+-  assert(closure != NULL);
+-  GtkThumbWheel *thumbwheel = (GtkThumbWheel *) w;
+-  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
+-  viewer->interactiveCountDec();
+-}
+-
+-// *************************************************************************
+-
+-/*
+-  internal
+-*/
+-
+-void
+-SoGtkExaminerViewerP::feedbackSizeChanged(GtkWidget * w,
+-                                          gpointer closure)
+-{
+-  assert(closure != NULL);
+-  GtkThumbWheel *thumbwheel = (GtkThumbWheel*) w;
+-  SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer*) closure;
+-
+-  gfloat val = gtk_thumbwheel_get_value(thumbwheel);
+-  if (val < 0.1f) {
+-    val = 0.1f;
+-    gtk_thumbwheel_set_value(thumbwheel, val);
+-  }
+-
+-  viewer->setFeedbackSize(int(val * 10.0f));
+-
+-  char buffer[16];
+-  sprintf(buffer, "%d", viewer->getFeedbackSize());
+-  gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->feedbackedit), buffer);
+ }
+ 
+ // *************************************************************************
+Index: FullViewer.cpp
+===================================================================
+RCS file: /export/cvsroot/SoGtk/src/Inventor/Gtk/viewers/FullViewer.cpp,v
+retrieving revision 1.15
+diff -u -r1.15 FullViewer.cpp
+--- FullViewer.cpp	4 Jun 2002 15:36:39 -0000	1.15
++++ FullViewer.cpp	6 Jun 2002 18:24:06 -0000
+@@ -565,50 +565,6 @@
+   // correctly.
+ 
+   inherited::setCamera(camera);
+-
+-  if (PRIVATE(this)->prefwindow) {
+-    PRIVATE(this)->setZoomSliderPosition(PRIVATE(this)->getCameraZoom());
+-    PRIVATE(this)->setZoomFieldString(PRIVATE(this)->getCameraZoom());
+-
+-    const gboolean enable = camera ? TRUE : FALSE;
+-    gtk_widget_set_sensitive(PRIVATE(this)->zoomslider, enable);
+-    gtk_widget_set_sensitive(PRIVATE(this)->zoomfield, enable); 
+-    gtk_widget_set_sensitive(PRIVATE(this)->zoomrangefrom, enable);
+-    gtk_widget_set_sensitive(PRIVATE(this)->zoomrangeto, enable); 
+-  }
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Overloaded from parent class to make sure the preferences window
+-  will be hidden automatically whenever the viewer window is hidden.
+-*/
+-
+-void
+-SoGtkFullViewer::hide(void)
+-{
+-  if (PRIVATE(this)->prefwindow)
+-    gtk_widget_hide(PRIVATE(this)->prefwindow);
+-  inherited::hide();
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-
+-  Catch close events on the preferences window (to convert to hide events)
+-  and right mouse button presses (to pop up the preferences menu).
+-*/
+-
+-SbBool
+-SoGtkFullViewer::eventFilter(GtkWidget * obj,
+-                             GdkEvent * ev)
+-{
+-  if (inherited::eventFilter(obj, ev))
+-    return TRUE;
+-  return FALSE;
+ }
+ 
+ // *************************************************************************
+@@ -946,34 +902,6 @@
+ // *************************************************************************
+ 
+ /*!
+-  Overload this method in subclass viewers to append more widgets to
+-  the bottom of the preferences sheet window.
+-*/
+-
+-GtkWidget *
+-SoGtkFullViewer::makeSubPreferences(GtkWidget *)
+-{
+-  return (GtkWidget *) NULL;
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Set title of preferences sheet.
+-*/
+-
+-void
+-SoGtkFullViewer::setPrefSheetString(const char * title)
+-{
+-  PRIVATE(this)->prefwindowtitle = title ? title : "";
+-  if (PRIVATE(this)->prefwindow)
+-    gtk_window_set_title (GTK_WINDOW (PRIVATE(this)->prefwindow),
+-                          PRIVATE(this)->prefwindowtitle.getString());
+-}
+-
+-// *************************************************************************
+-
+-/*!
+   Set label for the left thumbwheel.
+ */
+ 
+@@ -1059,18 +987,6 @@
+   PUBLIC(this)->pasteView(SbTime::getTimeOfDay());
+ }
+ 
+-// SoGtk Slot.
+-void
+-SoGtkFullViewerP::selectedPrefs(void)
+-{
+-  if (!this->prefwindow) {
+-    this->prefwindow = this->makePreferencesWindow();
+-  }
+-  if (this->prefwindow) {
+-    gtk_widget_show(this->prefwindow);
+-  }
+-}
+-
+ // *************************************************************************
+ // button selections
+ 
+@@ -1145,14 +1061,9 @@
+   this->canvas = (GtkWidget *) NULL;
+   this->canvasParent = (GtkWidget *) NULL;
+ 
+-  this->zoomrange = SbVec2f(1.0f, 140.0f);
+-
+   this->mainLayout = (GtkWidget *) NULL;
+   this->appButtonLayout = (GtkWidget *) NULL;
+ 
+-  this->prefwindow = (GtkWidget *) NULL;
+-  this->prefwindowtitle = _("Viewer Preference Sheet");
+-
+   this->menuEnabled = FALSE;
+   this->decorations = FALSE;
+ 
+@@ -1212,480 +1123,6 @@
+ 
+ // *************************************************************************
+ 
+-// Documented in common/viewers/SoGuiFullViewer.cpp.in.
+-void
+-SoGtkFullViewer::createPrefSheet(void)
+-{
+-  // FIXME: this is really not the way to do it, the prefsheet should
+-  // actually be constructed from the subclass(es) by piecing it
+-  // together from other virtual createPref*() methods. SoXt does the
+-  // right thing, look there for reference.  20020529 mortene.
+-
+-  PRIVATE(this)->prefwindow = PRIVATE(this)->makePreferencesWindow();
+-}
+-
+-// *************************************************************************
+-
+-
+-/*!
+-  Create preferences sheet.
+-*/
+-
+-GtkWidget *
+-SoGtkFullViewerP::makePreferencesWindow(void)
+-{
+-  this->prefwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+-  gtk_window_set_title (GTK_WINDOW (this->prefwindow),
+-                        this->prefwindowtitle.getString());
+-  gtk_window_set_position (GTK_WINDOW (this->prefwindow),  GTK_WIN_POS_MOUSE);
+-
+-  GtkWidget* form = gtk_vbox_new (FALSE, 0);
+-  gtk_widget_show (form);
+-  gtk_container_add (GTK_CONTAINER (this->prefwindow), form);
+-
+-  (void) makeSeekPreferences(form);
+-  (void) makeSeekDistancePreferences(form);
+-  (void) makeZoomPreferences(form);
+-  (void) makeAutoclipPreferences(form);
+-  (void) makeStereoPreferences(form);
+-  (void) PUBLIC(this)->makeSubPreferences(form);
+-
+-  gtk_signal_connect (GTK_OBJECT (this->prefwindow), "destroy",
+-                      GTK_SIGNAL_FUNC(preferencesDestroyed),
+-                      (gpointer) PUBLIC(this));
+-
+-  return this->prefwindow;
+-}
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::preferencesDestroyed(GtkObject * object,
+-                                       gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+-  PRIVATE(viewer)->prefwindow = (GtkWidget *) NULL;
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Create the UI representation of the preferences' settings for the
+-  seek-to-point functionality.
+-*/
+-
+-GtkWidget *
+-SoGtkFullViewerP::makeSeekPreferences(GtkWidget * parent)
+-{
+-  GSList *rbg1 = (GSList *) NULL;
+-
+-  GtkWidget *form = gtk_vbox_new (FALSE, 0);
+-  gtk_widget_show (form);
+-  gtk_container_add (GTK_CONTAINER (parent), form);
+-
+-  GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
+-  gtk_widget_show (hbox2);
+-  gtk_box_pack_start (GTK_BOX (form), hbox2, TRUE, TRUE, 0);
+-
+-  GtkWidget *label6 = gtk_label_new (_("Seek animation time:"));
+-  gtk_widget_show (label6);
+-  gtk_box_pack_start (GTK_BOX (hbox2), label6, FALSE, FALSE, 0);
+-  gtk_label_set_justify (GTK_LABEL (label6), GTK_JUSTIFY_LEFT);
+-  gtk_misc_set_alignment (GTK_MISC (label6), 0, 0.5);
+-  gtk_misc_set_padding (GTK_MISC (label6), 4, 0);
+-
+-  GtkWidget *entry3 = gtk_entry_new();
+-  gtk_widget_show (entry3);
+-  gtk_box_pack_start (GTK_BOX (hbox2), entry3, FALSE, FALSE, 0);
+-  gtk_widget_set_usize (entry3, 48, 24);
+-
+-  char buffer[16];
+-  sprintf(buffer, "%.2f", PUBLIC(this)->getSeekTime());
+-  gtk_entry_set_text (GTK_ENTRY (entry3), buffer);
+-
+-  GtkWidget *label7 = gtk_label_new (_("seconds"));
+-  gtk_widget_show (label7);
+-  gtk_box_pack_start (GTK_BOX (hbox2), label7, FALSE, TRUE, 0);
+-
+-  GtkWidget *hbox3 = gtk_hbox_new (FALSE, 0);
+-  gtk_widget_show (hbox3);
+-  gtk_box_pack_start (GTK_BOX (form), hbox3, TRUE, TRUE, 0);
+-
+-  GtkWidget *label8 = gtk_label_new (_("Seek to:"));
+-  gtk_widget_show (label8);
+-  gtk_box_pack_start (GTK_BOX (hbox3), label8, FALSE, FALSE, 0);
+-  gtk_label_set_justify (GTK_LABEL (label8), GTK_JUSTIFY_LEFT);
+-  gtk_misc_set_alignment (GTK_MISC (label8), 0, 0.5);
+-  gtk_misc_set_padding (GTK_MISC (label8), 4, 0);
+-
+-  GtkWidget *rb1 = gtk_radio_button_new_with_label (rbg1, _("point"));
+-  rbg1 = gtk_radio_button_group (GTK_RADIO_BUTTON (rb1));
+-  gtk_widget_show (rb1);
+-  gtk_box_pack_start (GTK_BOX (hbox3), rb1, FALSE, FALSE, 0);
+-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb1),
+-                                PUBLIC(this)->isDetailSeek());
+-
+-  GtkWidget *rb2 = gtk_radio_button_new_with_label (rbg1, _("object"));
+-  rbg1 = gtk_radio_button_group (GTK_RADIO_BUTTON (rb2));
+-  gtk_widget_show (rb2);
+-  gtk_box_pack_start (GTK_BOX (hbox3), rb2, FALSE, FALSE, 0);
+-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb1),
+-                                ! PUBLIC(this)->isDetailSeek());
+-
+-  gtk_signal_connect (GTK_OBJECT (entry3), "activate",
+-                      GTK_SIGNAL_FUNC (seekAnimationTimeChanged),
+-                      (gpointer) PUBLIC(this));
+-
+-  gtk_signal_connect (GTK_OBJECT (rb1), "toggled",
+-                      GTK_SIGNAL_FUNC (seekDetailToggled),
+-                      (gpointer) PUBLIC(this));
+-
+-  return form;
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Create the UI representation of the preferences' settings for the
+-  seek-to-point functionality.
+-*/
+-
+-GtkWidget *
+-SoGtkFullViewerP::makeSeekDistancePreferences(GtkWidget * parent)
+-{
+-  GSList * bg = (GSList *) NULL;
+-
+-  GtkWidget * form = gtk_vbox_new (FALSE, 0);
+-  gtk_widget_show (form);
+-  gtk_container_add (GTK_CONTAINER (parent), form);
+-
+-  GtkWidget * hbox4 = gtk_hbox_new (FALSE, 0);
+-  gtk_widget_show (hbox4);
+-  gtk_box_pack_start (GTK_BOX (form), hbox4, TRUE, TRUE, 0);
+-
+-  GtkWidget * label4 = gtk_label_new (_("Seek distance:"));
+-  gtk_widget_show (label4);
+-  gtk_box_pack_start (GTK_BOX (hbox4), label4, FALSE, FALSE, 0);
+-  gtk_misc_set_alignment (GTK_MISC (label4), 0, 0.5);
+-  gtk_misc_set_padding (GTK_MISC (label4), 4, 0);
+-
+-  this->seekdistancewheel = gtk_thumbwheel_new (0);
+-  gtk_thumbwheel_set_range_boundary_handling(GTK_THUMBWHEEL(this->seekdistancewheel),
+-                                             GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE);
+-  gtk_thumbwheel_set_value(GTK_THUMBWHEEL(this->seekdistancewheel),
+-                           sqrt(PUBLIC(this)->getSeekDistance()));
+-  gtk_widget_show (this->seekdistancewheel);
+-  gtk_box_pack_start (GTK_BOX (hbox4), this->seekdistancewheel, FALSE, FALSE, 0);
+-
+-  this->seekdistancefield = gtk_entry_new ();
+-  gtk_widget_show (this->seekdistancefield);
+-  gtk_widget_set_usize(this->seekdistancefield,64,0);
+-  gtk_entry_set_max_length(GTK_ENTRY(this->seekdistancefield), 6);
+-  gtk_box_pack_start (GTK_BOX (hbox4), this->seekdistancefield, FALSE, FALSE, 0);
+-
+-  char buffer[16];
+-  sprintf(buffer, "%.2f", PUBLIC(this)->getSeekDistance());
+-  gtk_entry_set_text (GTK_ENTRY (this->seekdistancefield), buffer);
+-
+-  GtkWidget *hbox5 = gtk_hbox_new (FALSE, 0);
+-  gtk_widget_show (hbox5);
+-  gtk_box_pack_start (GTK_BOX (form), hbox5, TRUE, FALSE, 0);
+-
+-  GtkWidget *r1 = gtk_radio_button_new_with_label (bg, _("percentage"));
+-  bg = gtk_radio_button_group (GTK_RADIO_BUTTON (r1));
+-  gtk_widget_show (r1);
+-  gtk_box_pack_start (GTK_BOX (hbox5), r1, FALSE, FALSE, 0);
+-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (r1),
+-                                PUBLIC(this)->isSeekValuePercentage());
+-
+-  GtkWidget *r2 = gtk_radio_button_new_with_label (bg, _("absolute"));
+-  bg = gtk_radio_button_group (GTK_RADIO_BUTTON (r2));
+-  gtk_widget_show (r2);
+-  gtk_box_pack_start (GTK_BOX (hbox5), r2, FALSE, FALSE, 0);
+-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (r2),
+-                                ! PUBLIC(this)->isSeekValuePercentage());
+-
+-  gtk_signal_connect (GTK_OBJECT (this->seekdistancefield), "activate",
+-                      GTK_SIGNAL_FUNC (seekDistanceEdit),
+-                      (gpointer) PUBLIC(this));
+-  gtk_signal_connect (GTK_OBJECT (this->seekdistancewheel), "value_changed",
+-                      GTK_SIGNAL_FUNC (seekDistanceWheelChanged),
+-                      (gpointer) PUBLIC(this));
+-  gtk_signal_connect (GTK_OBJECT (r1), "toggled",
+-                      GTK_SIGNAL_FUNC (seekDistanceTypeToggle),
+-                      (gpointer) PUBLIC(this));
+-
+-  return form;
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Create the UI representation of the preferences' settings for the
+-  camera zoom functionality.
+-*/
+-
+-GtkWidget *
+-SoGtkFullViewerP::makeZoomPreferences(GtkWidget * parent)
+-{
+-  char buffer[16] ;
+-
+-  GtkWidget * form = gtk_vbox_new (FALSE, 0);
+-  gtk_widget_show (form);
+-  gtk_container_add (GTK_CONTAINER (parent), form);
+-
+-  GtkWidget * hbox1 = gtk_hbox_new (FALSE, 0);
+-  gtk_widget_show (hbox1);
+-  gtk_box_pack_start (GTK_BOX (form), hbox1, TRUE, FALSE, 0);
+-
+-  GtkWidget * label9 = gtk_label_new (_("Camera Zoom:"));
+-  gtk_widget_show (label9);
+-  gtk_box_pack_start (GTK_BOX (hbox1), label9, FALSE, FALSE, 0);
+-  gtk_misc_set_alignment (GTK_MISC (label9), 0.0, 0.5);
+-  gtk_misc_set_padding (GTK_MISC (label9), 4, 0);
+-
+-  GtkObject * adj = gtk_adjustment_new (
+-                                        0.0, 0.0, ZOOMSLIDERRESOLUTION, 1.0, 0, 0) ;
+-  this->zoomslider = gtk_hscale_new (GTK_ADJUSTMENT (adj));
+-  gtk_scale_set_draw_value (GTK_SCALE (this->zoomslider), FALSE);
+-  gtk_widget_show (this->zoomslider);
+-  gtk_box_pack_start (GTK_BOX (hbox1), this->zoomslider, FALSE, TRUE, 0);
+-
+-  this->zoomfield = gtk_entry_new();
+-  gtk_widget_show (this->zoomfield);
+-  gtk_widget_set_usize(this->zoomfield,64,20);
+-  gtk_entry_set_max_length(GTK_ENTRY(this->zoomfield), 6);
+-  gtk_box_pack_start (GTK_BOX (hbox1), this->zoomfield, FALSE, FALSE, 0);
+-
+-  GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
+-  gtk_widget_show (hbox2);
+-  gtk_box_pack_start (GTK_BOX (form), hbox2, TRUE, TRUE, 0);
+-
+-  GtkWidget *label10 = gtk_label_new (_("Zoom slider ranges from:"));
+-  gtk_widget_show (label10);
+-  gtk_box_pack_start (GTK_BOX (hbox2), label10, FALSE, FALSE, 0);
+-  gtk_misc_set_alignment (GTK_MISC (label10), 0, 0.5);
+-  gtk_misc_set_padding (GTK_MISC (label10), 4, 0);
+-
+-  this->zoomrangefrom = gtk_entry_new();
+-  sprintf(buffer, "%.1f", this->zoomrange[0]);
+-  gtk_entry_set_text(GTK_ENTRY(this->zoomrangefrom), buffer);
+-  gtk_widget_set_usize(this->zoomrangefrom,64,20);
+-  gtk_widget_show (this->zoomrangefrom);
+-  gtk_box_pack_start (GTK_BOX (hbox2), this->zoomrangefrom, FALSE, FALSE, 0);
+-
+-  GtkWidget *label11 = gtk_label_new (_("to:"));
+-  gtk_widget_show (label11);
+-  gtk_box_pack_start (GTK_BOX (hbox2), label11, FALSE, FALSE, 0);
+-
+-  this->zoomrangeto = gtk_entry_new ();
+-  sprintf(buffer, "%.1f", this->zoomrange[1]);
+-  gtk_entry_set_text(GTK_ENTRY(this->zoomrangeto), buffer);
+-  gtk_widget_set_usize(this->zoomrangeto,64,20);
+-  gtk_widget_show (this->zoomrangeto);
+-  gtk_box_pack_start (GTK_BOX (hbox2), this->zoomrangeto, FALSE, FALSE, 0);
+-
+-  SoCamera *cam = PUBLIC(this)->getCamera();
+-  if (cam) {
+-    this->setZoomSliderPosition(this->getCameraZoom());
+-    this->setZoomFieldString(this->getCameraZoom());
+-  } else {
+-    gtk_widget_set_sensitive(this->zoomslider, FALSE);
+-    gtk_widget_set_sensitive(this->zoomfield, FALSE); 
+-    gtk_widget_set_sensitive(this->zoomrangefrom, FALSE);
+-    gtk_widget_set_sensitive(this->zoomrangeto, FALSE); 
+-  }
+-
+-  gtk_signal_connect (GTK_OBJECT (this->zoomfield), "activate",
+-                      GTK_SIGNAL_FUNC (zoomFieldChanged),
+-                      (gpointer) PUBLIC(this));
+-
+-  gtk_signal_connect (GTK_OBJECT (this->zoomrangefrom), "activate",
+-                      GTK_SIGNAL_FUNC (zoomRangeChanged1),
+-                      (gpointer) PUBLIC(this));
+-
+-  gtk_signal_connect (GTK_OBJECT (this->zoomrangeto), "activate",
+-                      GTK_SIGNAL_FUNC (zoomRangeChanged2),
+-                      (gpointer) PUBLIC(this));
+-
+-  gtk_signal_connect (GTK_OBJECT (adj), "value_changed",
+-                      GTK_SIGNAL_FUNC (zoomSliderMoved),
+-                      (gpointer) PUBLIC(this));
+-
+-  return form;
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Enable or disable interaction through the near and far clipping
+-  widgets.
+-*/
+-
+-void
+-SoGtkFullViewerP::setEnabledClippingWidgets(SbBool flag)
+-{
+-#if 1
+-  gtk_widget_set_sensitive(this->clippingtable, flag);
+-#else
+-  // FIXME: This trips a bug in Gtk's interaction with gtkthumbwheel
+-  // Could be a bug in gtk_table or in gtk_thumbwheel :)
+-  if (flag)
+-    {
+-      gtk_widget_show(this->clippingtable);
+-      //    gtk_widget_show(this->nearclippinglabel);
+-      //    gtk_widget_show(this->nearclippingwheel);
+-      //    gtk_widget_show(this->nearclippingedit); 
+-      //    gtk_widget_show(this->farclippinglabel); 
+-      //    gtk_widget_show(this->farclippingwheel); 
+-      //    gtk_widget_show(this->farclippingedit);  
+-    }
+-  else
+-    {
+-      gtk_widget_hide(this->clippingtable);
+-      //    gtk_widget_hide(this->nearclippinglabel);
+-      //    gtk_widget_hide(this->nearclippingwheel);
+-      //    gtk_widget_hide(this->nearclippingedit); 
+-      //    gtk_widget_hide(this->farclippinglabel); 
+-      //    gtk_widget_hide(this->farclippingwheel); 
+-      //    gtk_widget_hide(this->farclippingedit);  
+-    }
+-#endif
+-  SoCamera * cam = PUBLIC(this)->getCamera();
+-  if (!cam) return ;
+-
+-  {
+-    char buffer[16] ;
+-
+-    sprintf(buffer, "%.3f", cam->nearDistance.getValue());
+-    gtk_entry_set_text(GTK_ENTRY(this->nearclippingedit), buffer);
+-
+-    sprintf(buffer, "%.3f", cam->farDistance.getValue());
+-    gtk_entry_set_text(GTK_ENTRY(this->farclippingedit), buffer);
+-  }
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Create the UI representation of the preferences' settings for the
+-  manual control of the near and far clippping planes.
+-*/
+-
+-GtkWidget *
+-SoGtkFullViewerP::makeAutoclipPreferences(GtkWidget * dialog)
+-{
+-  GtkWidget *form = gtk_vbox_new (FALSE, 0);
+-  gtk_widget_show (form);
+-  gtk_container_add (GTK_CONTAINER (dialog), form);
+-
+-  GtkWidget *checkbutton1 = gtk_check_button_new_with_label (
+-                                                             _("Auto clipping planes"));
+-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
+-                               PUBLIC(this)->isAutoClipping());
+-  gtk_widget_show (checkbutton1);
+-  gtk_box_pack_start (GTK_BOX (form), checkbutton1, FALSE, FALSE, 0);
+-
+-  this->clippingtable = gtk_table_new (2, 3, FALSE);
+-  gtk_box_pack_start (GTK_BOX (form), this->clippingtable, FALSE, FALSE, 0);
+-  gtk_widget_show(this->clippingtable);
+-
+-  this->nearclippinglabel = gtk_label_new (
+-                                           _("near plane:"));
+-  gtk_label_set_justify (GTK_LABEL (this->nearclippinglabel), GTK_JUSTIFY_RIGHT); 
+-  gtk_misc_set_alignment (GTK_MISC (this->nearclippinglabel), 1, 0.5);
+-  gtk_table_attach (GTK_TABLE (this->clippingtable), this->nearclippinglabel, 0, 1, 0, 1,
+-                    (GtkAttachOptions) (GTK_FILL),
+-                    (GtkAttachOptions) (0), 0, 0);
+-  gtk_widget_show(this->nearclippinglabel);
+-
+-  this->nearclippingwheel = gtk_thumbwheel_new (0);
+-  gtk_table_attach (GTK_TABLE (this->clippingtable), this->nearclippingwheel, 1, 2, 0, 1,
+-                    (GtkAttachOptions) (0),
+-                    (GtkAttachOptions) (0), 0, 0);
+-  gtk_widget_show(this->nearclippingwheel);
+-
+-  this->nearclippingedit = gtk_entry_new ();
+-  gtk_table_attach (GTK_TABLE (this->clippingtable), this->nearclippingedit, 2, 3, 0, 1,
+-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+-                    (GtkAttachOptions) (0), 0, 0);
+-  gtk_widget_show(this->nearclippingedit);
+-
+-  this->farclippinglabel = gtk_label_new (
+-                                          _("far plane:"));
+-  gtk_label_set_justify (GTK_LABEL (this->farclippinglabel), GTK_JUSTIFY_RIGHT); 
+-  gtk_misc_set_alignment (GTK_MISC (this->farclippinglabel), 1, 0.5);
+-  gtk_table_attach (GTK_TABLE (this->clippingtable), this->farclippinglabel, 0, 1, 1, 2,
+-                    (GtkAttachOptions) (GTK_FILL),
+-                    (GtkAttachOptions) (0), 0, 0);
+-  gtk_widget_show(this->farclippinglabel);
+-
+-  this->farclippingwheel = gtk_thumbwheel_new (0);
+-  gtk_table_attach (GTK_TABLE (this->clippingtable), this->farclippingwheel, 1, 2, 1, 2,
+-                    (GtkAttachOptions) (0),
+-                    (GtkAttachOptions) (0), 0, 0);
+-  gtk_widget_show(this->farclippingwheel);
+-
+-  this->farclippingedit = gtk_entry_new ();
+-  gtk_table_attach (GTK_TABLE (this->clippingtable), this->farclippingedit, 2, 3, 1, 2,
+-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+-                    (GtkAttachOptions) (0), 0, 0);
+-  gtk_widget_show(this->farclippingedit);
+-
+-  gtk_signal_connect (GTK_OBJECT (checkbutton1), 
+-                      "toggled", GTK_SIGNAL_FUNC (clippingToggled), PUBLIC(this));
+-
+-  gtk_signal_connect(GTK_OBJECT(this->nearclippingwheel), 
+-                     "attached", GTK_SIGNAL_FUNC (increaseInteractiveCount), PUBLIC(this));
+-  gtk_signal_connect(GTK_OBJECT(this->nearclippingwheel), 
+-                     "value_changed", GTK_SIGNAL_FUNC (nearclippingwheelMoved), PUBLIC(this));
+-  gtk_signal_connect(GTK_OBJECT(this->nearclippingwheel), 
+-                     "released", GTK_SIGNAL_FUNC (decreaseInteractiveCount), PUBLIC(this));
+-
+-  gtk_signal_connect(GTK_OBJECT(this->farclippingwheel), 
+-                     "attached", GTK_SIGNAL_FUNC (increaseInteractiveCount), PUBLIC(this));
+-  gtk_signal_connect(GTK_OBJECT(this->farclippingwheel), 
+-                     "value_changed", GTK_SIGNAL_FUNC (farclippingwheelMoved), PUBLIC(this));
+-  gtk_signal_connect(GTK_OBJECT(this->farclippingwheel), 
+-                     "released", GTK_SIGNAL_FUNC (decreaseInteractiveCount), PUBLIC(this));
+-
+-  this->setEnabledClippingWidgets(! PUBLIC(this)->isAutoClipping());
+-
+-  return form;
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Create the UI representation of the preferences' settings for the
+-  stereo viewing controls.
+-*/
+-
+-GtkWidget *
+-SoGtkFullViewerP::makeStereoPreferences(GtkWidget * dialog)
+-{
+-  GtkWidget *form = gtk_vbox_new (FALSE, 0);
+-  gtk_widget_show (form);
+-  gtk_container_add (GTK_CONTAINER (dialog), form);
+-
+-  GtkWidget *checkbutton1 = gtk_check_button_new_with_label (
+-                                                             _("Stereo Viewing"));
+-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbutton1), 
+-                               PUBLIC(this)->isStereoViewing());
+-  gtk_widget_show (checkbutton1);
+-  gtk_box_pack_start (GTK_BOX (form), checkbutton1, FALSE, FALSE, 0);
+-
+-  gtk_signal_connect (GTK_OBJECT (checkbutton1), 
+-                      "toggled", GTK_SIGNAL_FUNC (stereoToggled), PUBLIC(this));
+-
+-  return form;
+-}
+-
+-// *************************************************************************
+-
+ /*!
+   Set camera zoom value.
+ */
+@@ -1736,282 +1173,6 @@
+ // *************************************************************************
+ 
+ /*!
+-  Update the Gtk HScale representing the camera zoom.
+-*/
+-
+-void
+-SoGtkFullViewerP::setZoomSliderPosition(float zoom)
+-{
+-  if (!this->prefwindow) return;
+-
+-  float f = (zoom - this->zoomrange[0]) / SbVec2fRange(this->zoomrange);
+-  f = SoGtkClamp(f, 0.0f, 1.0f) * ZOOMSLIDERRESOLUTION;
+-
+-  GtkAdjustment *adj = GTK_RANGE(this->zoomslider)->adjustment;
+-  gtk_adjustment_set_value(adj, f);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  Set string in the camera zoom edit field.
+-*/
+-
+-void
+-SoGtkFullViewerP::setZoomFieldString(float zoom)
+-{
+-  if (!this->prefwindow) return;
+-
+-  char buffer[16];
+-  sprintf(buffer, "%.1f", zoom);
+-  gtk_entry_set_text(GTK_ENTRY(this->zoomfield), buffer);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::seekAnimationTimeChanged(GtkEditable * editable,
+-                                           gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+-  char * s = gtk_editable_get_chars(editable, 0, -1);
+-  float val;
+-  if ((sscanf(s, "%f", &val) == 1) && (val >= 0.0f))
+-    viewer->setSeekTime(val);
+-  g_free(s);
+-
+-  char buffer[16] ;
+-  sprintf(buffer, "%.2f", viewer->getSeekTime());
+-  gtk_entry_set_text(GTK_ENTRY(editable), buffer);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::seekDetailToggled(GtkToggleButton * button,
+-                                    gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+-  viewer->setDetailSeek(gtk_toggle_button_get_active(button) ?
+-                        TRUE : FALSE);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::seekDistanceWheelChanged(GtkWidget * wheel,
+-                                           gpointer closure)
+-{
+-  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+-  gfloat val = gtk_thumbwheel_get_value(GTK_THUMBWHEEL(wheel));
+-
+-  if (val < 0.1f) {
+-    val = 0.1f;
+-    gtk_thumbwheel_set_value(GTK_THUMBWHEEL(PRIVATE(viewer)->seekdistancewheel), val);
+-  }
+-  viewer->setSeekDistance(val * val);
+-
+-  char buffer[16] ;
+-  sprintf(buffer, "%.2f", viewer->getSeekDistance());
+-  gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->seekdistancefield), buffer);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::seekDistanceEdit(GtkEditable * editable,
+-                                   gpointer closure)
+-{
+-  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+-  char *s = gtk_editable_get_chars(editable,0,-1);
+-  float val;
+-
+-  if ((sscanf(s, "%f", &val) == 1) && (val > 0.0f))
+-    {
+-      viewer->setSeekDistance(val);
+-      gtk_thumbwheel_set_value(GTK_THUMBWHEEL(PRIVATE(viewer)->seekdistancewheel),
+-                               sqrt(val));
+-    }
+-  g_free(s);
+-
+-  /* else */
+-  {
+-    char buffer[16] ;
+-    sprintf(buffer, "%.2f", viewer->getSeekDistance());
+-    gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->seekdistancefield), buffer);
+-  }
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::seekDistanceTypeToggle(GtkToggleButton * button,
+-                                         gpointer closure)
+-{
+-  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+-
+-  viewer->setSeekValueAsPercentage(gtk_toggle_button_get_active(button) ?
+-                                   TRUE : FALSE);
+-}
+-
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::zoomSliderMoved(GtkAdjustment * adjustment,
+-                                  gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+-
+-  float f = adjustment->value / float(ZOOMSLIDERRESOLUTION);
+-  f = PRIVATE(viewer)->zoomrange[0] + f * SbVec2fRange(PRIVATE(viewer)->zoomrange);
+-
+-  PRIVATE(viewer)->setCameraZoom(f);
+-  PRIVATE(viewer)->setZoomFieldString(f);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::zoomFieldChanged(GtkEditable * editable,
+-                                   gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+-
+-  float val;
+-  char *s = gtk_editable_get_chars(editable,0,-1);
+-  if (sscanf(s, "%f", &val) == 1) {
+-    val = SoGtkClamp(val, 0.001f, 179.999f);
+-    PRIVATE(viewer)->setCameraZoom(val);
+-    PRIVATE(viewer)->setZoomSliderPosition(val);
+-  }
+-  g_free(s);
+-
+-  /* else */
+-  {
+-    char buffer[16];
+-    sprintf(buffer, "%.1f", PRIVATE(viewer)->getCameraZoom());
+-    gtk_entry_set_text(GTK_ENTRY(editable), buffer);
+-  }
+-}
+-
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::zoomRangeChanged1(GtkEditable * editable,
+-                                    gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+-
+-  float val;
+-  char *s = gtk_editable_get_chars(editable,0,-1);
+-  if (sscanf(s, "%f", &val) == 1) {
+-    if (val > 0.0f && val < 180.0f && val < PRIVATE(viewer)->zoomrange[1]) {
+-      PRIVATE(viewer)->zoomrange[0] = val;
+-      PRIVATE(viewer)->setZoomSliderPosition(PRIVATE(viewer)->getCameraZoom());
+-    }
+-  }
+-  g_free(s);
+-
+-  /* else */
+-  {
+-    char buffer[16];
+-    sprintf(buffer, "%.1f", PRIVATE(viewer)->zoomrange[0]);
+-    gtk_entry_set_text(GTK_ENTRY(editable), buffer);
+-  }
+-}
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::zoomRangeChanged2(GtkEditable * editable,
+-                                    gpointer closure)
+-{
+-  SoGtkFullViewer *viewer = (SoGtkFullViewer *) closure;
+-
+-  float val;
+-  char *s = gtk_editable_get_chars(editable,0,-1);
+-  if (sscanf(s, "%f", &val) == 1) {
+-    if (val > 0.0f && val < 180.0f && val > PRIVATE(viewer)->zoomrange[0]) {
+-      PRIVATE(viewer)->zoomrange[1] = val;
+-      PRIVATE(viewer)->setZoomSliderPosition(PRIVATE(viewer)->getCameraZoom());
+-    }
+-  }
+-  g_free(s);
+-
+-  /* else */
+-  {
+-    char buffer[16];
+-    sprintf(buffer, "%.1f", PRIVATE(viewer)->zoomrange[1]);
+-    gtk_entry_set_text(GTK_ENTRY(editable), buffer);
+-  }
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::clippingToggled(GtkToggleButton * toggle_button,
+-                                  gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
+-  bool flag = gtk_toggle_button_get_active (toggle_button);
+-
+-  viewer->setAutoClipping(flag);
+-  PRIVATE(viewer)->setEnabledClippingWidgets(!flag);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+   \internal
+   Gtk Signal Handler.
+ */
+@@ -2037,169 +1198,6 @@
+ {
+   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure;
+   viewer->interactiveCountDec();
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::nearclippingwheelMoved(GtkWidget * w,
+-                                         gpointer closure)
+-{
+-  GtkThumbWheel * nearwheel = (GtkThumbWheel *) w;
+-  SoGtkFullViewer* viewer = (SoGtkFullViewer *) closure;
+-
+-  assert(PRIVATE(viewer)->farclippingwheel != NULL);
+-
+-  float val = gtk_thumbwheel_get_value(nearwheel);
+-  if (val < 0.001f) {
+-    val = 0.001f;
+-    gtk_thumbwheel_set_value(nearwheel, val);
+-  }
+-  float farval = gtk_thumbwheel_get_value(
+-                                          GTK_THUMBWHEEL(PRIVATE(viewer)->farclippingwheel));
+-  if (val >= farval) {
+-    val = farval - 0.001f;
+-    gtk_thumbwheel_set_value(GTK_THUMBWHEEL(PRIVATE(viewer)->nearclippingwheel), val);
+-  }
+-
+-  SoCamera * cam = viewer->getCamera();
+-  if (!cam) return;
+-
+-  // FIXME: cut off at 0.0? And against far clipping value? 990223 mortene.
+-  cam->nearDistance = val;
+-
+-  char buffer[16] ;
+-  sprintf(buffer, "%.3f", cam->nearDistance.getValue());
+-  gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->nearclippingedit), buffer);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::farclippingwheelMoved(GtkWidget * w,
+-                                        gpointer closure)
+-{
+-  GtkThumbWheel * farwheel = (GtkThumbWheel *) w;
+-  SoGtkFullViewer* viewer = (SoGtkFullViewer *) closure;
+-
+-  assert(PRIVATE(viewer)->nearclippingwheel != NULL);
+-
+-  float val = gtk_thumbwheel_get_value(farwheel);
+-  float nearval = gtk_thumbwheel_get_value(
+-                                           GTK_THUMBWHEEL(PRIVATE(viewer)->nearclippingwheel));
+-  if (val < nearval) {
+-    val = nearval + 0.001f;
+-    gtk_thumbwheel_set_value(farwheel, val);
+-  }
+-
+-  SoCamera * cam = viewer->getCamera();
+-  if (!cam) return ;
+-
+-  // FIXME: cut off at 0.0? And against far clipping value? 990223 mortene.
+-  cam->farDistance = val;
+-
+-  char buffer[16] ;
+-  sprintf(buffer, "%.3f", cam->farDistance.getValue());
+-  gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->farclippingedit), buffer);
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::nearclipEditPressed(GtkWidget *w,
+-                                      gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure ;
+-
+-  SoCamera * cam = viewer->getCamera();
+-  if (!cam) return;
+-
+-  char *s =
+-    gtk_editable_get_chars(GTK_EDITABLE(PRIVATE(viewer)->nearclippingedit),0,-1);
+-  float val;
+-  if (sscanf(s, "%f", &val) == 1) {
+-    // FIXME: sanity check on val? 990223 mortene.
+-    cam->nearDistance = val;
+-    gtk_thumbwheel_set_value(GTK_THUMBWHEEL(PRIVATE(viewer)->nearclippingwheel), val);
+-  }
+-  g_free(s);
+-
+-  /* else */
+-  {
+-    char buffer[16] ;
+-    sprintf(buffer, "%.3f", cam->nearDistance.getValue());
+-    gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->nearclippingedit), buffer);
+-  }
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::farclipEditPressed(GtkWidget * w,
+-                                     gpointer closure)
+-{
+-  SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure ;
+-
+-  SoCamera * cam = viewer->getCamera();
+-  if (!cam) return;
+-
+-  char *s = gtk_editable_get_chars(GTK_EDITABLE(PRIVATE(viewer)->farclippingedit),0,-1);
+-  float val;
+-  if (sscanf(s, "%f", &val) == 1) {
+-    // FIXME: sanity check on val? 990223 mortene.
+-    cam->farDistance = val;
+-    gtk_thumbwheel_set_value(GTK_THUMBWHEEL(PRIVATE(viewer)->farclippingwheel), val);
+-  }
+-  g_free(s);
+-
+-  /* else */
+-  {
+-    char buffer[16] ;
+-    sprintf(buffer, "%.3f", cam->farDistance.getValue());
+-    gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->farclippingedit), buffer);
+-  }
+-}
+-
+-// *************************************************************************
+-
+-/*!
+-  \internal
+-  Gtk Signal Handler.
+-*/
+-
+-void
+-SoGtkFullViewerP::stereoToggled(GtkToggleButton *toggle_button,
+-                                gpointer closure)
+-{
+-  SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
+-  bool flag = gtk_toggle_button_get_active (toggle_button);
+-
+-  SOGTK_STUB();
+-
+-  // FIXME: this is a dummy dialog
+-  SoGtk::createSimpleErrorDialog(GTK_WIDGET(toggle_button), 
+-                                 "Stereo Error Dialog", 
+-                                 _("Stereo Viewing can't be set on this machine."));
+ }
+ 
+ // *************************************************************************
+Index: PlaneViewer.cpp
+===================================================================
+RCS file: /export/cvsroot/SoGtk/src/Inventor/Gtk/viewers/PlaneViewer.cpp,v
+retrieving revision 1.20
+diff -u -r1.20 PlaneViewer.cpp
+--- PlaneViewer.cpp	6 Jun 2002 12:41:24 -0000	1.20
++++ PlaneViewer.cpp	6 Jun 2002 18:24:06 -0000
+@@ -124,7 +124,6 @@
+   PUBLIC(this)->setClassName("SoGtkPlaneViewer");
+ 
+   PUBLIC(this)->setPopupMenuString(_("Plane Viewer"));
+-  PUBLIC(this)->setPrefSheetString(_("Plane Viewer Preference Sheet")); 
+ 
+   PUBLIC(this)->setLeftWheelString(_("Translate Y"));
+   PUBLIC(this)->setBottomWheelString(_("Translate X"));
+@@ -282,16 +281,6 @@
+     }
+     buttonlist->append(widget);
+   }
+-}
+-
+-// ************************************************************************
+-
+-// Documented in superclass.
+-void
+-SoGtkPlaneViewer::createPrefSheet(void)
+-{
+-  SOGTK_STUB();
+-  inherited::createPrefSheet();
+ }
+ 
+ // ************************************************************************
+Index: SoGtkExaminerViewerP.h
+===================================================================
+RCS file: /export/cvsroot/SoGtk/src/Inventor/Gtk/viewers/SoGtkExaminerViewerP.h,v
+retrieving revision 1.1
+diff -u -r1.1 SoGtkExaminerViewerP.h
+--- SoGtkExaminerViewerP.h	3 Jun 2002 19:29:08 -0000	1.1
++++ SoGtkExaminerViewerP.h	6 Jun 2002 18:24:06 -0000
+@@ -47,19 +47,6 @@
+   GdkBitmap * orthomask, * perspectivemask;
+ 
+   GtkWidget * cameratogglebutton;
+-  GtkWidget * feedbacklabel1;
+-  GtkWidget * feedbacklabel2;
+-  GtkWidget * feedbackwheel;
+-  GtkWidget * feedbackedit;
+-  void setEnableFeedbackControls(const SbBool flag);
+-
+-  // Pref sheet.
+-  static void spinAnimationToggled(GtkToggleButton *, gpointer);
+-  static void feedbackVisibilityToggled(GtkToggleButton *, gpointer);
+-  static void feedbackEditPressed(GtkEntry *, gpointer);
+-  static void feedbackWheelPressed(GtkWidget *, gpointer);
+-  static void feedbackSizeChanged(GtkWidget *, gpointer);
+-  static void feedbackWheelReleased(GtkWidget *, gpointer);
+ 
+   // Button row.
+   static void camerabuttonCB(GtkWidget *, gpointer);
+Index: SoGtkFullViewerP.h
+===================================================================
+RCS file: /export/cvsroot/SoGtk/src/Inventor/Gtk/viewers/SoGtkFullViewerP.h,v
+retrieving revision 1.7
+diff -u -r1.7 SoGtkFullViewerP.h
+--- SoGtkFullViewerP.h	4 Jun 2002 15:36:39 -0000	1.7
++++ SoGtkFullViewerP.h	6 Jun 2002 18:24:06 -0000
+@@ -44,13 +44,6 @@
+ 
+   static void setThumbWheelValue(void * wheel, float val);
+ 
+-  GtkWidget * makePreferencesWindow(void);
+-  GtkWidget * makeSeekPreferences(GtkWidget * parent);
+-  GtkWidget * makeSeekDistancePreferences(GtkWidget * parent);
+-  GtkWidget * makeZoomPreferences(GtkWidget * parent);
+-  GtkWidget * makeAutoclipPreferences(GtkWidget * parent);
+-  GtkWidget * makeStereoPreferences(GtkWidget * parent);
+-
+   GtkWidget * viewerWidget, * canvasParent, * canvas;
+   GtkWidget * interactbutton, * viewbutton, * seekbutton;
+ 
+@@ -68,27 +61,8 @@
+ 
+   SbPList * viewerButtons;
+ 
+-  GtkWidget * prefwindow;
+-  SbString prefwindowtitle;
+-
+-  GtkWidget * zoomslider;
+-  GtkWidget * zoomfield, * zoomrangefrom, * zoomrangeto;
+-  SbVec2f zoomrange;
+-
+   void setCameraZoom(const float zoom);
+   float getCameraZoom(void);
+-  void setZoomSliderPosition(float zoom);
+-  void setZoomFieldString(float zoom);
+-
+-  GtkWidget * seekdistancewheel;
+-  GtkWidget * seekdistancefield;
+-
+-  GtkWidget * clippingtable;
+-  GtkWidget * nearclippinglabel, * farclippinglabel;
+-  GtkWidget * nearclippingwheel, * farclippingwheel;
+-  GtkWidget * nearclippingedit, * farclippingedit;
+-
+-  void setEnabledClippingWidgets(SbBool flag);
+ 
+   // Thumbwheels.
+   void leftWheelPressed(void);
+@@ -101,32 +75,6 @@
+   void bottomWheelChanged(float value);
+   void bottomWheelReleased(void);
+ 
+-  // Pref sheet.
+-  static void preferencesDestroyed(GtkObject *, gpointer);
+-
+-  //  seek settings
+-  static void seekAnimationTimeChanged(GtkEditable *, gpointer);
+-  static void seekDetailToggled(GtkToggleButton *, gpointer);
+-  static void seekDistanceWheelChanged(GtkWidget *, gpointer);
+-  static void seekDistanceEdit(GtkEditable *, gpointer);
+-  static void seekDistanceTypeToggle(GtkToggleButton *, gpointer);
+-
+-  //  zoom settings
+-  static void zoomSliderMoved(GtkAdjustment *, gpointer);
+-  static void zoomFieldChanged(GtkEditable *, gpointer);
+-  static void zoomRangeChanged1(GtkEditable *, gpointer);
+-  static void zoomRangeChanged2(GtkEditable *, gpointer);
+-
+-  //  clipping settings
+-  static void clippingToggled(GtkToggleButton *, gpointer);
+-  static void nearclippingwheelMoved(GtkWidget *, gpointer);
+-  static void farclippingwheelMoved(GtkWidget *, gpointer);
+-  static void nearclipEditPressed(GtkWidget *, gpointer);
+-  static void farclipEditPressed(GtkWidget *, gpointer);
+-
+-  // Stereo settings
+-  static void stereoToggled(GtkToggleButton *, gpointer);
+-
+   // Generic Signal Handlers.
+   static void increaseInteractiveCount(GtkWidget *, gpointer);
+   static void decreaseInteractiveCount(GtkWidget *, gpointer);
+@@ -152,7 +100,6 @@
+   static void rightwheelReleasedCB(GtkWidget *, gpointer);
+ 
+   // menu selections
+-  void selectedPrefs(void);
+   void selectedViewing(void);
+   void selectedDecoration(void);
+   void selectedHeadlight(void);
+Index: WalkViewer.cpp
+===================================================================
+RCS file: /export/cvsroot/SoGtk/src/Inventor/Gtk/viewers/WalkViewer.cpp,v
+retrieving revision 1.8
+diff -u -r1.8 WalkViewer.cpp
+--- WalkViewer.cpp	6 Jun 2002 09:08:48 -0000	1.8
++++ WalkViewer.cpp	6 Jun 2002 18:24:06 -0000
+@@ -105,7 +105,6 @@
+ //  this->addVisibilityChangeCallback(SoGtkWalkViewer::visibilityCB, this);
+ 
+   this->setPopupMenuString(_("Walk Viewer"));
+-  this->setPrefSheetString(_("Walk Viewer Preference Sheet"));
+ 
+   this->setLeftWheelString(_("Tilt"));
+   this->setBottomWheelString(_("Rotate"));
+@@ -294,57 +293,12 @@
+ */
+ 
+ void
+-SoGtkWalkViewer::createPrefSheet(void)
+-{
+-}
+-
+-// ************************************************************************
+-
+-/*!
+-  FIXME: write doc
+-*/
+-
+-void
+ SoGtkWalkViewer::openViewerHelpCard(void)
+ {
+   this->openHelpCard("SoGtkWalkViewer.help");
+ }
+ 
+ // ************************************************************************
+-
+-/*!
+-  Overloaded to add preferences settings for fly viewer
+-  specific stuff.
+-*/
+-
+-GtkWidget *
+-SoGtkWalkViewer::makeSubPreferences(GtkWidget * parent)
+-{
+-  GtkWidget* hbox = gtk_hbox_new (FALSE, 0);
+-  gtk_container_add (GTK_CONTAINER (parent), hbox);
+-
+-  GtkWidget *label1 = gtk_label_new(_("Walking speed:"));
+-  gtk_box_pack_start (GTK_BOX (hbox), label1, FALSE, FALSE, 0);
+-
+-  GtkWidget *incbutton = gtk_button_new_with_label(_("increase"));
+-  gtk_box_pack_start (GTK_BOX (hbox), incbutton, FALSE, FALSE, 0);
+-
+-  GtkWidget *decbutton = gtk_button_new_with_label(_("decrease"));
+-  gtk_box_pack_start (GTK_BOX (hbox), decbutton, FALSE, FALSE, 0);
+-
+-#if NOTYET
+-  gtk_signal_connect(GTK_OBJECT(incbutton), "activate",
+-    GTK_SIGNAL_FUNC(SoGtkWalkViewer::increaseCB), this);
+-  gtk_signal_connect(GTK_OBJECT(decbutton), "activate",
+-    GTK_SIGNAL_FUNC(SoGtkWalkViewer::decreaseCB), this);
+-#endif
+-
+-  gtk_widget_show_all(hbox);
+-
+-  return hbox;
+-}
+-
+-// *************************************************************************
+ //
+ //  Private implementation
+ //

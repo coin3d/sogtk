@@ -124,7 +124,6 @@ SoGtkPlaneViewerP::constructor(const SbBool build)
   PUBLIC(this)->setClassName("SoGtkPlaneViewer");
 
   PUBLIC(this)->setPopupMenuString(_("Plane Viewer"));
-  PUBLIC(this)->setPrefSheetString(_("Plane Viewer Preference Sheet")); 
 
   PUBLIC(this)->setLeftWheelString(_("Translate Y"));
   PUBLIC(this)->setBottomWheelString(_("Translate X"));
@@ -282,16 +281,6 @@ SoGtkPlaneViewer::createViewerButtons(GtkWidget * parent,
     }
     buttonlist->append(widget);
   }
-}
-
-// ************************************************************************
-
-// Documented in superclass.
-void
-SoGtkPlaneViewer::createPrefSheet(void)
-{
-  SOGTK_STUB();
-  inherited::createPrefSheet();
 }
 
 // ************************************************************************
