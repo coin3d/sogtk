@@ -46,8 +46,8 @@ static const char rcsid[] =
 #include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
 
 #include <Inventor/Gtk/viewers/SoAnyFullViewer.h>
-#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
+#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 
 // Button icons.
 #include <Inventor/Gtk/common/pixmaps/pick.xpm>
@@ -58,9 +58,12 @@ static const char rcsid[] =
 #include <Inventor/Gtk/common/pixmaps/view_all.xpm>
 #include <Inventor/Gtk/common/pixmaps/seek.xpm>
 
+// *************************************************************************
+
 /*!
   \class SoGtkFullViewer Inventor/Gtk/viewers/SoGtkFullViewer.h
-  \brief The SoGtkFullViewer class adds decorations to the simple viewer of the parent.
+  \brief The SoGtkFullViewer class adds decorations to the parent viewer class.
+
   \ingroup viewers
 
   TODO: more doc
@@ -71,8 +74,6 @@ static const char rcsid[] =
   ...viewer modes (examine vs interact) w/ explanation of what they are
   useful for...
 */
-
-// *************************************************************************
 
 SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkFullViewer);
 
@@ -187,32 +188,6 @@ SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkFullViewer);
 
 static const int VIEWERBORDER = 2;
 static const int ZOOMSLIDERRESOLUTION = 200;
-
-///////// FIXME start //////////////////////////////////////////////////
-// Do something clever about this Qt layout assistant code..
-// 990222 mortene.
-
-enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
-
-// *************************************************************************
-
-/*
-void
-expandSize(QSize & result, const QSize & addend, LayoutOrientation o)
-{
-  if (o == LayoutHorizontal) {
-    result.rwidth() += addend.width();
-    if (result.height() < addend.height()) result.setHeight(addend.height());
-  }
-  else {
-    result.rheight() += addend.height();
-    if (result.width() < addend.width()) result.setWidth(addend.width());
-  }
-}
-*/
-
-///////// FIXME end ////////////////////////////////////////////////////
-
 
 // FIXME: rewrite as inline function? 990221 mortene.
 #define VIEWERBUTTON(idb) \
@@ -337,8 +312,7 @@ SoGtkFullViewer::SoGtkFullViewer(
   this->setClassName( "SoGtkFullViewer" );
 
   if ( ! build ) return;
-  GtkWidget * viewerparent = this->getParentWidget();
-  GtkWidget * viewer = this->buildWidget( viewerparent );
+  GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
   this->setBaseWidget( viewer );
   // this->setSize( SbVec2s( 500, 390 ) );
 } // SoGtkFullViewer()

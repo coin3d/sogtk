@@ -19,8 +19,10 @@
 
 // $Id$
 
-#ifndef SOGTK_FULLVIEWER_PH
-#define SOGTK_FULLVIEWER_PH
+#ifndef SOGTK_FULLVIEWERP_H
+#define SOGTK_FULLVIEWERP_H
+
+#include <gtk/gtk.h>
 
 struct SoGtkViewerButton {
   char * keyword;
@@ -29,4 +31,4 @@ struct SoGtkViewerButton {
   char ** xpm_data;
 };
 
-#endif // ! SOGTK_FULLVIEWER_PH
+#endif // ! SOGTK_FULLVIEWERP_H
