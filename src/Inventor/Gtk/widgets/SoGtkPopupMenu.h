@@ -66,7 +66,13 @@ protected:
   void traverseBuild( GtkWidget * parent, MenuRecord * menu, int indent );
   GtkWidget * build( GtkWidget * parent );
 
+  void selection( int itemid );
+  static void selectionCB( GtkWidget *, gpointer );
+
 private:
+  void createSeparator( ItemRecord * item );
+  void createMenuItem( ItemRecord * item );
+
   SbPList * menus;
   SbPList * items;
   GtkWidget * popup;

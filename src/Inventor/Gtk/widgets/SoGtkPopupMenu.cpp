@@ -42,6 +42,7 @@ struct MenuRecord {
 }; // struct MenuRecord
 
 struct ItemRecord {
+  SoGtkPopupMenu * context;
   int itemid;
   int flags;
   int pos;
@@ -559,6 +560,28 @@ SoGtkPopupMenu::PopUp(
 */
 
 void
+SoGtkPopupMenu::createSeparator( // private
+  ItemRecord * item )
+{
+  item->item = GTK_WIDGET(gtk_menu_item_new_with_label( "----------" ));
+} // createSeparator()
+
+/*!
+*/
+
+void
+SoGtkPopupMenu::createMenuItem( // private
+  ItemRecord * item )
+{
+  item->item = GTK_WIDGET(gtk_menu_item_new_with_label( item->title ));
+  gtk_signal_connect( GTK_OBJECT(item->item), "activate",
+    GTK_SIGNAL_FUNC(SoGtkPopupMenu::selectionCB), (gpointer) item );
+} // createMenuItem()
+
+/*!
+*/
+
+void
 SoGtkPopupMenu::traverseBuild(
   GtkWidget * parent,
   MenuRecord * menu,
@@ -597,11 +620,11 @@ SoGtkPopupMenu::traverseBuild(
       for ( i = 0; i < numItems; i++ ) {
         item = (ItemRecord *) (*this->items)[i];
         if ( item->pos == j && item->parent == menu ) {
-//          fprintf( stderr, "%s%s\n", pre, item->name );
+//          fprintf( stderr, "%s%s [%s]\n", pre, item->title, item->name );
           if ( item->flags & ITEM_SEPARATOR ) {
-            item->item = GTK_WIDGET(gtk_menu_item_new_with_label( "----------" ));
+            createSeparator( item );
           } else {
-            item->item = GTK_WIDGET(gtk_menu_item_new_with_label( item->title ));
+            createMenuItem( item );
           }
           gtk_container_add( GTK_CONTAINER(parent), GTK_WIDGET(item->item) );
           gtk_widget_show( GTK_WIDGET(item->item) );
@@ -691,6 +714,7 @@ SoGtkPopupMenu::createItemRecord(
   char * name )
 {
   ItemRecord * rec = new ItemRecord;
+  rec->context = this;
   rec->itemid = -1;
   rec->flags = 0;
   rec->pos = -1;
@@ -700,6 +724,24 @@ SoGtkPopupMenu::createItemRecord(
   rec->parent = NULL;
   return rec;
 } // createItemRecord()
+
+// *************************************************************************
+
+void
+SoGtkPopupMenu::selection(
+  int itemid )
+{
+  this->InvokeMenuSelection( itemid );
+}
+
+void
+SoGtkPopupMenu::selectionCB( // static
+  GtkWidget *,
+  gpointer closure )
+{
+  ItemRecord * item = (ItemRecord *) closure;
+  item->context->selection( item->itemid );
+} // selection()
 
 // *************************************************************************
 
