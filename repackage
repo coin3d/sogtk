@@ -1,5 +1,8 @@
 #! /bin/sh
 ############################################################################
+# repackage -- script used to generate cfg/bootstrap.tar.  Only CVS writers
+# need to run this script to support developers without the correct versions
+# of the config tools.
 
 wd=`echo "$0" | sed 's,[^/]*$,,g'`
 me=`echo "$0" | sed 's,.*/,,g'`
