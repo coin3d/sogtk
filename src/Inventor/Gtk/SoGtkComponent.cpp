@@ -659,11 +659,11 @@ SoGtkComponent::setIconTitle(
   }
   if ( title )
     PRIVATE(this)->iconText = strcpy( new char [strlen(title)+1], title );
-//  if ( PRIVATE(this)->widget ) {
-//    GtkWidget * window = gtk_widget_get_toplevel( PRIVATE(this)->widget );
-//    assert( window != NULL );
-//    gtk_window_set_icon_title( GTK_WINDOW(window), title ? title : "" );
-//  }
+  if ( PRIVATE(this)->widget ) {
+    GtkWidget * window = gtk_widget_get_toplevel( PRIVATE(this)->widget );
+    assert( window != NULL );
+    gdk_window_set_icon_name( window->window, title ? title : "" );
+  }
 } // setIconTitle()
 
 /*!

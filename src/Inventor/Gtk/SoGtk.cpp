@@ -201,7 +201,7 @@ SoGtk::timerSensorCB( // static, private
 {
   SoDB::getSensorManager()->processTimerQueue();
   SoGtk::sensorQueueChanged( NULL );
-  return 0; // FIXME: wild guess.. 20000319 mortene.
+  return FALSE; // FIXME: wild guess.. 20000319 mortene.
 } // timerSensorCB()
 
 gint
@@ -210,7 +210,7 @@ SoGtk::idleSensorCB( // static, private
 {
   SoDB::getSensorManager()->processDelayQueue(TRUE);
   SoGtk::sensorQueueChanged( NULL );
-  return 0; // FIXME: wild guess.. 20000319 mortene.
+  return FALSE; // FIXME: wild guess.. 20000319 mortene.
 } // idleSensorCB()
 
 gint
@@ -219,7 +219,7 @@ SoGtk::delaySensorCB( // static, private
 {
   SoDB::getSensorManager()->processDelayQueue(FALSE);
   SoGtk::sensorQueueChanged( NULL );
-  return 0; // FIXME: wild guess.. 20000319 mortene.
+  return FALSE; // FIXME: wild guess.. 20000319 mortene.
 }
 
 // *************************************************************************
@@ -346,7 +346,7 @@ SoGtk::getTopLevelWidget(
   Returns a pointer to the GtkWidget which is the top level widget for the
   given GtkWidget \a w. This is just a convenience function provided for
   easier porting of Open Inventor applications based on SoXt components,
-  as you can do the same thing by calling the QWidget::topLevelWidget()
+  as you can do the same thing by calling the GtkWidget::topLevelWidget()
   method directly on \a w.
 
   \sa getTopLevelWidget()
@@ -372,8 +372,8 @@ SoGtk::getShellWidget(
 
 /*!
   This method is provided for easier porting/compatibility with the
-  Open Inventor SoXt component classes. It will call QWidget::show() and
-  QWidget::raise() on the provided \a widget pointer.
+  Open Inventor SoXt component classes. It will call gtk_widget_show()
+  on the provided \a widget pointer.
 
   \sa hide()
 */
@@ -390,7 +390,7 @@ SoGtk::show(
 
 /*!
   This method is provided for easier porting/compatibility with the
-  Open Inventor SoXt component classes. It will call QWidget::hide() on the
+  Open Inventor SoXt component classes. It will call gtk_widget_hide() on the
   provided \a widget pointer.
 
   \sa show()
@@ -408,8 +408,8 @@ SoGtk::hide(
 
 /*!
   This method is provided for easier porting of applications based on the
-  Open Inventor SoXt component classes. It will call QWidget::resize() on the
-  provided \a w widget pointer.
+  Open Inventor SoXt component classes. It will call gtk_widget_set_usize
+  on the provided \a w widget pointer.
 
   \sa getWidgetSize()
 */
