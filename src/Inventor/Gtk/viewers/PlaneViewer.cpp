@@ -41,13 +41,7 @@
 
 // *************************************************************************
 
-/*!
-  \class SoGtkPlaneViewer Inventor/Gtk/viewers/SoGtkPlaneViewer.h
-  \brief The SoGtkPlaneViewer class is for examining 3D models by moving the camera in orthogonal planes.
-  \ingroup components viewers
-
-  FIXME: write doc
-*/
+// Class documentation in common/viewers/SoGuiPlaneViewer.cpp.in.
 
 // *************************************************************************
 
@@ -226,18 +220,6 @@ SoGtkPlaneViewer::setCamera(// virtual
   }
   inherited::setCamera(newCamera);
 } // setCamera()
-
-/*!
-  Decide whether or not the mouse pointer cursor should be visible in the
-  rendering canvas.
-*/
-void
-SoGtkPlaneViewer::setCursorEnabled(// virtual
-  SbBool enable)
-{
-  inherited::setCursorEnabled(enable);
-  this->setCursorRepresentation(this->mode);
-} // setCursorEnabled()
 
 // *************************************************************************
 
@@ -466,52 +448,6 @@ SoGtkPlaneViewer::openViewerHelpCard(// virtual, protected
 {
   this->openHelpCard("SoGtkPlaneViewer.help");
 } // openViewerHelpCard()
-
-// *************************************************************************
-
-/*!
-  \internal
-
-  Set cursor graphics according to mode.
-*/
-void
-SoGtkPlaneViewer::setCursorRepresentation(int mode)
-{
-  // FIXME: seems to never be called. 20011126 mortene.
-
-  GtkWidget * w = this->getGLWidget();
-  assert(w);
-
-  if (! this->isCursorEnabled()) {
-    this->setComponentCursor(SoGtkCursor::getBlankCursor());
-    return;
-  }
-
-  switch ((SoGtkPlaneViewer::PlaneViewerMode) mode) {
-//  case SoGtkPlaneViewer::INTERACT:
-//  case SoGtkPlaneViewer::EXAMINE:
-  case SoGtkPlaneViewer::IDLE_MODE:
-    this->setComponentCursor(SoGtkCursor::getBlankCursor());
-    break ;
-  case SoGtkPlaneViewer::DOLLY_MODE:
-    this->setComponentCursor(SoGtkCursor(SoGtkCursor::UPARROW));
-    break;
-  case SoGtkPlaneViewer::ROTZ_WAIT_MODE:
-  case SoGtkPlaneViewer::ROTZ_MODE:
-    this->setComponentCursor(SoGtkCursor::getRotateCursor());
-    break;
-  case SoGtkPlaneViewer::SEEK_WAIT_MODE:
-  case SoGtkPlaneViewer::SEEK_MODE:
-    this->setComponentCursor(SoGtkCursor(SoGtkCursor::CROSSHAIR));
-    break;
-  case SoGtkPlaneViewer::TRANSLATE_MODE:
-    this->setComponentCursor(SoGtkCursor::getPanCursor());
-    break;
-  default: 
-    assert(0); 
-    break;
-  }
-} // setCursorRepresentation()
 
 // ************************************************************************
 //
