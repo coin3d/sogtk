@@ -1730,10 +1730,16 @@ if test x"$with_inventor" != xno; then
   CPPFLAGS="$sim_ac_oiv_image_cppflags $CPPFLAGS"
   LDFLAGS="$sim_ac_oiv_image_ldflags $LDFLAGS"
   LIBS="$sim_ac_oiv_image_libs $LIBS"
+  AC_MSG_CHECKING([for the Open Inventor image library])
   AC_TRY_LINK(,
     [img_read();],
     [sim_ac_oiv_image_avail=true],
     [sim_ac_oiv_image_avail=false])
+  if $sim_ac_oiv_image_avail; then
+    AC_MSG_RESULT([found])
+  else
+    AC_MSG_RESULT([not found])
+  fi
   CPPFLAGS=$sim_ac_save_cppflags
   LDFLAGS=$sim_ac_save_ldflags
   LIBS=$sim_ac_save_libs
