@@ -54,7 +54,7 @@ protected:
   virtual GtkWidget * buildRosterListWidget(GtkWidget * parent);
   virtual GtkWidget * buildStatusBarWidget(GtkWidget * parent);
 
-  virtual void sizeChanged(const SbVec2s size);
+  virtual void sizeChanged(const SbVec2s & size);
 
   virtual void componentCreated(SoGtkComponent * component);
   virtual void componentDestroyed(SoGtkComponent * component);

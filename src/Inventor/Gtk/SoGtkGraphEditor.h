@@ -56,7 +56,7 @@ protected:
   virtual GtkWidget * buildGraphEditorWidget(GtkWidget * parent);
   virtual GtkWidget * buildStatusBarWidget(GtkWidget * parent);
 
-  virtual void sizeChanged(const SbVec2s size);
+  virtual void sizeChanged(const SbVec2s & size);
 
   virtual void buildSceneGraphTree(void);
   virtual void clearSceneGraphTree(void);

@@ -429,13 +429,9 @@ SoGtkGraphEditor::fieldSelection(// virtual, protected
 
 // *************************************************************************
 
-/*!
-  Does nothing.
-*/
-
+// doc in super
 void
-SoGtkGraphEditor::sizeChanged(
-  SbVec2s size)
+SoGtkGraphEditor::sizeChanged(const SbVec2s & size)
 {
   // inherited::sizeChanged(size);
 } // sizeChanged()

@@ -58,13 +58,6 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-/*!
-  \fn virtual void SoGtkComponent::sizeChanged(const SbVec2s size)
-
-  Overload to detect when the base widget in the component changes its
-  dimensions (an operation which is usually triggered by the user).
-*/
-
 // *************************************************************************
 
 class SoGtkComponentP {
@@ -804,14 +797,14 @@ SoGtkComponent::getSize(
 // *************************************************************************
 
 /*!
+  Overload to detect when the base widget in the component changes its
+  dimensions (an operation which is usually triggered by the user).
 */
-
-void
-SoGtkComponent::sizeChanged(// virtual, protected
-  const SbVec2s size)
+void          // virtual, protected
+SoGtkComponent::sizeChanged(const SbVec2s & size)
 {
   // nada
-} // sizeChanged()
+}
 
 // *************************************************************************
 

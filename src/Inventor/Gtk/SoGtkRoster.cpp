@@ -292,13 +292,9 @@ SoGtkRoster::buildStatusBarWidget(// virtual, protected
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
-
+// doc in super
 void
-SoGtkRoster::sizeChanged(// virtual, protected
-  const SbVec2s size)
+SoGtkRoster::sizeChanged(const SbVec2s & size)
 {
   // SoDebugError::postInfo("SoGtkRoster::sizeChanged", "[invoked]");
 } // sizeChanged()

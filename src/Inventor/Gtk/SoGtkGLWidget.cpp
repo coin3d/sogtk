@@ -527,13 +527,9 @@ SoGtkGLWidget::getGLWidget(void) const
 
 // *************************************************************************
 
-/*!
-  FIXME: write function documentation
-*/
-
+// doc in super
 void
-SoGtkGLWidget::sizeChanged(
-  const SbVec2s size)
+SoGtkGLWidget::sizeChanged(const SbVec2s & size)
 {
 } // sizeChanged()
 
