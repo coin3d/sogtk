@@ -376,7 +376,11 @@ gtk_thumbwheel_expose(
 
   ((ThumbWheel *)thumbwheel->wheel)->SetGraphicsByteOrder( ThumbWheel::ABGR );
   ((ThumbWheel *)thumbwheel->wheel)->SetColor( 0, 150, 200 );
-  ((ThumbWheel *)thumbwheel->wheel)->DrawBitmap( 1, (void *) bitmap, true );
+  unsigned int flags = 0;
+  if ( thumbwheel->vertical )
+    flags |= THUMBWHEEL_VERTICAL;
+  flags |= THUMBWHEEL_ENABLED;
+  ((ThumbWheel *)thumbwheel->wheel)->DrawBitmap( 1, (void *) bitmap, flags );
 
   gdk_draw_rgb_32_image(
     widget->window, widget->style->fg_gc[ GTK_WIDGET_STATE(widget) ],
@@ -400,7 +404,6 @@ gtk_thumbwheel_button_press(
 
   GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
 
-  // 
   if ( thumbwheel->vertical ) {
   } else {
   }
