@@ -37,6 +37,7 @@
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
+#include <Inventor/Gtk/viewers/SoGtkExaminerViewerP.h>
 #include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 
 #include <Inventor/Gtk/common/pixmaps/ortho.xpm>
@@ -45,46 +46,6 @@
 // *************************************************************************
 
 SOGTK_OBJECT_SOURCE(SoGtkExaminerViewer);
-
-// *************************************************************************
-
-class SoGtkExaminerViewerP {
-public:
-  SoGtkExaminerViewerP(SoGtkExaminerViewer * publ);
-  ~SoGtkExaminerViewerP(void);
-
-  static SoGtkViewerButton SoGtkExaminerViewerButtons[];
-
-  GdkPixmap * orthopixmap, * perspectivepixmap;
-  GdkBitmap * orthomask, * perspectivemask;
-
-  GtkWidget * cameratogglebutton;
-  GtkWidget * feedbacklabel1;
-  GtkWidget * feedbacklabel2;
-  GtkWidget * feedbackwheel;
-  GtkWidget * feedbackedit;
-  void setEnableFeedbackControls(const SbBool flag);
-
-  // Pref sheet.
-  static void spinAnimationToggled(GtkToggleButton *, gpointer);
-  static void feedbackVisibilityToggled(GtkToggleButton *, gpointer);
-  static void feedbackEditPressed(GtkEntry *, gpointer);
-  static void feedbackWheelPressed(GtkWidget *, gpointer);
-  static void feedbackSizeChanged(GtkWidget *, gpointer);
-  static void feedbackWheelReleased(GtkWidget *, gpointer);
-
-  // Button row.
-  static void camerabuttonCB(GtkWidget *, gpointer);
-
-private:
-  SoGtkExaminerViewer * pub;
-
-};
-
-#define PUBLIC(ptr) (ptr->pub)
-#define PRIVATE(ptr) (ptr->pimpl)
-
-#define THIS (PRIVATE(this))
 
 // *************************************************************************
 
@@ -119,7 +80,8 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent,
                                          SoGtkViewer::Type type)
   : inherited(parent, name, embed, flags, type, FALSE)
 {
-  this->constructor(TRUE);
+  PRIVATE(this) = new SoGtkExaminerViewerP(this);
+  PRIVATE(this)->constructor(TRUE);
 }
 
 /*!
@@ -134,7 +96,8 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent,
                                          SbBool build)
   : inherited(parent, name, embed, flags, type, FALSE)
 {
-  this->constructor(build);
+  PRIVATE(this) = new SoGtkExaminerViewerP(this);
+  PRIVATE(this)->constructor(build);
 }
 
 /*!
@@ -145,26 +108,24 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent,
 */
 
 void
-SoGtkExaminerViewer::constructor(const SbBool build)
+SoGtkExaminerViewerP::constructor(const SbBool build)
 {
   this->genericConstructor();
 
-  this->pimpl = new SoGtkExaminerViewerP(this);
-
-  this->setClassName("SoGtkExaminerViewer");
+  PUBLIC(this)->setClassName("SoGtkExaminerViewer");
 
 //  this->addVisibilityChangeCallback(SoGtkExaminerViewerP::visibilityCB, this);
 
-  this->setPopupMenuString(_("Examiner Viewer"));
-  this->setPrefSheetString(_("Examiner Viewer Preference Sheet"));
+  PUBLIC(this)->setPopupMenuString(_("Examiner Viewer"));
+  PUBLIC(this)->setPrefSheetString(_("Examiner Viewer Preference Sheet"));
 
-  this->setLeftWheelString(_("Rotx"));
-  this->setBottomWheelString(_("Roty"));
-  this->setRightWheelString(_("Dolly"));
+  PUBLIC(this)->setLeftWheelString(_("Rotx"));
+  PUBLIC(this)->setBottomWheelString(_("Roty"));
+  PUBLIC(this)->setRightWheelString(_("Dolly"));
 
   if (! build) return;
-  GtkWidget * viewer = this->buildWidget(this->getParentWidget());
-  this->setBaseWidget(viewer);
+  GtkWidget * viewer = PUBLIC(this)->buildWidget(PUBLIC(this)->getParentWidget());
+  PUBLIC(this)->setBaseWidget(viewer);
 }
 
 /*!
@@ -173,8 +134,8 @@ SoGtkExaminerViewer::constructor(const SbBool build)
 
 SoGtkExaminerViewer::~SoGtkExaminerViewer()
 {
-  this->genericDestructor();
-  delete this->pimpl;
+  PRIVATE(this)->genericDestructor();
+  delete PRIVATE(this);
 }
 
 // *************************************************************************
@@ -186,7 +147,7 @@ void
 SoGtkExaminerViewer::setAnimationEnabled(const SbBool enable)
 { // FIXME: make this virtual?  20001230 larsa
   // FIXME: update pref-sheet widget with the value. 20020603 mortene.
-  this->setGenericAnimationEnabled(enable);
+  PRIVATE(this)->setGenericAnimationEnabled(enable);
 }
  
 
@@ -201,7 +162,7 @@ void
 SoGtkExaminerViewer::setFeedbackSize(const int size)
 {
   // FIXME: update pref-sheet widget with the value. 20020603 mortene.
-  this->setGenericFeedbackSize(size);
+  PRIVATE(this)->setGenericFeedbackSize(size);
 }
 
 // *************************************************************************
@@ -311,6 +272,16 @@ SoGtkExaminerViewer::makeSubPreferences(GtkWidget * parent)
 
 // *************************************************************************
 
+// Documented in superclass.
+void
+SoGtkExaminerViewer::createPrefSheet(void)
+{
+  // FIXME: not implemented according to correct API yet. 20020603 mortene.
+  inherited::createPrefSheet();
+}
+
+// *************************************************************************
+
 // Documented in superclass. Overridden so we can append the camera
 // type switch button in the rightside button column.
 void
@@ -385,9 +356,8 @@ SoGtkExaminerViewer::createViewerButtons(GtkWidget * parent,
 //
 
 SoGtkExaminerViewerP::SoGtkExaminerViewerP(SoGtkExaminerViewer * publ)
+  : SoGuiExaminerViewerP(publ)
 {
-  this->pub = publ;
-
   GdkColormap * colormap = gtk_widget_get_colormap (PUBLIC(this)->getParentWidget());
 
   this->orthopixmap =
