@@ -228,14 +228,15 @@ SoGtk::sensorQueueChanged(void *)
   if (sm->isTimerSensorPending(t)) {
     SbTime interval = t - SbTime::getTimeOfDay();
     timerid = gtk_timeout_add(int(interval.getValue() * 1000.0),
-                              SoGtk::timerSensorCB, NULL);
+                              (GtkFunction)SoGtk::timerSensorCB, NULL);
   }
 
   // Set up idle notification for delay queue processing if necessary.
 
   if (sm->isDelaySensorPending()) {
-    idleid = gtk_idle_add(SoGtk::idleSensorCB, NULL);
-    delayid = gtk_timeout_add(SoDB::getDelaySensorTimeout().getMsecValue(), SoGtk::delaySensorCB, NULL);
+    idleid = gtk_idle_add((GtkFunction)SoGtk::idleSensorCB, NULL);
+    delayid = gtk_timeout_add(SoDB::getDelaySensorTimeout().getMsecValue(), 
+			      (GtkFunction)SoGtk::delaySensorCB, NULL);
   }
 
 }
@@ -319,7 +320,7 @@ SoGtk::getTopLevelWidget(void)
   \sa getTopLevelWidget()
 */
 GtkWidget *
-SoGtk::getShellWidget(const GtkWidget * const widget)
+SoGtk::getShellWidget(const GtkWidget * widget)
 {
 #if SOGTK_DEBUG
   if (widget == NULL) {
@@ -407,7 +408,7 @@ SoGtk::setWidgetSize(GtkWidget * const widget,
   \sa setWidgetSize()
 */
 SbVec2s
-SoGtk::getWidgetSize(const GtkWidget * const widget)
+SoGtk::getWidgetSize(const GtkWidget * widget)
 {
 #if SOGTK_DEBUG
   if (widget == NULL) {
@@ -436,10 +437,10 @@ SoGtk::getWidgetSize(const GtkWidget * const widget)
   There will only be a single "Ok" button for the user to press.
 */
 void
-SoGtk::createSimpleErrorDialog(GtkWidget * const widget,
-                               const char * const dialogTitle,
-                               const char * const errorStr1,
-                               const char * const errorStr2)
+SoGtk::createSimpleErrorDialog(GtkWidget * widget,
+                               const char * dialogTitle,
+                               const char * errorStr1,
+                               const char * errorStr2)
 {
   // FIXME: Gtk-1.2.x doesn't have a MessageBox implementation.  Gnome
   // and yet unreleased versions of Gtk however do.  So it might be
@@ -574,7 +575,7 @@ SoGtk::componentCreation(SoGtkComponent * component)
 gint
 SoGtk::componentDestruction(SoGtkComponent * component)
 {
-  assert(SoGtk::components);
+  assert(SoGtk::components != NULL);
   int idx = SoGtk::components->find(component);
   assert(idx != -1);
   SoGtk::invokeComponentActionCallbacks(component, DESTRUCTION);

@@ -1206,7 +1206,7 @@ SoGtkFullViewer::setLeftWheelValue(
 
 void
 SoGtkFullViewer::setLeftWheelString(
-  const char * string)
+  const char * const string)
 {
   delete [] this->leftWheelStr;
   this->leftWheelStr = (char *) NULL;
@@ -1297,7 +1297,7 @@ SoGtkFullViewer::setBottomWheelValue(
 
 void
 SoGtkFullViewer::setBottomWheelString(
-  const char * string)
+  const char * const string)
 {
   delete [] this->bottomWheelStr;
   this->bottomWheelStr = (char *) NULL;
@@ -1388,7 +1388,7 @@ SoGtkFullViewer::setRightWheelValue(
 
 void
 SoGtkFullViewer::setRightWheelString(
-  const char * string)
+  const char * const string)
 {
   delete [] this->rightWheelStr;
   this->rightWheelStr = (char *) NULL;
