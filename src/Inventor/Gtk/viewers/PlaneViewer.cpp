@@ -654,6 +654,15 @@ SoGtkPlaneViewerP::camerabuttonCB(
 
 // ************************************************************************
 
+void
+SoGtkPlaneViewer::createPrefSheet(void)
+{
+  // FIXME: not yet implemented. 20020113 mortene.
+//    inherited::createPrefSheet();
+}
+
+// ************************************************************************
+
 #if SOGTK_DEBUG
 static const char * getSoGtkPlaneViewerRCSId(void) { return rcsid; }
 #endif // SOGTK_DEBUG
