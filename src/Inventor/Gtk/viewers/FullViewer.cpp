@@ -17,20 +17,9 @@
  *
  **************************************************************************/
 
-/*!
-  \class SoGtkFullViewer Inventor/Gtk/viewers/SoGtkFullViewer.h
-  \brief The SoGtkFullViewer class adds decorations to the parent viewer class.
+// ************************************************************************
 
-  \ingroup viewers
-
-  TODO: more doc
-  ...overview of what this class provides over parent class...
-  ...keyboard combinations...mousebutton combinations...explain pan,
-  rotate, zoom, dolly, seek...explain the fact that we're moving the
-  camera, not the scene...
-  ...viewer modes (examine vs interact) w/ explanation of what they are
-  useful for...
-*/
+// Class is documented in common/viewers/SoGuiFullViewer.cpp.in.
 
 // *************************************************************************
 

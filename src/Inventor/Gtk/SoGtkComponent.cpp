@@ -59,10 +59,7 @@ SbDict * SoGtkComponentP::cursordict = NULL;
 
 SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkComponent);
 
-/*!
-  \internal
-  This method initializes the type system for all the component classes.
-*/
+// documented in common/SoGuiComponentCommon.cpp.in.
 void
 SoGtkComponent::initClasses(void)
 {
@@ -78,7 +75,7 @@ SoGtkComponent::initClasses(void)
   SoGtkFlyViewer::initClass();
   SoGtkGraphEditor::initClass();
   SoGtkRoster::initClass();
-} // initClasses()
+}
 
 // *************************************************************************
 
