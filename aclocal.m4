@@ -1,4 +1,4 @@
-dnl cfg/aclocal.m4 generated automatically by aclocal 1.4a
+dnl aclocal.m4 generated automatically by aclocal 1.4a
 
 dnl Copyright (C) 1994, 1995-9, 2000 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
@@ -2059,7 +2059,7 @@ fi
 
 
 # Usage:
-#   SIM_DEBUGSYMBOLS
+#   SIM_AC_DEBUGSYMBOLS
 #
 # Description:
 #   Let the user decide if debug symbol information should be compiled
@@ -2071,16 +2071,12 @@ fi
 # 
 # Author: Morten Eriksen, <mortene@sim.no>.
 # 
-# TODO:
-#   * [mortene:19991114] make this work with compilers other than gcc/g++
-# 
 
-AC_DEFUN([SIM_DEBUGSYMBOLS], [
-AC_PREREQ([2.13])
+AC_DEFUN([SIM_AC_DEBUGSYMBOLS], [
 AC_ARG_ENABLE(
   [symbols],
   AC_HELP_STRING([--enable-symbols],
-                 [(GCC only) include symbol debug information [default=yes]]),
+                 [include symbol debug information [default=yes]]),
   [case "${enableval}" in
     yes) enable_symbols=yes ;;
     no)  enable_symbols=no ;;
@@ -2089,15 +2085,11 @@ AC_ARG_ENABLE(
   [enable_symbols=yes])
 
 if test x"$enable_symbols" = x"no"; then
-  if test x"$GXX" = x"yes" || x"$GCC" = x"yes"; then
-    CFLAGS="`echo $CFLAGS | sed 's/-g//'`"
-    CXXFLAGS="`echo $CXXFLAGS | sed 's/-g//'`"
-  else
-    AC_MSG_WARN([--disable-symbols only has effect when using GNU gcc or g++])
-  fi
+  CFLAGS="`echo $CFLAGS | sed 's/-g//'`"
+  CPPFLAGS="`echo $CPPFLAGS | sed 's/-g//'`"
+  CXXFLAGS="`echo $CXXFLAGS | sed 's/-g//'`"
 fi
 ])
-
 
 # Usage:
 #   SIM_AC_RTTI_SUPPORT

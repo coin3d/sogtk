@@ -96,26 +96,24 @@ END
 done
 
 # abnormal exit?
-${DIE=false} && echo "" && exit 1
+${DIE=false} && echo "" && echo "Aborted." && exit 1
 
 # generate cfg/aclocal.m4
 echo "Running aclocal..."
-aclocal -I $MACRODIR --output=cfg/aclocal.m4
+aclocal -I $MACRODIR
 
 # generate config.h.in
 echo "Running autoheader..."
-autoheader -l cfg
+autoheader
 
 # generate Makefile.in templates
 echo "Running automake..."
 echo "[ignore any \"directory should not contain '/'\" warning]"
-cp cfg/aclocal.m4 .
 automake
-rm aclocal.m4
 
 # generate configure
 echo "Running autoconf..."
-autoconf -l cfg
+autoconf
 
 echo "Done."
 
