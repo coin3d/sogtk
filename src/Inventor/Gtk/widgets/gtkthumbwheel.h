@@ -23,7 +23,7 @@
 #define SOGTK_THUMBWHEEL_H
 
 #include <gdk/gdk.h>
-//#include <gtk/gtkadjustment.h>
+/* #include <gtk/gtkadjustment.h> */
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkmisc.h>
 
@@ -68,7 +68,7 @@ struct _GtkThumbWheel {
   int img; 		/* index of the bitmap to be shown */
   guchar *bitmap ;
   void * wheel; 	/* SoAnyThumbWheel class instance */
-}; // GtkThumbWheel
+}; /* GtkThumbWheel */
 
 struct _GtkThumbWheelClass {
   GtkMiscClass parent_class;
@@ -76,7 +76,7 @@ struct _GtkThumbWheelClass {
   void (* attached)       ( GtkThumbWheel * thumbwheel );
   void (* value_changed)  ( GtkThumbWheel * thumbwheel, gfloat value );
   void (* released)       ( GtkThumbWheel * thumbwheel );
-}; // GtkThumbWheelClass
+}; /* GtkThumbWheelClass */
 
 /* ********************************************************************** */
 
