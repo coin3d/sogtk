@@ -34,9 +34,9 @@ static const char rcsid[] =
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
 #include <sogtkdefs.h>
-#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 #include <Inventor/Gtk/viewers/SoAnyPlaneViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkPlaneViewer.h>
+#include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 
 #include <Inventor/Gtk/SoGtkCursor.h>
 #include <Inventor/Gtk/common/pixmaps/x.xpm>

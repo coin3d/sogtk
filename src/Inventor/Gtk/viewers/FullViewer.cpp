@@ -49,7 +49,7 @@ static const char rcsid[] =
 
 #include <Inventor/Gtk/viewers/SoAnyFullViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
-#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
+#include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 
 // Button icons.
 #include <Inventor/Gtk/common/pixmaps/pick.xpm>
@@ -201,15 +201,6 @@ static const char rcsid[] =
   This variable contains the popup menu object or NULL if it has not been
   created yet.
 */
-
-// *************************************************************************
-
-struct SoGtkViewerButton {
-  char * keyword;
-  char * label;
-  GtkSignalFunc pressed;
-  char ** xpm_data;
-};
 
 // *************************************************************************
 
@@ -667,8 +658,7 @@ SoGtkFullViewer::lengthAppPushButton(
 */
 
 GtkWidget *
-SoGtkFullViewer::getRenderAreaWidget(
-  void)
+SoGtkFullViewer::getRenderAreaWidget(void) const
 {
   return PRIVATE(this)->canvas;
 } // getRenderAreaWidget()
@@ -2944,6 +2934,18 @@ SoGtkFullViewerP::rightwheelReleasedCB(// static
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->rightWheelFinish();
 } // rightwheelReleasedCB()
+
+// *************************************************************************
+
+// Documented in superclass.
+void
+SoGtkFullViewer::sizeChanged(const SbVec2s & size)
+{
+  // FIXME: nothing for SoGtk. Check SoQt and / or SoXt to see what
+  // happens there -- perhaps we've forgotten something important?
+  // 20020109 mortene.
+  inherited::sizeChanged(size);
+}
 
 // *************************************************************************
 

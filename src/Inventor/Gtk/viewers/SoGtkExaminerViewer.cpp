@@ -34,13 +34,12 @@ static const char rcsid[] =
 #include <Inventor/projectors/SbSphereSheetProjector.h>
 
 #include <sogtkdefs.h>
-#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 #include <Inventor/Gtk/SoGtkCursor.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
-#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 #include <Inventor/Gtk/viewers/SoAnyExaminerViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
+#include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 
 #include <Inventor/Gtk/common/pixmaps/ortho.xpm>
 #include <Inventor/Gtk/common/pixmaps/perspective.xpm>
