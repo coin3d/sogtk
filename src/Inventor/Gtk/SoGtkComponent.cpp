@@ -86,6 +86,7 @@ public:
 
   static GdkCursor * arrowcursor;
   static GdkCursor * crosscursor;
+  static GdkCursor * uparrowcursor;
 
 private:
   SoGtkComponent * pub;
@@ -94,6 +95,7 @@ private:
 
 GdkCursor * SoGtkComponentP::arrowcursor = NULL;
 GdkCursor * SoGtkComponentP::crosscursor = NULL;
+GdkCursor * SoGtkComponentP::uparrowcursor = NULL;
 SbDict * SoGtkComponentP::cursordict = NULL;
 
 #define PUBLIC(ptr) (ptr->pub)
@@ -1042,6 +1044,35 @@ SoGtkComponent::setComponentCursor(const SoGtkCursor & cursor)
 void
 SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
 {
+
+  if (GTK_WIDGET_NO_WINDOW(w)) {
+    if (SOGTK_DEBUG) {
+      // FIXME: This should not happen, but there seems to be a bug in
+      // SoGtk's event handling causing this. 20001219 RC.
+      static SbBool first = TRUE;
+      if (first) {
+        SoDebugError::postWarning("SoGtkComponent::setWidgetCursor",
+                                  "widget %x: NO WINDOW\n", (int) w);
+        first = FALSE;
+      }
+    }
+    return;
+  }
+
+  if (w->window == (GdkWindow *)NULL) {
+    if (SOGTK_DEBUG) {
+      // FIXME: This should not happen, but there seems to be a bug in
+      // SoGtk's event handling causing this. 20001219 RC.
+      static SbBool first = TRUE;
+      if (first) {
+        SoDebugError::postWarning("SoGtkComponent::setWidgetCursor",
+                                  "widget %x: widget->window == 0\n", (int) w);
+        first = FALSE;
+      }
+    }
+    return;
+  }
+
   if (cursor.getShape() == SoGtkCursor::CUSTOM_BITMAP) {
     const SoGtkCursor::CustomCursor * cc = &cursor.getCustomCursor();
     gdk_window_set_cursor(w->window, SoGtkComponentP::getNativeCursor(w, cc));
@@ -1073,7 +1104,11 @@ SoGtkComponent::setWidgetCursor(GtkWidget * w, const SoGtkCursor & cursor)
       break;
 
     case SoGtkCursor::UPARROW:
-      SOGTK_STUB();
+      if (!SoGtkComponentP::uparrowcursor) {
+        // FIXME: plug memleak. 20011126 mortene.
+        SoGtkComponentP::uparrowcursor = gdk_cursor_new(GDK_SB_UP_ARROW);
+      }
+      gdk_window_set_cursor(w->window, SoGtkComponentP::uparrowcursor);
       break;
 
     default:
