@@ -193,6 +193,8 @@ gtk_thumbwheel_init(
   SoAnyThumbWheel * wheel = new SoAnyThumbWheel;
   wheel->SetWheelMotionMethod( SoAnyThumbWheel::UNIFORM );
   wheel->SetWheelRangeBoundaryHandling( SoAnyThumbWheel::MODULATE );
+  wheel->SetGraphicsByteOrder( SoAnyThumbWheel::ABGR );
+//  wheel->SetColor( 0, 150, 200 );
   thumbwheel->wheel = (void *) wheel;
 } // gtk_thumbwheel_init()
 
@@ -413,8 +415,6 @@ gtk_thumbwheel_expose(
   int img = ((SoAnyThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
     thumbwheel->tempvalue, SoAnyThumbWheel::ENABLED );
 
-  ((SoAnyThumbWheel *)thumbwheel->wheel)->SetGraphicsByteOrder( SoAnyThumbWheel::ABGR );
-  ((SoAnyThumbWheel *)thumbwheel->wheel)->SetColor( 0, 150, 200 );
   ((SoAnyThumbWheel *)thumbwheel->wheel)->DrawBitmap( img, (void *) bitmap,
     (thumbwheel->vertical != 0) ? SoAnyThumbWheel::VERTICAL : SoAnyThumbWheel::HORIZONTAL );
 
