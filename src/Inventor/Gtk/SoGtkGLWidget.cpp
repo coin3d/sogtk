@@ -122,7 +122,9 @@ SoGtkGLWidget::buildWidget(
   gtk_widget_set_usize( this->glWidget, 100, 100 );
   
   gtk_widget_set_events( GTK_WIDGET(this->glWidget),
-    GDK_EXPOSURE_MASK | GDK_KEY_PRESS_MASK );
+    GDK_EXPOSURE_MASK | GDK_KEY_PRESS_MASK |
+    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
+    GDK_POINTER_MOTION_MASK );
 
   /* configure_event should probably be moved to SoGtkRenderArea? */
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "realize",
@@ -131,6 +133,9 @@ SoGtkGLWidget::buildWidget(
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLReshape), (void *) this );
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "expose_event",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLDraw), (void *) this );
+
+  gtk_signal_connect( GTK_OBJECT(this->glWidget), "event",
+    GTK_SIGNAL_FUNC(SoGtkGLWidget::eventHandler), (void *) this );
 
   this->container = gtk_vbox_new( FALSE, 0 );
   gtk_container_set_border_width( GTK_CONTAINER(this->container),
@@ -159,12 +164,9 @@ SoGtkGLWidget::eventFilter(
   GtkObject * object,
   GdkEvent * event )
 {
+  SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "[invoked]" );
+
 /*
-
-#if 0 // debug
-  SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "obj: %p", obj);
-#endif // debug
-
 #if 0 // debug
   switch (e->type()) {
   case Event_MouseButtonPress:
@@ -242,8 +244,7 @@ SoGtkGLWidget::eventFilter(
     // Pass this on further down the inheritance hierarchy of the SoGtk
     // components.
     this->processEvent(e);
-  }
-  else {
+  } else {
     // Handle in superclass.
     stopevent = inherited::eventFilter(obj, e);
   }
@@ -649,16 +650,16 @@ SoGtkGLWidget::glFlushBuffer(
 /*!
 */
 
-void
-SoGtkGLWidget::eventHandler(
+gint
+SoGtkGLWidget::eventHandler( // static
   GtkWidget * widget,
-  void * closure,
   GdkEvent * event,
-  bool * )
+  void * closure )
 {
   assert( closure != NULL );
   SoGtkGLWidget * component = (SoGtkGLWidget *) closure;
   component->processEvent( event );
+  return FALSE;
 } // eventHandler()
 
 // *************************************************************************

@@ -91,7 +91,7 @@ protected:
 
   SbBool waitForExpose;
 
-  static void eventHandler( GtkWidget *, void *, GdkEvent *, bool * );
+  static gint eventHandler( GtkWidget *, GdkEvent *, void * );
 
 private:
   GtkWidget * glParent;
