@@ -10,7 +10,7 @@
  *  more details.
  *
  *  If you want to use Coin SoGtk for applications not compatible with the
- *  LGPL, please contact SIM to aquire a Professional Edition License.
+ *  LGPL, please contact SIM to acquire a Professional Edition License.
  *
  *  Systems in Motion, Prof Brochs gate 6, N-7030 Trondheim, NORWAY
  *  http://www.sim.no/ support@sim.no Voice: +47 22114160 Fax: +47 22207097
@@ -25,7 +25,6 @@
 #include <gtk/gtk.h>
 
 #include <Inventor/SbLinear.h>
-#include <Inventor/SbString.h>
 #include <Inventor/SoLists.h>
 
 #include <Inventor/Gtk/SoGtkBasic.h>
@@ -69,12 +68,14 @@ public:
 protected:
   SoGtkComponent( GtkWidget * const parent = NULL,
                   const char * const name = NULL,
-                  const SbBool buildInsideParent = TRUE );
+                  const SbBool embed = TRUE );
 
   void setClassName( const char * const name );
   void setBaseWidget( GtkWidget * widget );
 
   void subclassInitialized(void);
+  
+  virtual void afterRealizeHook(void);
 
 //  virtual const char * componentClassName(void) const = 0;
   virtual const char * getDefaultWidgetName(void) const;
@@ -95,14 +96,16 @@ protected:
 private:
   GtkWidget * widget;
   GtkWidget * parent;
-  SbBool buildInside;
-  SbString className, widgetName, captionText, iconText;
+  SbBool embedded;
+  SbBool realized;
+  char * className;
+  char * widgetName;
+  char * captionText;
+  char * iconText;
   SoGtkComponentCB * closeCB;
   void * closeCBdata;
   SbPList * visibilityChangeCBs;
   SbVec2s storeSize;
-
-  static SbPList * soGtkCompList;
 
 }; // class SoGtkComponent
 

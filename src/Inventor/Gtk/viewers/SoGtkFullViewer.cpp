@@ -10,7 +10,7 @@
  *  more details.
  *
  *  If you want to use Coin SoGtk for applications not compatible with the
- *  LGPL, please contact SIM to aquire a Professional Edition License.
+ *  LGPL, please contact SIM to acquire a Professional Edition License.
  *
  *  Systems in Motion, Prof Brochs gate 6, N-7030 Trondheim, NORWAY
  *  http://www.sim.no/ support@sim.no Voice: +47 22114160 Fax: +47 22207097
@@ -472,7 +472,6 @@ void
 SoGtkFullViewer::setViewing(
   SbBool enable )
 {
-//  SoDebugError::postWarning( "SoGtkFullViewer::setViewing", "[%s]", enable ? "TRUE" : "FALSE" );
   if ( ( enable && this->isViewing() ) ||
        ( ! enable && ! this->isViewing() ) ) {
 #if SOGTK_DEBUG
@@ -492,8 +491,6 @@ SoGtkFullViewer::setViewing(
   if ( interact_button && view_button ) {
     gtk_signal_handler_block_by_data( GTK_OBJECT(interact_button), (gpointer) this );
     gtk_signal_handler_block_by_data( GTK_OBJECT(view_button), (gpointer) this );
-//    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(interact_button), enable ? TRUE : FALSE );
-//    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(view_button), enable ? FALSE : TRUE );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(interact_button), enable ? FALSE : TRUE );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(view_button), enable ? TRUE : FALSE );
     gtk_signal_handler_unblock_by_data( GTK_OBJECT(interact_button), (gpointer) this );
