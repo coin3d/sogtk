@@ -446,7 +446,7 @@ fi
 # Gettext support
 
 ## Add the languages which your application supports here.
-ALL_LINGUAS="de no"
+ALL_LINGUAS="de" # "no" tmp disabled. 20011209 mortene.
 SIM_GNU_GETTEXT 
 ## Set PACKAGE_LOCALE_DIR in config.h.
 if test x"${prefix}" = x"NONE"; then  

@@ -68,10 +68,7 @@ EXTRA_DIST = \
 	po/ChangeLog \
 	po/Makefile.in.in \
 	po/POTFILES.in \
-	po/cat-id-tbl.c \
 	po/de.po \
-	po/no.po \
-	po/stamp-cat-id \
 	$(SoGuiCommonDistFiles)
 
 if BUILD_LIBRARY
