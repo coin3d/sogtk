@@ -525,7 +525,7 @@ gtk_thumbwheel_motion(
     gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
   bmp = img;
 
-  gtk_timeout_add( 100, gtk_thumbwheel_motion, (gpointer) thumbwheel );
+  gtk_timeout_add( 100, (gint (*)(void *)) gtk_thumbwheel_motion, (gpointer) thumbwheel );
   return FALSE;
 } // gtk_thumbwheel_motion()
 
@@ -545,7 +545,7 @@ gtk_thumbwheel_motion_notify(
     return FALSE;
 
   gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
-  gtk_timeout_add( 100, gtk_thumbwheel_motion, (gpointer) thumbwheel );
+  gtk_timeout_add( 100, (gint (*)(void *)) gtk_thumbwheel_motion, (gpointer) thumbwheel );
   return FALSE;
 } // gtk_thumbwheel_motion_notify()
 
