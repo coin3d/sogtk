@@ -82,7 +82,7 @@ SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
 */
 
 SoGtkKeyboard::SoGtkKeyboard(
-  const int eventbits)
+  int eventbits)
 {
   this->eventmask = eventbits & SoGtkKeyboard::ALL_EVENTS;
   this->kbdevent = new SoKeyboardEvent;

@@ -84,7 +84,7 @@ SOGTK_OBJECT_SOURCE(SoGtkMouse);
 */
 
 SoGtkMouse::SoGtkMouse(
-  const int eventbits)
+  int eventbits)
 {
   this->eventmask = eventbits & SoGtkMouse::ALL_EVENTS;
   this->buttonevent = new SoMouseButtonEvent;

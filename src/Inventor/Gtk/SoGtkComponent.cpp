@@ -203,8 +203,8 @@ SoGtkComponent::~SoGtkComponent()
   \sa removeVisibilityChangeCallback(), isVisible()
 */
 void
-SoGtkComponent::addVisibilityChangeCallback(SoGtkComponentVisibilityCB * func,
-                                            void * userData)
+SoGtkComponent::addVisibilityChangeCallback(SoGtkComponentVisibilityCB * const func,
+                                            void * const userData)
 {
   if (! PRIVATE(this)->visibilityChangeCBs) {
     PRIVATE(this)->visibilityChangeCBs = new SbPList;
@@ -220,8 +220,8 @@ SoGtkComponent::addVisibilityChangeCallback(SoGtkComponentVisibilityCB * func,
   \sa addVisibilityChangeCallback(), isVisible()
 */
 void
-SoGtkComponent::removeVisibilityChangeCallback(SoGtkComponentVisibilityCB * func,
-                                               void * userData)
+SoGtkComponent::removeVisibilityChangeCallback(SoGtkComponentVisibilityCB * const func,
+                                               void * const userData)
 {
 #if SOGTK_DEBUG
   if (! PRIVATE(this)->visibilityChangeCBs) {
@@ -647,9 +647,9 @@ SoGtkComponent::setIconTitle(const char * const title)
   if (PRIVATE(this)->widget) {
     GtkWidget * window = gtk_widget_get_toplevel(PRIVATE(this)->widget);
     assert(window != NULL);
-    gdk_window_set_icon_name((GTK_WIDGET(PRIVATE(this)->parent))->window, title ? title : "");
+    gdk_window_set_icon_name((GTK_WIDGET(PRIVATE(this)->parent))->window,(char*)( title ? title : ""));
 #if 0
-    gdk_window_set_icon_name(window->window, title ? title : "");
+    gdk_window_set_icon_name(window->window,(char*)( title ? title : ""));
 #endif
   }
 }
@@ -789,7 +789,7 @@ SoGtkComponent::sizeChanged(const SbVec2s & size)
   this will only pop up an error message.
 */
 void
-SoGtkComponent::openHelpCard(const char * card)
+SoGtkComponent::openHelpCard(const char * const card)
 {
   SoGtk::createSimpleErrorDialog(PRIVATE(this)->widget, _("Not Implemented"),
                                  _("The help card system has not been implemented yet."));
@@ -808,7 +808,7 @@ SoGtkComponent::openHelpCard(const char * card)
   \sa isTopLevelShell()
 */
 void
-SoGtkComponent::setWindowCloseCallback(SoGtkComponentCB * func,
+SoGtkComponent::setWindowCloseCallback(SoGtkComponentCB * const func,
                                        void * const data)
 {
   // FIXME: make list instead of one slot that is overwritten?
@@ -853,7 +853,8 @@ SoGtkComponent::afterRealizeHook(void)
   gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->widget), "event",
                      GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler),
                      (gpointer) this);
-  gtk_window_set_title(GTK_WINDOW(PRIVATE(this)->parent), this->getTitle());
+  if(GTK_IS_WINDOW(PRIVATE(this)->parent))
+    gtk_window_set_title(GTK_WINDOW(PRIVATE(this)->parent), this->getTitle());
 }
 
 // *************************************************************************

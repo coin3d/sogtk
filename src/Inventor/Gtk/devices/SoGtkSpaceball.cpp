@@ -85,7 +85,7 @@ SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
 */
 
 SoGtkSpaceball::SoGtkSpaceball(
-  const int eventbits)
+  int eventbits)
 {
   this->events = eventbits;
   this->rotationscale = 0.006f;

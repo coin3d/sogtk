@@ -198,7 +198,7 @@ SoGtkGraphEditor::buildSubGraph(
   SbName nodename = node->getName();
   GtkWidget * root;
   if (! nodename) {
-    root = GTK_WIDGET(gtk_tree_item_new_with_label(classname));
+    root = GTK_WIDGET(gtk_tree_item_new_with_label((gchar*)classname));
   } else {
     const char * name = nodename.getString();
     char buf[128];
@@ -226,7 +226,7 @@ SoGtkGraphEditor::buildSubGraph(
       SbName fieldname;
       node->getFieldName(field, fieldname);
       const char * fieldnamestr = fieldname.getString();
-      GtkWidget * fieldwidget = GTK_WIDGET(gtk_tree_item_new_with_label(fieldnamestr));
+      GtkWidget * fieldwidget = GTK_WIDGET(gtk_tree_item_new_with_label((gchar*)fieldnamestr));
       gtk_object_set_data(GTK_OBJECT(fieldwidget), "SoNode", (gpointer) node);
       gtk_object_set_data(GTK_OBJECT(fieldwidget), "SoField", (gpointer) field);
       gtk_widget_show(fieldwidget);
