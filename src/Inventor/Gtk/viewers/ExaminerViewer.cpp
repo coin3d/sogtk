@@ -539,31 +539,6 @@ SoGtkExaminerViewer::openViewerHelpCard(void)
 // *************************************************************************
 
 /*!
-  Overload this method to make sure any animations are stopped before
-  we go into seek mode.
-*/
-
-void
-SoGtkExaminerViewer::setSeekMode(// virtual
-  SbBool on)
-{
-#if SOGTK_DEBUG
-  if (on == this->isSeekMode()) {
-    SoDebugError::postWarning("SoGtkExaminerViewer::setSeekMode",
-                               "seek mode already %sset", on ? "" : "un");
-    return;
-  }
-#endif // SOGTK_DEBUG
-  if (this->isAnimating()) this->stopAnimating();
-  inherited::setSeekMode(on);
-  this->setMode(on ? 
-                        SoGtkExaminerViewer::WAITING_FOR_SEEK : 
-                        SoGtkExaminerViewer::EXAMINE);
-} // setSeekMode()
-
-// *************************************************************************
-
-/*!
   Overload this method to be able to draw the axis cross if selected
   in the preferences sheet.
 */
