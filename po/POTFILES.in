@@ -24,8 +24,11 @@ src/Inventor/Gtk/devices/SoGtkInputFocus.cpp
 src/Inventor/Gtk/devices/SoGtkKeyboard.cpp
 src/Inventor/Gtk/devices/SoGtkMouse.cpp
 src/Inventor/Gtk/devices/SoGtkSpaceball.cpp
+src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.cpp
 src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp
+src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp
 src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp
 src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp
+src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp
 src/Inventor/Gtk/widgets/gtkthumbwheel.cpp
 src/Inventor/Gtk/widgets/SoGtkPopupMenu.cpp

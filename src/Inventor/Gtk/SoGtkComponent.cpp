@@ -825,8 +825,8 @@ void
 SoGtkComponent::openHelpCard(
   const char * card )
 {
-  SoGtk::createSimpleErrorDialog( PRIVATE(this)->widget, "Not Implemented",
-    "The help card system has not been implemented yet." );
+  SoGtk::createSimpleErrorDialog( PRIVATE(this)->widget, _( "Not Implemented" ),
+    _( "The help card system has not been implemented yet." ) );
 } // openHelpCard()
 
 // *************************************************************************
