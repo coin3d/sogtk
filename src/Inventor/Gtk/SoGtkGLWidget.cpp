@@ -120,14 +120,6 @@ SoGtkGLWidget::~SoGtkGLWidget()
 
 // *************************************************************************
 
-void
-SoGtkGLWidget::buildGLWidget(void)
-{
-  SOGTK_STUB();
-  // FIXME: not used in SoGtk -- what is it used for in SoQt and SoXt?
-  // 20011012 mortene.
-}
-
 // Documented in common/SoGuiGLWidgetCommon.cpp.in.
 GtkWidget *
 SoGtkGLWidget::buildWidget(GtkWidget * parent)
