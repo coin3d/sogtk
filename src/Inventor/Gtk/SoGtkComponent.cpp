@@ -44,7 +44,6 @@
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkPlaneViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
-#include <Inventor/Gtk/viewers/SoGtkWalkViewer.h>
 #include <Inventor/errors/SoDebugError.h>
 #include <sogtkdefs.h>
 
@@ -71,7 +70,9 @@ SoGtkComponent::initClasses(void)
   SoGtkExaminerViewer::initClass();
   SoGtkPlaneViewer::initClass();
   SoGtkConstrainedViewer::initClass();
+#if 0  // TMP DISABLED: walkviewer not properly implemented yet. 20020624 mortene.
   SoGtkWalkViewer::initClass();
+#endif // TMP DISABLED
   SoGtkFlyViewer::initClass();
   SoGtkGraphEditor::initClass();
   SoGtkRoster::initClass();

@@ -1,3 +1,7 @@
+# FIXME: this file has not been kept up-to-date and is now not
+# correctly reflecting the set of files which should be made part
+# of an RPM file. 20011207 mortene.
+
 # Spec file for constructing installation package in RPM format.
 # Quick instructions (these are similar to instructions found in
 # the simage.spec.in and coin.spec.in files):
@@ -99,7 +103,6 @@ strip @libdir@/libSoGtk.so.1.0.0
 @includedir@/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
 @includedir@/Inventor/Gtk/viewers/SoGtkConstrainedViewer.h
 @includedir@/Inventor/Gtk/viewers/SoGtkFlyViewer.h
-@includedir@/Inventor/Gtk/viewers/SoGtkWalkViewer.h
 @libdir@/libSoGtk.so.1
 @libdir@/libSoGtk.so.1.0.0
 @libdir@/libSoGtk.la

@@ -19,7 +19,6 @@ DISTCLEANFILES = \
 
 libSoGtkViewers_la_SOURCES = \
 	PlaneViewer.cpp \
-	WalkViewer.cpp \
 	FullViewer.cpp \
 	ExaminerViewer.cpp
 
@@ -39,7 +38,6 @@ nodist_SoGtkViewersinc_HEADERS = \
 	SoGtkFullViewer.h \
 	SoGtkExaminerViewer.h \
 	SoGtkFlyViewer.h \
-	SoGtkPlaneViewer.h \
-	SoGtkWalkViewer.h
+	SoGtkPlaneViewer.h
 
 ############################################################################
