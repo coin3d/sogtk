@@ -1,8 +1,15 @@
 TODO
 ====
 
-* [larsa:20000201] change #ifndef/#define/#endif header-wrapper namespace
+* [larsa:20000201] clean up all the Qt-related comments in the source code.
+
+* [larsa:20000201] make GtkMiscClass the parent class of GtkThumbwheel instead
+    of plain GtkWidget (for the added padding and alignment functionality).
+
+* [larsa:20000201] change #ifndef/#define/#endif header-wrapper namespace.
 
 * [larsa:20000117] consider implementing our own GL widget for GTK+ to avoid
-  the somewhat inconvenient extra library dependency for GtkGLArea.
+    the somewhat inconvenient extra library dependency for GtkGLArea.  may
+    need to do something like this for GTK+ for Windows and BeOS anyways,
+    since the SoGtkGLArea widget seems to be in development doze-mode.
 
