@@ -1,2 +1,7 @@
 SoGtk is licensed under the GNU Lesser General Public License,
 version 2.1.  See the file LICENSE.LGPL for all the details.
+
+The contents of the intl/ directory is part of the gettext package,
+licensed under the GNU General Public License, which is copyright
+Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+
