@@ -27,16 +27,19 @@
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
 /*
+ * gtkthumbwheel - my first GTK+ widget.
+ *
  * TODO
- * - draw button/wheel frame
- * - create pregenerated thumbwheel pixmaps, and blit them to widget
+ * - cache pregenerated thumbwheel pixmaps
  * - track mouse motion and update wheel values / wheel graphics
  * - create thumbwheel configuration/state methods
- * - imlpement (emit) and check/debug the signals (my first GTK+ widget ever)
+ * - implement (emit) and check/debug thumbwheel signals
+ * - make widget un-resizable
+ * - document some stuff
  *
  * CONSIDER
  * - put thumbwheel into public domain and/or contribute it to The GTK+ Team.
- *   (convert sourcecode to C first)
+ *   (C-ify source code first)
  */
 
 // *************************************************************************
@@ -80,7 +83,7 @@ enum {
 static GtkWidgetClass * parent_class = NULL;
 static guint thumbwheel_signals[NUM_SIGNALS] = { 0 };
 
-static const guint GTK_THUMBWHEEL_DEFAULT_WIDTH = 20;
+static const guint GTK_THUMBWHEEL_DEFAULT_WIDTH = 26;
 static const guint GTK_THUMBWHEEL_DEFAULT_LENGTH = 90;
 
 // *************************************************************************
@@ -117,6 +120,8 @@ gtk_thumbwheel_class_init(
 {
   GtkObjectClass * object_class = (GtkObjectClass *) cclass;
   GtkWidgetClass * widget_class = (GtkWidgetClass *) cclass;
+
+  gdk_rgb_init();
 
   parent_class = (GtkWidgetClass *) gtk_type_class( gtk_widget_get_type() );
 
@@ -179,7 +184,7 @@ gtk_thumbwheel_init(
   thumbwheel->downpos = 0;
   thumbwheel->value = 0.0f;
   thumbwheel->tempvalue = 0.0f;
-//  thumbwheel->wheel = new ThumbWheel;
+  thumbwheel->wheel = (void *) new ThumbWheel;
 } // gtk_thumbwheel_init()
 
 // *************************************************************************
@@ -312,12 +317,71 @@ gtk_thumbwheel_expose(
   if ( event->count > 0 )
     return FALSE;
 
-//  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
+  GtkThumbWheel * thumbwheel = GTK_THUMBWHEEL(widget);
+
   gdk_window_clear_area( widget->window,
     0, 0, widget->allocation.width, widget->allocation.height );
 
-  gdk_draw_line( widget->window, widget->style->fg_gc[widget->state],
-    0, 0, widget->allocation.width - 1, widget->allocation.height - 1 );
+  gdk_draw_line( widget->window,
+    widget->style->light_gc[GTK_WIDGET_STATE(widget)],
+    0, 0, widget->allocation.width - 1, 0 );
+  gdk_draw_line( widget->window,
+    widget->style->light_gc[GTK_WIDGET_STATE(widget)],
+    1, 1, widget->allocation.width - 2, 1 );
+
+  gdk_draw_line( widget->window,
+    widget->style->light_gc[GTK_WIDGET_STATE(widget)],
+    0, 0, 0, widget->allocation.height - 1 );
+  gdk_draw_line( widget->window,
+    widget->style->light_gc[GTK_WIDGET_STATE(widget)],
+    1, 1, 1, widget->allocation.height - 2 );
+
+  gdk_draw_line( widget->window,
+    widget->style->dark_gc[GTK_WIDGET_STATE(widget)],
+                               1, widget->allocation.height - 1,
+    widget->allocation.width - 1, widget->allocation.height - 1 );
+  gdk_draw_line( widget->window,
+    widget->style->dark_gc[GTK_WIDGET_STATE(widget)],
+                               2, widget->allocation.height - 2,
+    widget->allocation.width - 2, widget->allocation.height - 2 );
+
+  gdk_draw_line( widget->window,
+    widget->style->dark_gc[GTK_WIDGET_STATE(widget)],
+    widget->allocation.width - 1, 1,
+    widget->allocation.width - 1, widget->allocation.height - 1 );
+
+  gdk_draw_line( widget->window,
+    widget->style->dark_gc[GTK_WIDGET_STATE(widget)],
+    widget->allocation.width - 2, 2,
+    widget->allocation.width - 2, widget->allocation.height - 1 );
+
+  gdk_draw_line( widget->window,
+    widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+    5, 9, 5, widget->allocation.height - 10 );
+  gdk_draw_line( widget->window,
+    widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+    5, 9, widget->allocation.width - 6, 9 );
+  gdk_draw_line( widget->window,
+    widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+    widget->allocation.width - 6, 9,
+    widget->allocation.width - 6, widget->allocation.height - 10 );
+  gdk_draw_line( widget->window,
+    widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+    5, widget->allocation.height - 10,
+    widget->allocation.width - 6, widget->allocation.height - 10 );
+
+  static guchar bitmap[90*26*4*4]; // just "enough" for now
+  ((ThumbWheel *)thumbwheel->wheel)->SetWheelSize(
+    widget->allocation.height - 20, widget->allocation.width - 12 );
+
+  ((ThumbWheel *)thumbwheel->wheel)->SetGraphicsByteOrder( ThumbWheel::ABGR );
+  ((ThumbWheel *)thumbwheel->wheel)->SetColor( 0, 150, 200 );
+  ((ThumbWheel *)thumbwheel->wheel)->DrawBitmap( 1, (void *) bitmap, true );
+
+  gdk_draw_rgb_32_image(
+    widget->window, widget->style->fg_gc[ GTK_WIDGET_STATE(widget) ],
+    6, 10, widget->allocation.width - 12, widget->allocation.height - 20,
+    GDK_RGB_DITHER_NONE, bitmap, (widget->allocation.width - 12) * 4 );
 
   return FALSE;
 } // gtk_thumbwheel_expose()
