@@ -67,11 +67,23 @@ VERSION=$SOGTK_VERSION
 #  AC_DEFINE_UNQUOTED(SOGTK_VERSION, "$SOGTK_VERSION")
 
 # **************************************************************************
+# If you just want to generate docs, ignore all the build-related tests
 
-AC_CANONICAL_SYSTEM
+sim_ac_build_library=true
+AC_ARG_ENABLE(
+  [build],
+  AC_HELP_STRING([--disable-build], [disable configuring for library build]), [
+  case $enableval in
+    no) sim_ac_build_library=false ;;
+    *)  ;;
+  esac])
+
+if $sim_ac_build_library; then
 
 # **************************************************************************
 # Locate compilers and set C++ as the default compiler to run in tests.
+
+AC_CANONICAL_SYSTEM
 
 AC_PROG_CC
 AC_PROG_CPP
@@ -271,6 +283,59 @@ AM_CONDITIONAL(BUILD_TESTS, test "x${with_test_code+set}" = "xset")
 SIM_AC_SOGUI_STATIC_DEFAULTS
 
 # **************************************************************************
+# Gettext support
+
+## Add the languages which your application supports here.
+ALL_LINGUAS="de no"
+SIM_GNU_GETTEXT 
+## Set PACKAGE_LOCALE_DIR in config.h.
+if test x"${prefix}" = x"NONE"; then  
+  package_local_dir="${ac_default_prefix}/${DATADIRNAME}/locale";
+else
+  package_locale_dir="${prefix}/${DATADIRNAME}/locale";
+fi
+AC_DEFINE_UNQUOTED([PACKAGE_LOCALE_DIR],
+    ["${package_locale_dir}"],
+    [Location the locale data will get installed to.])
+
+# **************************************************************************
+# Submodules that must be configured.
+
+AC_CONFIG_SUBDIRS(data)
+
+# **************************************************************************
+# FIXME: avoid the shift magic
+
+SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_CPPFLAGS, -I$includedir $SOGTK_EXTRA_CPPFLAGS)
+set : $SOGTK_EXTRA_CPPFLAGS
+shift
+shift
+SOGTK_EXTRA_CPPFLAGS=$@
+
+SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_LDFLAGS, -L$libdir $SOGTK_EXTRA_LDFLAGS)
+set : $SOGTK_EXTRA_LDFLAGS
+shift
+shift
+SOGTK_EXTRA_LDFLAGS=$@
+
+SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_LIBS, $SOGTK_LIBNAME $SOGTK_EXTRA_LIBS)
+set : $SOGTK_EXTRA_LIBS
+shift
+shift
+SOGTK_EXTRA_LIBS=$@
+
+SIM_AC_UNIQIFY_LIST(CPPFLAGS, $CPPFLAGS)
+SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
+SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
+
+# **************************************************************************
+# END OF "if $sim_ac_build_library" TEST
+
+else
+  SIM_EXPAND_DIR_VARS
+fi
+
+# **************************************************************************
 # Variable substitutions for using libSoGtk in the generic code.
 
 GUI=GTK
@@ -328,6 +393,7 @@ if test x"$want_html" != xno -o x"$want_man" != xno; then
   if test x"$sim_ac_doxygen_avail" != x"$sim_ac_doxygen_our_version"; then
     AC_MSG_WARN(You are not using Doxygen version $sim_ac_doxygen_our_version)
   fi
+  AC_SUBST(sim_ac_doxygen_exe)
 
   AC_PATH_PROG(sim_ac_perl_exe, perl, false, $PATH)
   if test x"$sim_ac_perl_exe" = xfalse; then
@@ -335,52 +401,6 @@ if test x"$want_html" != xno -o x"$want_man" != xno; then
   fi
   AC_SUBST(sim_ac_perl_exe)
 fi
-
-# **************************************************************************
-# FIXME: avoid the shift magic
-
-SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_CPPFLAGS, -I$includedir $SOGTK_EXTRA_CPPFLAGS)
-set : $SOGTK_EXTRA_CPPFLAGS
-shift
-shift
-SOGTK_EXTRA_CPPFLAGS=$@
-
-SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_LDFLAGS, -L$libdir $SOGTK_EXTRA_LDFLAGS)
-set : $SOGTK_EXTRA_LDFLAGS
-shift
-shift
-SOGTK_EXTRA_LDFLAGS=$@
-
-SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_LIBS, $SOGTK_LIBNAME $SOGTK_EXTRA_LIBS)
-set : $SOGTK_EXTRA_LIBS
-shift
-shift
-SOGTK_EXTRA_LIBS=$@
-
-SIM_AC_UNIQIFY_LIST(CPPFLAGS, $CPPFLAGS)
-SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
-SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
-
-# **************************************************************************
-# Gettext support
-
-## Add the languages which your application supports here.
-ALL_LINGUAS="de no"
-SIM_GNU_GETTEXT 
-## Set PACKAGE_LOCALE_DIR in config.h.
-if test x"${prefix}" = x"NONE"; then  
-  package_local_dir="${ac_default_prefix}/${DATADIRNAME}/locale";
-else
-  package_locale_dir="${prefix}/${DATADIRNAME}/locale";
-fi
-AC_DEFINE_UNQUOTED([PACKAGE_LOCALE_DIR],
-    ["${package_locale_dir}"],
-    [Location the locale data will get installed to.])
-
-# **************************************************************************
-# Submodules that must be configured.
-
-AC_CONFIG_SUBDIRS(data)
 
 # **************************************************************************
 # List all makefiles configure must automatically generate.

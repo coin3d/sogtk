@@ -2795,75 +2795,6 @@ fi
 ])
 
 
-# Usage:
-#  SIM_AC_DOXYGEN_TOOL([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
-#
-# Description:
-#   This macro locates the doxygen executable. If it is found, the
-#   variable $sim_ac_doxygen_exe is set to the full path- and
-#   executable name (if not found, it is set to "false") and
-#   $sim_ac_doxygen_avail is set to the version number (if not
-#   found, it is set to "no").
-#
-# Author: Morten Eriksen, <mortene@sim.no>.
-
-AC_DEFUN(SIM_AC_DOXYGEN_TOOL, [
-AC_ARG_WITH(
-  [doxygen],
-  AC_HELP_STRING([--with-doxygen=DIR],
-                 [DIR is the directory where the doxygen executable resides]),
-  [],
-  [with_doxygen=yes])
-
-sim_ac_doxygen_avail=no
-
-if test x"$with_doxygen" != xno; then
-  sim_ac_path=$PATH
-  if test x"$with_doxygen" != xyes; then
-    sim_ac_path=${with_doxygen}:$PATH
-  fi
-
-  AC_PATH_PROG(sim_ac_doxygen_exe, doxygen, false, $sim_ac_path)
-  if test x"$sim_ac_doxygen_exe" = xfalse; then
-    ifelse([$2], , :, [$2])
-  else
-    sim_ac_doxygen_avail=`$sim_ac_doxygen_exe -help 2> /dev/null | head -1 | sed 's%[[^ ]]\+ [[^ ]]\+ %%'`
-    $1
-  fi
-fi
-])
-
-# **************************************************************************
-# SIM_AC_UNIQIFY_LIST( VARIABLE, LIST )
-#
-# This macro filters out redundant items from a list.  This macro was made
-# to avoid having multiple equivalent -I and -L options for the compiler on
-# the command-line, which made compilation quite messy to watch.
-#
-# BUGS:
-#   Items with spaces are probably not supported.
-#
-# Authors:
-#   Lars J. Aas <larsa@sim.no>
-#
-
-AC_DEFUN([SIM_AC_UNIQIFY_LIST], [
-sim_ac_uniqued_list=
-for sim_ac_item in $2; do
-  if test x"$sim_ac_uniqued_list" = x; then
-    sim_ac_uniqued_list="$sim_ac_item"
-  else
-    sim_ac_unique=true
-    for sim_ac_uniq in $sim_ac_uniqued_list; do
-      test x"$sim_ac_item" = x"$sim_ac_uniq" && sim_ac_unique=false
-    done
-    $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
-  fi
-done
-$1=$sim_ac_uniqued_list
-]) # SIM_AC_UNIQIFY_LIST
-
-
 # Macro to add for using GNU gettext.
 # Ulrich Drepper <drepper@cygnus.com>, 1995.
 #
@@ -3246,4 +3177,73 @@ AC_DEFUN(AM_LC_MESSAGES,
         [Define if your locale.h file contains LC_MESSAGES.])
     fi
   fi])
+
+# **************************************************************************
+# SIM_AC_UNIQIFY_LIST( VARIABLE, LIST )
+#
+# This macro filters out redundant items from a list.  This macro was made
+# to avoid having multiple equivalent -I and -L options for the compiler on
+# the command-line, which made compilation quite messy to watch.
+#
+# BUGS:
+#   Items with spaces are probably not supported.
+#
+# Authors:
+#   Lars J. Aas <larsa@sim.no>
+#
+
+AC_DEFUN([SIM_AC_UNIQIFY_LIST], [
+sim_ac_uniqued_list=
+for sim_ac_item in $2; do
+  if test x"$sim_ac_uniqued_list" = x; then
+    sim_ac_uniqued_list="$sim_ac_item"
+  else
+    sim_ac_unique=true
+    for sim_ac_uniq in $sim_ac_uniqued_list; do
+      test x"$sim_ac_item" = x"$sim_ac_uniq" && sim_ac_unique=false
+    done
+    $sim_ac_unique && sim_ac_uniqued_list="$sim_ac_uniqued_list $sim_ac_item"
+  fi
+done
+$1=$sim_ac_uniqued_list
+]) # SIM_AC_UNIQIFY_LIST
+
+
+# Usage:
+#  SIM_AC_DOXYGEN_TOOL([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
+#
+# Description:
+#   This macro locates the doxygen executable. If it is found, the
+#   variable $sim_ac_doxygen_exe is set to the full path- and
+#   executable name (if not found, it is set to "false") and
+#   $sim_ac_doxygen_avail is set to the version number (if not
+#   found, it is set to "no").
+#
+# Author: Morten Eriksen, <mortene@sim.no>.
+
+AC_DEFUN(SIM_AC_DOXYGEN_TOOL, [
+AC_ARG_WITH(
+  [doxygen],
+  AC_HELP_STRING([--with-doxygen=DIR],
+                 [DIR is the directory where the doxygen executable resides]),
+  [],
+  [with_doxygen=yes])
+
+sim_ac_doxygen_avail=no
+
+if test x"$with_doxygen" != xno; then
+  sim_ac_path=$PATH
+  if test x"$with_doxygen" != xyes; then
+    sim_ac_path=${with_doxygen}:$PATH
+  fi
+
+  AC_PATH_PROG(sim_ac_doxygen_exe, doxygen, false, $sim_ac_path)
+  if test x"$sim_ac_doxygen_exe" = xfalse; then
+    ifelse([$2], , :, [$2])
+  else
+    sim_ac_doxygen_avail=`$sim_ac_doxygen_exe -help 2> /dev/null | head -1 | sed 's%[[^ ]]\+ [[^ ]]\+ %%'`
+    $1
+  fi
+fi
+])
 

@@ -13,9 +13,9 @@ else
 TESTDIR =
 endif
 
-SUBDIRS = . data src/Inventor/Gtk po $(TESTDIR)
+############################################################################
 
-bin_SCRIPTS = sogtk-config
+SUBDIRS = . data src/Inventor/Gtk po $(TESTDIR)
 
 BUILT_SOURCES = \
 	sogtkdefs.h \
@@ -42,9 +42,9 @@ BUILT_SOURCES = \
 	src/Inventor/Gtk/widgets/SoAnyPopupMenu.h \
 	src/Inventor/Gtk/widgets/SoAnyPopupMenu.cpp
 
-EXTRA_DIST = cfg/m4/sogtk.m4
+bin_SCRIPTS = sogtk-config
 
-noinst_HEADERS = $(BUILT_SOURCES)
+EXTRA_DIST = cfg/m4/sogtk.m4
 
 Makefile: $(BUILT_SOURCES)
 
@@ -143,3 +143,7 @@ src/Inventor/Gtk/widgets/SoAnyPopupMenu.cpp: \
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyPopupMenu.cpp.in
 
 ############################################################################
+
+doxygen-docs:
+	@( cd build; @sim_ac_doxygen_exe@ sogtk.doxygen )
+
