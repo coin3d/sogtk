@@ -238,9 +238,7 @@ SoGtkPlaneViewer::buildWidget(GtkWidget * parent)
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
+// Documented in superclass.
 void
 SoGtkPlaneViewer::createViewerButtons(GtkWidget * parent,
                                       SbPList * buttonlist)

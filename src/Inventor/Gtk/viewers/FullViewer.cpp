@@ -440,7 +440,7 @@ SoGtkFullViewer::SoGtkFullViewer(
   GtkWidget * viewer = this->buildWidget(this->getParentWidget());
   this->setBaseWidget(viewer);
   // this->setSize(SbVec2s(500, 390));
-} // SoGtkFullViewer()
+}
 
 /*!
   Destructor.
@@ -453,7 +453,7 @@ SoGtkFullViewer::~SoGtkFullViewer(
   delete [] this->bottomWheelStr;
   delete [] this->rightWheelStr;
   delete this->pimpl;
-} // ~SoGtkFullViewer()
+}
 
 // *************************************************************************
 
@@ -479,7 +479,7 @@ SoGtkFullViewer::setDecoration(
   PRIVATE(this)->decorations = enable;
   if (PRIVATE(this)->viewerWidget)
     PRIVATE(this)->showDecorationWidgets(enable);
-} // setDecoration()
+}
 
 /*!
   Return \c TRUE if the viewer decorations are on, otherwise \c FALSE.
@@ -492,7 +492,7 @@ SoGtkFullViewer::isDecoration(
   void) const
 {
   return PRIVATE(this)->decorations;
-} // isDecoration()
+}
 
 // *************************************************************************
 
@@ -518,7 +518,7 @@ SoGtkFullViewer::setPopupMenuEnabled(
   }
 #endif // SOGTK_DEBUG
   PRIVATE(this)->menuEnabled = on;
-} // setPopupMenuEnabled()
+}
 
 /*!
   Return \c TRUE if the popup preferences menu is enabled,
@@ -532,7 +532,7 @@ SoGtkFullViewer::isPopupMenuEnabled(
   void) const
 {
   return PRIVATE(this)->menuEnabled;
-} // isPopupMenuEnabled()
+}
 
 // *************************************************************************
 
@@ -549,7 +549,7 @@ SoGtkFullViewer::getAppPushButtonParent(
   void) const
 {
   return PRIVATE(this)->appButtonForm;
-} // getAppPushButtonParent()
+}
 
 /*!
   Add an application specific push button to the viewer decorations.
@@ -567,7 +567,7 @@ SoGtkFullViewer::addAppPushButton(
 {
   PRIVATE(this)->appButtonList->append(button);
   PRIVATE(this)->layoutAppButtons(this->getAppPushButtonParent());
-} // addAppPushButton()
+}
 
 /*!
   Insert an application specific push button to the viewer decorations
@@ -590,7 +590,7 @@ SoGtkFullViewer::insertAppPushButton(
 #endif // SOGTK_DEBUG
   PRIVATE(this)->appButtonList->insert(newButton, index);
   PRIVATE(this)->layoutAppButtons(this->getAppPushButtonParent());
-} // insertAppPushButton()
+}
 
 /*!
   Remove one of the application specific buttons.
@@ -614,7 +614,7 @@ SoGtkFullViewer::removeAppPushButton(
 
   PRIVATE(this)->appButtonList->remove(idx);
   PRIVATE(this)->layoutAppButtons(this->getAppPushButtonParent());
-} // removeAppPushButton()
+}
 
 /*!
   Return the index of a particular button that has been specified by
@@ -628,7 +628,7 @@ SoGtkFullViewer::findAppPushButton(
   GtkWidget * button) const
 {
   return PRIVATE(this)->appButtonList->find(button);
-} // findAppPushButton()
+}
 
 /*!
   Return number of application specific buttons added.
@@ -641,7 +641,7 @@ SoGtkFullViewer::lengthAppPushButton(
   void) const
 {
   return PRIVATE(this)->appButtonList->getLength();
-} // lengthAppPushButton()
+}
 
 // *************************************************************************
 
@@ -657,7 +657,7 @@ SoGtkFullViewer::getRenderAreaWidget(void) const
   // the OpenGL widget, but the widget above it (the one which
   // provides a border around the rendering canvas upon request).
   return PRIVATE(this)->canvas;
-} // getRenderAreaWidget()
+}
 
 // *************************************************************************
 
@@ -691,7 +691,7 @@ SoGtkFullViewer::setViewing(
   // FIXME: shouldn't we change the state of the "view" and "pick"
   // buttons aswell? 20010821 mortene.
   gtk_widget_set_sensitive(PRIVATE(this)->seekbutton, enable ? TRUE : FALSE);
-} // setViewing()
+}
 
 // *************************************************************************
 
@@ -731,7 +731,7 @@ SoGtkFullViewer::hide(
   if (PRIVATE(this)->prefwindow)
     gtk_widget_hide(PRIVATE(this)->prefwindow);
   inherited::hide();
-} // hide()
+}
 
 // *************************************************************************
 
@@ -750,7 +750,7 @@ SoGtkFullViewer::eventFilter(
   if (inherited::eventFilter(obj, ev))
     return TRUE;
   return FALSE;
-} // eventFilter()
+}
 
 // *************************************************************************
 
@@ -792,7 +792,7 @@ SoGtkFullViewer::buildWidget(GtkWidget * parent)
   this->setSize(SbVec2s(500, 390));
   PRIVATE(this)->viewerWidget = root;
   return PRIVATE(this)->viewerWidget;
-} // buildWidget()
+}
 
 // *************************************************************************
 
@@ -807,7 +807,7 @@ SoGtkFullViewer::buildDecoration(
   this->leftDecoration   = this->buildLeftTrim(parent);
   this->bottomDecoration = this->buildBottomTrim(parent);
   this->rightDecoration  = this->buildRightTrim(parent);
-} // buildDecoration()
+}
 
 // *************************************************************************
 
@@ -847,7 +847,7 @@ SoGtkFullViewer::buildLeftTrim(
 #endif
 
   return trim;
-} // buildLeftTrim()
+}
 
 // *************************************************************************
 
@@ -903,7 +903,7 @@ SoGtkFullViewer::buildBottomTrim(
   gtk_widget_show(GTK_WIDGET(this->rightWheelLabel));
 
   return trim;
-} // buildBottomTrim()
+}
 
 // *************************************************************************
 
@@ -946,7 +946,7 @@ SoGtkFullViewer::buildRightTrim(
 #endif
 
   return trim;
-} // buildRightTrim()
+}
 
 // *************************************************************************
 
@@ -966,7 +966,7 @@ SoGtkFullViewer::buildAppButtons(GtkWidget * parent)
 
 */
   return PRIVATE(this)->appButtonForm;
-} // buildAppButtons()
+}
 
 // *************************************************************************
 
@@ -991,19 +991,14 @@ SoGtkFullViewer::buildViewerButtons(
   }
   gtk_widget_show(buttons);
   return buttons;
-} // buildViewerButtons()
+}
 
 // *************************************************************************
 
-/*!
-  Create the viewer buttons with pixmaps and event connections.
-  Overload this function to add buttons to the viewer button row.
-*/
-
+// Documented in common/viewers/SoGuiFullViewer.cpp.in.
 void
-SoGtkFullViewer::createViewerButtons(// virtual
-  GtkWidget * parent,
-  SbPList * buttonlist)
+SoGtkFullViewer::createViewerButtons(GtkWidget * parent,
+                                     SbPList * buttonlist)
 {
   GtkTooltips *tooltips = gtk_tooltips_new ();
 
@@ -1063,7 +1058,7 @@ SoGtkFullViewer::createViewerButtons(// virtual
     }
     buttonlist->append(widget);
   }
-} // createViewerButtons()
+}
 
 // *************************************************************************
 
@@ -1076,7 +1071,7 @@ SoGtkFullViewer::buildPopupMenu(
   void)
 {
   this->prefmenu = this->setupStandardPopupMenu();
-} // buildPopupMenu()
+}
 
 // *************************************************************************
 
@@ -1094,7 +1089,7 @@ SoGtkFullViewer::openPopupMenu(
     this->prepareMenu(this->prefmenu);
     this->prefmenu->popUp(this->getGLWidget(), position[0], position[1]);
   }
-} // openPopupMenu()
+}
 
 // *************************************************************************
 
@@ -1108,7 +1103,7 @@ SoGtkFullViewer::makeSubPreferences(
   GtkWidget *) // parent)
 {
   return (GtkWidget *) NULL;
-} // makeSubPreferences()
+}
 
 // *************************************************************************
 
@@ -1124,7 +1119,7 @@ SoGtkFullViewer::setPrefSheetString(
   if (PRIVATE(this)->prefwindow)
     gtk_window_set_title (GTK_WINDOW (PRIVATE(this)->prefwindow),
       PRIVATE(this)->prefwindowtitle.getString());
-} // setPrefSheetString()
+}
 
 // *************************************************************************
 
@@ -1138,11 +1133,10 @@ SoGtkFullViewer::setPrefSheetString(
 */
 
 void
-SoGtkFullViewer::leftWheelStart(// virtual
-  void)
+SoGtkFullViewer::leftWheelStart(void)
 {
   this->interactiveCountInc();
-} // leftWheelStart()
+}
 
 /*!
   Called repeatedly as the user drags the thumbwheel in the left frame.
@@ -1154,11 +1148,10 @@ SoGtkFullViewer::leftWheelStart(// virtual
 */
 
 void
-SoGtkFullViewer::leftWheelMotion(// virtual
-  float value)
+SoGtkFullViewer::leftWheelMotion(float value)
 {
   this->leftWheelVal = value;
-} // leftWheelMotion()
+}
 
 /*!
   Called as the user let go of the thumbwheel in the left frame after
@@ -1170,11 +1163,10 @@ SoGtkFullViewer::leftWheelMotion(// virtual
 */
 
 void
-SoGtkFullViewer::leftWheelFinish(// virtual
-  void)
+SoGtkFullViewer::leftWheelFinish(void)
 {
   this->interactiveCountDec();
-} // leftWheelFinish()
+}
 
 /*!
   Get current value of the left thumbwheel.
@@ -1187,7 +1179,7 @@ SoGtkFullViewer::getLeftWheelValue(
   void) const
 {
   return this->leftWheelVal;
-} // getLeftWheelValue()
+}
 
 /*!
   FIXME: write doc
@@ -1198,7 +1190,7 @@ SoGtkFullViewer::setLeftWheelValue(
   const float value)
 {
   this->leftWheelVal = value;
-} // setLeftWheelValue()
+}
 
 /*!
   Set label for the left thumbwheel.
@@ -1215,7 +1207,7 @@ SoGtkFullViewer::setLeftWheelString(
   if (this->leftWheelLabel)
     gtk_label_set_text(GTK_LABEL(this->leftWheelLabel),
       this->leftWheelStr ? this->leftWheelStr : "");
-} // setLeftWheelString()
+}
 
 // *************************************************************************
 
@@ -1229,11 +1221,10 @@ SoGtkFullViewer::setLeftWheelString(
 */
 
 void
-SoGtkFullViewer::bottomWheelStart(// virtual
-  void)
+SoGtkFullViewer::bottomWheelStart(void)
 {
   this->interactiveCountInc();
-} // bottomWheelStart()
+}
 
 /*!
   Called repeatedly as the user drags the thumbwheel in the bottom frame.
@@ -1245,11 +1236,10 @@ SoGtkFullViewer::bottomWheelStart(// virtual
 */
 
 void
-SoGtkFullViewer::bottomWheelMotion(// virtual
-  float value)
+SoGtkFullViewer::bottomWheelMotion(float value)
 {
   this->bottomWheelVal = value;
-} // bottomWheelMotion()
+}
 
 /*!
   Called as the user let go of the thumbwheel in the bottom frame after
@@ -1261,11 +1251,10 @@ SoGtkFullViewer::bottomWheelMotion(// virtual
 */
 
 void
-SoGtkFullViewer::bottomWheelFinish(// virtual
-  void)
+SoGtkFullViewer::bottomWheelFinish(void)
 {
   this->interactiveCountDec();
-} // bottomWheelFinish()
+}
 
 /*!
   Get current value of the bottom thumbwheel.
@@ -1278,7 +1267,7 @@ SoGtkFullViewer::getBottomWheelValue(
   void) const
 {
   return this->bottomWheelVal;
-} // getBottomWheelValue()
+}
 
 /*!
   FIXME: write doc
@@ -1289,7 +1278,7 @@ SoGtkFullViewer::setBottomWheelValue(
   const float value)
 {
   this->bottomWheelVal = value;
-} // setBottomWheelValue()
+}
 
 /*!
   Set label of the bottom thumbwheel.
@@ -1306,7 +1295,7 @@ SoGtkFullViewer::setBottomWheelString(
   if (this->bottomWheelLabel)
     gtk_label_set_text(GTK_LABEL(this->bottomWheelLabel),
       this->bottomWheelStr ? this->bottomWheelStr : "");
-} // setBottomWheelString()
+}
 
 // *************************************************************************
 
@@ -1320,11 +1309,10 @@ SoGtkFullViewer::setBottomWheelString(
 */
 
 void
-SoGtkFullViewer::rightWheelStart(// virtual
-  void)
+SoGtkFullViewer::rightWheelStart(void)
 {
   this->interactiveCountInc();
-} // rightWheelStart()
+}
 
 /*!
   Called repeatedly as the user drags the thumbwheel in the right frame.
@@ -1336,11 +1324,10 @@ SoGtkFullViewer::rightWheelStart(// virtual
 */
 
 void
-SoGtkFullViewer::rightWheelMotion(// virtual
-  float value)
+SoGtkFullViewer::rightWheelMotion(float value)
 {
   this->rightWheelVal = value;
-} // rightWheelMotion()
+}
 
 /*!
   Called as the user let go of the thumbwheel in the right frame after
@@ -1352,11 +1339,10 @@ SoGtkFullViewer::rightWheelMotion(// virtual
 */
 
 void
-SoGtkFullViewer::rightWheelFinish(// virtual
-  void)
+SoGtkFullViewer::rightWheelFinish(void)
 {
   this->interactiveCountDec();
-} // rightWheelFinish()
+}
 
 /*!
   Get current value of the right thumbwheel.
@@ -1369,7 +1355,7 @@ SoGtkFullViewer::getRightWheelValue(
   void) const
 {
   return this->rightWheelVal;
-} // getRightWheelValue()
+}
 
 /*!
   FIXME: write doc
@@ -1380,7 +1366,7 @@ SoGtkFullViewer::setRightWheelValue(
   const float value)
 {
   this->rightWheelVal = value;
-} // setRightWheelValue()
+}
 
 /*!
   Set label of the right thumbwheel.
@@ -1397,7 +1383,7 @@ SoGtkFullViewer::setRightWheelString(
   if (this->rightWheelLabel)
     gtk_label_set_text(GTK_LABEL(this->rightWheelLabel),
       this->rightWheelStr ? this->rightWheelStr : "");
-} // setRightWheelString()
+}
 
 // *************************************************************************
 
@@ -1407,13 +1393,12 @@ SoGtkFullViewer::setRightWheelString(
 */
 
 void
-SoGtkFullViewer::openViewerHelpCard(// virtual
-  void)
+SoGtkFullViewer::openViewerHelpCard(void)
 {
   const char * classname = this->getClassName();
   if (classname && strlen(classname) > 0)
     SoGtkComponent::openHelpCard(classname);
-} // openViewerHelpCard()
+}
 
 // *************************************************************************
 // menu selections
@@ -1426,7 +1411,7 @@ void
 SoGtkFullViewer::selectedViewing(void)
 {
   this->setViewing(this->isViewing() ? FALSE : TRUE);
-} // selectedViewing()
+}
 
 /*!
   \internal
@@ -1436,7 +1421,7 @@ void
 SoGtkFullViewer::selectedDecoration(void)
 {
   this->setDecoration(this->isDecoration() ? FALSE : TRUE);
-} // selectedDecoration()
+}
 
 /*!
   \internal
@@ -1446,7 +1431,7 @@ void
 SoGtkFullViewer::selectedHeadlight(void)
 {
   this->setHeadlight(this->isHeadlight() ? FALSE : TRUE);
-} // selectedHeadlight()
+}
 
 /*!
   \internal
@@ -1456,7 +1441,7 @@ void
 SoGtkFullViewer::copyviewSelected(void)
 {
   this->copyView(SbTime::getTimeOfDay());
-} // copyviewSelected()
+}
 
 /*!
   \internal
@@ -1466,7 +1451,7 @@ void
 SoGtkFullViewer::pasteviewSelected(void)
 {
   this->pasteView(SbTime::getTimeOfDay());
-} // pasteviewSelected()
+}
 
 /*!
   \internal
@@ -1479,7 +1464,7 @@ SoGtkFullViewer::selectedPrefs(void)
   if (! PRIVATE(this)->prefwindow)
     PRIVATE(this)->prefwindow = PRIVATE(this)->makePreferencesWindow();
   gtk_widget_show(PRIVATE(this)->prefwindow);
-} // selectedPrefs()
+}
 
 // *************************************************************************
 // button selections
@@ -1500,7 +1485,7 @@ SoGtkFullViewer::interactbuttonClicked(
     return;
   }
   this->setViewing(FALSE);
-} // interactbuttonClicked()
+}
 
 /*!
   FIXME: write doc
@@ -1519,7 +1504,7 @@ SoGtkFullViewer::viewbuttonClicked(
     return;
   }
   this->setViewing(TRUE);
-} // viewbuttonClicked()
+}
 
 /*!
   FIXME: write doc
@@ -1530,7 +1515,7 @@ SoGtkFullViewer::helpbuttonClicked(
   void)
 {
   this->openViewerHelpCard();
-} // helpbuttonClicked()
+}
 
 /*!
   FIXME: write doc
@@ -1541,7 +1526,7 @@ SoGtkFullViewer::homebuttonClicked(
   void)
 {
   this->resetToHomePosition();
-} // homebuttonClicked()
+}
 
 /*!
   FIXME: write doc
@@ -1552,7 +1537,7 @@ SoGtkFullViewer::sethomebuttonClicked(
   void)
 {
   this->saveHomePosition();
-} // sethomebuttonClicked()
+}
 
 /*!
   FIXME: write doc
@@ -1563,7 +1548,7 @@ SoGtkFullViewer::viewallbuttonClicked(
   void)
 {
   this->viewAll();
-} // viewallbuttonClicked()
+}
 
 /*!
   FIXME: write doc
@@ -1574,7 +1559,7 @@ SoGtkFullViewer::seekbuttonClicked(
   void)
 {
   this->setSeekMode(this->isSeekMode() ? FALSE : TRUE);
-} // seekbuttonClicked()
+}
 
 // *************************************************************************
 //
@@ -1608,7 +1593,7 @@ SoGtkFullViewerP::SoGtkFullViewerP(
   this->appButtonList = new SbPList;
   this->appButtonForm = (GtkWidget *) NULL;
 
-} // SoGtkFullViewerP()
+}
 
 /*
 */
@@ -1618,7 +1603,7 @@ SoGtkFullViewerP::~SoGtkFullViewerP(
 {
   delete this->viewerButtons;
   delete this->appButtonList;
-} // ~SoGtkFullViewerP()
+}
 
 // *************************************************************************
 
@@ -1647,7 +1632,7 @@ SoGtkFullViewerP::showDecorationWidgets(SbBool enable)
     gtk_widget_hide(GTK_WIDGET(PUBLIC(this)->rightDecoration));
     gtk_widget_hide(GTK_WIDGET(PUBLIC(this)->bottomDecoration));
   }
-} // showDecorationWidgets()
+}
 
 // *************************************************************************
 
@@ -1659,7 +1644,7 @@ void
 SoGtkFullViewerP::layoutAppButtons(
   GtkWidget * form)
 {
-} // layoutAppButtons()
+}
 
 // *************************************************************************
 
@@ -1692,7 +1677,7 @@ SoGtkFullViewerP::makePreferencesWindow(
                       (gpointer) PUBLIC(this));
 
   return this->prefwindow;
-} // makePreferencesWindow()
+}
 
 /*!
   \internal
@@ -1706,7 +1691,7 @@ SoGtkFullViewerP::preferencesDestroyed(
 {
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   PRIVATE(viewer)->prefwindow = (GtkWidget *) NULL;
-} // preferencesDestroyed()
+}
 
 // *************************************************************************
 
@@ -1783,7 +1768,7 @@ SoGtkFullViewerP::makeSeekPreferences(
                       (gpointer) PUBLIC(this));
 
   return form;
-} // makeSeekPreferences()
+}
 
 // *************************************************************************
 
@@ -1860,7 +1845,7 @@ SoGtkFullViewerP::makeSeekDistancePreferences(
                       (gpointer) PUBLIC(this));
 
   return form;
-} // makeSeekDistancePreferences()
+}
 
 // *************************************************************************
 
@@ -1958,7 +1943,7 @@ SoGtkFullViewerP::makeZoomPreferences(
                       (gpointer) PUBLIC(this));
 
   return form;
-} // makeZoomPreferences()
+}
 
 // *************************************************************************
 
@@ -2009,7 +1994,7 @@ SoGtkFullViewerP::setEnabledClippingWidgets(
     sprintf(buffer, "%.3f", cam->farDistance.getValue());
     gtk_entry_set_text(GTK_ENTRY(this->farclippingedit), buffer);
   }
-} // setEnabledClippingWidgets()
+}
 
 // *************************************************************************
 
@@ -2099,7 +2084,7 @@ SoGtkFullViewerP::makeAutoclipPreferences(
   this->setEnabledClippingWidgets(! PUBLIC(this)->isAutoClipping());
 
   return form;
-} // makeAutoclipPreferences()
+}
 
 // *************************************************************************
 
@@ -2127,7 +2112,7 @@ SoGtkFullViewerP::makeStereoPreferences(
     "toggled", GTK_SIGNAL_FUNC (stereoToggled), PUBLIC(this));
 
   return form;
-} // makeStereoPreferences()
+}
 
 // *************************************************************************
 
@@ -2151,7 +2136,7 @@ SoGtkFullViewerP::setCameraZoom(
 #if SOGTK_DEBUG
   else assert(0);
 #endif // SOGTK_DEBUG
-} // setCameraZoom()
+}
 
 // *************************************************************************
 
@@ -2178,7 +2163,7 @@ SoGtkFullViewerP::getCameraZoom(
   assert(0);
 #endif // SOGTK_DEBUG
   return 0.0f;
-} // getCameraZoom()
+}
 
 // *************************************************************************
 
@@ -2197,7 +2182,7 @@ SoGtkFullViewerP::setZoomSliderPosition(
 
   GtkAdjustment *adj = GTK_RANGE(this->zoomslider)->adjustment;
   gtk_adjustment_set_value(adj, f);
-} // setZoomSliderPosition()
+}
 
 // *************************************************************************
 
@@ -2214,7 +2199,7 @@ SoGtkFullViewerP::setZoomFieldString(
   char buffer[16];
   sprintf(buffer, "%.1f", zoom);
   gtk_entry_set_text(GTK_ENTRY(this->zoomfield), buffer);
-} // setZoomFieldString()
+}
 
 // *************************************************************************
 
@@ -2238,7 +2223,7 @@ SoGtkFullViewerP::seekAnimationTimeChanged(
   char buffer[16] ;
   sprintf(buffer, "%.2f", viewer->getSeekTime());
   gtk_entry_set_text(GTK_ENTRY(editable), buffer);
-} // seekAnimationTimeChanged()
+}
 
 // *************************************************************************
 
@@ -2255,7 +2240,7 @@ SoGtkFullViewerP::seekDetailToggled(
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->setDetailSeek(gtk_toggle_button_get_active(button) ?
     TRUE : FALSE);
-} // seekDetailToggle()
+}
 
 // *************************************************************************
 
@@ -2281,7 +2266,7 @@ SoGtkFullViewerP::seekDistanceWheelChanged(
   char buffer[16] ;
   sprintf(buffer, "%.2f", viewer->getSeekDistance());
   gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->seekdistancefield), buffer);
-} // seekDistanceWheelChanged()
+}
 
 // *************************************************************************
 
@@ -2313,7 +2298,7 @@ SoGtkFullViewerP::seekDistanceEdit(
     sprintf(buffer, "%.2f", viewer->getSeekDistance());
     gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->seekdistancefield), buffer);
   }
-} // seekDistanceEdit()
+}
 
 // *************************************************************************
 
@@ -2331,7 +2316,7 @@ SoGtkFullViewerP::seekDistanceTypeToggle(
 
   viewer->setSeekValueAsPercentage(gtk_toggle_button_get_active(button) ?
     TRUE : FALSE);
-} // seekDistanceTypeToggle()
+}
 
 
 // *************************************************************************
@@ -2353,7 +2338,7 @@ SoGtkFullViewerP::zoomSliderMoved(
 
   PRIVATE(viewer)->setCameraZoom(f);
   PRIVATE(viewer)->setZoomFieldString(f);
-} // zoomSliderMoved()
+}
 
 // *************************************************************************
 
@@ -2384,7 +2369,7 @@ SoGtkFullViewerP::zoomFieldChanged(
     sprintf(buffer, "%.1f", PRIVATE(viewer)->getCameraZoom());
     gtk_entry_set_text(GTK_ENTRY(editable), buffer);
   }
-} // zoomFieldChanged()
+}
 
 
 // *************************************************************************
@@ -2417,7 +2402,7 @@ SoGtkFullViewerP::zoomRangeChanged1(
     sprintf(buffer, "%.1f", PRIVATE(viewer)->zoomrange[0]);
     gtk_entry_set_text(GTK_ENTRY(editable), buffer);
   }
-} // zoomRangeChanged1()
+}
 
 /*!
   \internal
@@ -2447,7 +2432,7 @@ SoGtkFullViewerP::zoomRangeChanged2(
     sprintf(buffer, "%.1f", PRIVATE(viewer)->zoomrange[1]);
     gtk_entry_set_text(GTK_ENTRY(editable), buffer);
   }
-} // zoomRangeChanged2()
+}
 
 // *************************************************************************
 
@@ -2466,7 +2451,7 @@ SoGtkFullViewerP::clippingToggled(
 
   viewer->setAutoClipping(flag);
   PRIVATE(viewer)->setEnabledClippingWidgets(!flag);
-} // clippingToggled()     
+}
 
 // *************************************************************************
 
@@ -2482,7 +2467,7 @@ SoGtkFullViewerP::increaseInteractiveCount(
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure;
   viewer->interactiveCountInc();
-} // increaseInteractiveCount()
+}
 
 // *************************************************************************
 
@@ -2498,7 +2483,7 @@ SoGtkFullViewerP::decreaseInteractiveCount(
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure;
   viewer->interactiveCountDec();
-} // decreaseInteractiveCount()
+}
 
 // *************************************************************************
 
@@ -2538,7 +2523,7 @@ SoGtkFullViewerP::nearclippingwheelMoved(
   char buffer[16] ;
   sprintf(buffer, "%.3f", cam->nearDistance.getValue());
   gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->nearclippingedit), buffer);
-} // nearclippingwheelMoved()
+}
 
 // *************************************************************************
 
@@ -2574,7 +2559,7 @@ SoGtkFullViewerP::farclippingwheelMoved(
   char buffer[16] ;
   sprintf(buffer, "%.3f", cam->farDistance.getValue());
   gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->farclippingedit), buffer);
-} // farclippingwheelMoved()
+}
 
 // *************************************************************************
 
@@ -2609,7 +2594,7 @@ SoGtkFullViewerP::nearclipEditPressed(
     sprintf(buffer, "%.3f", cam->nearDistance.getValue());
     gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->nearclippingedit), buffer);
   }
-} // nearclipEditPressed()
+}
 
 // *************************************************************************
 
@@ -2643,7 +2628,7 @@ SoGtkFullViewerP::farclipEditPressed(
     sprintf(buffer, "%.3f", cam->farDistance.getValue());
     gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->farclippingedit), buffer);
   }
-} // farclipEditPressed()
+}
 
 // *************************************************************************
 
@@ -2666,7 +2651,7 @@ SoGtkFullViewerP::stereoToggled(
   SoGtk::createSimpleErrorDialog(GTK_WIDGET(toggle_button), 
     "Stereo Error Dialog", 
     _("Stereo Viewing can't be set on this machine."));
-} // stereoToggled()     
+}
 
 // *************************************************************************
 
@@ -2675,54 +2660,50 @@ SoGtkFullViewerP::stereoToggled(
 */
 
 void
-SoGtkFullViewerP::interactbuttonClickedCB(// static
-  GtkWidget *w,
-  gpointer closure)
+SoGtkFullViewerP::interactbuttonClickedCB(GtkWidget *w,
+                                          gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
 
   if (viewer->isViewing())
     viewer->setViewing(FALSE);
-} // interactbuttonClickedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::viewbuttonClickedCB(// static
-  GtkWidget * w,
-  gpointer closure)
+SoGtkFullViewerP::viewbuttonClickedCB(GtkWidget * w,
+                                      gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
   if (!viewer->isViewing()) 
     viewer->setViewing(TRUE);
-} // viewbuttonClickedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::helpbuttonClickedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::helpbuttonClickedCB(GtkWidget *,
+                                      gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
   viewer->helpbuttonClicked();
-} // helpbuttonClickedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::homebuttonClickedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::homebuttonClickedCB(GtkWidget *,
+                                      gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
@@ -2734,9 +2715,8 @@ SoGtkFullViewerP::homebuttonClickedCB(// static
 */
 
 void
-SoGtkFullViewerP::sethomebuttonClickedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::sethomebuttonClickedCB(GtkWidget *,
+                                         gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
@@ -2748,9 +2728,8 @@ SoGtkFullViewerP::sethomebuttonClickedCB(// static
 */
 
 void
-SoGtkFullViewerP::viewallbuttonClickedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::viewallbuttonClickedCB(GtkWidget *,
+                                         gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
@@ -2762,9 +2741,8 @@ SoGtkFullViewerP::viewallbuttonClickedCB(// static
 */
 
 void
-SoGtkFullViewerP::seekbuttonClickedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::seekbuttonClickedCB(GtkWidget *,
+                                      gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
@@ -2778,129 +2756,120 @@ SoGtkFullViewerP::seekbuttonClickedCB(// static
 */
 
 void
-SoGtkFullViewerP::leftwheelPressedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::leftwheelPressedCB(GtkWidget *,
+                                     gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->leftWheelStart();
-} // leftwheelPressedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::leftwheelMovedCB(// static
-  GtkWidget * wheel,
-  gpointer closure)
+SoGtkFullViewerP::leftwheelMovedCB(GtkWidget * wheel,
+                                   gpointer closure)
 {
   assert(closure != NULL);
   gfloat value = gtk_thumbwheel_get_value(GTK_THUMBWHEEL(wheel));
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->leftWheelMotion(value);
-} // leftWheelMovedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::leftwheelReleasedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::leftwheelReleasedCB(GtkWidget *,
+                                      gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->leftWheelFinish();
-} // leftwheelReleasedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::bottomwheelPressedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::bottomwheelPressedCB(GtkWidget *,
+                                       gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->bottomWheelStart();
-} // bottomwheelPressedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::bottomwheelMovedCB(// static
-  GtkWidget * wheel,
-  gpointer closure)
+SoGtkFullViewerP::bottomwheelMovedCB(GtkWidget * wheel,
+                                     gpointer closure)
 {
   assert(closure != NULL);
   gfloat value = gtk_thumbwheel_get_value(GTK_THUMBWHEEL(wheel));
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->bottomWheelMotion(value);
-} // bottomWheelMovedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::bottomwheelReleasedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::bottomwheelReleasedCB(GtkWidget *,
+                                        gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->bottomWheelFinish();
-} // bottomwheelReleasedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::rightwheelPressedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::rightwheelPressedCB(GtkWidget *,
+                                      gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->rightWheelStart();
-} // rightwheelPressedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::rightwheelMovedCB(// static
-  GtkWidget * wheel,
-  gpointer closure)
+SoGtkFullViewerP::rightwheelMovedCB(GtkWidget * wheel,
+                                    gpointer closure)
 {
   assert(closure != NULL);
   gfloat value = gtk_thumbwheel_get_value(GTK_THUMBWHEEL(wheel));
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->rightWheelMotion(value);
-} // rightWheelMovedCB()
+}
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkFullViewerP::rightwheelReleasedCB(// static
-  GtkWidget *,
-  gpointer closure)
+SoGtkFullViewerP::rightwheelReleasedCB(GtkWidget *,
+                                       gpointer closure)
 {
   assert(closure != NULL);
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->rightWheelFinish();
-} // rightwheelReleasedCB()
+}
 
 // *************************************************************************
 

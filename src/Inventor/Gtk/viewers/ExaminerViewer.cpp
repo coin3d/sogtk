@@ -17,11 +17,6 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
-
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -99,7 +94,7 @@ public:
 private:
   SoGtkExaminerViewer * pub;
 
-}; // class SoGtkExaminerViewerP
+};
 
 #define PUBLIC(ptr) (ptr->pub)
 #define PRIVATE(ptr) (ptr->pimpl)
@@ -122,7 +117,7 @@ SoGtkExaminerViewerP::SoGtkExaminerViewerButtons[] = {
     (GtkSignalFunc) SoGtkExaminerViewerP::camerabuttonCB,
     perspective_xpm
   }
-}; // SoGtkExaminerViewerButtons[]
+};
 
 // *************************************************************************
 
@@ -132,32 +127,30 @@ SoGtkExaminerViewerP::SoGtkExaminerViewerButtons[] = {
   will be built immediately.
 */
 
-SoGtkExaminerViewer::SoGtkExaminerViewer(
-  GtkWidget * parent,
-  const char * name,
-  SbBool embed,
-  SoGtkFullViewer::BuildFlag flags,
-  SoGtkViewer::Type type)
-: inherited(parent, name, embed, flags, type, FALSE)
+SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent,
+                                         const char * name,
+                                         SbBool embed,
+                                         SoGtkFullViewer::BuildFlag flags,
+                                         SoGtkViewer::Type type)
+  : inherited(parent, name, embed, flags, type, FALSE)
 {
   this->constructor(TRUE);
-} // SoGtkExaminerViewer()
+}
 
 /*!
   Constructor. See parent class for explanation of arguments.
 */
 
-SoGtkExaminerViewer::SoGtkExaminerViewer(// protected
-  GtkWidget * parent,
-  const char * name,
-  SbBool embed,
-  SoGtkFullViewer::BuildFlag flags,
-  SoGtkViewer::Type type,
-  SbBool build)
-: inherited(parent, name, embed, flags, type, FALSE)
+SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent,
+                                         const char * name,
+                                         SbBool embed,
+                                         SoGtkFullViewer::BuildFlag flags,
+                                         SoGtkViewer::Type type,
+                                         SbBool build)
+  : inherited(parent, name, embed, flags, type, FALSE)
 {
   this->constructor(build);
-} // SoGtkExaminerViewer()
+}
 
 /*!
   \internal
@@ -167,8 +160,7 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(// protected
 */
 
 void
-SoGtkExaminerViewer::constructor(// private
-  const SbBool build)
+SoGtkExaminerViewer::constructor(const SbBool build)
 {
   this->genericConstructor();
 
@@ -188,7 +180,7 @@ SoGtkExaminerViewer::constructor(// private
   if (! build) return;
   GtkWidget * viewer = this->buildWidget(this->getParentWidget());
   this->setBaseWidget(viewer);
-} // constructor()
+}
 
 /*!
   Destructor.
@@ -198,7 +190,7 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer()
 {
   this->genericDestructor();
   delete this->pimpl;
-} // ~SoGtkExaminerViewer()
+}
 
 // *************************************************************************
 
@@ -207,14 +199,13 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer()
   pointer cursor is updated.
 */
 void
-SoGtkExaminerViewer::setViewing(// virtual
-  SbBool enable)
+SoGtkExaminerViewer::setViewing(SbBool enable)
 {
   this->setMode(enable ?
-                         SoGtkExaminerViewer::EXAMINE :
-                         SoGtkExaminerViewer::INTERACT);
+                SoGtkExaminerViewer::EXAMINE :
+                SoGtkExaminerViewer::INTERACT);
   inherited::setViewing(enable);
-} // setViewing()
+}
 
 // *************************************************************************
 
@@ -225,7 +216,7 @@ void
 SoGtkExaminerViewer::setAnimationEnabled(const SbBool enable)
 { // FIXME: make this virtual?  20001230 larsa
   this->setGenericAnimationEnabled(enable);
-} // setAnimationEnabled()
+}
  
 
 // *************************************************************************
@@ -239,7 +230,7 @@ void
 SoGtkExaminerViewer::setFeedbackSize(const int size)
 {
   this->setGenericFeedbackSize(size);
-} // setFeedbackSize()
+}
 
 // *************************************************************************
 
@@ -274,13 +265,12 @@ SoGtkExaminerViewer::setCamera(SoCamera * newCamera)
 */
 
 void
-SoGtkExaminerViewer::leftWheelStart(// virtual
-  void)
+SoGtkExaminerViewer::leftWheelStart(void)
 {
   if (this->isAnimating())
     this->stopAnimating();
   inherited::leftWheelStart();
-} // leftWheelStart()
+}
 
 /*!
   Overloaded to provide the examiner viewer functionality on the left
@@ -288,25 +278,23 @@ SoGtkExaminerViewer::leftWheelStart(// virtual
 */
 
 void
-SoGtkExaminerViewer::leftWheelMotion(// virtual
-  float value)
+SoGtkExaminerViewer::leftWheelMotion(float value)
 {
   inherited::leftWheelMotion(
     this->rotXWheelMotion(value, this->getLeftWheelValue()));
-} // leftWheelMotion()
+}
 
 /*!
   Overloaded to stop spin animation when wheel is being handled.
 */
 
 void
-SoGtkExaminerViewer::bottomWheelStart(// virtual
-  void)
+SoGtkExaminerViewer::bottomWheelStart(void)
 {
   if (this->isAnimating())
     this->stopAnimating();
   inherited::bottomWheelStart();
-} // bottomWheelStart()
+}
 
 /*!
   Overloaded to provide the examiner viewer functionality on the bottom
@@ -314,12 +302,11 @@ SoGtkExaminerViewer::bottomWheelStart(// virtual
 */
 
 void
-SoGtkExaminerViewer::bottomWheelMotion(// virtual
-  float value)
+SoGtkExaminerViewer::bottomWheelMotion(float value)
 {
   inherited::bottomWheelMotion(
     this->rotYWheelMotion(value, this->getBottomWheelValue()));
-} // bottomWheelMotion()
+}
 
 /*!
   Overloaded to provide the examiner viewer functionality on the left
@@ -327,12 +314,11 @@ SoGtkExaminerViewer::bottomWheelMotion(// virtual
 */
 
 void
-SoGtkExaminerViewer::rightWheelMotion(// virtual
-  float value)
+SoGtkExaminerViewer::rightWheelMotion(float value)
 {
   this->zoom(this->getRightWheelValue() - value);
   inherited::rightWheelMotion(value);
-} // rightWheelMotion()
+}
 
 // *************************************************************************
 
@@ -343,8 +329,7 @@ SoGtkExaminerViewer::rightWheelMotion(// virtual
 */
 
 GtkWidget *
-SoGtkExaminerViewer::makeSubPreferences(
-  GtkWidget * parent)
+SoGtkExaminerViewer::makeSubPreferences(GtkWidget * parent)
 {
   GtkWidget* form1 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (form1);
@@ -412,19 +397,15 @@ SoGtkExaminerViewer::makeSubPreferences(
   PRIVATE(this)->setEnableFeedbackControls(this->isFeedbackVisible());
 
   return form1;
-} // makeSubPreferences()
+}
 
 // *************************************************************************
 
-/*!
-  Overloaded from parent class so we can append the camera type switch
-  button in the rightside button column.
-*/
-
+// Documented in superclass. Overridden so we can append the camera
+// type switch button in the rightside button column.
 void
-SoGtkExaminerViewer::createViewerButtons(
-  GtkWidget * parent,
-  SbPList * buttonlist)
+SoGtkExaminerViewer::createViewerButtons(GtkWidget * parent,
+                                         SbPList * buttonlist)
 {
   inherited::createViewerButtons(parent, buttonlist);
   
@@ -486,7 +467,7 @@ SoGtkExaminerViewer::createViewerButtons(
     }
     buttonlist->append(widget);
   }
-} // createViewerButtons()
+}
 
 // *************************************************************************
 
@@ -499,7 +480,7 @@ SoGtkExaminerViewer::getDefaultWidgetName(void) const
 {
   static const char defaultWidgetName[] = "SoGtkExaminerViewer";
   return defaultWidgetName;
-} // getDefaultWidgetName()
+}
 
 /*!
   Overloaded to provide ``title'' of class.
@@ -510,7 +491,7 @@ SoGtkExaminerViewer::getDefaultTitle(void) const
 {
   static const char defaultTitle[] = N_("Examiner Viewer");
   return _(defaultTitle);
-} // getDefaultTitle()
+}
 
 /*!
   Overloaded to provide ``title'' of class.
@@ -521,7 +502,7 @@ SoGtkExaminerViewer::getDefaultIconTitle(void) const
 {
   static const char defaultIconTitle[] = N_("Examiner Viewer");
   return _(defaultIconTitle);
-} // getDefaultIconTitle()
+}
 
 // *************************************************************************
 
@@ -533,7 +514,7 @@ void
 SoGtkExaminerViewer::openViewerHelpCard(void)
 {
   this->openHelpCard("SoGtkExaminerViewer.help");
-} // openViewerHelpCard()
+}
 
 // *************************************************************************
 
@@ -543,8 +524,7 @@ SoGtkExaminerViewer::openViewerHelpCard(void)
 */
 
 void
-SoGtkExaminerViewer::actualRedraw(
-  void)
+SoGtkExaminerViewer::actualRedraw(void)
 {
   this->actualGenericRedraw();
   inherited::actualRedraw();
@@ -552,7 +532,7 @@ SoGtkExaminerViewer::actualRedraw(
     this->drawAxisCross();
   if (this->isAnimating())
     this->scheduleRedraw();
-} // actualRedraw()
+}
 
 // *************************************************************************
 
@@ -631,7 +611,7 @@ SoGtkExaminerViewerP::SoGtkExaminerViewerP(SoGtkExaminerViewer * publ)
                                           // FIXME: nasty cast, get
                                           // rid of it. 20020320 mortene.
                                           (gchar **)perspective_xpm);
-} // SoGtkExaminerViewerP()
+}
 
 SoGtkExaminerViewerP::~SoGtkExaminerViewerP()
 {
@@ -642,7 +622,7 @@ SoGtkExaminerViewerP::~SoGtkExaminerViewerP()
   gdk_pixmap_unref(this->perspectivepixmap);
   gdk_bitmap_unref(this->perspectivemask);
 
-} // ~SoGtkExaminerViewerP()
+}
 
 // *************************************************************************
 
@@ -651,14 +631,13 @@ SoGtkExaminerViewerP::~SoGtkExaminerViewerP()
 */
 
 void
-SoGtkExaminerViewerP::setEnableFeedbackControls(
-  const SbBool flag)
+SoGtkExaminerViewerP::setEnableFeedbackControls(const SbBool flag)
 {
   gtk_widget_set_sensitive(this->feedbacklabel1, flag);
   gtk_widget_set_sensitive(this->feedbacklabel2, flag);
   gtk_widget_set_sensitive(this->feedbackwheel, flag);
   gtk_widget_set_sensitive(this->feedbackedit, flag);
-} // setEnableFeedbackControls()
+}
 
 // *************************************************************************
 
@@ -667,16 +646,15 @@ SoGtkExaminerViewerP::setEnableFeedbackControls(
 */
 
 void
-SoGtkExaminerViewerP::spinAnimationToggled(
-  GtkToggleButton * w,  
-  gpointer closure)
+SoGtkExaminerViewerP::spinAnimationToggled(GtkToggleButton * w,  
+                                           gpointer closure)
 {
   assert(closure != NULL);
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
   SbBool flag = gtk_toggle_button_get_active(w) ? TRUE : FALSE;
 
   viewer->setAnimationEnabled(flag);
-} // spinAnimationToggled()
+}
 
 // *************************************************************************
 
@@ -685,9 +663,8 @@ SoGtkExaminerViewerP::spinAnimationToggled(
 */
 
 void
-SoGtkExaminerViewerP::feedbackVisibilityToggled(
-  GtkToggleButton * w,  
-  gpointer closure)
+SoGtkExaminerViewerP::feedbackVisibilityToggled(GtkToggleButton * w,  
+                                                gpointer closure)
 {
   assert(closure != NULL);
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
@@ -695,7 +672,7 @@ SoGtkExaminerViewerP::feedbackVisibilityToggled(
 
   viewer->setFeedbackVisibility(flag);
   PRIVATE(viewer)->setEnableFeedbackControls(flag);
-} // feedbackVisibilityToggled()
+}
 
 // *************************************************************************
 
@@ -704,9 +681,8 @@ SoGtkExaminerViewerP::feedbackVisibilityToggled(
 */
 
 void
-SoGtkExaminerViewerP::feedbackEditPressed(
-  GtkEntry * w,
-  gpointer closure)
+SoGtkExaminerViewerP::feedbackEditPressed(GtkEntry * w,
+                                          gpointer closure)
 {
   assert(closure != NULL);
   SoGtkExaminerViewer	*viewer = (SoGtkExaminerViewer*) closure;
@@ -726,7 +702,7 @@ SoGtkExaminerViewerP::feedbackEditPressed(
     sprintf(buffer, "%d", viewer->getFeedbackSize());
     gtk_entry_set_text(GTK_ENTRY(w), buffer);
   }
-} // feedbackEditPressed()
+}
 
 // *************************************************************************
 
@@ -735,15 +711,14 @@ SoGtkExaminerViewerP::feedbackEditPressed(
 */
 
 void
-SoGtkExaminerViewerP::feedbackWheelPressed(
-  GtkWidget * w,
-  gpointer closure)
+SoGtkExaminerViewerP::feedbackWheelPressed(GtkWidget * w,
+                                           gpointer closure)
 {
   assert(closure != NULL);
   GtkThumbWheel *thumbwheel = (GtkThumbWheel *) w;
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
   viewer->interactiveCountInc();
-} // feedbackWheelPressed()
+}
 
 // *************************************************************************
 
@@ -752,15 +727,14 @@ SoGtkExaminerViewerP::feedbackWheelPressed(
 */
 
 void
-SoGtkExaminerViewerP::feedbackWheelReleased(
-  GtkWidget * w,
-  gpointer closure)
+SoGtkExaminerViewerP::feedbackWheelReleased(GtkWidget * w,
+                                            gpointer closure)
 {
   assert(closure != NULL);
   GtkThumbWheel *thumbwheel = (GtkThumbWheel *) w;
   SoGtkExaminerViewer *viewer = (SoGtkExaminerViewer *) closure;
   viewer->interactiveCountDec();
-} // feedbackWheelReleased()
+}
 
 // *************************************************************************
 
@@ -769,9 +743,8 @@ SoGtkExaminerViewerP::feedbackWheelReleased(
 */
 
 void
-SoGtkExaminerViewerP::feedbackSizeChanged(
-  GtkWidget * w,
-  gpointer closure)
+SoGtkExaminerViewerP::feedbackSizeChanged(GtkWidget * w,
+                                          gpointer closure)
 {
   assert(closure != NULL);
   GtkThumbWheel		*thumbwheel = (GtkThumbWheel*) w;
@@ -788,7 +761,7 @@ SoGtkExaminerViewerP::feedbackSizeChanged(
   char buffer[16];
   sprintf(buffer, "%d", viewer->getFeedbackSize());
   gtk_entry_set_text(GTK_ENTRY(PRIVATE(viewer)->feedbackedit), buffer);
-} // feedbackSizeChanged()
+}
 
 // *************************************************************************
 
@@ -797,19 +770,13 @@ SoGtkExaminerViewerP::feedbackSizeChanged(
 */
 
 void
-SoGtkExaminerViewerP::camerabuttonCB(
-  GtkWidget *,
-  gpointer closure)
+SoGtkExaminerViewerP::camerabuttonCB(GtkWidget *,
+                                     gpointer closure)
 {
   assert(closure != NULL);
   SoGtkExaminerViewer * viewer = (SoGtkExaminerViewer *) closure;
   if (viewer->getCamera())
     viewer->toggleCameraType();
-} // camerabuttonCB()
+}
 
 // *************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkExaminerViewerRCSId(void) { return rcsid; }
-#endif // SOGTK_DEBUG
-
