@@ -10,12 +10,6 @@ AC_CONFIG_AUX_DIR(cfg)
 # repository.
 
 SIM_AC_CVS_CHANGES([
-  # the moving of "conf-macros" to "cfg/m4"
-  SIM_AC_CVS_CHANGE([
-    rm -rf conf-macros
-    cvs co SoGtkMacros
-  ], [test -d cfg/m4/CVS], [test ! -d conf-macros])
-
   # the addition of the "data" module
   SIM_AC_CVS_CHANGE([
     cvs co SoGtkData
