@@ -270,7 +270,7 @@ gtk_thumbwheel_destroy(
 // *************************************************************************
 
 void
-get_thumbwheel_set_update_policy(
+gtk_thumbwheel_set_update_policy(
   GtkThumbWheel * thumbwheel,
   GtkUpdateType update )
 {
