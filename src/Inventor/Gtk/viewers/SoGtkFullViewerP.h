@@ -103,8 +103,6 @@ public:
   void selectedViewing(void);
   void selectedDecoration(void);
   void selectedHeadlight(void);
-  void copyviewSelected(void);
-  void pasteviewSelected(void);
 
   // button selections
   void interactbuttonClicked(void);

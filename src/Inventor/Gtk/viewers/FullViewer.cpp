@@ -975,18 +975,6 @@ SoGtkFullViewerP::selectedHeadlight(void)
   PUBLIC(this)->setHeadlight(PUBLIC(this)->isHeadlight() ? FALSE : TRUE);
 }
 
-void
-SoGtkFullViewerP::copyviewSelected(void)
-{
-  PUBLIC(this)->copyView(SbTime::getTimeOfDay());
-}
-
-void
-SoGtkFullViewerP::pasteviewSelected(void)
-{
-  PUBLIC(this)->pasteView(SbTime::getTimeOfDay());
-}
-
 // *************************************************************************
 // button selections
 
