@@ -13,6 +13,7 @@ BUILT_SOURCES = \
 	SoGtkObject.cpp \
 	SoGtkCursors.h \
 	SoGtkCursors.cpp \
+	SoGtkGLWidget.h \
 	SoGtkRenderArea.h \
 	SoGtkRenderArea.cpp \
 	SoAnyMaterialList.h \
@@ -27,7 +28,6 @@ libSoGtk@SUFFIX@_la_SOURCES = \
 	SoGtk.cpp \
 	SoGtkComponent.h \
 	SoGtkComponent.cpp \
-	SoGtkGLWidget.h \
 	SoGtkGLWidget.cpp \
 	SoGtkMaterialList.h \
 	SoGtkMaterialList.cpp \
@@ -86,6 +86,10 @@ SoGtkCursors.h: \
 SoGtkCursors.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiCursors.cpp.in
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkCursors.cpp )
+
+SoGtkGLWidget.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiGLWidget.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkGLWidget.h )
 
 SoGtkRenderArea.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in

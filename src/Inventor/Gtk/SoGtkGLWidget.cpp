@@ -139,6 +139,7 @@ SoGtkGLWidget::SoGtkGLWidget(
   this->pimpl = new SoGtkGLWidgetP(this);
 
   this->waitForExpose = TRUE;
+  this->drawToFrontBuffer = FALSE; // FIXME: not in use in SoGtk. 20011012 mortene.
   PRIVATE(this)->wasresized = FALSE;
   PRIVATE(this)->glSize = SbVec2s(0,0);
 
@@ -176,6 +177,14 @@ SoGtkGLWidget::~SoGtkGLWidget(
 } // ~SoGtkGLWidget()
 
 // *************************************************************************
+
+void   // private
+SoGtkGLWidget::buildGLWidget(void)
+{
+  SOGTK_STUB();
+  // FIXME: not used in SoGtk -- what is it used for in SoQt and SoXt?
+  // 20011012 mortene.
+}
 
 /*!
   FIXME: write function documentation
@@ -219,7 +228,7 @@ SoGtkGLWidget::buildWidget(
   glAttributes[i] = GDK_GL_NONE; i++;
 
   if (sharewidget) {
-    PRIVATE(this)->glWidget = gtk_gl_area_share_new(glAttributes, (GtkGLArea*) sharewidget->getGtkGLArea());
+    PRIVATE(this)->glWidget = gtk_gl_area_share_new(glAttributes, (GtkGLArea*) sharewidget->getGLWidget());
   }
   else {
     PRIVATE(this)->glWidget = gtk_gl_area_new(glAttributes);    
@@ -466,24 +475,20 @@ SoGtkGLWidget::setGLSize(
 /*!
   Return the dimensions of the OpenGL canvas.
 */
-
-const SbVec2s
-SoGtkGLWidget::getGLSize(
-  void) const
+SbVec2s
+SoGtkGLWidget::getGLSize(void) const
 {
   if (! PRIVATE(this)->glWidget)
     return SbVec2s(-1, -1);
   return SbVec2s(PRIVATE(this)->glWidget->allocation.width,
                   PRIVATE(this)->glWidget->allocation.height);
-} // getGLSize()
+}
 
 /*!
   Return the aspect ratio of the OpenGL canvas.
 */
-
 float
-SoGtkGLWidget::getGLAspectRatio(
-  void) const
+SoGtkGLWidget::getGLAspectRatio(void) const
 {
   if (! PRIVATE(this)->glWidget)
     return 1.0f;
@@ -512,11 +517,10 @@ SoGtkGLWidget::getGLAspectRatio(
 // *************************************************************************
 
 /*!
-  Returns a pointer to the GtkGLArea.
+  Returns a pointer to the GtkGLArea widget.
 */
-
 GtkWidget *
-SoGtkGLWidget::getGtkGLArea(void) const
+SoGtkGLWidget::getGLWidget(void) const
 {
   return PRIVATE(this)->glWidget;
 } // getGtkGLArea()
@@ -771,6 +775,18 @@ SbBool
 SoGtkGLWidget::isRGBMode(void)
 {
   return TRUE; // FIXME
+}
+
+/*!
+  FIXME: doc
+*/
+unsigned long
+SoGtkGLWidget::getOverlayTransparentPixel(void)
+{
+  SOGTK_STUB();
+  // FIXME: investigate if this function is really used for the other
+  // toolkits. 20011012 mortene.
+  return 0;
 }
 
 // *************************************************************************

@@ -32,6 +32,7 @@ BUILT_SOURCES = \
 	src/Inventor/Gtk/SoGtkObject.cpp \
 	src/Inventor/Gtk/SoGtkCursors.h \
 	src/Inventor/Gtk/SoGtkCursors.cpp \
+	src/Inventor/Gtk/SoGtkGLWidget.h \
 	src/Inventor/Gtk/SoGtkRenderArea.h \
 	src/Inventor/Gtk/SoGtkRenderArea.cpp \
 	src/Inventor/Gtk/SoAnyMaterialList.h \
@@ -105,6 +106,10 @@ src/Inventor/Gtk/SoGtkCursors.h: \
 src/Inventor/Gtk/SoGtkCursors.cpp: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.cpp.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.cpp.in
+
+src/Inventor/Gtk/SoGtkGLWidget.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoGuiGLWidget.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiGLWidget.h.in
 
 src/Inventor/Gtk/SoGtkRenderArea.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in
