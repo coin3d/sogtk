@@ -109,7 +109,7 @@ SoGtkPopupMenu::~SoGtkPopupMenu(
 */
 
 int
-SoGtkPopupMenu::NewMenu(
+SoGtkPopupMenu::newMenu(
   char * name,
   int menuid )
 {
@@ -131,13 +131,13 @@ SoGtkPopupMenu::NewMenu(
   rec->menuid = id;
   this->menus->append( (void *) rec );
   return id;
-} // NewMenu()
+} // newMenu()
 
 /*!
 */
 
 int
-SoGtkPopupMenu::GetMenu(
+SoGtkPopupMenu::getMenu(
   char * name )
 {
   const int numMenus = this->menus->getLength();
@@ -148,13 +148,13 @@ SoGtkPopupMenu::GetMenu(
       return rec->menuid;
   }
   return -1;
-} // GetMenu()
+} // getMenu()
 
 /*!
 */
 
 void
-SoGtkPopupMenu::SetMenuTitle(
+SoGtkPopupMenu::setMenuTitle(
   int menuid,
   char * title )
 {
@@ -170,20 +170,20 @@ SoGtkPopupMenu::SetMenuTitle(
   if ( rec->parent )
     rec->parent->changeItem( rec->menuid, rec->title );
 */
-} // SetMenuTitle()
+} // setMenuTitle()
 
 /*!
 */
 
 char *
-SoGtkPopupMenu::GetMenuTitle(
+SoGtkPopupMenu::getMenuTitle(
   int menuid )
 {
   MenuRecord * rec = this->getMenuRecord( menuid );
   if ( rec )
     return rec->title;
   return NULL;
-} // GetMenuTitle()
+} // getMenuTitle()
 
 // *************************************************************************
 
@@ -191,7 +191,7 @@ SoGtkPopupMenu::GetMenuTitle(
 */
 
 int
-SoGtkPopupMenu::NewMenuItem(
+SoGtkPopupMenu::newMenuItem(
   char * name,
   int itemid )
 {
@@ -213,13 +213,13 @@ SoGtkPopupMenu::NewMenuItem(
   rec->itemid = id;
   this->items->append( rec );
   return id;
-} // NewMenuItem()
+} // newMenuItem()
 
 /*!
 */
 
 int
-SoGtkPopupMenu::GetMenuItem(
+SoGtkPopupMenu::getMenuItem(
   char * name )
 {
   const int numItems = this->items->getLength();
@@ -230,13 +230,13 @@ SoGtkPopupMenu::GetMenuItem(
       return rec->itemid;
   }
   return -1;
-} // GetMenuItem()
+} // getMenuItem()
 
 /*!
 */
 
 void
-SoGtkPopupMenu::SetMenuItemTitle(
+SoGtkPopupMenu::setMenuItemTitle(
   int itemid,
   char * title )
 {
@@ -249,42 +249,42 @@ SoGtkPopupMenu::SetMenuItemTitle(
   if ( rec->parent )
     rec->parent->changeItem( rec->itemid, rec->title );
 */
-} // SetMenuItemTitle()
+} // setMenuItemTitle()
 
 /*!
 */
 
 char *
-SoGtkPopupMenu::GetMenuItemTitle(
+SoGtkPopupMenu::getMenuItemTitle(
   int itemid )
 {
   ItemRecord * rec = this->getItemRecord( itemid );
   if ( rec )
     return rec->title;
   return NULL;
-} // GetMenuItemTitle()
+} // getMenuItemTitle()
 
 /*!
 */
 
 void
-SoGtkPopupMenu::SetMenuItemEnabled(
+SoGtkPopupMenu::setMenuItemEnabled(
   int itemid,
   SbBool enabled )
 {
   SOGTK_STUB();
-} // SetMenuItemEnabled()
+} // setMenuItemEnabled()
 
 /*!
 */
 
 SbBool
-SoGtkPopupMenu::GetMenuItemEnabled(
+SoGtkPopupMenu::getMenuItemEnabled(
   int itemid )
 {
   SOGTK_STUB();
   return FALSE;
-} // GetMenuItemEnabled()
+} // getMenuItemEnabled()
 
 /*!
 */
@@ -316,13 +316,13 @@ SoGtkPopupMenu::_setMenuItemMarked(
     item->flags |= ITEM_MARKED;
   else
     item->flags &= ~ITEM_MARKED;
-} // SetMenuItemMarked()
+} // _setMenuItemMarked()
 
 /*!
 */
 
 SbBool
-SoGtkPopupMenu::GetMenuItemMarked(
+SoGtkPopupMenu::getMenuItemMarked(
   int itemid )
 {
   ItemRecord * item = getItemRecord( itemid );
@@ -334,7 +334,7 @@ SoGtkPopupMenu::GetMenuItemMarked(
   if ( item->flags & ITEM_MARKED )
     return TRUE;
   return FALSE;
-} // GetMenuItemMarked()
+} // getMenuItemMarked()
 
 // *************************************************************************
 
@@ -342,7 +342,7 @@ SoGtkPopupMenu::GetMenuItemMarked(
 */
 
 void
-SoGtkPopupMenu::AddMenu(
+SoGtkPopupMenu::addMenu(
   int menuid,
   int submenuid,
   int pos )
@@ -390,13 +390,13 @@ SoGtkPopupMenu::AddMenu(
     sub->pos = pos;
     sub->parent = super;
   }
-} // AddMenu()
+} // addMenu()
 
 /*!
 */
 
 void
-SoGtkPopupMenu::AddMenuItem(
+SoGtkPopupMenu::addMenuItem(
   int menuid,
   int itemid,
   int pos )
@@ -444,13 +444,13 @@ SoGtkPopupMenu::AddMenuItem(
     item->pos = pos;
     item->parent = menu;
   }
-} // AddMenuItem()
+} // addMenuItem()
 
 /*!
 */
 
 void
-SoGtkPopupMenu::AddSeparator(
+SoGtkPopupMenu::addSeparator(
   int menuid,
   int pos )
 {
@@ -499,13 +499,13 @@ SoGtkPopupMenu::AddSeparator(
     sep->parent = menu;
   }
   this->items->append( sep );
-} // AddSeparator()
+} // addSeparator()
 
 /*!
 */
 
 void
-SoGtkPopupMenu::RemoveMenu(
+SoGtkPopupMenu::removeMenu(
   int menuid )
 {
   MenuRecord * rec = this->getMenuRecord( menuid );
@@ -531,13 +531,13 @@ SoGtkPopupMenu::RemoveMenu(
   rec->parent->removeItem( rec->menuid );
   rec->parent = NULL;
 */
-} // RemoveMenu()
+} // removeMenu()
 
 /*!
 */
 
 void
-SoGtkPopupMenu::RemoveMenuItem(
+SoGtkPopupMenu::removeMenuItem(
   int itemid )
 {
   ItemRecord * rec = this->getItemRecord( itemid );
@@ -557,7 +557,7 @@ SoGtkPopupMenu::RemoveMenuItem(
   rec->parent->removeItem( rec->itemid );
   rec->parent = NULL;
 */
-} // RemoveMenuItem()
+} // removeMenuItem()
 
 // *************************************************************************
 
@@ -565,7 +565,7 @@ SoGtkPopupMenu::RemoveMenuItem(
 */
 
 void
-SoGtkPopupMenu::PopUp(
+SoGtkPopupMenu::popUp(
   GtkWidget * inside,
   int x,
   int y )
@@ -586,7 +586,7 @@ SoGtkPopupMenu::PopUp(
   }
   this->dirty = FALSE;
   gtk_menu_popup( GTK_MENU(this->popup), NULL, NULL, NULL, NULL, 2, 0 );
-} // PopUp()
+} // popUp()
 
 // *************************************************************************
 
@@ -772,7 +772,7 @@ void
 SoGtkPopupMenu::selection(
   int itemid )
 {
-  this->InvokeMenuSelection( itemid );
+  this->invokeMenuSelection( itemid );
 } // selection()
 
 void
