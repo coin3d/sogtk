@@ -888,6 +888,7 @@ SoGtkComponent::afterRealizeHook( // virtual, protected
 #endif
   gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->widget), "event",
     GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler), (gpointer) this );
+  gtk_window_set_title(GTK_WINDOW(PRIVATE(this)->parent), this->getTitle() );
 } // afterRealizeHook()
 
 // *************************************************************************
