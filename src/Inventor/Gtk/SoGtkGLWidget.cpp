@@ -626,7 +626,8 @@ void
 SoGtkGLWidget::glLock(
   void )
 {
-  gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) );
+  if ( GTK_IS_GL_AREA(this->glWidget) )
+    gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) );
 } // glLock()
 
 void
@@ -639,7 +640,8 @@ void
 SoGtkGLWidget::glSwapBuffers(
   void )
 {
-  gtk_gl_area_swapbuffers( GTK_GL_AREA(this->glWidget) );
+  if ( GTK_IS_GL_AREA(this->glWidget) )
+    gtk_gl_area_swapbuffers( GTK_GL_AREA(this->glWidget) );
 } // glSwapBuffers()
 
 void
