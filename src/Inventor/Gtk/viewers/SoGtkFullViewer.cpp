@@ -221,7 +221,6 @@ public:
 
   SbBool decorations;
 
-  SbString menuTitle;
   SbBool menuEnabled;
 
   GtkWidget * mainLayout;
@@ -1094,11 +1093,7 @@ void
 SoGtkFullViewer::setPopupMenuString(
   const char * str )
 {
-  PRIVATE(this)->menuTitle = str ? str : "";
-//  SOGTK_STUB();
-//  if ( this->prefMenu )
-//    this->prefMenu->changeItem( this->menutitle.getString(),
-//                                MENUTITLE_ITEM );
+  this->common->setPopupMenuString( str );
 }
 
 // *************************************************************************
@@ -1640,8 +1635,6 @@ SoGtkFullViewerP::SoGtkFullViewerP(
 
   this->menuEnabled = FALSE;
   this->decorations = FALSE;
-
-  this->menuTitle = _( "Viewer Menu" );
 
   this->viewerButtons = new SbPList;
   this->appButtonList = new SbPList;
