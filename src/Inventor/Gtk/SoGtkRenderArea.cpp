@@ -115,18 +115,19 @@ GtkWidget *
 SoGtkRenderArea::buildWidget(
   GtkWidget * parent )
 {
-  GtkWidget * w = inherited::buildWidget( parent );
+  GtkWidget * widget = inherited::buildWidget( parent );
   this->setBorder( TRUE );
-  // Set default size if no size has been specified.
+
   if (this->getSize()[0] == -1)
     this->setSize(SbVec2s(400, 400));
 
   GtkWidget * glWidget = this->getGtkGLArea();
-  assert( glWidget != NULL );
+  g_return_val_if_fail( glWidget != NULL, NULL );
+
   gtk_signal_connect( GTK_OBJECT(glWidget), "configure_event",
     GTK_SIGNAL_FUNC(SoGtkRenderArea::sGLReshape), (void *) this );
 
-  return w;
+  return widget;
 } // buildWidget()
 
 // *************************************************************************

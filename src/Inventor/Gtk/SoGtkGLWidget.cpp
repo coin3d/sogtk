@@ -113,6 +113,7 @@ SoGtkGLWidget::buildWidget(
   glAttributes[i++] = GDK_GL_NONE;
 
   this->glWidget = gtk_gl_area_new( glAttributes );
+  gtk_widget_set_usize( this->glWidget, 100, 100 );
   
   gtk_widget_set_events( GTK_WIDGET(this->glWidget),
     GDK_EXPOSURE_MASK | GDK_KEY_PRESS_MASK );
@@ -130,15 +131,13 @@ SoGtkGLWidget::buildWidget(
   gtk_box_pack_start( GTK_BOX(this->container), GTK_WIDGET(this->glWidget),
       TRUE, TRUE, FALSE );
 
-  gtk_container_add( GTK_CONTAINER(parent), GTK_WIDGET(this->container) );
-
   gtk_widget_show( GTK_WIDGET(this->glWidget) );
-  gtk_widget_show( GTK_WIDGET(this->container) );
+//  gtk_widget_show( GTK_WIDGET(this->container) );
 
   this->setBaseWidget( this->container );
   this->subclassInitialized();
 
-  return this->glWidget;
+  return this->container;
 } // buildWidget()
 
 // *************************************************************************
