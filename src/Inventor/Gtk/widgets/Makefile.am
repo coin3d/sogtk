@@ -14,8 +14,10 @@ libSoGtkWidgets_la_SOURCES = \
 libSoGtkWidgets_la_LIBADD = 
 
 ThumbWheel.lo: $(top_srcdir)/src/Inventor/Gtk/common/ThumbWheel.cpp
-	source='$^' object='$@' libtool=yes \
+	source='$(top_srcdir)/src/Inventor/Gtk/common/ThumbWheel.cpp' \
+	object='$@' libtool=yes \
 	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
 	$(CXXDEPMODE) $(depcomp) \
-	$(LTCXXCOMPILE) -c -o $@ $^
+	$(LTCXXCOMPILE) -c -o $@ \
+	$(top_srcdir)/src/Inventor/Gtk/common/ThumbWheel.cpp
 
