@@ -29,6 +29,8 @@ BUILT_SOURCES = \
 	src/Inventor/Gtk/SoAnyMaterialList.h \
 	src/Inventor/Gtk/SoAnyMaterialList.cpp \
 	src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp \
+	src/Inventor/Gtk/devices/spwinput.h \
+	src/Inventor/Gtk/devices/spwinput_x11.cpp \
 	src/Inventor/Gtk/viewers/SoGtkViewer.h \
 	src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
 	src/Inventor/Gtk/viewers/SoAnyFullViewer.h \
@@ -37,6 +39,8 @@ BUILT_SOURCES = \
 	src/Inventor/Gtk/viewers/SoAnyExaminerViewer.cpp \
 	src/Inventor/Gtk/viewers/SoAnyPlaneViewer.h \
 	src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp \
+	src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.h \
+	src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.cpp \
 	src/Inventor/Gtk/viewers/SoAnyFlyViewer.h \
 	src/Inventor/Gtk/viewers/SoAnyFlyViewer.cpp \
 	src/Inventor/Gtk/viewers/SoAnyWalkViewer.h \
@@ -100,6 +104,14 @@ src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp: \
   $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
 
+src/Inventor/Gtk/devices/spwinput.h: \
+  $(srcdir)/src/Inventor/Gtk/common/spwinput.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/spwinput.h.in
+
+src/Inventor/Gtk/devices/spwinput_x11.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/spwinput_x11.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/spwinput_x11.cpp.in
+
 src/Inventor/Gtk/viewers/SoGtkViewer.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiViewer.h.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiViewer.h.in
@@ -131,6 +143,14 @@ src/Inventor/Gtk/viewers/SoAnyPlaneViewer.h: \
 src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp: \
   $(srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
+
+src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyConstrainedViewer.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyConstrainedViewer.h.in
+
+src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyConstrainedViewer.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyConstrainedViewer.cpp.in
 
 src/Inventor/Gtk/viewers/SoAnyFlyViewer.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.h.in
