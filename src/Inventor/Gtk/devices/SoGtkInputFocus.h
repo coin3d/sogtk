@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
 #ifndef SOGTK_INPUTFOCUS_H
 #define SOGTK_INPUTFOCUS_H
@@ -32,8 +32,7 @@
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkInputFocus : public SoGtkDevice {
-  SOGTK_TYPED_OBJECT_HEADER(SoGtkInputFocus);
-  typedef SoGtkDevice inherited;
+  SOGTK_OBJECT_HEADER(SoGtkInputFocus, SoGtkDevice);
 
 public:
   SoGtkInputFocus( sogtkEventMask mask = SO_GTK_ALL_FOCUS_EVENTS );

@@ -22,8 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif
 
-#include <assert.h>
-
 #include <gtk/gtk.h>
 
 #include <Inventor/errors/SoDebugError.h>
@@ -44,7 +42,7 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_TYPED_OBJECT_SOURCE(SoGtkGraphEditor, SoGtkComponent);
+SOGTK_OBJECT_SOURCE(SoGtkGraphEditor);
 
 // *************************************************************************
 

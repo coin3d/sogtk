@@ -17,10 +17,12 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
-#ifndef SOGTK_TYPEDOBJECT_H
-#define SOGTK_TYPEDOBJECT_H
+#ifndef SOGTK_OBJECT_H
+#define SOGTK_OBJECT_H
+
+#include <assert.h>
 
 #include <Inventor/SbBasic.h>
 #include <Inventor/SbString.h>
@@ -30,7 +32,7 @@
 
 // *************************************************************************
 
-class SoGtkTypedObject {
+class SoGtkObject {
   static SoType classTypeId;
 
 public:
@@ -41,7 +43,7 @@ public:
 
   static void init(void);
 
-}; // SoGtkTypedObject
+}; // SoGtkObject
 
 // *************************************************************************
 
@@ -51,28 +53,30 @@ public:
 // problem if the custom component wasn't written for Coin in the first
 // place.
 
-#define SOGTK_TYPED_ABSTRACT_OBJECT_HEADER(classname)                      \
+#define SOGTK_OBJECT_ABSTRACT_HEADER(classname, parentname)                \
 public:                                                                    \
   static void initClass(void);                                             \
   static SoType getClassTypeId(void);                                      \
   virtual SoType getTypeId(void) const /* = 0 */;                          \
 private:                                                                   \
+  typedef parentname inherited;                                            \
   static SoType classTypeId
 
-#define SOGTK_TYPED_OBJECT_HEADER(classname)                               \
+#define SOGTK_OBJECT_HEADER(classname, parentname)                         \
 public:                                                                    \
   static void initClass(void);                                             \
   static SoType getClassTypeId(void);                                      \
   virtual SoType getTypeId(void) const;                                    \
-  static classname * createInstance(void);                                 \
+  static void * createInstance(void);                                      \
 private:                                                                   \
+  typedef parentname inherited;                                            \
   static SoType classTypeId
 
-#define SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(classname, parentname)          \
+#define SOGTK_OBJECT_ABSTRACT_SOURCE(classname)                            \
 void classname::initClass(void) {                                          \
   assert( classname::classTypeId == SoType::badType() );                   \
   classname::classTypeId =                                                 \
-    SoType::createType( parentname::getClassTypeId(),                      \
+    SoType::createType( inherited::getClassTypeId(),                       \
                        	SO__QUOTE(classname) );                            \
 }                                                                          \
 SoType classname::getClassTypeId(void) {                                   \
@@ -83,12 +87,13 @@ SoType classname::getTypeId(void) const {                                  \
 }                                                                          \
 SoType classname::classTypeId
 
-#define SOGTK_TYPED_OBJECT_SOURCE(classname, parentname)                   \
+#define SOGTK_OBJECT_SOURCE(classname)                                     \
 void classname::initClass(void) {                                          \
   assert( classname::classTypeId == SoType::badType() );                   \
   classname::classTypeId =                                                 \
-    SoType::createType( parentname::getClassTypeId(),                      \
-                       	SO__QUOTE(classname) );                            \
+    SoType::createType( inherited::getClassTypeId(),                       \
+                       	SO__QUOTE(classname),                              \
+                        classname::createInstance  );                      \
 }                                                                          \
 SoType classname::getClassTypeId(void) {                                   \
   return classname::classTypeId;                                           \
@@ -96,11 +101,11 @@ SoType classname::getClassTypeId(void) {                                   \
 SoType classname::getTypeId(void) const {                                  \
   return classname::classTypeId;                                           \
 }                                                                          \
-classname * classname::createInstance(void) {                              \
-  return new classname;                                                    \
+void * classname::createInstance(void) {                                   \
+  return (void *) new classname;                                           \
 }                                                                          \
 SoType classname::classTypeId
 
 // *************************************************************************
 
-#endif // ! SOGTK_TYPEDOBJECT_H
+#endif // ! SOGTK_OBJECT_H

@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
 #ifndef SOGTK_SPACEBALL_H
 #define SOGTK_SPACEBALL_H
@@ -27,8 +27,7 @@
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkSpaceball : public SoGtkDevice {
-  SOGTK_TYPED_OBJECT_HEADER(SoGtkSpaceball);
-  typedef SoGtkDevice inherited;
+  SOGTK_OBJECT_HEADER(SoGtkSpaceball, SoGtkDevice);
 
 public:
   enum Mask {

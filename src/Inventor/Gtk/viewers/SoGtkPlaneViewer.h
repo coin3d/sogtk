@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
 #ifndef SOGTK_PLANEVIEWER_H
 #define SOGTK_PLANEVIEWER_H
@@ -27,6 +27,7 @@
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkPlaneViewer : public SoGtkFullViewer {
+  SOGTK_OBJECT_HEADER(SoGtkPlaneViewer, SoGtkFullViewer);
   typedef SoGtkFullViewer inherited;
 
 public:

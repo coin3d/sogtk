@@ -22,8 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#include <assert.h>
-
 #include <GL/gl.h>
 
 #include <Inventor/errors/SoDebugError.h>
@@ -73,7 +71,7 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
 
 // *************************************************************************
 
-SOGTK_TYPED_OBJECT_SOURCE(SoGtkExaminerViewer, SoGtkFullViewer);
+SOGTK_OBJECT_SOURCE(SoGtkExaminerViewer);
 
 // *************************************************************************
 

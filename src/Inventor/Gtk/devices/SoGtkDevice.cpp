@@ -22,8 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#include <assert.h>
-
 #include <Inventor/errors/SoDebugError.h>
 
 #include <Inventor/events/SoEvent.h>
@@ -45,9 +43,7 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(SoGtkDevice, SoGtkTypedObject);
-
-// *************************************************************************
+SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkDevice);
 
 void
 SoGtkDevice::initClasses( // static

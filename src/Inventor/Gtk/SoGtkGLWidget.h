@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
 #ifndef SOGTK_GLWIDGET_H
 #define SOGTK_GLWIDGET_H
@@ -39,8 +39,7 @@ enum glModes {
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkGLWidget : public SoGtkComponent {
-  SOGTK_TYPED_ABSTRACT_OBJECT_HEADER(SoGtkGLWidget);
-  typedef SoGtkComponent inherited;
+  SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkGLWidget, SoGtkComponent);
 
 public:
   void setBorder( const SbBool enable );

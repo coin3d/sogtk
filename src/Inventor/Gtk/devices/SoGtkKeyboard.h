@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
 #ifndef SOGTK_KEYBOARD_H
 #define SOGTK_KEYBOARD_H
@@ -31,8 +31,7 @@ class SoKeyboardEvent;
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkKeyboard : public SoGtkDevice {
-  SOGTK_TYPED_OBJECT_HEADER(SoGtkKeyboard);
-  typedef SoGtkDevice inherited;
+  SOGTK_OBJECT_HEADER(SoGtkKeyboard, SoGtkDevice);
 
 public:
   enum SoGtkKeyboardEventMask {

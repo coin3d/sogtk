@@ -1292,63 +1292,10 @@ fi
 # Author: Morten Eriksen, <mortene@sim.no>.
 #
 
-AC_DEFUN([SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE], [
-
-sim_ac_oiv_image_avail=false
-
-if test x"$with_inventor" != xno; then
-  if test x"$with_inventor" != xyes; then
-    sim_ac_oiv_image_cppflags="-I${with_inventor}/include"
-    sim_ac_oiv_image_ldflags="-L${with_inventor}/lib"
-  else
-    AC_MSG_CHECKING(value of the OIVHOME environment variable)
-    if test x"$OIVHOME" = x; then
-      AC_MSG_RESULT([empty])
-      AC_MSG_WARN([OIVHOME environment variable not set -- this might be an indication of a problem])
-    else
-      AC_MSG_RESULT([$OIVHOME])
-      sim_ac_oiv_image_cppflags="-I$OIVHOME/include"
-      sim_ac_oiv_image_ldflags="-L$OIVHOME/lib"
-    fi
-  fi
-  sim_ac_oiv_image_libs="-limage"
-
-  AC_LANG_PUSH(C)
-  sim_ac_save_cppflags=$CPPFLAGS
-  sim_ac_save_ldflags=$LDFLAGS
-  sim_ac_save_libs=$LIBS
-  CPPFLAGS="$sim_ac_oiv_image_cppflags $CPPFLAGS"
-  LDFLAGS="$sim_ac_oiv_image_ldflags $LDFLAGS"
-  LIBS="$sim_ac_oiv_image_libs $LIBS"
-  AC_MSG_CHECKING([for the Open Inventor image library])
-  AC_TRY_LINK(,
-    [img_read();],
-    [sim_ac_oiv_image_avail=true],
-    [sim_ac_oiv_image_avail=false])
-  if $sim_ac_oiv_image_avail; then
-    AC_MSG_RESULT([found])
-  else
-    AC_MSG_RESULT([not found])
-  fi
-  CPPFLAGS=$sim_ac_save_cppflags
-  LDFLAGS=$sim_ac_save_ldflags
-  LIBS=$sim_ac_save_libs
-  AC_LANG_POP
-fi
-
-if $sim_ac_oiv_image_avail; then
-  ifelse([$1], , :, [$1])
-else
-  ifelse([$2], , :, [$2])
-fi
-
-])
-
 AC_DEFUN([SIM_CHECK_INVENTOR], [
-AC_ARG_WITH(
-  [inventor],
-  AC_HELP_STRING([--with-inventor=DIR],
-                 [use the Open Inventor library [default=no]]),
+AC_ARG_WITH([inventor],
+  AC_HELP_STRING([--with-inventor], [use another Inventor than Coin [default=no]])
+AC_HELP_STRING([--with-inventor=PATH], [specify where the Inventor implementation resides]),
   [],
   [with_inventor=yes])
 
@@ -1543,6 +1490,158 @@ else
   ifelse([$2], , :, [$2])
 fi
 ]) # SIM_AC_HAVE_SOMOUSEBUTTONEVENT_BUTTONS()
+
+# **************************************************************************
+# SIM_AC_WITH_INVENTOR
+# This macro just ensures the --with-inventor option is used.
+
+AC_DEFUN([SIM_AC_WITH_INVENTOR], [
+: ${sim_ac_want_inventor=false}
+AC_ARG_WITH([inventor],
+  AC_HELP_STRING([--with-inventor], [use another Open Inventor than Coin [default=no]])
+AC_HELP_STRING([--with-inventor=PATH], [specify where Open Inventor resides]),
+  [case "$withval" in
+  no)  sim_ac_want_inventor=false ;;
+  yes) sim_ac_want_inventor=true ;;
+  *)   sim_ac_want_inventor=true; sim_ac_inventor_path="$withval" ;;
+  esac])
+]) # SIM_AC_WITH_INVENTOR
+
+# **************************************************************************
+# SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE
+
+AC_DEFUN([SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE], [
+AC_REQUIRE([SIM_AC_WITH_INVENTOR])
+
+sim_ac_oiv_image_avail=false
+
+if $sim_ac_want_inventor; then
+  if test s${sim_ac_inventor_path+et} = set; then
+    sim_ac_oiv_image_cppflags="-I${with_inventor}/include"
+    sim_ac_oiv_image_ldflags="-L${with_inventor}/lib"
+  else
+    AC_MSG_CHECKING(value of the OIVHOME environment variable)
+    if test s${OIVHOME+et} != set; then
+      AC_MSG_RESULT([empty])
+      AC_MSG_WARN([OIVHOME environment variable not set -- this might be an indication of a problem])
+    else
+      AC_MSG_RESULT([$OIVHOME])
+      sim_ac_oiv_image_cppflags="-I$OIVHOME/include"
+      sim_ac_oiv_image_ldflags="-L$OIVHOME/lib"
+    fi
+  fi
+  sim_ac_oiv_image_libs="-limage"
+
+  AC_LANG_PUSH(C)
+  sim_ac_save_cppflags=$CPPFLAGS
+  sim_ac_save_ldflags=$LDFLAGS
+  sim_ac_save_libs=$LIBS
+  CPPFLAGS="$sim_ac_oiv_image_cppflags $CPPFLAGS"
+  LDFLAGS="$sim_ac_oiv_image_ldflags $LDFLAGS"
+  LIBS="$sim_ac_oiv_image_libs $LIBS"
+  AC_MSG_CHECKING([for the Open Inventor image library])
+  AC_TRY_LINK(,
+    [img_read();],
+    [sim_ac_oiv_image_avail=true],
+    [sim_ac_oiv_image_avail=false])
+  if $sim_ac_oiv_image_avail; then
+    AC_MSG_RESULT([found])
+  else
+    AC_MSG_RESULT([not found])
+  fi
+  CPPFLAGS=$sim_ac_save_cppflags
+  LDFLAGS=$sim_ac_save_ldflags
+  LIBS=$sim_ac_save_libs
+  AC_LANG_POP
+fi
+
+if $sim_ac_oiv_image_avail; then
+  ifelse([$1], , :, [$1])
+else
+  ifelse([$2], , :, [$2])
+fi
+]) # SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE
+
+# **************************************************************************
+# SIM_AC_HAVE_INVENTOR_IFELSE
+
+AC_DEFUN([SIM_AC_HAVE_INVENTOR_IFELSE], [
+AC_REQUIRE([SIM_AC_WITH_INVENTOR])
+
+if $sim_ac_want_inventor; then
+  sim_ac_inventor_save_CPPFLAGS="$CPPFLAGS";
+  sim_ac_inventor_save_LDFLAGS="$LDFLAGS";
+  sim_ac_inventor_save_LIBS="$LIBS";
+
+  SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE([
+    sim_ac_oiv_cppflags="$sim_ac_oiv_image_cppflags"
+    sim_ac_oiv_ldflags="$sim_ac_oiv_image_ldflags"
+    sim_ac_oiv_libs="$sim_ac_oiv_image_libs"
+    CPPFLAGS="$sim_ac_oiv_image_cppflags $CPPFLAGS"
+    LDFLAGS="$sim_ac_oiv_image_ldflags $LDFLAGS"
+    LIBS="$sim_ac_oiv_image_libs $LIBS"
+  ])
+
+  if test s${sim_ac_inventor_path+et} = set; then
+    sim_ac_oiv_cppflags="-I${sim_ac_inventor_path}/include $sim_ac_oiv_cppflags"
+    sim_ac_oiv_ldflags="-L${sim_ac_inventor_path}/lib $sim_ac_oiv_ldflags"
+  else
+    AC_MSG_CHECKING(value of the OIVHOME environment variable)
+    if test x"$OIVHOME" = x; then
+      AC_MSG_RESULT([empty])
+      AC_MSG_WARN([OIVHOME environment variable not set -- this might be an indication of a problem])
+    else
+      AC_MSG_RESULT([$OIVHOME])
+      sim_ac_oiv_cppflags="-I$OIVHOME/include $sim_ac_oiv_cppflags"
+      sim_ac_oiv_ldflags="-L$OIVHOME/lib $sim_ac_oiv_ldflags"
+    fi
+  fi
+
+  if test x"$sim_ac_linking_style" = xmswin; then
+    cat <<EOF > conftest.c
+#include <Inventor/SbBasic.h>
+PeekInventorVersion: TGS_VERSION
+EOF
+    iv_version=`$CXX -E conftest.c 2>/dev/null | grep "^PeekInventorVersion" | sed 's/.* //g'`
+    if test x"$iv_version" = xTGS_VERSION; then
+      AC_MSG_ERROR([SbBasic.h does not define TGS_VERSION.  Maybe it's a Coin file?])
+    fi
+    iv_version=`echo $iv_version | sed 's/.$//'`
+    rm -f conftest.c
+    sim_ac_oiv_libs="inv${iv_version}.lib"
+    sim_ac_oiv_enter="#include <SoWinEnterScope.h>"
+    sim_ac_oiv_leave="#include <SoWinLeaveScope.h>"
+  else
+    sim_ac_oiv_libs="-lInventor"
+  fi
+
+  sim_ac_save_cppflags=$CPPFLAGS
+  sim_ac_save_ldflags=$LDFLAGS
+  sim_ac_save_libs=$LIBS
+
+  CPPFLAGS="$sim_ac_oiv_cppflags $CPPFLAGS"
+  LDFLAGS="$sim_ac_oiv_ldflags $LDFLAGS"
+  LIBS="$sim_ac_oiv_libs $LIBS"
+
+  AC_CACHE_CHECK([for Open Inventor developer kit],
+    sim_cv_lib_oiv_avail,
+    [AC_TRY_LINK([$sim_ac_oiv_enter
+                  #include <Inventor/SoDB.h>],
+                 [SoDB::init();],
+                 [sim_cv_lib_oiv_avail=yes],
+                 [sim_cv_lib_oiv_avail=no])])
+
+  if test x"$sim_cv_lib_oiv_avail" = xyes; then
+    sim_ac_oiv_avail=yes
+    $1
+  else
+    CPPFLAGS=$sim_ac_save_cppflags
+    LDFLAGS=$sim_ac_save_ldflags
+    LIBS=$sim_ac_save_libs
+    $2
+  fi
+fi
+]) # SIM_AC_HAVE_INVENTOR_IFELSE
 
 
 # Usage:

@@ -17,10 +17,10 @@
  *
  **************************************************************************/
 
+#if SOGTK_DEBUG
 static const char rcsid[] =
   "$Id$";
-
-#include <assert.h>
+#endif // SOGTK_DEBUG
 
 #if SOGTK_DEBUG
 #include <Inventor/errors/SoDebugError.h>
@@ -44,7 +44,7 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(SoGtkComponent, SoGtkTypedObject);
+SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkComponent);
 
 void
 SoGtkComponent::initClasses(

@@ -9,7 +9,7 @@ moduledir=${0%/[^/]*}
 module=SoGtk
 GUI=Gtk
 cvs2cl=$HOME/code/cvs/src/cvs2cl/cvs2cl.pl
-headerfile=/tmp/So$GUI.header
+headerfile=/tmp/$module.header
 
 cd $moduledir
 
@@ -23,8 +23,7 @@ matically generated every night.  Entries are in reversed chronological
 order.  See also the following ChangeLog files:
 
   ./src/Inventor/$GUI/common/ChangeLog
-  ./data/ChangeLog
-  ./conf-macros/ChangeLog 
+  ./cfg/m4/ChangeLog 
 
 See http://www.red-bean.com/~kfogel/cvs2cl.shtml for information about the
 script, cvs2cl.pl, used to generate this file.
@@ -41,8 +40,8 @@ cvs log | $cvs2cl --stdin --header $headerfile --separate-header --prune \
   --ignore '(Makefile\.in|configure|aclocal\.m4|config\.sub|config\.guess)$' \
   --ignore '(ltconfig|ltmain\.sh|missing|mkinstalldirs|stamp-h.*|install-sh)$' \
   --ignore 'config\.h\.in$' \
-  --ignore 'conf-macros/' \
   --ignore "src/Inventor/$GUI/common/" \
+  --ignore 'cfg/m4/' \
   --ignore "data/"
 
 rm ChangeLog.bak $headerfile

@@ -24,52 +24,51 @@ static const char rcsid[] =
 
 #include <assert.h>
 
-#include <Inventor/Gtk/SoGtkTypedObject.h>
+#include <Inventor/Gtk/SoGtkObject.h>
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 #include <Inventor/Gtk/SoGtkComponent.h>
 
 /*!
-  \class SoGtkTypedObject Inventor/Gtk/SoGtkTypedObject.h
-  \brief The SoGtkTypedObject class provides run-time type checking
-  facilities for SoGtk objects.
+  \class SoGtkObject Inventor/Gtk/SoGtkObject.h
+  \brief The SoGtkObject class provides run-time type checking facilities
+  for SoGtk objects.
 
   This class is an extension to the original Inventor SoXt API.
 */
 
 // *************************************************************************
 
-SoType SoGtkTypedObject::classTypeId; // static
+SoType SoGtkObject::classTypeId; // static
 
 void
-SoGtkTypedObject::init( // static
+SoGtkObject::init( // static
   void )
 {
-  SoGtkTypedObject::initClass();
+  SoGtkObject::initClass();
   SoGtkDevice::initClasses();
   SoGtkComponent::initClasses();
 } // init()
 
 void
-SoGtkTypedObject::initClass( // static
+SoGtkObject::initClass( // static
   void )
 {
-  assert( SoGtkTypedObject::classTypeId == SoType::badType() );
-  SoGtkTypedObject::classTypeId =
-    SoType::createType( SoType::badType(), "GtkTypedObject");
+  assert( SoGtkObject::classTypeId == SoType::badType() );
+  SoGtkObject::classTypeId = SoType::createType( SoType::badType(), "GtkObject");
 } // initClass()
 
 SbBool
-SoGtkTypedObject::isOfType(
+SoGtkObject::isOfType(
   SoType type ) const
 {
   return this->getTypeId().isDerivedFrom(type);
 } // isOfType()
 
 SoType
-SoGtkTypedObject::getClassTypeId( // static
+SoGtkObject::getClassTypeId( // static
   void ) 
 {
-  return SoGtkTypedObject::classTypeId;
+  return SoGtkObject::classTypeId;
 } // getClassTypeId()
 
 // *************************************************************************

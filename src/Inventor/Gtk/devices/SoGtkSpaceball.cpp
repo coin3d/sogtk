@@ -22,8 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#include <assert.h>
-
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkSpaceball.h>
 
@@ -35,6 +33,12 @@ static const char rcsid[] =
   FIXME: write class doc
 */
 
+// *************************************************************************
+
+SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
+
+// *************************************************************************
+
 /*¡
   TODO:
   - not implemented yet! no spaceball available
@@ -42,12 +46,6 @@ static const char rcsid[] =
   PC equipment? wheel mice, joysticks, ....
   - implement XInput support
 */
-
-// *************************************************************************
-
-SOGTK_TYPED_OBJECT_SOURCE(SoGtkSpaceball,SoGtkDevice);
-
-// *************************************************************************
 
 /*!
   \enum SoGtkSpaceball::Mask

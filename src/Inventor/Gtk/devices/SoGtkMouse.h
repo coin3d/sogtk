@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
 #ifndef SOGTK_MOUSE_H
 #define SOGTK_MOUSE_H
@@ -30,8 +30,7 @@ class SoLocation2Event;
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkMouse : public SoGtkDevice {
-  SOGTK_TYPED_OBJECT_HEADER(SoGtkMouse);
-  typedef SoGtkDevice inherited;
+  SOGTK_OBJECT_HEADER(SoGtkMouse, SoGtkDevice);
 
 public:
   enum SoGtkMouseEventMask {

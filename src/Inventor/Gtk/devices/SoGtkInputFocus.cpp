@@ -22,8 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#include <assert.h>
-
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkInputFocus.h>
 
@@ -37,7 +35,7 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_TYPED_OBJECT_SOURCE(SoGtkInputFocus,SoGtkDevice);
+SOGTK_OBJECT_SOURCE(SoGtkInputFocus);
 
 // *************************************************************************
 

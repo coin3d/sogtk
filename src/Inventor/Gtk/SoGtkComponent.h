@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
 #ifndef SOGTK_COMPONENT_H
 #define SOGTK_COMPONENT_H
@@ -27,7 +27,7 @@
 #include <Inventor/SbLinear.h>
 #include <Inventor/SoLists.h>
 
-#include <Inventor/Gtk/SoGtkTypedObject.h>
+#include <Inventor/Gtk/SoGtkObject.h>
 
 class SoGtkComponent;
 
@@ -36,8 +36,8 @@ typedef void SoGtkComponentVisibilityCB( void * userData, SbBool visibleFlag );
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtkComponent : public SoGtkTypedObject {
-  SOGTK_TYPED_ABSTRACT_OBJECT_HEADER(SoGtkObject);
+class SOGTK_DLL_EXPORT SoGtkComponent : public SoGtkObject {
+  SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkComponent, SoGtkObject);
 
 public:
   virtual ~SoGtkComponent(void);

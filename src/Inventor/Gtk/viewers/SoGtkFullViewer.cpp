@@ -22,8 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#include <assert.h>
-
 #include <gtk/gtk.h>
 #include <gtk/gtkvbox.h>
 #include <gtk/gtkhbox.h>
@@ -72,7 +70,7 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(SoGtkFullViewer, SoGtkViewer);
+SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkFullViewer);
 
 // *************************************************************************
 

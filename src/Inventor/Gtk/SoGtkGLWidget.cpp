@@ -40,7 +40,7 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_TYPED_ABSTRACT_OBJECT_SOURCE(SoGtkGLWidget, SoGtkComponent);
+SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkGLWidget);
 
 // *************************************************************************
 

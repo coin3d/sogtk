@@ -34,6 +34,7 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtk.h>
+#include <Inventor/Gtk/SoGtkObject.h>
 
 // *************************************************************************
 
@@ -99,6 +100,7 @@ SoGtk::init(
   SoDB::init();
   SoNodeKit::init();
   SoInteraction::init();
+  SoGtkObject::init();
 
   SoDB::getSensorManager()->setChangedCallback(
     SoGtk::sensorQueueChanged, NULL );

@@ -22,8 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-#include <assert.h>
-
 #include <gdk/gdktypes.h>
 
 #include <Inventor/errors/SoDebugError.h>
@@ -48,7 +46,7 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SOGTK_TYPED_OBJECT_SOURCE(SoGtkMouse, SoGtkDevice);
+SOGTK_OBJECT_SOURCE(SoGtkMouse);
 
 // *************************************************************************
 

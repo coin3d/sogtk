@@ -123,6 +123,8 @@ libSoGtk_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	SoGtk.h \
 	SoGtk.cpp \
+	SoGtkObject.h \
+	SoGtkObject.cpp \
 	SoGtkComponent.h \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.h \
@@ -141,6 +143,7 @@ libSoGtkincdir = $(includedir)/Inventor/Gtk
 libSoGtkinc_HEADERS = \
 	SoGtkBasic.h \
 	SoGtk.h \
+	SoGtkObject.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
 	SoGtkRenderArea.h \
@@ -160,8 +163,8 @@ LIBS = @LIBS@
 libSoGtk_la_LDFLAGS = 
 libSoGtk_la_DEPENDENCIES =  devices/libSoGtkDevices.la \
 viewers/libSoGtkViewers.la widgets/libSoGtkWidgets.la
-am_libSoGtk_la_OBJECTS =  SoGtkRenderArea.lo SoGtk.lo SoGtkComponent.lo \
-SoGtkGLWidget.lo SoGtkGraphEditor.lo
+am_libSoGtk_la_OBJECTS =  SoGtkRenderArea.lo SoGtk.lo SoGtkObject.lo \
+SoGtkComponent.lo SoGtkGLWidget.lo SoGtkGraphEditor.lo
 libSoGtk_la_OBJECTS =  $(am_libSoGtk_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -179,7 +182,7 @@ HEADERS =  $(libSoGtkinc_HEADERS)
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/SoGtk.Plo $(DEPDIR)/SoGtkComponent.Plo \
 $(DEPDIR)/SoGtkGLWidget.Plo $(DEPDIR)/SoGtkGraphEditor.Plo \
-$(DEPDIR)/SoGtkRenderArea.Plo
+$(DEPDIR)/SoGtkObject.Plo $(DEPDIR)/SoGtkRenderArea.Plo
 DIST_COMMON =  $(libSoGtkinc_HEADERS) Makefile.am Makefile.in
 
 
@@ -363,6 +366,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/SoGtkComponent.Plo
 @AMDEP@include $(DEPDIR)/SoGtkGLWidget.Plo
 @AMDEP@include $(DEPDIR)/SoGtkGraphEditor.Plo
+@AMDEP@include $(DEPDIR)/SoGtkObject.Plo
 @AMDEP@include $(DEPDIR)/SoGtkRenderArea.Plo
 
 mostlyclean-depend:

@@ -22,15 +22,6 @@ static const char rcsid[] =
   "$Id$";
 #endif // SOGTK_DEBUG
 
-/*!
-  \class SoGtkKeyboard Inventor/Gtk/devices/SoGtkKeyboard.h
-  \brief The SoGtkKeyboard class translates GdkEventKey events into
-  SoKeyboardEvent events.
-  \ingroup sogtkdevices
-*/
-
-#include <assert.h>
-
 #include <gdk/gdktypes.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -42,9 +33,16 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkKeyboard.h>
 
+/*!
+  \class SoGtkKeyboard Inventor/Gtk/devices/SoGtkKeyboard.h
+  \brief The SoGtkKeyboard class translates GdkEventKey events into
+  SoKeyboardEvent events.
+  \ingroup sogtkdevices
+*/
+
 // *************************************************************************
 
-SOGTK_TYPED_OBJECT_SOURCE(SoGtkKeyboard,SoGtkDevice);
+SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
 
 // *************************************************************************
 

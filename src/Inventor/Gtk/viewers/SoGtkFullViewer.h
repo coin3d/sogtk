@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-//  $Id$
+// $Id$
 
 #ifndef SOGTK_FULLVIEWER_H
 #define SOGTK_FULLVIEWER_H
@@ -30,8 +30,7 @@ class SoAnyPopupMenu;
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkFullViewer : public SoGtkViewer {
-  SOGTK_TYPED_ABSTRACT_OBJECT_HEADER(SoGtkFullViewer);
-  typedef SoGtkViewer inherited;
+  SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkFullViewer, SoGtkViewer);
   friend class SoAnyFullViewer;
 
 public:

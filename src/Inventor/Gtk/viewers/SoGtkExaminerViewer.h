@@ -38,8 +38,7 @@ class SoAnyExaminerViewer;
 // *************************************************************************
 
 class SOGTK_DLL_EXPORT SoGtkExaminerViewer : public SoGtkFullViewer {
-  SOGTK_TYPED_OBJECT_HEADER(SoGtkExaminerViewer);
-  typedef SoGtkFullViewer inherited;
+  SOGTK_OBJECT_HEADER(SoGtkExaminerViewer, SoGtkFullViewer);
   friend class SoAnyExaminerViewer;
 
 public:
