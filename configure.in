@@ -129,7 +129,7 @@ AC_SUBST(SOGTK_EXTRA_LIBS)
 
 # **************************************************************************
 
-if test s${with_inventor+et} = set \
+if test -n "$with_inventor" \
      -a x"$with_inventor" != x"no"; then
 
   SIM_AC_CHECK_DL([
@@ -151,7 +151,7 @@ if test s${with_inventor+et} = set \
   ], [AC_MSG_ERROR(needs the OpenGL utility library)])
 
   # FIXME: move the following two blocks into SIM_CHECK_INVENTOR
-  if x"$with_inventor" = x"yes"; then
+  if test x"$with_inventor" != x"no"; then
     CPPFLAGS="$CPPFLAGS -I$with_inventor/include"
     LDFLAGS="$LDFLAGS -L$with_inventor/lib"
   fi
@@ -274,7 +274,6 @@ GUI=GTK
 Gui=Gtk
 gui=gtk
 WIDGET="GtkWidget *"
-# WINWIDGET="GtkWidget *"
 EVENT="GdkEvent *"
 COMPONENTHEADER=""
 
@@ -283,7 +282,6 @@ AC_SUBST(Gui)
 AC_SUBST(gui)
 AC_SUBST(EVENT)
 AC_SUBST(WIDGET)
-# AC_SUBST(WINWIDGET)
 AC_SUBST(COMPONENTHEADER)
 
 # **************************************************************************
