@@ -107,8 +107,6 @@ protected:
 private:
   void constructor( const SbBool build );
 
-  void setModeFromState( const unsigned int state );
-
   struct {
     GtkWidget * orthogonal;
     GtkWidget * perspective;

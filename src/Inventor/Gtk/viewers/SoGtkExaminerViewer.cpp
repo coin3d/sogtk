@@ -534,54 +534,6 @@ SoGtkExaminerViewer::actualRedraw(
 /*!
   \internal
 
-  Set the viewer mode based on the given mouse and keyboard state setting.
-*/
-
-void
-SoGtkExaminerViewer::setModeFromState(
-  const unsigned int state )
-{
-/*
-  SoAnyExaminerViewer::ViewerMode mode;
-  const unsigned int maskedstate =
-    state & (LeftButton|MidButton|ControlButton);
-
-  switch (maskedstate) {
-  case 0:
-    mode = SoAnyExaminerViewer::EXAMINE;
-    break;
-
-  case LeftButton:
-    mode = SoAnyExaminerViewer::DRAGGING;
-    break;
-
-  case MidButton:
-  case (LeftButton|ControlButton):
-    mode = SoAnyExaminerViewer::PANNING;
-    break;
-
-  case ControlButton:
-    mode = SoAnyExaminerViewer::WAITING_FOR_PAN;
-    break;
-
-  case (MidButton|ControlButton):
-  case (LeftButton|MidButton):
-  case (LeftButton|MidButton|ControlButton):
-    mode = SoAnyExaminerViewer::ZOOMING;
-    break;
-
-  default: assert(0); break;
-  }
-
-  this->common->setMode(mode);
-*/
-}
-
-// *************************************************************************
-
-/*!
-  \internal
-
   Set cursor graphics according to mode.
 */
 
