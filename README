@@ -16,8 +16,12 @@ Although you can contact the author directly, please use the coin-discuss
 mailing-list for SoGtk-related questions.  Information on the coin mailing-
 lists can be found on the support page at <URL:http://www.coin3d.org/>.
 
-Set $COIN_HOME to ${prefix}/share/Coin to use the installed materials with
-the SoGtkMaterialList component, or add --enable-static-defaults to the
-configure options you use to get them compiled directly into libSoGtk.
+To build the SoGtk documentation, you need the Doxygen utility.  You can
+also access the documentation online at http://www.coin3d.org/sogtk-docs/
+
+If you want to avoid compiling the default set of materials (used by the
+SoGtkMaterialList component) into libSoGtk , you should set $COIN_HOME to
+${prefix}/share/Coin and add the option --disable-static-defaults to the
+configure options you use.
 
   Lars J
