@@ -117,6 +117,10 @@ protected:
 
   SoAnyPopupMenu * prefmenu;
 
+  SbBool addPointer( const char * name, void * data );
+  SbBool setCurrentPointer( const char * name );
+  const char * getCurrentPointer(void) const;
+
 protected:
   GtkWidget * leftDecoration;
   GtkWidget * leftWheel;

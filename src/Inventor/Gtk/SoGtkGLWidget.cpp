@@ -17,10 +17,10 @@
  *
  **************************************************************************/
 
+#if SOGTK_DEBUG
 static const char rcsid[] =
   "$Id$";
-
-#include <assert.h>
+#endif // SOGTK_DEBUG
 
 #include <GL/gl.h>
 
@@ -30,8 +30,6 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
-
-// *************************************************************************
 
 /*!
   \class SoGtkGLWidget SoGtkGLWidget.h Inventor/Gtk/SoGtkGLWidget.h
@@ -67,10 +65,11 @@ static const int SO_BORDER_THICKNESS = 2;
 SoGtkGLWidget::SoGtkGLWidget(
   GtkWidget * const parent,
   const char * const name,
-  const SbBool buildInsideParent,
+  const SbBool embed,
   const int glModes,
-  const SbBool buildNow )
-  : inherited( parent ), waitForExpose( TRUE )
+  const SbBool build )
+: inherited( parent, name, embed )
+, waitForExpose( TRUE )
 {
   this->glModeBits = glModes;
 
@@ -78,19 +77,22 @@ SoGtkGLWidget::SoGtkGLWidget(
   this->glWidget = NULL;
   this->container = NULL;
 
-  if ( gdk_gl_query() != FALSE ) {
-    if ( buildNow )
-      this->buildWidget( buildInsideParent ? parent : NULL );
-  } else {
-    SoDebugError::post( "SoGtkGLWidget::SoGtkGLWidget",
-                        "OpenGL is not available on your display!" );
-  }
-
   this->properties.mouseInput = FALSE;
   this->properties.keyboardInput = FALSE;
   this->properties.drawFrontBuff = FALSE;
 
   this->borderThickness = 0;
+
+  if ( ! gdk_gl_query() ) {
+    SoDebugError::post(
+      "SoGtkGLWidget::SoGtkGLWidget", "OpenGL is not available on your display!" );
+    return;
+  }
+
+  if ( ! build ) return;
+  GtkWidget * const parent = this->getParentWidget();
+  GtkWidget * const glwidget = this->buildWidget( parent );
+  this->setBaseWidget( glwidget );
 } // SoGtkGLWidget()
 
 // *************************************************************************
@@ -103,8 +105,9 @@ GtkWidget *
 SoGtkGLWidget::buildWidget(
   GtkWidget * parent )
 {
-  int glAttributes[16];
-  int i = 0;
+  this->glParent = parent;
+
+  int glAttributes[16], i = 0;
 
   if ( this->glModeBits & SO_GL_RGB ) {
     glAttributes[i] = GDK_GL_RGBA; i++;
@@ -129,12 +132,6 @@ SoGtkGLWidget::buildWidget(
   assert( this->glWidget != NULL );
   gtk_widget_set_usize( this->glWidget, 100, 100 );
   
-  gtk_widget_set_events( GTK_WIDGET(this->glWidget),
-    GDK_EXPOSURE_MASK | GDK_KEY_PRESS_MASK |
-    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-    GDK_POINTER_MOTION_MASK );
-
-  /* configure_event should probably be moved to SoGtkRenderArea? */
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "realize",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLInit), (void *) this );
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "configure_event",
@@ -153,10 +150,13 @@ SoGtkGLWidget::buildWidget(
       TRUE, TRUE, FALSE );
 
   gtk_widget_show( GTK_WIDGET(this->glWidget) );
-//  gtk_widget_show( GTK_WIDGET(this->container) );
 
-  this->setBaseWidget( this->container );
-  this->subclassInitialized();
+  gtk_widget_add_events( GTK_WIDGET(this->glWidget),
+    GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK |
+    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
+    GDK_BUTTON_MOTION_MASK | GDK_BUTTON1_MOTION_MASK |
+    GDK_BUTTON2_MOTION_MASK | GDK_BUTTON3_MOTION_MASK |
+    GDK_POINTER_MOTION_MASK );
 
   return this->container;
 } // buildWidget()
@@ -169,98 +169,33 @@ SoGtkGLWidget::buildWidget(
 
 SbBool
 SoGtkGLWidget::eventFilter(
-  GtkObject * object,
-  GdkEvent * event )
+  GtkObject * obj,
+  GdkEvent * ev )
 {
-  SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "[invoked]" );
-
-/*
-#if 0 // debug
-  switch (e->type()) {
-  case Event_MouseButtonPress:
-//      SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "button press");
-    break;
-  case Event_MouseButtonRelease:
-//      SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "button release");
-    break;
-  case Event_MouseButtonDblClick:
-//      SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "dbl click");
-    break;
-  case Event_MouseMove:
-//      SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "mousemove");
-    break;
-  case Event_Paint:
-    SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "paint");
-    break;
-  case Event_Resize:
-    SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "resize");
-    break;
-  case Event_FocusIn:
-  case Event_FocusOut:
-  case Event_Enter:
-  case Event_Leave:
-  case Event_Move:
-  case Event_LayoutHint:
-  case Event_ChildInserted:
-  case Event_ChildRemoved:
-    // ignored
-    break;
-  default:
-    SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "type %d", e->type());
-    break;
-  }
-#endif // debug
-
-  SbBool stopevent = FALSE;
-
-  // Redirect keyboard events to the GL canvas widget (workaround for
-  // problems with Gtk focus policy).
-  if ((e->type() == Event_KeyPress) || (e->type() == Event_KeyRelease))
-    obj = this->glwidget;
-
-  if (obj == (QObject *)this->glparent) {
-    if (e->type() == Event_Resize) {
-      QResizeEvent * r = (QResizeEvent *)e;
-#if 0  // debug
-      SoDebugError::postInfo("SoGtkGLWidget::eventFilter",
-                             "resize %p: (%d, %d)",
-                             this->glwidget,
-                             r->size().width(), r->size().height());
-#endif // debug
-
-      this->borderwidget->resize(r->size());
-      int newwidth = r->size().width() - 2 * this->borderthickness;
-      int newheight = r->size().height() - 2 * this->borderthickness;
-
-      ((PrivateGLWidget *)this->glwidget)->doRender(FALSE);
-      this->glwidget->setGeometry(this->borderthickness,
-                                  this->borderthickness,
-                                  newwidth, newheight);
-      ((PrivateGLWidget *)this->glwidget)->doRender(TRUE);
-
-      this->sizeChanged(SbVec2s(newwidth, newheight));
-#if 0 // debug
-      SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "resize done");
-#endif // debug
-    }
-  }
-  else if (obj == (QObject *)this->glwidget) {
-#if 0  // debug
-    if (e->type() == Event_Resize)
-      SoDebugError::postInfo("SoGtkGLWidget::eventFilter", "gl widget resize");
-#endif // debug
-    // Pass this on further down the inheritance hierarchy of the SoGtk
-    // components.
-    this->processEvent(e);
-  } else {
-    // Handle in superclass.
-    stopevent = inherited::eventFilter(obj, e);
-  }
-
-  return stopevent;
-*/
-  return FALSE;
+  if ( inherited::eventFilter( obj, ev ) ) return TRUE;
+  // SoDebugError::postInfo( "SoGtkGLWidget::eventFilter", "[invoked]" );
+  if ( ! GTK_IS_WIDGET(obj) || GTK_WIDGET(obj) != this->glWidget )
+    return FALSE;
+  this->processEvent( ev );
+  return TRUE;
 } // eventFilter()
+
+/*!
+  static wrapper for eventFilter
+*/
+
+gint
+SoGtkGLWidget::eventHandler( // static, protected
+  GtkObject * object,
+  GdkEvent * event,
+  void * closure )
+{
+  assert( closure != NULL );
+  // SoDebugError::postInfo( "SoGtkGLWidget::eventHandler", "[invoked]" );
+  SoGtkGLWidget * component = (SoGtkGLWidget *) closure;
+  component->eventFilter( object, event );
+  return FALSE;
+} // eventHandler()
 
 // *************************************************************************
 
@@ -387,25 +322,10 @@ SoGtkGLWidget::isDrawToFrontBufferEnable(
 */
 
 void
-SoGtkGLWidget::setGlxSize(
-  const SbVec2s size )
-{
-  assert( this->container );
-
-  GtkRequisition req = {
-    size[0] + this->borderThickness * 2,
-    size[1] + this->borderThickness * 2
-  };
-
-  gtk_widget_size_request( GTK_WIDGET(this->container), &req );
-} // setGlxSize()
-
-void
 SoGtkGLWidget::setGLSize(
   const SbVec2s size )
 {
   assert( this->container );
-
   GtkRequisition req = {
     size[0] + this->borderThickness * 2,
     size[1] + this->borderThickness * 2
@@ -414,42 +334,22 @@ SoGtkGLWidget::setGLSize(
   gtk_widget_size_request( GTK_WIDGET(this->container), &req );
 } // setGLSize()
 
-// *************************************************************************
-
 /*!
   Return the dimensions of the OpenGL canvas.
 */
 
 const SbVec2s
-SoGtkGLWidget::getGlxSize(
-  void ) const
-{
-  return SbVec2s( this->glWidget->allocation.width,
-                  this->glWidget->allocation.height );
-} // getGlxSize()
-
-const SbVec2s
 SoGtkGLWidget::getGLSize(
   void ) const
 {
+  assert( this->glWidget );
   return SbVec2s( this->glWidget->allocation.width,
                   this->glWidget->allocation.height );
 } // getGLSize()
 
-// *************************************************************************
-
 /*!
   Return the aspect ratio of the OpenGL canvas.
 */
-
-float
-SoGtkGLWidget::getGlxAspectRatio(
-  void ) const
-{
-  assert( this->glWidget );
-  return (float) this->glWidget->allocation.width /
-         (float) this->glWidget->allocation.height;
-} // getGlxAspectRatio()
 
 float
 SoGtkGLWidget::getGLAspectRatio(
@@ -507,13 +407,17 @@ SoGtkGLWidget::widgetChanged(
 */
 
 void
-SoGtkGLWidget::processEvent(
+SoGtkGLWidget::processEvent( // virtual
   GdkEvent * event )
 {
   // FIXME: anything to do here?
 } // processEvent()
 
 // *************************************************************************
+
+/*!
+  FIXME: write doc
+*/
 
 void
 SoGtkGLWidget::glInit(
@@ -527,29 +431,13 @@ SoGtkGLWidget::glInit(
 */
 
 gint
-SoGtkGLWidget::glInit(
-  GtkWidget * widget )
-{
-  this->glInit();
-//  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) ) )
-//    return TRUE;
-
-  /* glEnable( GL_DEPTH_TEST ); */
-
-  return TRUE;
-} // glInit()
-
-/*!
-  FIXME: write doc
-*/
-
-gint
 SoGtkGLWidget::sGLInit( // static
   GtkWidget * widget,
-  void * userData )
+  void * closure )
 {
-  SoGtkGLWidget * that = (SoGtkGLWidget *) userData;
-  return that->glInit( widget );
+  SoGtkGLWidget * that = (SoGtkGLWidget *) closure;
+  that->glInit();
+  return TRUE;
 } // sGLInit()
 
 // *************************************************************************
@@ -658,19 +546,25 @@ SoGtkGLWidget::glFlushBuffer(
 
 // *************************************************************************
 
-/*!
-*/
-
-gint
-SoGtkGLWidget::eventHandler( // static
-  GtkWidget * widget,
-  GdkEvent * event,
-  void * closure )
+void
+SoGtkGLWidget::afterRealizeHook( // virtual, protected
+  void )
 {
-  assert( closure != NULL );
-  SoGtkGLWidget * component = (SoGtkGLWidget *) closure;
-  component->processEvent( event );
-  return FALSE;
-} // eventHandler()
+  inherited::afterRealizeHook();
+/*
+  if ( ! GTK_IS_WIDGET(this->glWidget) )
+    return;
+  gtk_widget_add_events( GTK_WIDGET(this->glWidget),
+    GDK_EXPOSURE_MASK |
+    GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK |
+    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
+    GDK_POINTER_MOTION_MASK );
+*/
+} // afterRealizeHook()
 
 // *************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkGLWidgetRCSId(void) { return rcsid; }
+#endif // SOGTK_DEBUG
+

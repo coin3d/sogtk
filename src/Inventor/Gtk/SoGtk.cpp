@@ -17,17 +17,18 @@
  *
  **************************************************************************/
 
+#if SOGTK_DEBUG
 static const char rcsid[] =
   "$Id$";
-
-#include <assert.h>
+#endif // SOGTK_DEBUG
 
 #include <gtk/gtk.h>
 
+#include <Inventor/SbTime.h>
+#include <Inventor/SbPList.h>
 #include <Inventor/SoDB.h>
 #include <Inventor/SoInteraction.h>
 #include <Inventor/nodekits/SoNodeKit.h>
-#include <Inventor/SbTime.h>
 #if SOGTK_DEBUG
 #include <Inventor/errors/SoDebugError.h>
 #endif // SOGTK_DEBUG
@@ -48,11 +49,8 @@ static const char rcsid[] =
 // *************************************************************************
 
 GtkWidget * SoGtk::mainWidget = NULL;
-// GtkApplication * SoGtk::appobject = NULL;
-// Timer * SoGtk::idletimer = NULL;
-// Timer * SoGtk::timerqueuetimer = NULL;
-// Timer * SoGtk::delaytimeouttimer = NULL;
-SoGtk * SoGtk::slotobj = NULL;
+SbPList * SoGtk::components = NULL;
+SbPList * SoGtk::component_callbacks = NULL;
 
 // *************************************************************************
 
@@ -447,45 +445,113 @@ SoGtk::createSimpleErrorDialog(
   const char * const errorStr1,
   const char * const errorStr2 )
 {
+  SOGTK_STUB();
 } // createSimpleErrorDialog()
 
 // *************************************************************************
 
-/*!
-  \internal
+struct ActionCallbackInfo {
+  SoGtk::SoGtkComponentActionCallback * callback;
+  void * closure;
+};
 
-  We're using the singleton pattern to create a single SoGtk object instance
+/*!
 */
 
-SoGtk *
-SoGtk::sogtk_instance(
-  void )
+void
+SoGtk::addComponentActionCallback( // static
+  SoGtkComponentActionCallback * callback,
+  void * closure )
 {
-  if ( ! SoGtk::slotobj )
-    SoGtk::slotobj = new SoGtk;
-  return SoGtk::slotobj;
-} // sogtk_instance()
+  if ( ! SoGtk::component_callbacks )
+    SoGtk::component_callbacks = new SbPList;
+  ActionCallbackInfo * info = new ActionCallbackInfo;
+  info->callback = callback;
+  info->closure = closure;
+  SoGtk::component_callbacks->append(info);
+} // addComponentActionCallback()
+
+/*!
+*/
+
+void
+SoGtk::removeComponentActionCallback( // static
+  SoGtkComponentActionCallback * callback,
+  void * closure )
+{
+  if ( ! SoGtk::component_callbacks ) {
+    SoDebugError::post( "SoGtk::removeComponentActionCallback",
+      "no such callback!" );
+    return;
+  }
+  const int numCallbacks = SoGtk::component_callbacks->getLength();
+  for ( int i = 0; i < numCallbacks; i++ ) {
+    ActionCallbackInfo * info = (ActionCallbackInfo *) SoGtk::component_callbacks->get(i);
+    if ( info->callback == callback && info->closure == closure ) {
+      delete info;
+      SoGtk::component_callbacks->remove(i);
+      return;
+    }
+  }
+  SoDebugError::post( "SoGtk::removeComponentActionCallback",
+    "no such callback!" );
+} // removeComponentActionCallback()
+
+/*!
+*/
+
+void
+SoGtk::invokeComponentActionCallbacks( // static, protected
+  SoGtkComponent * component,
+  SoGtkComponentAction action )
+{
+  if ( ! SoGtk::component_callbacks ) return;
+  const int numCallbacks = SoGtk::component_callbacks->getLength();
+  for ( int i = 0; i < numCallbacks; i++ ) {
+    ActionCallbackInfo * info = (ActionCallbackInfo *) SoGtk::component_callbacks->get(i);
+    info->callback( component, action, info->closure );
+  }
+} // SoGtk::invokeComponentActionCallbacks()
+
+// *************************************************************************
+
+void
+SoGtk::componentCreation( // static, protected
+  SoGtkComponent * component )
+{
+  if ( ! SoGtk::components )
+    SoGtk::components = new SbPList;
+  SoGtk::components->append( (void *) component );
+  SoGtk::invokeComponentActionCallbacks( component, CREATION );
+} // componentCreation()
+
+void
+SoGtk::componentDestruction( // static, protected
+  SoGtkComponent * component )
+{
+  assert( SoGtk::components );
+  int idx = SoGtk::components->find( component );
+  assert( idx != -1 );
+  SoGtk::invokeComponentActionCallbacks( component, DESTRUCTION );
+  SoGtk::components->remove( idx );
+} // componentDestruction()
 
 // *************************************************************************
 
 /*!
-  \internal
-
-  Uses an event filter on qApp to be able to process immediate delay
-  sensors before any system events.
+  Returns the number of components, and appends all the component pointers
+  to \a componentlist.
 */
 
-/*
-bool
-SoGtk::eventFilter(
-  GtkObject *,
-  GdkEvent * )
+int
+SoGtk::getComponents(
+  SbPList & componentlist )
 {
-  if ( SoDB::getSensorManager()->isDelaySensorPending() )
-    SoDB::getSensorManager()->processImmediateQueue();
-
-  return FALSE;
-} // eventFilter()
-*/
+  if ( ! SoGtk::components ) return 0;
+  const int numComponents = SoGtk::components->getLength();
+  for ( int i = 0; i < numComponents; i++ )
+    componentlist.append( SoGtk::components->get(i) );
+  return numComponents;
+} // getComponents()
 
 // *************************************************************************

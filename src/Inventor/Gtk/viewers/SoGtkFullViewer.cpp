@@ -50,8 +50,6 @@ static const char rcsid[] =
 #include <Inventor/Gtk/common/pixmaps/view_all.xpm>
 #include <Inventor/Gtk/common/pixmaps/seek.xpm>
 
-// *************************************************************************
-
 /*!
   \class SoGtkFullViewer SoGtkFullViewer.h Inventor/Qt/viewers/SoGtkFullViewer.h
   \brief The SoGtkFullViewer class adds decorations to the simple viewer of the parent.
@@ -602,18 +600,19 @@ SoGtkFullViewer::hide(
 /*!
   \internal
 
-  Catch close events on the preferences window (to convert to hide
-  events) and right mouse button presses (to pop up the
-  preferences menu).
+  Catch close events on the preferences window (to convert to hide events)
+  and right mouse button presses (to pop up the preferences menu).
 */
 
 SbBool
 SoGtkFullViewer::eventFilter(
   GtkObject * obj,
-  GdkEvent * event )
+  GdkEvent * ev )
 {
+  if ( inherited::eventFilter( obj, ev ) )
+    return TRUE;
   return FALSE;
-}
+} // eventFilter()
 
 // *************************************************************************
 
@@ -2395,6 +2394,39 @@ SoGtkFullViewer::rightwheelReleasedCB( // static
   SoGtkFullViewer * viewer = (SoGtkFullViewer *) closure;
   viewer->rightWheelFinish();
 } // rightwheelReleasedCB()
+
+// *************************************************************************
+
+/*!
+*/
+
+SbBool
+SoGtkFullViewer::addPointer(
+  const char * name,
+  void * data )
+{
+  return TRUE;
+} // addPointer()
+
+/*!
+*/
+
+SbBool
+SoGtkFullViewer::setCurrentPointer(
+  const char * name )
+{
+  return TRUE;
+} // setCurrentPointer()
+
+/*!
+*/
+
+const char *
+SoGtkFullViewer::getCurrentPointer(
+  void ) const
+{
+  return NULL;
+} // getCurrentPointer()
 
 // *************************************************************************
 

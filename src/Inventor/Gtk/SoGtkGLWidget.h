@@ -42,14 +42,14 @@ class SOGTK_DLL_EXPORT SoGtkGLWidget : public SoGtkComponent {
   SOGTK_OBJECT_ABSTRACT_HEADER(SoGtkGLWidget, SoGtkComponent);
 
 public:
-  void setBorder( const SbBool enable );
+  void setBorder( const SbBool enable ); // FIXME: set virtual
   SbBool isBorder(void) const;
 
   virtual void setDoubleBuffer( const SbBool enable );
   SbBool isDoubleBuffer(void) const;
 
-  void setDrawToFrontBufferEnable( const SbBool enable );
-  SbBool isDrawToFrontBufferEnable(void) const;
+  void setDrawToFrontBufferEnable( const SbBool enable ); // FIXME: set virtual
+  SbBool isDrawToFrontBufferEnable(void) const; // FIXME: change name
 
 protected:
   SoGtkGLWidget( GtkWidget * const parent = NULL,
@@ -70,14 +70,9 @@ protected:
   virtual void sizeChanged( const SbVec2s size );
   virtual void widgetChanged(void);
 
-  void setGlxSize( const SbVec2s newSize );
   void setGLSize( const SbVec2s newSize );
-  const SbVec2s getGlxSize(void) const;
   const SbVec2s getGLSize(void) const;
-  float getGlxAspectRatio(void) const;
   float getGLAspectRatio(void) const;
-
-  virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
 
   void glLock(void);
   void glUnlock(void);
@@ -90,7 +85,10 @@ protected:
 
   SbBool waitForExpose;
 
-  static gint eventHandler( GtkWidget *, GdkEvent *, void * );
+  virtual void afterRealizeHook(void);
+
+  virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
+  static gint eventHandler( GtkObject * object, GdkEvent * event, gpointer closure );
 
 private:
   GtkWidget * glParent;

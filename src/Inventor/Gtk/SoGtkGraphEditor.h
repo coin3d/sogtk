@@ -68,10 +68,15 @@ protected:
   virtual void nodeSelection( GtkWidget * item, SoNode * node );
   virtual void fieldSelection( GtkWidget * item, SoNode * node, SoField * field );
 
+  virtual const char * getDefaultWidgetName(void) const;
+  virtual const char * getDefaultTitle(void) const;
+  virtual const char * getDefaultIconTitle(void) const;
+
 private:
   void constructor( const SbBool build, const int parts );
 
   static void saveCB( GtkObject * obj, gpointer closure );
+  static void closeCB( GtkObject * obj, gpointer closure );
   static void selectionCB( GtkObject * obj, gpointer closure );
 
   GtkWidget * buildSubGraph( GtkWidget * parent, SoNode * node );

@@ -76,11 +76,8 @@ protected:
   void setClassName( const char * const name );
   void setBaseWidget( GtkWidget * widget );
 
-  void subclassInitialized(void);
-  
   virtual void afterRealizeHook(void);
 
-//  virtual const char * componentClassName(void) const = 0;
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
@@ -95,11 +92,17 @@ protected:
   void openHelpCard( const char * name );
 
   virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
+  static gint eventHandler( GtkObject * object, GdkEvent * event, gpointer closure );
+
+private:
+  gint realizeHandler( GtkObject * object );
+  static gint realizeHandlerCB( GtkObject * object, gpointer closure );
 
 private:
   GtkWidget * widget;
   GtkWidget * parent;
   SbBool embedded;
+  SbBool shelled;
   SbBool realized;
   char * className;
   char * widgetName;

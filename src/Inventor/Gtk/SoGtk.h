@@ -31,12 +31,14 @@
 
 #include <Inventor/Gtk/SoGtkBasic.h>
 
+class SbPList;
 class SoSensor;
+class SoGtkComponent;
 
 // *************************************************************************
 
-class SOGTK_DLL_EXPORT SoGtk
-{
+class SOGTK_DLL_EXPORT SoGtk {
+  friend class SoGtkComponent;
 
 public:
   static GtkWidget * init( const char * const appName,
@@ -66,8 +68,22 @@ public:
                                        const char * const errorStr1,
                                        const char * const errorStr2 = NULL );
 
+
+  enum SoGtkComponentAction { CREATION, DESTRUCTION, CHANGE };
+  typedef void SoGtkComponentActionCallback(
+    SoGtkComponent *, SoGtk::SoGtkComponentAction, void * );
+
+  static void addComponentActionCallback( SoGtkComponentActionCallback *, void * );
+  static void removeComponentActionCallback( SoGtkComponentActionCallback *, void * );
+
+  static int getComponents( SbPList & components );
+
 protected:
-  bool eventFilter( GtkObject * object, GdkEvent * event );
+  static void invokeComponentActionCallbacks(
+    SoGtkComponent * component, SoGtkComponentAction action );
+
+  static void componentCreation( SoGtkComponent * component );
+  static void componentDestruction( SoGtkComponent * component );
 
 private:
   static void sensorQueueChanged( void * cbdata );
@@ -76,11 +92,8 @@ private:
   static gint delaySensorCB( gpointer data );
 
   static GtkWidget * mainWidget;
-//  static GtkApplication * appobject;
-//  static Timer * timerqueuetimer, * idletimer, * delaytimeouttimer;
-
-  static SoGtk * sogtk_instance(void);
-  static SoGtk * slotobj; // necessary?
+  static SbPList * components;
+  static SbPList * component_callbacks;
 
 }; // class SoGtk
 

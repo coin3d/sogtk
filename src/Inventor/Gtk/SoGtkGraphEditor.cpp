@@ -24,11 +24,13 @@ static const char rcsid[] =
 
 #include <gtk/gtk.h>
 
+#include <Inventor/SoOutput.h>
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/misc/SoChildList.h>
 #include <Inventor/SoLists.h>
 #include <Inventor/fields/SoField.h>
 #include <Inventor/nodes/SoNode.h>
+#include <Inventor/actions/SoWriteAction.h>
 
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
 
@@ -235,7 +237,20 @@ void
 SoGtkGraphEditor::saveSceneGraph( // virtual, protected
   void )
 {
-  SoDebugError::postInfo( "SoGtkGraphEditor::saveSceneGraph", "[not implemented]" );
+  if ( ! this->scenegraph ) {
+    this->setStatusMessage( "No scene to save." );
+    return;
+  }
+  SoOutput * output = new SoOutput;
+  if ( ! output->openFile( "scene.iv" ) ) {
+    this->setStatusMessage( "Error opening 'scene.iv' for writing." );
+    delete output;
+    return;
+  }
+  SoWriteAction writer( output );
+  writer.apply( this->scenegraph );
+  delete output;
+  this->setStatusMessage( "Scene saved in 'scene.iv'." );
 } // saveSceneGraph()
 
 // *************************************************************************
@@ -286,9 +301,14 @@ SoGtkGraphEditor::buildMenuBarWidget( // virtual, protected
   GtkWidget * saveitem = gtk_menu_item_new_with_label( "Save" );
   gtk_widget_show( saveitem );
   gtk_menu_append( GTK_MENU(filemenu), GTK_WIDGET(saveitem));
-  gtk_menu_item_set_submenu( GTK_MENU_ITEM(filemenuitem), GTK_WIDGET(filemenu) );
   gtk_signal_connect( GTK_OBJECT(saveitem), "activate",
     GTK_SIGNAL_FUNC(SoGtkGraphEditor::saveCB), (gpointer) this );
+  GtkWidget * closeitem = gtk_menu_item_new_with_label( "Close" );
+  gtk_widget_show( closeitem );
+  gtk_menu_append( GTK_MENU(filemenu), GTK_WIDGET(closeitem));
+  gtk_signal_connect( GTK_OBJECT(closeitem), "activate",
+    GTK_SIGNAL_FUNC(SoGtkGraphEditor::closeCB), (gpointer) this );
+  gtk_menu_item_set_submenu( GTK_MENU_ITEM(filemenuitem), GTK_WIDGET(filemenu) );
   return menubar;
 } // buildMenuBarWidget()
 
@@ -394,6 +414,19 @@ SoGtkGraphEditor::saveCB( // static, private
   editor->saveSceneGraph();
 } // saveCB()
 
+/*!
+*/
+
+void
+SoGtkGraphEditor::closeCB( // static, private
+  GtkObject * obj,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkGraphEditor * editor = (SoGtkGraphEditor *) closure;
+  editor->hide();
+} // closeCB()
+
 // *************************************************************************
 
 /*!
@@ -427,6 +460,41 @@ SoGtkGraphEditor::selectionCB(
   else
     SoDebugError::postInfo( "SoGtkGraphEditor::selectionCB", "[invalid selection data]" );
 } // selectionCB()
+
+// *************************************************************************
+
+/*!
+*/
+
+const char *
+SoGtkGraphEditor::getDefaultWidgetName( // virtual, protected
+  void ) const
+{
+  static const char defaultWidgetName[] = "SoGtkGraphEditor";
+  return defaultWidgetName;
+} // getDefaultWidgetName()
+
+/*!
+*/
+
+const char *
+SoGtkGraphEditor::getDefaultTitle( // virtual, protected
+  void ) const
+{
+  static const char defaultTitle[] = "Graph Editor";
+  return defaultTitle;
+} // getDefaultTitle()
+
+/*!
+*/
+
+const char *
+SoGtkGraphEditor::getDefaultIconTitle( // virtual, protected
+  void ) const
+{
+  static const char defaultIconTitle[] = "Graph Editor";
+  return defaultIconTitle;
+} // getDefaultIconTitle()
 
 // *************************************************************************
 
