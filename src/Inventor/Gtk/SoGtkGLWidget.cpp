@@ -551,15 +551,21 @@ SoGtkGLWidget::widgetChanged( // virtual
 // *************************************************************************
 
 /*!
-  FIXME: write function documentation
-*/
+  Any events from the native window system that goes to the OpenGL
+  canvas gets piped through this method.
 
+  It is overloaded in the subclasses to catch user interaction with
+  the render canvas in the viewers, aswell as forwarding relevant
+  events to the scenegraph.
+*/
 void
 SoGtkGLWidget::processEvent( // virtual
                             GdkEvent * event )
 {
-  // FIXME: anything to do here?
-} // processEvent()
+  // Nothing is done here for the SoGtkGLWidget, as realize, resize
+  // and expose events are caught by explicitly attaching signal
+  // callbacks to the widget.
+}
 
 
 /*!
