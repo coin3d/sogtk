@@ -81,6 +81,7 @@ AC_CANONICAL_SYSTEM
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_CXX
+AC_PROG_CXXCPP
 AC_LANG_CPLUSPLUS
 
 # **************************************************************************
@@ -145,8 +146,7 @@ AC_ARG_ENABLE(
     no) sim_ac_build_library=false ;;
     *)  ;;
   esac])
-
-if $sim_ac_build_library; then
+AM_CONDITIONAL([BUILD_LIBRARY], [$sim_ac_build_library])
 
 AC_ARG_WITH(
   [alternate],
@@ -165,6 +165,93 @@ AC_ARG_WITH(
   [SUFFIX=])
 
 AC_SUBST(SUFFIX)
+
+# **************************************************************************
+# Section for Doxygen
+
+AC_ARG_VAR([htmldir],
+           [destination for HTML docs (default ${datadir}/SoGtk/html)])
+
+AC_ARG_ENABLE(html,
+  AC_HELP_STRING([--enable-html], [build and install SoGtk HTML documentation]),
+  [case $enableval in
+    yes | true) want_html=yes ;;
+    *)          want_html=no ;;
+  esac],
+  [want_html=no])
+
+case $htmldir in
+"")
+  htmldir="$datadir/SoGtk/html"
+  ;;
+/*)
+  # do nothing - absolute path
+  ;;
+*)
+  htmldir="\${prefix}/$htmldir"
+  ;;
+esac
+
+AC_SUBST(htmldir)
+
+AC_ARG_ENABLE(man,
+  AC_HELP_STRING([--enable-man], [build and install SoGtk man pages]),
+  [case $enableval in
+    yes | true) want_man=yes ;;
+    *)          want_man=no ;;
+  esac],
+  [want_man=no])
+
+# Used in the Doxygen parameter file.
+AC_SUBST([SOGTK_DOC_HTML], [`echo $want_html | tr '[a-z]' '[A-Z]'`])
+AC_SUBST([SOGTK_DOC_MAN], [`echo $want_man | tr '[a-z]' '[A-Z]'`])
+
+AC_SUBST([sogtk_build_dir], [`pwd`])
+AC_SUBST([sogtk_src_dir], [`cd $srcdir; pwd`])
+AC_SUBST([sogtk_html_dir], [$sogtk_build_dir/html])
+AC_SUBST([sogtk_man_dir], [$sogtk_build_dir/man])
+
+AM_CONDITIONAL(BUILD_MANPAGES, test x"$want_man" = x"yes")
+AM_CONDITIONAL(BUILD_HTMLPAGES, test x"$want_html" = x"yes")
+
+if test x"$want_man" = x"yes"; then
+  SIM_AC_CONFIGURATION_SETTING([manpage installation], [$mandir])
+fi
+
+if test x"$want_html" = x"yes"; then
+  SIM_AC_CONFIGURATION_SETTING([HTML installation], [$htmldir])
+fi
+
+if test x"$want_html" != xno -o x"$want_man" != xno; then
+  SIM_AC_DOXYGEN_TOOL([], [SIM_AC_ERROR([no-doxygen])])
+  # too much overhead in maintaining this stupid thing...
+  # sim_ac_doxygen_our_version=1.2.1
+  # if test x"$sim_ac_doxygen_avail" != x"$sim_ac_doxygen_our_version"; then
+  #   AC_MSG_WARN(You are not using Doxygen version $sim_ac_doxygen_our_version)
+  # fi
+
+  AC_PATH_PROG(sim_ac_perl_exe, perl, false, $PATH)
+  if test x"$sim_ac_perl_exe" = xfalse; then
+    AC_MSG_WARN(Could not find the Perl executable)
+  fi
+fi
+
+# path_tag is used to identify paths in docs/coin.doxygen that needs to be
+# transformed using cygpath under cygwin.
+
+case $host in
+*-cygwin) path_tag="<PATH>" ;;
+*)        path_tag= ;;
+esac
+
+AC_SUBST(path_tag)
+
+AM_CONDITIONAL([BUILD_METAFILES], [false])
+AC_SUBST([meta_prefix], [bogus])
+
+# **************************************************************************
+
+if $sim_ac_build_library; then
 
 # **************************************************************************
 
@@ -264,8 +351,22 @@ SIM_AC_HAVE_INVENTOR_FEATURE(
   [HAVE_SOCAMERA_SETSTEREOMODE])
 
 # **************************************************************************
-# Check for GTK+
 
+SIM_AC_CHECK_JOYSTICK_LINUX([
+  if false; then
+  AC_DEFINE(HAVE_JOYSTICK_LINUX, ,
+    [Define to enable Linux Joystick driver support])
+  AC_DEFINE_UNQUOTED(SOXT_LINUX_JOYSTICK_DEVICE,
+    "$sim_ac_joystick_linux_device",
+    [Define this to device handle to fallback on])
+  fi
+])
+
+# for now, it's not a supported device enyways, but we need the conditional...
+sim_ac_joystick=linux_avail=false
+AM_CONDITIONAL(HAVE_JOYSTICK_LINUX, $sim_ac_joystick_linux_avail)
+
+# Check for GTK+
 # Ugly AM_PATH_GTK check macro from gtk.m4 doesn't work with C++ compilers.
 sim_ac_gtk_store_ldflags=$LDFLAGS
 LDFLAGS=
@@ -386,74 +487,12 @@ fi
 # **************************************************************************
 # Variable substitutions for using libSoGtk in the generic code.
 
-GUI=GTK
-Gui=Gtk
-gui=gtk
-WIDGET="GtkWidget *"
-EVENT="GdkEvent *"
-COMPONENTHEADER=""
-
-AC_SUBST(GUI)
-AC_SUBST(Gui)
-AC_SUBST(gui)
-AC_SUBST(EVENT)
-AC_SUBST(WIDGET)
-AC_SUBST(COMPONENTHEADER)
-
-# **************************************************************************
-# Section for Doxygen
-
-AC_ARG_WITH(
-  html,
-  AC_HELP_STRING([--with-html], [build and install SoGtk HTML documentation]),
-  [case "${withval}" in
-    yes) want_html=yes ;;
-    no)  want_html=no ;;
-    *) AC_MSG_ERROR(bad value "${withval}" for --with-html) ;;
-  esac],
-  [want_html=no])
-
-AC_ARG_WITH(
-  man,
-  AC_HELP_STRING([--with-man], [build and install SoGtk man pages]),
-  [case "${withval}" in
-    yes) want_man=yes ;;
-    no)  want_man=no ;;
-    *) AC_MSG_ERROR(bad value "${withval}" for --with-man) ;;
-  esac],
-  [want_man=no])
-
-SOGTK_DOC_HTML=`echo $want_html | tr a-z A-Z`
-SOGTK_DOC_MAN=`echo $want_man | tr a-z A-Z`
-AC_SUBST(SOGTK_DOC_HTML)
-AC_SUBST(SOGTK_DOC_MAN)
-
-sogtk_build_dir=`pwd`
-sogtk_src_dir=`cd $srcdir; pwd`
-
-AC_SUBST(sogtk_src_dir)
-AC_SUBST(sogtk_build_dir)
-
-if test x"$want_html" != xno -o x"$want_man" != xno; then
-  SIM_AC_DOXYGEN_TOOL(,
-    AC_MSG_ERROR(Could not find the doxygen tool -- see http://www.stack.nl/~dimitri/doxygen/))
-  # sim_ac_doxygen_our_version=1.1.5
-  # if test x"$sim_ac_doxygen_avail" != x"$sim_ac_doxygen_our_version"; then
-  #   AC_MSG_WARN(You are not using Doxygen version $sim_ac_doxygen_our_version)
-  # fi
-  AC_SUBST(sim_ac_doxygen_exe)
-
-  AC_PATH_PROG(sim_ac_perl_exe, perl, false, $PATH)
-  if test x"$sim_ac_perl_exe" = xfalse; then
-    AC_MSG_WARN(Could not find the Perl executable)
-  fi
-  AC_SUBST(sim_ac_perl_exe)
-
-  HTML_DOC_DIR=`eval echo "$datadir/SoGtk/html"`
-  AC_SUBST(HTML_DOC_DIR)
-fi
-
-SIM_AC_CONFIGURATION_SETTING([Install Prefix], [$prefix])
+AC_SUBST([GUI], [GTK])
+AC_SUBST([Gui], [Gtk])
+AC_SUBST([gui], [gtk])
+AC_SUBST([EVENT], ["GdkEvent *"])
+AC_SUBST([WIDGET], ["GtkWidget *"])
+AC_SUBST([COMPONENTHEADER], [])
 
 # **************************************************************************
 # List all makefiles configure must automatically generate.
@@ -471,6 +510,10 @@ AC_OUTPUT([
 	src/Inventor/Gtk/devices/Makefile
 	src/Inventor/Gtk/viewers/Makefile
 	src/Inventor/Gtk/widgets/Makefile
+	man/Makefile
+	man/man1/Makefile
+	man/man3/Makefile
+	html/Makefile
 	po/Makefile.in
 	intl/Makefile
         build/Makefile
@@ -480,6 +523,8 @@ AC_OUTPUT([
 	test-code/components/Makefile
 	test-code/widgets/Makefile
 ])
+
+SIM_AC_CONFIGURATION_SETTING([Install Prefix], [$prefix])
 
 SIM_AC_CONFIGURATION_SUMMARY
 

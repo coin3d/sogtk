@@ -2,10 +2,30 @@
 ## SoGtk/Makefile.am
 ## $Id$
 
+include src/Inventor/Gtk/common/Makefile.common
+
 ACLOCAL_AMFLAGS = -I cfg/m4
 
 ############################################################################
 # Automake conditional stuff
+
+if BUILD_LIBRARY
+LIBDIRS = data src
+if BUILD_INTL
+INTLDIRS = po intl
+else
+INTLDIRS =
+endif
+else
+LIBDIRS =
+INTLDIRS =
+endif
+
+if BUILD_HTMLPAGES
+HTMLDIR = html
+else
+HTMLDIR =
+endif
 
 if BUILD_TESTS
 TESTDIR = test-code
@@ -13,128 +33,19 @@ else
 TESTDIR =
 endif
 
-if BUILD_INTL
-INTLDIRS = po intl
-else
-INTLDIRS =
-endif
+SUBDIRS = . $(LIBDIRS) man $(HTMLDIR) $(INTLDIRS) $(TESTDIR)
 
 ############################################################################
 
-SUBDIRS = . data src $(INTLDIRS) $(TESTDIR)
-
 BUILT_SOURCES = \
-	src/sogtkdefs.h \
-	src/Inventor/Gtk/SoAny.h \
-	src/Inventor/Gtk/SoAny.cpp \
-	src/Inventor/Gtk/SoGtkBasic.h \
-	src/Inventor/Gtk/SoGtkObject.h \
-	src/Inventor/Gtk/SoGtkObject.cpp \
-	src/Inventor/Gtk/SoGtkCursors.h \
-	src/Inventor/Gtk/SoGtkCursors.cpp \
-	src/Inventor/Gtk/SoGtk.h \
-	src/Inventor/Gtk/SoGtkComponent.h \
-	src/Inventor/Gtk/SoGtkGLWidget.h \
-	src/Inventor/Gtk/SoGtkRenderArea.h \
-	src/Inventor/Gtk/SoGtkRenderArea.cpp \
-	src/Inventor/Gtk/SoAnyMaterialList.h \
-	src/Inventor/Gtk/SoAnyMaterialList.cpp \
-	src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp \
-	src/Inventor/Gtk/common/gl.h \
-	src/Inventor/Gtk/devices/spwinput.h \
-	src/Inventor/Gtk/devices/spwinput_x11.cpp \
-	src/Inventor/Gtk/viewers/SoGtkViewer.h \
-	src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
-	src/Inventor/Gtk/viewers/SoAnyFullViewer.h \
-	src/Inventor/Gtk/viewers/SoAnyFullViewer.cpp \
-	src/Inventor/Gtk/viewers/SoAnyExaminerViewer.h \
-	src/Inventor/Gtk/viewers/SoAnyExaminerViewer.cpp \
-	src/Inventor/Gtk/viewers/SoAnyPlaneViewer.h \
-	src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp \
-	src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.h \
-	src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.cpp \
-	src/Inventor/Gtk/viewers/SoAnyFlyViewer.h \
-	src/Inventor/Gtk/viewers/SoAnyFlyViewer.cpp \
-	src/Inventor/Gtk/viewers/SoAnyWalkViewer.h \
-	src/Inventor/Gtk/viewers/SoAnyWalkViewer.cpp \
-	src/Inventor/Gtk/widgets/SoAnyThumbWheel.h \
-	src/Inventor/Gtk/widgets/SoAnyThumbWheel.cpp \
-	src/Inventor/Gtk/widgets/SoAnyPopupMenu.h \
-	src/Inventor/Gtk/widgets/SoAnyPopupMenu.cpp
+	$(SoGuiAllBuiltFiles)
 
-bin_SCRIPTS = so@gui@-config
-
-EXTRA_DIST = \
-	so@gui@.m4 \
-	build/Makefile.am \
-	build/Makefile.in \
-	build/README \
-	build/geniwz.pl \
-	build/sogtk.doxygen.in \
-	build/sogtk.spec.in \
-        src/Inventor/@Gui@/common/SoAny.h.in \
-        src/Inventor/@Gui@/common/SoAny.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyConstrainedViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyConstrainedViewer.h.in \
-        src/Inventor/@Gui@/common/SoAnyExaminerViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyExaminerViewer.h.in \
-        src/Inventor/@Gui@/common/SoAnyFlyViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyFlyViewer.h.in \
-        src/Inventor/@Gui@/common/SoAnyFullViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyFullViewer.h.in \
-        src/Inventor/@Gui@/common/SoAnyMaterialList.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyMaterialList.h.in \
-        src/Inventor/@Gui@/common/SoAnyMaterialListBuiltins.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyMaterialListBuiltins.cpp.in.m4 \
-        src/Inventor/@Gui@/common/SoAnyPlaneViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyPlaneViewer.h.in \
-        src/Inventor/@Gui@/common/SoAnyPopupMenu.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyPopupMenu.h.in \
-        src/Inventor/@Gui@/common/SoAnyThumbWheel.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyThumbWheel.h.in \
-        src/Inventor/@Gui@/common/SoAnyWalkViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoAnyWalkViewer.h.in \
-        src/Inventor/@Gui@/common/SoGuiBasic.h.in \
-        src/Inventor/@Gui@/common/SoGuiConstrainedViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoGuiConstrainedViewer.h.in \
-        src/Inventor/@Gui@/common/SoGuiCursors.cpp.in \
-        src/Inventor/@Gui@/common/SoGuiCursors.h.in \
-        src/Inventor/@Gui@/common/SoGuiFlyViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoGuiFlyViewer.h.in \
-        src/Inventor/@Gui@/common/SoGuiGLWidget.h.in \
-        src/Inventor/@Gui@/common/SoGuiObject.cpp.in \
-        src/Inventor/@Gui@/common/SoGuiObject.h.in \
-        src/Inventor/@Gui@/common/SoGuiRenderArea.cpp.in \
-        src/Inventor/@Gui@/common/SoGuiRenderArea.h.in \
-        src/Inventor/@Gui@/common/SoGuiViewer.cpp.in \
-        src/Inventor/@Gui@/common/SoGuiViewer.h.in \
-        src/Inventor/@Gui@/common/gl.h.in \
-        src/Inventor/@Gui@/common/sogui.cfg.in \
-        src/Inventor/@Gui@/common/sogui-config.in \
-        src/Inventor/@Gui@/common/soguidefs.h.in \
-        src/Inventor/@Gui@/common/spwinput.h.in \
-        src/Inventor/@Gui@/common/spwinput_x11.cpp.in \
-        src/Inventor/@Gui@/common/pixmaps/help.xpm \
-        src/Inventor/@Gui@/common/pixmaps/home.xpm \
-        src/Inventor/@Gui@/common/pixmaps/ortho.xpm \
-        src/Inventor/@Gui@/common/pixmaps/perspective.xpm \
-        src/Inventor/@Gui@/common/pixmaps/pick.xpm \
-        src/Inventor/@Gui@/common/pixmaps/seek.xpm \
-        src/Inventor/@Gui@/common/pixmaps/set_home.xpm \
-        src/Inventor/@Gui@/common/pixmaps/view.xpm \
-        src/Inventor/@Gui@/common/pixmaps/view_all.xpm \
-        src/Inventor/@Gui@/common/pixmaps/x.xpm \
-        src/Inventor/@Gui@/common/pixmaps/y.xpm \
-        src/Inventor/@Gui@/common/pixmaps/z.xpm \
-	po/ChangeLog \
-	po/Makefile.in.in \
-	po/POTFILES.in \
-	po/cat-id-tbl.c \
-	po/de.po \
-	po/no.po \
-	po/stamp-cat-id
+CLEANFILES = \
+	$(SoGui_BuiltMetaFiles)
 
 DISTCLEANFILES = \
+	$(SoGui_BuiltFiles) \
+	$(SoGui_BuiltMetaFiles) \
 	build/Makefile \
 	build/so@gui@.doxygen \
 	build/so@gui@.spec \
@@ -146,177 +57,37 @@ DISTCLEANFILES = \
 	po/Makefile.in \
 	po/Makefile
 
+EXTRA_DIST = \
+	so@gui@.m4 \
+	build/Makefile.am \
+	build/Makefile.in \
+	build/README \
+	build/geniwz.pl \
+	build/sogtk.doxygen.in \
+	build/sogtk.spec.in \
+	po/ChangeLog \
+	po/Makefile.in.in \
+	po/POTFILES.in \
+	po/cat-id-tbl.c \
+	po/de.po \
+	po/no.po \
+	po/stamp-cat-id \
+	$(SoGuiCommonDistFiles)
+
+if BUILD_LIBRARY
+
+bin_SCRIPTS = so@gui@-config
+
 m4datadir = $(datadir)/aclocal
 m4data_DATA = so@gui@.m4
 
 cfgdatadir = $(datadir)/Coin/conf
 cfgdata_DATA = so@gui@-@CONFIG@.cfg
 
-so@gui@-config: Makefile config.status $(srcdir)/src/Inventor/@Gui@/common/sogui-config.in
-	@$(SHELL) config.status --file=$@:src/Inventor/@Gui@/common/sogui-config.in
+endif
 
 all-local: built-sources
 
-############################################################################
-
 built-sources: $(BUILT_SOURCES)
 
-src/sogtkdefs.h: $(srcdir)/src/Inventor/Gtk/common/soguidefs.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/soguidefs.h.in
-
-src/Inventor/Gtk/SoGtkBasic.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
-	@./config.status --file=-:src/Inventor/Gtk/common/SoGuiBasic.h.in | \
-	./config.status --header=$@:-
-
-src/Inventor/Gtk/SoGtkObject.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiObject.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiObject.h.in
-
-src/Inventor/Gtk/SoGtkObject.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiObject.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiObject.cpp.in
-
-src/Inventor/Gtk/SoGtkCursors.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.h.in
-
-src/Inventor/Gtk/SoGtkCursors.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.cpp.in
-
-src/Inventor/Gtk/SoGtk.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGui.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGui.h.in
-
-src/Inventor/Gtk/SoGtkComponent.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiComponent.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiComponent.h.in
-
-src/Inventor/Gtk/SoGtkGLWidget.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiGLWidget.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiGLWidget.h.in
-
-src/Inventor/Gtk/SoGtkRenderArea.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiRenderArea.h.in
-
-src/Inventor/Gtk/SoGtkRenderArea.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
-
-src/Inventor/Gtk/SoAnyMaterialList.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialList.h.in
-
-src/Inventor/Gtk/SoAnyMaterialList.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
-
-src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
-
-src/Inventor/Gtk/common/gl.h: $(srcdir)/src/Inventor/Gtk/common/gl.h.in
-	@if test -d src/Inventor/Gtk/common; then :; else \
-	  echo " mkdir src/Inventor/Gtk/common"; \
-	  mkdir src/Inventor/Gtk/common; \
-	fi
-	@./config.status --file=$@:src/Inventor/Gtk/common/gl.h.in
-
-src/Inventor/Gtk/devices/spwinput.h: \
-  $(srcdir)/src/Inventor/Gtk/common/spwinput.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/spwinput.h.in
-
-src/Inventor/Gtk/devices/spwinput_x11.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/spwinput_x11.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/spwinput_x11.cpp.in
-
-src/Inventor/Gtk/viewers/SoGtkViewer.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiViewer.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiViewer.h.in
-
-src/Inventor/Gtk/viewers/SoGtkViewer.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiViewer.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiViewer.cpp.in
-
-src/Inventor/Gtk/SoAny.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAny.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAny.h.in
-
-src/Inventor/Gtk/SoAny.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAny.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAny.cpp.in
-
-src/Inventor/Gtk/viewers/SoAnyFullViewer.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyFullViewer.h.in
-
-src/Inventor/Gtk/viewers/SoAnyFullViewer.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in
-
-src/Inventor/Gtk/viewers/SoAnyExaminerViewer.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyExaminerViewer.h.in
-
-src/Inventor/Gtk/viewers/SoAnyExaminerViewer.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp.in
-
-src/Inventor/Gtk/viewers/SoAnyPlaneViewer.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyPlaneViewer.h.in
-
-src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
-
-src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyConstrainedViewer.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyConstrainedViewer.h.in
-
-src/Inventor/Gtk/viewers/SoAnyConstrainedViewer.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyConstrainedViewer.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyConstrainedViewer.cpp.in
-
-src/Inventor/Gtk/viewers/SoAnyFlyViewer.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyFlyViewer.h.in
-
-src/Inventor/Gtk/viewers/SoAnyFlyViewer.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyFlyViewer.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyFlyViewer.cpp.in
-
-src/Inventor/Gtk/viewers/SoAnyWalkViewer.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyWalkViewer.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyWalkViewer.h.in
-
-src/Inventor/Gtk/viewers/SoAnyWalkViewer.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyWalkViewer.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyWalkViewer.cpp.in
-
-src/Inventor/Gtk/widgets/SoAnyThumbWheel.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyThumbWheel.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyThumbWheel.h.in
-
-src/Inventor/Gtk/widgets/SoAnyThumbWheel.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyThumbWheel.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyThumbWheel.cpp.in
-
-src/Inventor/Gtk/widgets/SoAnyPopupMenu.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyPopupMenu.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyPopupMenu.h.in
-
-src/Inventor/Gtk/widgets/SoAnyPopupMenu.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoAnyPopupMenu.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyPopupMenu.cpp.in
-
 ############################################################################
-
-doxygen-doc:
-	@( cd build; @sim_ac_doxygen_exe@ so@gui@.doxygen )
-
-doxygen-docs:
-	@( cd build; @sim_ac_doxygen_exe@ so@gui@.doxygen )
-

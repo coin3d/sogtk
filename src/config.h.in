@@ -50,6 +50,9 @@
 /* Define if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to enable Linux Joystick driver support */
+#undef HAVE_JOYSTICK_LINUX
+
 /* Define if your locale.h file contains LC_MESSAGES. */
 #undef HAVE_LC_MESSAGES
 
@@ -169,6 +172,9 @@
 
 /* The version string for SoGtk */
 #undef SOGTK_VERSION
+
+/* Define this to device handle to fallback on */
+#undef SOXT_LINUX_JOYSTICK_DEVICE
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be

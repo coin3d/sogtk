@@ -1,12 +1,15 @@
 
+include Inventor/Gtk/common/Makefile.common
+
 SUBDIRS = Inventor
 
 BUILT_SOURCES = \
-	so@gui@defs.h
+	$(SoGuiAllBuiltFiles)
+
+CLEANFILES = \
+	$(SoGui_src_BuiltMetaFiles)
 
 DISTCLEANFILES = \
-	$(BUILT_SOURCES)
-
-so@gui@defs.h: $(srcdir)/Inventor/@Gui@/common/soguidefs.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
+	$(SoGui_src_BuiltFiles) \
+	$(SoGui_src_BuiltMetaFiles)
 

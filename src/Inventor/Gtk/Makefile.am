@@ -1,4 +1,6 @@
 
+include common/Makefile.common
+
 SUBDIRS = devices widgets viewers
 
 INCLUDES = -I$(top_srcdir)/src -I$(top_builddir)/data
@@ -6,25 +8,14 @@ INCLUDES = -I$(top_srcdir)/src -I$(top_builddir)/data
 lib_LTLIBRARIES = libSoGtk@SUFFIX@.la
 
 BUILT_SOURCES = \
-	SoAny.h \
-	SoAny.cpp \
-	SoGtkBasic.h \
-	SoGtkObject.h \
-	SoGtkObject.cpp \
-	SoGtkCursors.h \
-	SoGtkCursors.cpp \
-	SoGtk.h \
-	SoGtkComponent.h \
-	SoGtkGLWidget.h \
-	SoGtkRenderArea.h \
-	SoGtkRenderArea.cpp \
-	SoAnyMaterialList.h \
-	SoAnyMaterialList.cpp \
-	SoAnyMaterialListBuiltins.cpp
+	$(SoGuiAllBuiltSources)
+
+CLEANFILES = \
+	$(SoGui_src_Inventor_Gui_BuiltFiles)
 
 DISTCLEANFILES = \
-	$(BUILT_SOURCES) \
-	common/gl.h
+	$(SoGui_src_Inventor_Gui_BuiltFiles) \
+	$(SoGui_src_Inventor_Gui_BuiltMetaFiles)
 
 ############################################################################
 
@@ -40,7 +31,8 @@ libSoGtk@SUFFIX@_la_SOURCES = \
 	SoGtkRoster.cpp
 
 nodist_libSoGtk@SUFFIX@_la_SOURCES = \
-	$(BUILT_SOURCES)
+	$(SoGui_src_Inventor_Gui_BuiltFiles) \
+	$(SoGui_src_Inventor_Gui_BuiltMetaFiles)
 
 libSoGtk@SUFFIX@_la_LIBADD = \
         devices/libSoGtkDevices.la \
@@ -53,64 +45,46 @@ libSoGtk@SUFFIX@_la_LDFLAGS = \
 ############################################################################
 
 SoGtkincdir = $(includedir)/Inventor/Gtk
+
 SoGtkinc_HEADERS = \
+	SoGtkGraphEditor.h \
+	SoGtkMaterialList.h \
+	SoGtkRoster.h
+
+nodist_SoGtkinc_HEADERS = \
 	SoGtkBasic.h \
 	SoGtk.h \
 	SoGtkObject.h \
 	SoGtkCursors.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
-	SoGtkRenderArea.h \
-	SoGtkGraphEditor.h \
-	SoGtkMaterialList.h \
-	SoGtkRoster.h
+	SoGtkRenderArea.h
 
-############################################################################
+install-SoGtkincHEADERS: $(SoGtkinc_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(SoGtkincdir)
+	@list='$(SoGtkinc_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  src="$$d$$p"; dst="$(DESTDIR)$(SoGtkincdir)/$$f"; \
+	  if cmp -s "$$src" "$$dst"; then :; else \
+	    echo " $(INSTALL_HEADER) $$src $$dst"; \
+	    $(INSTALL_HEADER) "$$src" "$$dst"; \
+	  fi \
+	done
 
-SoGtkBasic.h: $(srcdir)/common/SoGuiBasic.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtkObject.h: $(srcdir)/common/SoGuiObject.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtkObject.cpp: $(srcdir)/common/SoGuiObject.cpp.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoAny.h: $(srcdir)/common/SoAny.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoAny.cpp: $(srcdir)/common/SoAny.cpp.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtkCursors.h: $(srcdir)/common/SoGuiCursors.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtkCursors.cpp: $(srcdir)/common/SoGuiCursors.cpp.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtk.h: $(srcdir)/common/SoGui.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtkComponent.h: $(srcdir)/common/SoGuiComponent.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtkGLWidget.h: $(srcdir)/common/SoGuiGLWidget.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtkRenderArea.h: $(srcdir)/common/SoGuiRenderArea.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoGtkRenderArea.cpp: $(srcdir)/common/SoGuiRenderArea.cpp.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoAnyMaterialList.h: $(srcdir)/common/SoAnyMaterialList.h.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoAnyMaterialList.cpp: $(srcdir)/common/SoAnyMaterialList.cpp.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
-
-SoAnyMaterialListBuiltins.cpp: $(srcdir)/common/SoAnyMaterialListBuiltins.cpp.in
-	@( cd $(top_builddir); $(MAKE) built-sources )
+install-nodist_SoGtkincHEADERS: $(nodist_SoGtkinc_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(SoGtkincdir)
+	@list='$(nodist_SoGtkinc_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  src="$$d$$p"; dst="$(DESTDIR)$(SoGtkincdir)/$$f"; \
+	  if cmp -s "$$src" "$$dst"; then :; else \
+	    echo " $(INSTALL_HEADER) $$src $$dst"; \
+	    $(INSTALL_HEADER) "$$src" "$$dst"; \
+	  fi \
+	done
 
 ############################################################################
 
@@ -154,3 +128,4 @@ uninstall-local: uninstall-am
 
 endif
 
+############################################################################

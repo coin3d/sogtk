@@ -1,6 +1,8 @@
 # **************************************************************************
 ## Process this file with automake to generate Makefile.in.
 
+include ../common/Makefile.common
+
 noinst_LTLIBRARIES = libSoGtkDevices.la
 
 ## Remove any linklibraries detected by configure, as they are not
@@ -10,11 +12,14 @@ LIBS =
 INCLUDES = -I$(top_srcdir)/src
 
 BUILT_SOURCES = \
-	spwinput_x11.cpp \
-	spwinput.h
+	$(SoGuiAllBuiltFiles)
+
+CLEANFILES = \
+	$(SoGui_src_Inventor_Gui_devices_BuiltMetaFiles)
 
 DISTCLEANFILES = \
-	$(BUILT_SOURCES)
+	$(SoGui_src_Inventor_Gui_devices_BuiltFiles) \
+	$(SoGui_src_Inventor_Gui_devices_BuiltMetaFiles)
 
 # **************************************************************************
 
@@ -43,12 +48,3 @@ SoGtkdevicesinc_HEADERS = \
 	SoGtkSpaceball.h
 
 # **************************************************************************
-
-spwinput.h: $(top_srcdir)/src/Inventor/Gtk/common/spwinput.h.in
-	@( cd $(top_builddir); \
-	   $(MAKE) src/Inventor/Gtk/devices/spwinput.h )
-
-spwinput_x11.cpp: $(top_srcdir)/src/Inventor/Gtk/common/spwinput_x11.cpp.in
-	@( cd $(top_builddir); \
-	   $(MAKE) src/Inventor/Gtk/devices/spwinput_x11.cpp )
-

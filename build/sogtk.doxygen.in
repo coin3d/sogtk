@@ -237,45 +237,45 @@ WARN_FORMAT           = "$file:$line: $text"
 # with spaces. 
 
 INPUT                 = \
-	@sogtk_build_dir@/src/Inventor/Gtk/SoGtkBasic.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtk.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtk.h \
-	@sogtk_build_dir@/src/Inventor/Gtk/SoGtkObject.cpp \
-	@sogtk_build_dir@/src/Inventor/Gtk/SoGtkObject.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtkComponent.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtkComponent.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtkGLWidget.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtkGLWidget.h \
-	@sogtk_build_dir@/src/Inventor/Gtk/SoGtkRenderArea.cpp \
-	@sogtk_build_dir@/src/Inventor/Gtk/SoGtkRenderArea.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkDevice.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkDevice.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkInputFocus.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkInputFocus.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkKeyboard.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkKeyboard.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkMouse.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkMouse.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkSpaceball.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkSpaceball.h \
-	@sogtk_build_dir@/src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
-	@sogtk_build_dir@/src/Inventor/Gtk/viewers/SoGtkViewer.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkWalkViewer.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkFlyViewer.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtkGraphEditor.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtkGraphEditor.h \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtkRoster.cpp \
-	@sogtk_src_dir@/src/Inventor/Gtk/SoGtkRoster.h
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkBasic.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/SoGtk.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtk.h \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkObject.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkObject.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/SoGtkComponent.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkComponent.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/SoGtkGLWidget.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkGLWidget.h \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkRenderArea.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/SoGtkRenderArea.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkDevice.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkDevice.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkInputFocus.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkInputFocus.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkKeyboard.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkKeyboard.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkMouse.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkMouse.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkSpaceball.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/devices/SoGtkSpaceball.h \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/viewers/SoGtkViewer.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkFullViewer.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkFullViewer.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkExaminerViewer.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkPlaneViewer.h \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/viewers/SoGtkConstrainedViewer.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkWalkViewer.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/viewers/SoGtkWalkViewer.h \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/viewers/SoGtkFlyViewer.cpp \
+	@path_tag@@sogtk_build_dir@/src/Inventor/Gtk/viewers/SoGtkFlyViewer.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/SoGtkGraphEditor.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/SoGtkGraphEditor.h \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/SoGtkRoster.cpp \
+	@path_tag@@sogtk_src_dir@/src/Inventor/Gtk/SoGtkRoster.h
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -366,7 +366,7 @@ GENERATE_HTML         = @SOGTK_DOC_HTML@
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 
 # put in front of it. If left blank `html' will be used as the default path. 
 
-HTML_OUTPUT           = @HTML_DOC_DIR@
+HTML_OUTPUT           = @path_tag@@sogtk_html_dir@
 
 # The HTML_HEADER tag can be used to specify a personal HTML header for 
 # each generated HTML page. If it is left blank doxygen will generate a 
@@ -504,7 +504,7 @@ GENERATE_MAN          = @SOGTK_DOC_MAN@
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 
 # put in front of it. If left blank `man' will be used as the default path. 
 
-MAN_OUTPUT            = @mandir@
+MAN_OUTPUT            = @path_tag@@sogtk_man_dir@
 
 # The MAN_EXTENSION tag determines the extension that is added to 
 # the generated man pages (default is the subroutine's section .3) 
