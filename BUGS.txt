@@ -1,0 +1,12 @@
+=====================================================================
+NOTE: see also src/Inventor/Win/common/BUGS.txt.
+=====================================================================
+
+000 Tooltips on viewer buttons.
+
+    The functionality of the different viewer pushbuttons is not
+    entirely obvious, so we should add tooltips on the buttons.
+
+    20030114 mortene.
+
+=====================================================================
