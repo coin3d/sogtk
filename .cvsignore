@@ -1,2 +1,5 @@
 stuff
 ABOUT-NLS
+Makefile.in
+aclocal.m4
+configure

@@ -1,3 +1,23 @@
+Cookbook Procedure
+==================
+
+  1) run `bootstrap'
+
+    $ ./bootstrap
+
+  2) set up and enter a build directory
+
+    $ mkdir compile
+    $ cd compile
+
+  3) run `configure'
+
+    $ ../configure
+
+  4) compile and install
+
+    $ make install
+
 Basic Installation
 ==================
 

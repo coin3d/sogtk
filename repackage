@@ -1,0 +1,38 @@
+#! /bin/sh
+############################################################################
+
+wd=`echo "$0" | sed 's,[^/]*$,,g'`
+me=`echo "$0" | sed 's,.*/,,g'`
+
+cd $wd
+if test ! -f ./$me; then
+  echo >&2 "$me: error: unexpected problem with your shell - bailing out"
+  exit 1
+fi
+
+package=cfg/bootstrap.tar
+repository=`cat CVS/Repository`
+full_hierarchy=`find . -follow -type d -name CVS -print | sed 's:/CVS$::'`
+
+local_hierarchy=`for dir in $full_hierarchy; do
+                   cat $dir/CVS/Repository | sed -n "s:^$repository:.: p"
+                 done`
+
+autofiles=`find $local_hierarchy -maxdepth 1 -type f -a \
+  \( -name Makefile.in \
+  -o -name aclocal.m4 \
+  -o -name configure \
+  -o -name config.h.in \
+  -o -name config.guess \
+  -o -name config.sub \
+  -o -name depcomp \
+  -o -name install-sh \
+  -o -name ltconfig \
+  -o -name ltmain.sh \
+  -o -name missing \
+  -o -name mkinstalldirs \
+  \)`
+
+rm -f $package
+tar cf $package $autofiles
+
