@@ -146,10 +146,10 @@ SoGtkExaminerViewer::constructor( // private
   this->setBottomWheelString( "Roty" );
   this->setRightWheelString( "Dolly" );
 
-  if ( build ) {
-    GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
-    this->setBaseWidget( viewer );
-  }
+  if ( ! build ) return;
+  GtkWidget * parent = this->getParentWidget();
+  GtkWidget * viewer = this->buildWidget( parent );
+  this->setBaseWidget( viewer );
 } // constructor()
 
 /*!
