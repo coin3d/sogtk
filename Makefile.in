@@ -211,6 +211,7 @@ SoGui_src_Inventor_Gui_viewers_BuiltFiles = \
   $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.h \
   $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.cpp \
   $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.h \
+  $(top_builddir)/src/Inventor/@Gui@/viewers/SoGuiFullViewerP.h \
   $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp \
   $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h \
   $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.cpp \
@@ -275,6 +276,7 @@ SoGuiBuiltFiles = \
 @BUILD_METAFILES_TRUE@SoGui_src_Inventor_Gui_viewers_BuiltMetaFiles = \
 @BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@Viewer.cpp \
 @BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewer.cpp \
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp \
 @BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewer.cpp \
 @BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp \
 @BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ConstrainedViewer.cpp \
@@ -353,6 +355,7 @@ SoGuiCommonDistFiles = \
   src/Inventor/@Gui@/common/viewers/SoGuiFlyViewer.h.in \
   src/Inventor/@Gui@/common/viewers/SoGuiFullViewer.cpp.in \
   src/Inventor/@Gui@/common/viewers/SoGuiFullViewer.h.in \
+  src/Inventor/@Gui@/common/viewers/SoGuiFullViewerP.h.in \
   src/Inventor/@Gui@/common/viewers/SoGuiExaminerViewer.cpp.in \
   src/Inventor/@Gui@/common/viewers/SoGuiExaminerViewer.h.in \
   src/Inventor/@Gui@/common/viewers/SoGuiPlaneViewer.cpp.in \
@@ -497,7 +500,7 @@ $(top_builddir)/config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 $(srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
 	cd $(srcdir) && $(AUTOCONF)
 
-$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ configure.in cfg/m4/changesonly.m4 cfg/m4/check_be.m4 cfg/m4/check_dl.m4 cfg/m4/check_inventor.m4 cfg/m4/check_jpeglib.m4 cfg/m4/check_linkstyle.m4 cfg/m4/check_mac.m4 cfg/m4/check_mathlib.m4 cfg/m4/check_motif.m4 cfg/m4/check_nprintf.m4 cfg/m4/check_oggvorbis.m4 cfg/m4/check_openal.m4 cfg/m4/check_opengl.m4 cfg/m4/check_pnglib.m4 cfg/m4/check_pthread.m4 cfg/m4/check_qt.m4 cfg/m4/check_tifflib.m4 cfg/m4/check_ungif.m4 cfg/m4/check_x11.m4 cfg/m4/check_zlib.m4 cfg/m4/coin.m4 cfg/m4/compile_debug.m4 cfg/m4/compile_exceptions.m4 cfg/m4/compile_functionname.m4 cfg/m4/compile_profiling.m4 cfg/m4/compile_rtti.m4 cfg/m4/compile_symbols.m4 cfg/m4/compile_warnings.m4 cfg/m4/compiler_capabilities.m4 cfg/m4/configuration_summary.m4 cfg/m4/cvschanges.m4 cfg/m4/dates.m4 cfg/m4/dime.m4 cfg/m4/doxygen_detection.m4 cfg/m4/errors.m4 cfg/m4/expand_dir_vars.m4 cfg/m4/general.m4 cfg/m4/gettext.m4 cfg/m4/guile.m4 cfg/m4/lcmessage.m4 cfg/m4/libtool.m4 cfg/m4/linux_api.m4 cfg/m4/macro_quoting.m4 cfg/m4/misc_compiler.m4 cfg/m4/modifierlist.m4 cfg/m4/network.m4 cfg/m4/path_conversion.m4 cfg/m4/profit.m4 cfg/m4/progtest.m4 cfg/m4/reconfigure.m4 cfg/m4/simage.m4 cfg/m4/smallchange.m4 cfg/m4/sobe.m4 cfg/m4/sockets.m4 cfg/m4/sogtk.m4 cfg/m4/sogui-misc-common.m4 cfg/m4/sogui.m4 cfg/m4/somac.m4 cfg/m4/soqt.m4 cfg/m4/sowin.m4 cfg/m4/soxt.m4 cfg/m4/uniqify.m4 cfg/m4/wrapmsvc.m4
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ configure.in cfg/m4/changesonly.m4 cfg/m4/check_be.m4 cfg/m4/check_dl.m4 cfg/m4/check_inventor.m4 cfg/m4/check_jpeglib.m4 cfg/m4/check_linkstyle.m4 cfg/m4/check_mac.m4 cfg/m4/check_mathlib.m4 cfg/m4/check_motif.m4 cfg/m4/check_nprintf.m4 cfg/m4/check_oggvorbis.m4 cfg/m4/check_openal.m4 cfg/m4/check_opengl.m4 cfg/m4/check_pnglib.m4 cfg/m4/check_pthread.m4 cfg/m4/check_qt.m4 cfg/m4/check_tifflib.m4 cfg/m4/check_ungif.m4 cfg/m4/check_x11.m4 cfg/m4/check_zlib.m4 cfg/m4/coin.m4 cfg/m4/compile_debug.m4 cfg/m4/compile_exceptions.m4 cfg/m4/compile_functionname.m4 cfg/m4/compile_profiling.m4 cfg/m4/compile_rtti.m4 cfg/m4/compile_symbols.m4 cfg/m4/compile_warnings.m4 cfg/m4/compiler_capabilities.m4 cfg/m4/configuration_summary.m4 cfg/m4/cvschanges.m4 cfg/m4/dates.m4 cfg/m4/dime.m4 cfg/m4/doxygen_detection.m4 cfg/m4/errors.m4 cfg/m4/expand_dir_vars.m4 cfg/m4/general.m4 cfg/m4/gettext.m4 cfg/m4/gtk.m4 cfg/m4/guile.m4 cfg/m4/lcmessage.m4 cfg/m4/libtool.m4 cfg/m4/linux_api.m4 cfg/m4/macro_quoting.m4 cfg/m4/misc_compiler.m4 cfg/m4/modifierlist.m4 cfg/m4/network.m4 cfg/m4/path_conversion.m4 cfg/m4/profit.m4 cfg/m4/progtest.m4 cfg/m4/reconfigure.m4 cfg/m4/simage.m4 cfg/m4/smallchange.m4 cfg/m4/sobe.m4 cfg/m4/sockets.m4 cfg/m4/sogtk.m4 cfg/m4/sogui-misc-common.m4 cfg/m4/sogui.m4 cfg/m4/somac.m4 cfg/m4/soqt.m4 cfg/m4/sowin.m4 cfg/m4/soxt.m4 cfg/m4/uniqify.m4 cfg/m4/wrapmsvc.m4
 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 sogtk-$CONFIG.cfg: $(top_builddir)/config.status $(top_srcdir)/src/Inventor/Gtk/common/sogui.cfg.in
 	cd $(top_builddir) && CONFIG_FILES=$@:src/Inventor/Gtk/common/sogui.cfg.in CONFIG_HEADERS= CONFIG_LINKS= $(SHELL) ./config.status
@@ -938,6 +941,9 @@ $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.cpp: $(top_srcdir)/s
 $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.h: $(top_srcdir)/src/Inventor/@Gui@/common/viewers/SoGuiFullViewer.h.in $(top_builddir)/config.status
 	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/viewers/So@Gui@FullViewer.h:src/Inventor/@Gui@/common/viewers/SoGuiFullViewer.h.in )
 
+$(top_builddir)/src/Inventor/@Gui@/viewers/SoGuiFullViewerP.h: $(top_srcdir)/src/Inventor/@Gui@/common/viewers/SoGuiFullViewerP.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/viewers/SoGuiFullViewerP.h:src/Inventor/@Gui@/common/viewers/SoGuiFullViewerP.h.in )
+
 $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/viewers/SoGuiFullViewer.cpp.in $(top_builddir)/config.status
 	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp:src/Inventor/@Gui@/common/viewers/SoGuiFullViewer.cpp.in )
 
@@ -1044,6 +1050,11 @@ $(top_builddir)/man/man1/so@gui@-config.1: $(top_srcdir)/src/Inventor/@Gui@/comm
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
 @BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewer.cpp `$(UNIX2WINPATH) $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.h`"; \
 @BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewer.cpp `$(UNIX2WINPATH) $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.h` )
+
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp: $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
+@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h`"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h` )
 
 @BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewer.cpp: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
