@@ -7,15 +7,22 @@
 # Author: Morten Eriksen, <mortene@sim.no>. Loosely based on Ralph
 # Levien's script for Gnome.
 
-DIE=false
+
+directory=`echo "$0" | sed -e 's/[^\/]*$//g'`;
+cd $directory
+if ! test -f ./autogen.sh; then
+  echo "unexpected problem with your shell - bailing out"
+  exit 1
+fi
 
 GUI=Gtk
 PROJECT=So${GUI}
 
-MACRODIR=conf-macros
 SUBPROJECTS="$MACRODIR src/Inventor/${GUI}/common examples/components"
 SUBPROJECTNAMES="$MACRODIR So${GUI}Common So${GUI}Components"
 
+MACRODIR=conf-macros
+DIE=false
 
 AUTOMAKE_ADD=
 if test "$1" = "--clean"; then
@@ -37,7 +44,6 @@ if test "$1" = "--clean"; then
 elif test "$1" = "--add"; then
   AUTOMAKE_ADD="--add-missing --gnu --copy"
 fi
-
 
 echo "Checking the installed configuration tools..."
 
@@ -97,15 +103,13 @@ for project in $SUBPROJECTS; do
     echo "(if all else fails), remove $PROJECT and run:"
     echo "  cvs -z3 -d :pserver:cvs@cvs.sim.no:/export/cvsroot co -P $PROJECT"
     echo ""
-    DIE=1
+    DIE=true
   }
   num=`expr $num + 1`
   shift
 done
 
-
 $DIE && exit 1
-
 
 echo "Running aclocal (generating aclocal.m4)..."
 aclocal -I $MACRODIR
@@ -121,3 +125,4 @@ echo "Running autoconf (generating ./configure and the Makefile files)..."
 autoconf
 
 echo "Done: Now run './configure' and 'make install' to build $PROJECT."
+

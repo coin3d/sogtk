@@ -17,9 +17,12 @@ else
 IVEXAMPLEDIR = 
 endif
 
-SUBDIRS = src/Inventor/Gtk $(TESTDIR) $(EXAMPLEDIR) $(IVEXAMPLEDIR)
+SUBDIRS = . src/Inventor/Gtk $(TESTDIR) $(EXAMPLEDIR) $(IVEXAMPLEDIR)
+
+bin_SCRIPTS = sogtk-config
 
 BUILT_SOURCES = \
+	sogtkdefs.h \
 	src/Inventor/Gtk/SoGtkBasic.h \
 	src/Inventor/Gtk/SoGtkRenderArea.h \
 	src/Inventor/Gtk/SoGtkRenderArea.cpp \
@@ -38,7 +41,16 @@ BUILT_SOURCES = \
 
 EXTRA_DIST = conf-macros/sogtk.m4 conf-macros/modifierlist.m4
 
+noinst_HEADERS = $(BUILT_SOURCES)
+
 ############################################################################
+
+sogtk-config: $(top_srcdir)/sogtk-config.in
+	@CONFIG_HEADERS= CONFIG_FILES=$@:sogtk-config.in ./config.status
+	@chmod +x sogtk-config
+
+sogtkdefs.h: $(top_srcdir)/sogtkdefs.h.in
+	@CONFIG_HEADERS= CONFIG_FILES=$@:sogtkdefs.h.in ./config.status
 
 src/Inventor/Gtk/SoGtkBasic.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
