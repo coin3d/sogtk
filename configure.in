@@ -202,6 +202,9 @@ if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
   ])
   SIM_AC_CONFIGURATION_SETTING([Open Inventor brand], [SGI/TGS Inventor])
 else
+  SIM_AC_CHECK_HEADER_GL()
+  SIM_AC_CHECK_HEADER_GLU()
+
   SIM_AC_HAVE_COIN_IFELSE([
     CPPFLAGS="$CPPFLAGS $sim_ac_coin_cppflags"
     LDFLAGS="$CPPFLAGS $sim_ac_coin_ldflags"

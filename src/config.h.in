@@ -41,10 +41,10 @@
 /* Define as 1 if you have gettext and don't want to use GNU gettext. */
 #undef HAVE_GETTEXT
 
-/* Define if you have the <GL/glu.h> header file. */
+/* define if the GLU header should be included as GL/glu.h */
 #undef HAVE_GL_GLU_H
 
-/* Define if you have the <GL/gl.h> header file. */
+/* define if the GL header should be included as GL/gl.h */
 #undef HAVE_GL_GL_H
 
 /* Define if you have the <inttypes.h> header file. */
@@ -77,10 +77,10 @@
 /* Define if you have the <nl_types.h> header file. */
 #undef HAVE_NL_TYPES_H
 
-/* Define if you have the <OpenGL/glu.h> header file. */
+/* define if the GLU header should be included as OpenGL/glu.h */
 #undef HAVE_OPENGL_GLU_H
 
-/* Define if you have the <OpenGL/gl.h> header file. */
+/* define if the GL header should be included as OpenGL/gl.h */
 #undef HAVE_OPENGL_GL_H
 
 /* Define if you have the `putenv' function. */
