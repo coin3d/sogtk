@@ -7,7 +7,7 @@
 # Author: Morten Eriksen, <mortene@sim.no>. Loosely based on Ralph
 # Levien's script for Gnome.
 
-DIE=0
+DIE=false
 
 GUI=Gtk
 PROJECT=So${GUI}
@@ -16,9 +16,32 @@ MACRODIR=conf-macros
 SUBPROJECTS="$MACRODIR src/Inventor/${GUI}/common examples/components"
 SUBPROJECTNAMES="$MACRODIR So${GUI}Common So${GUI}Components"
 
+
+AUTOMAKE_ADD=
+if test "$1" = "--clean"; then
+  rm -f aclocal.m4 \
+	config.guess \
+	config.h.in \
+	config.sub \
+	configure \
+	depcomp \
+	install-sh \
+	ltconfig \
+	ltmain.sh \
+	missing \
+	mkinstalldirs \
+	stamp-h*
+  find . -name Makefile.in -print | \
+        egrep -v '^\./(examples|ivexamples)/' | xargs rm
+  exit
+elif test "$1" = "--add"; then
+  AUTOMAKE_ADD="--add-missing --gnu --copy"
+fi
+
+
 echo "Checking the installed configuration tools..."
 
-AUTOCONF_VER=2.14.1  # Autoconf from CVS @ 2000-01-13.
+AUTOCONF_VER=2.14.1-SIM  # Autoconf from CVS @ 2000-01-13.
 if test -z "`autoconf --version | grep \" $AUTOCONF_VER\" 2> /dev/null`"; then
     echo
     echo "You must have autoconf version $AUTOCONF_VER installed to"
@@ -30,21 +53,10 @@ if test -z "`autoconf --version | grep \" $AUTOCONF_VER\" 2> /dev/null`"; then
     echo ""
     echo "   ftp://ftp.sim.no/pub/coin/autoconf-2.14.1-coin.tar.gz"
     echo ""
-    DIE=1
+    DIE=true
 fi
 
-LIBTOOL_VER=1.3.4  # Latest release of libtool
-if test -z "`libtool --version | grep \" $LIBTOOL_VER \" 2> /dev/null`"; then
-    echo
-    echo "You must have libtool version $LIBTOOL_VER installed to"
-    echo "generate configure information and Makefiles for $PROJECT."
-    echo ""
-    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.3.4.tar.gz"
-    echo ""
-    DIE=1
-fi
-
-AUTOMAKE_VER=1.4a  # Automake from CVS @ 2000-01-13.
+AUTOMAKE_VER=1.4a-SIM-20000531  # Automake from CVS
 if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
     echo
     echo "You must have automake version $AUTOMAKE_VER installed to"
@@ -56,7 +68,18 @@ if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
     echo ""
     echo "   ftp://ftp.sim.no/pub/coin/automake-1.4a-coin.tar.gz"
     echo ""
-    DIE=1
+    DIE=true
+fi
+
+LIBTOOL_VER=1.3.5
+if test -z "`libtool --version | grep \" $LIBTOOL_VER \" 2> /dev/null`"; then
+    echo
+    echo "You must have libtool version $LIBTOOL_VER installed to"
+    echo "generate configure information and Makefiles for $PROJECT."
+    echo ""
+    echo "Get ftp://ftp.gnu.org/pub/libtool/libtool-1.3.5.tar.gz"
+    echo ""
+    DIE=true
 fi
 
 
@@ -81,9 +104,7 @@ for project in $SUBPROJECTS; do
 done
 
 
-if test "$DIE" -eq 1; then
-        exit 1
-fi
+$DIE && exit 1
 
 
 echo "Running aclocal (generating aclocal.m4)..."
@@ -94,10 +115,9 @@ autoheader
 
 echo "Running automake (generating the Makefile.in files)..."
 echo "[ignore any \"directory should not contain '/'\" warning]"
-automake
+automake $AUTOMAKE_ADD
 
 echo "Running autoconf (generating ./configure and the Makefile files)..."
 autoconf
 
 echo "Done: Now run './configure' and 'make install' to build $PROJECT."
-
