@@ -121,10 +121,12 @@ SoGtkMaterialList::buildWidget( // protected
   gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW(scrolled), this->materiallist );
 
   SoGtkMaterialDirectory * dir = common->getMaterialDirectory();
-  SoGtkMaterialGroup * group = dir->groups[dir->current];
-  for ( int i = 0; i < group->numMaterials; i++ ) {
-    const char ** ptr = &(group->materials[i]->name);
-    gtk_clist_append( GTK_CLIST(this->materiallist), (char **) ptr );
+  if ( dir && dir->numGroups > 0 ) {
+    SoGtkMaterialGroup * group = dir->groups[dir->current];
+    for ( int i = 0; i < group->numMaterials; i++ ) {
+      const char ** ptr = &(group->materials[i]->name);
+      gtk_clist_append( GTK_CLIST(this->materiallist), (char **) ptr );
+    }
   }
 
   gtk_box_pack_start( GTK_BOX(listroot), scrolled, 1, 1, 0 );
@@ -143,13 +145,15 @@ SoGtkMaterialList::buildPulldownMenu( // protected
   gtk_widget_show( menu );
 
   SoGtkMaterialDirectory * data = common->getMaterialDirectory();
-  for ( int i = 0; i < data->numGroups; i++ ) {
-    GtkWidget * menuitem = GTK_WIDGET(gtk_menu_item_new_with_label( data->groups[i]->name ));
-    gtk_signal_connect( GTK_OBJECT(menuitem), "activate",
-      GTK_SIGNAL_FUNC(SoGtkMaterialList::menuactivationCB), (gpointer) this );
-    gtk_widget_show( menuitem );
-    gtk_menu_append( GTK_MENU(menu), menuitem );
-    data->groups[i]->menuitem = menuitem;
+  if ( data ) {
+    for ( int i = 0; i < data->numGroups; i++ ) {
+      GtkWidget * menuitem = GTK_WIDGET(gtk_menu_item_new_with_label( data->groups[i]->name ));
+      gtk_signal_connect( GTK_OBJECT(menuitem), "activate",
+        GTK_SIGNAL_FUNC(SoGtkMaterialList::menuactivationCB), (gpointer) this );
+      gtk_widget_show( menuitem );
+      gtk_menu_append( GTK_MENU(menu), menuitem );
+      data->groups[i]->menuitem = menuitem;
+    }
   }
 
   return menu;
@@ -180,16 +184,18 @@ SoGtkMaterialList::menuactivation( // private
   GtkWidget * menuitem )
 {
   SoGtkMaterialDirectory * dir = common->getMaterialDirectory();
-  for ( int i = 0; i < dir->numGroups; i++ ) {
-    SoGtkMaterialGroup * group = dir->groups[i];
-    if ( group->menuitem == menuitem ) {
-      gtk_clist_clear( GTK_CLIST(this->materiallist) );
-      for ( int j = 0; j < group->numMaterials; j++ ) {
-        const char ** ptr = &(group->materials[j]->name);
-        gtk_clist_append( GTK_CLIST(this->materiallist), (char **) ptr );
+  if ( dir ) {
+    for ( int i = 0; i < dir->numGroups; i++ ) {
+      SoGtkMaterialGroup * group = dir->groups[i];
+      if ( group->menuitem == menuitem ) {
+        gtk_clist_clear( GTK_CLIST(this->materiallist) );
+        for ( int j = 0; j < group->numMaterials; j++ ) {
+          const char ** ptr = &(group->materials[j]->name);
+          gtk_clist_append( GTK_CLIST(this->materiallist), (char **) ptr );
+        }
+        dir->current = i;
+        return;
       }
-      dir->current = i;
-      return;
     }
   }
   SoDebugError::postWarning( "SoGtkMaterialList::menuactivation", "invalid menu item" );
@@ -212,6 +218,7 @@ SoGtkMaterialList::itemactivation( // private
   int materialid )
 {
   SoGtkMaterialDirectory * data = common->getMaterialDirectory();
+  assert( data != NULL );
   assert( materialid >= 0 &&
           materialid < data->groups[data->current]->numMaterials );
   const char * materialdata =
