@@ -415,6 +415,7 @@ SoGtkPlaneViewer::createViewerButtons( // virtual, protected
       break ;
     }
 
+    GTK_WIDGET_UNSET_FLAGS(widget,GTK_CAN_FOCUS);
     gtk_tooltips_set_tip( tooltips, widget, 
       _( SoGtkPlaneViewerButtons[button].keyword ), NULL );
 

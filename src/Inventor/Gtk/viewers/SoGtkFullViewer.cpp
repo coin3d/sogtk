@@ -932,6 +932,7 @@ SoGtkFullViewer::createViewerButtons( // virtual
       break ;
     }
 
+    GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
     gtk_tooltips_set_tip (tooltips, widget,
       _( SoGtkFullViewerButtons[button].keyword ), (const gchar *) NULL);
 

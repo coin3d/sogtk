@@ -382,8 +382,6 @@ SoGtkComponent::eventHandler( // static, private
 //    "[invoked (event %d)]", event->type );
   SoGtkComponent * const component = (SoGtkComponent *) closure;
   component->eventFilter( object, event );
-  if ( event->type == GDK_KEY_PRESS || event->type == GDK_KEY_RELEASE )
-    return TRUE;
   return FALSE;
 } // eventHandler()
 
