@@ -84,7 +84,7 @@ SoGtkGLWidget::SoGtkGLWidget(
 
   this->properties.mouseInput = FALSE;
   this->properties.keyboardInput = FALSE;
-  this->properties.drawFrontBuff = TRUE;
+  this->properties.drawFrontBuff = FALSE;
 
   this->borderThickness = 0;
 } // SoGtkGLWidget()
@@ -99,26 +99,30 @@ GtkWidget *
 SoGtkGLWidget::buildWidget(
   GtkWidget * parent )
 {
-  int glAttributes[10];
+  int glAttributes[16];
   int i = 0;
 
-  if ( this->glModeBits & SO_GL_DOUBLE )
-    glAttributes[i++] = GDK_GL_DOUBLEBUFFER;
-  if ( this->glModeBits & SO_GL_ZBUFFER ) {
-    glAttributes[i++] = GDK_GL_DEPTH_SIZE;
-    glAttributes[i++] = 1;
+  if ( this->glModeBits & SO_GL_RGB ) {
+    glAttributes[i] = GDK_GL_RGBA; i++;
   }
-  if ( this->glModeBits & SO_GL_RGB )
-    glAttributes[i++] = GDK_GL_RGBA;
-  if ( this->glModeBits & SO_GL_STEREO )
-    glAttributes[i++] = GDK_GL_STEREO;
+  if ( this->glModeBits & SO_GL_DOUBLE ) {
+    glAttributes[i] = GDK_GL_DOUBLEBUFFER; i++;
+  }
+  if ( this->glModeBits & SO_GL_ZBUFFER ) {
+    glAttributes[i] = GDK_GL_DEPTH_SIZE; i++;
+    glAttributes[i] = 1; i++;
+  }
+  if ( this->glModeBits & SO_GL_STEREO ) {
+    glAttributes[i] = GDK_GL_STEREO; i++;
+  }
 
-  glAttributes[i++] = GDK_GL_STENCIL_SIZE;
-  glAttributes[i++] = 1;
+  glAttributes[i] = GDK_GL_STENCIL_SIZE; i++;
+  glAttributes[i] = 1; i++;
 
-  glAttributes[i++] = GDK_GL_NONE;
+  glAttributes[i] = GDK_GL_NONE; i++;
 
   this->glWidget = gtk_gl_area_new( glAttributes );
+  assert( this->glWidget != NULL );
   gtk_widget_set_usize( this->glWidget, 100, 100 );
   
   gtk_widget_set_events( GTK_WIDGET(this->glWidget),
@@ -343,7 +347,7 @@ SoGtkGLWidget::isDoubleBuffer(
     return this->glWidget->doubleBuffer();
   else
 */
-  return (this->glModeBits & SO_GLX_DOUBLE) ? TRUE : FALSE;
+  return (this->glModeBits & SO_GL_DOUBLE) ? TRUE : FALSE;
 } // isDoubleBuffer()
 
 // *************************************************************************
