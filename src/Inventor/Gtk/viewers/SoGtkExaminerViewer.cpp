@@ -22,6 +22,8 @@ static const char rcsid[] =
 
 #include <assert.h>
 
+#include <GL/gl.h>
+
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
 #include <Inventor/fields/SoSFTime.h>
@@ -56,8 +58,9 @@ inline void exvSwap( Type & A, Type & B ) { Type T; T = A; A = B; B = T; }
 // Do something clever about this Qt layout assistant code.. (the code
 // for expandSize() is inside SoGtkFullViewer.cpp). 990222 mortene.
 enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
-extern void expandSize(QSize & result, const QSize & addend,
-                       LayoutOrientation o);
+
+// extern void expandSize(QSize & result, const QSize & addend,
+//                        LayoutOrientation o);
 ///////// FIXME end ////////////////////////////////////////////////////
 
 /*!
@@ -120,8 +123,10 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(GtkWidget * parent, const char * name,
   This contains the real constructor code (the two constructors are only
   entry points for this method).
 */
+
 void
-SoGtkExaminerViewer::constructor(SbBool buildNow)
+SoGtkExaminerViewer::constructor(
+  SbBool buildNow )
 {
   // FIXME: use a smaller sphere than the default one to have a larger
   // area close to the borders that gives us "z-axis rotation"?
@@ -131,25 +136,25 @@ SoGtkExaminerViewer::constructor(SbBool buildNow)
   vv.ortho(-1, 1, -1, 1, -1, 1);
   this->projector->setViewVolume(vv);
 
-  this->currentmode = EXAMINE;
-  this->defaultcursor = NULL;
-  this->rotatecursor = NULL;
-  this->pancursor = NULL;
-  this->zoomcursor = NULL;
+  this->currentMode = EXAMINE;
+//  this->defaultcursor = NULL;
+//  this->rotateCursor = NULL;
+//  this->panCursor = NULL;
+//  this->zoomCursor = NULL;
 
-  this->orthopixmap = new QPixmap((const char **)ortho_xpm);
-  this->perspectivepixmap = new QPixmap((const char **)perspective_xpm);
-  assert(this->orthopixmap->size() == this->perspectivepixmap->size());
+//  this->pixmaps.orthogonal = new QPixmap((const char **)ortho_xpm);
+//  this->pixmaps.perspective = new QPixmap((const char **)perspective_xpm);
+//  assert(this->poxmaps.orthogonal->size() == this->pixmaps.perspective->size());
 
-  this->animatingallowed = TRUE;
-  this->spinanimating = FALSE;
-  this->spindetecttimer = NULL;
-  this->spinsamplecounter = 0;
-  this->spinincrement = SbRotation::identity();
-  this->timertrigger =
+  this->animatingAllowed = TRUE;
+  this->spinAnimating = FALSE;
+//  this->spinDetectTimer = NULL;
+  this->spinSampleCounter = 0;
+  this->spinIncrement = SbRotation::identity();
+  this->timerTrigger =
     new SoTimerSensor(SoGtkExaminerViewer::timertriggeredCB, this);
   // FIXME: should set equal to vertical refresh rate? 990425 mortene.
-  this->timertrigger->setInterval(1.0/30.0);
+  this->timerTrigger->setInterval(1.0/30.0);
 
   this->setClassName("SoGtkExaminerViewer");
 
@@ -160,31 +165,33 @@ SoGtkExaminerViewer::constructor(SbBool buildNow)
   this->setLeftWheelString("Rotx");
   this->setBottomWheelString("Roty");
 
-  this->axiscrossOn = FALSE;
-  this->axiscrossSize = 25;
+  this->axisCrossOn = FALSE;
+  this->axisCrossSize = 25;
 
-  if(buildNow) this->setBaseWidget(this->buildWidget(this->getParentWidget()));
+  if ( buildNow )
+    this->setBaseWidget( this->buildWidget( this->getParentWidget() ) );
 }
 
 // *************************************************************************
 /*!
   Destructor.
 */
-SoGtkExaminerViewer::~SoGtkExaminerViewer()
+SoGtkExaminerViewer::~SoGtkExaminerViewer(
+  void )
 {
   // Cursors.
-  delete this->zoomcursor;
-  delete this->pancursor;
-  delete this->rotatecursor;
-  delete this->defaultcursor;
+//  delete this->zoomCursor;
+//  delete this->panCursor;
+//  delete this->rotateCursor;
+//  delete this->defaultCursor;
 
   // Button pixmaps.
-  delete this->orthopixmap;
-  delete this->perspectivepixmap;
+  delete this->pixmaps.orthogonal;
+  delete this->pixmaps.perspective;
 
   // Variables used in the spin animation code.
-  delete this->timertrigger;
-  delete this->spindetecttimer;
+  delete this->timerTrigger;
+//  delete this->spinDetectTimer;
   delete this->projector;
 }
 
@@ -198,15 +205,16 @@ void
 SoGtkExaminerViewer::setFeedbackVisibility(const SbBool on)
 {
 #if SOGTK_DEBUG
-  if (on == this->axiscrossOn) {
+  if (on == this->axisCrossOn) {
     SoDebugError::postWarning("SoGtkExaminerViewer::setFeedbackVisibility",
                               "feedback visibility already set to %s",
                               on ? "TRUE" : "FALSE");
     return;
   }
 #endif // SOGTK_DEBUG
-  this->axiscrossOn = on;
-  if (this->isViewing()) this->scheduleRedraw();
+  this->axisCrossOn = on;
+  if ( this->isViewing() )
+    this->scheduleRedraw();
 }
 
 // *************************************************************************
@@ -218,7 +226,7 @@ SoGtkExaminerViewer::setFeedbackVisibility(const SbBool on)
 SbBool
 SoGtkExaminerViewer::isFeedbackVisible(void) const
 {
-  return this->axiscrossOn;
+  return this->axisCrossOn;
 }
 
 // *************************************************************************
@@ -239,8 +247,9 @@ SoGtkExaminerViewer::setFeedbackSize(const int size)
   }
 #endif // SOGTK_DEBUG
 
-  this->axiscrossSize = size;
-  if (this->isFeedbackVisible() && this->isViewing()) this->scheduleRedraw();
+  this->axisCrossSize = size;
+  if (this->isFeedbackVisible() && this->isViewing())
+    this->scheduleRedraw();
 }
 
 // *************************************************************************
@@ -252,7 +261,7 @@ SoGtkExaminerViewer::setFeedbackSize(const int size)
 int
 SoGtkExaminerViewer::getFeedbackSize(void) const
 {
-  return this->axiscrossSize;
+  return this->axisCrossSize;
 }
 
 // *************************************************************************
@@ -268,7 +277,7 @@ SoGtkExaminerViewer::getFeedbackSize(void) const
 void
 SoGtkExaminerViewer::setAnimationEnabled(SbBool on)
 {
-  this->animatingallowed = on;
+  this->animatingAllowed = on;
   if (!on && this->isAnimating()) this->stopAnimating();
 }
 
@@ -282,7 +291,7 @@ SoGtkExaminerViewer::setAnimationEnabled(SbBool on)
 SbBool
 SoGtkExaminerViewer::isAnimationEnabled(void)
 {
-  return this->animatingallowed;
+  return this->animatingAllowed;
 }
 
 // *************************************************************************
@@ -292,10 +301,10 @@ SoGtkExaminerViewer::isAnimationEnabled(void)
 void
 SoGtkExaminerViewer::stopAnimating(void)
 {
-  if (this->spinanimating) {
-    this->timertrigger->unschedule();
+  if (this->spinAnimating) {
+    this->timerTrigger->unschedule();
     this->interactiveCountDec();
-    this->spinanimating = FALSE;
+    this->spinAnimating = FALSE;
   }
 #if SOGTK_DEBUG
   else {
@@ -313,7 +322,7 @@ SoGtkExaminerViewer::stopAnimating(void)
 SbBool
 SoGtkExaminerViewer::isAnimating(void)
 {
-  return this->spinanimating;
+  return this->spinAnimating;
 }
 
 // *************************************************************************
@@ -334,18 +343,18 @@ SoGtkExaminerViewer::setViewing(SbBool on)
   selection button pixmap and string of the zoom/dolly thumbwheel.
 */
 void
-SoGtkExaminerViewer::setCamera(SoCamera * newCamera)
+SoGtkExaminerViewer::setCamera(
+  SoCamera * newCamera )
 {
   if (newCamera) {
     SoType camtype = newCamera->getTypeId();
     SbBool orthotype =
-      camtype.isDerivedFrom(SoOrthographicCamera::getClassTypeId());
+      camtype.isDerivedFrom( SoOrthographicCamera::getClassTypeId() );
 
-    this->setRightWheelString(orthotype ? "Zoom" : "Dolly");
-    if (this->cameratogglebutton) {
-      this->cameratogglebutton->setPixmap(orthotype ?
-                                          * (this->orthopixmap) :
-                                          * (this->perspectivepixmap));
+    this->setRightWheelString( orthotype ? "Zoom" : "Dolly");
+    if (this->cameraToggleButton) {
+//      this->cameraToggleButton->setPixmap( orthotype ?
+//        *(this->pixmaps.orthogonal) : *(this->pixmaps.perspective) );
     }
   }
 
@@ -361,7 +370,7 @@ void
 SoGtkExaminerViewer::setCursorEnabled(SbBool on)
 {
   inherited::setCursorEnabled(on);
-  this->setCursorRepresentation(this->currentmode);
+  this->setCursorRepresentation(this->currentMode);
 }
 
 // *************************************************************************
@@ -411,6 +420,7 @@ SoGtkExaminerViewer::rightWheelMotion(float val)
 GtkWidget *
 SoGtkExaminerViewer::makeSubPreferences(GtkWidget * parent)
 {
+/*
   GtkWidget * w = new GtkWidget(parent);
 //  w->setBackgroundColor( QColor( 250, 0, 0 ) );
 
@@ -488,18 +498,25 @@ SoGtkExaminerViewer::makeSubPreferences(GtkWidget * parent)
   this->setEnableFeedbackControls(this->isFeedbackVisible());
 
   return w;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Overloaded from parent class so we can append the camera type switch
   button in the rightside button column.
 */
+
 void
-SoGtkExaminerViewer::createViewerButtons(GtkWidget * parent, SbPList * buttonlist)
+SoGtkExaminerViewer::createViewerButtons(
+  GtkWidget * parent,
+  SbPList * buttonlist )
 {
   inherited::createViewerButtons(parent, buttonlist);
 
+/*
   this->cameratogglebutton = new QPushButton(parent);
   assert(this->perspectivepixmap);
   assert(this->orthopixmap);
@@ -523,12 +540,15 @@ SoGtkExaminerViewer::createViewerButtons(GtkWidget * parent, SbPList * buttonlis
                    this, SLOT(cameratoggleClicked()));
 
   buttonlist->append(this->cameratogglebutton);
+*/
 }
 
 // *************************************************************************
+
 /*!
   Overloaded to provide name of class.
 */
+
 const char *
 SoGtkExaminerViewer::getDefaultWidgetName(void) const
 {
@@ -536,9 +556,11 @@ SoGtkExaminerViewer::getDefaultWidgetName(void) const
 }
 
 // *************************************************************************
+
 /*!
   Overloaded to provide ``title'' of class.
 */
+
 const char *
 SoGtkExaminerViewer::getDefaultTitle(void) const
 {
@@ -546,9 +568,11 @@ SoGtkExaminerViewer::getDefaultTitle(void) const
 }
 
 // *************************************************************************
+
 /*!
   Overloaded to provide ``title'' of class.
 */
+
 const char *
 SoGtkExaminerViewer::getDefaultIconTitle(void) const
 {
@@ -570,17 +594,20 @@ SoGtkExaminerViewer::openViewerHelpCard(void)
   Overloaded from parent class to take care of any model interaction
   events.
 */
+
 void
-SoGtkExaminerViewer::processEvent(GdkEvent * event)
+SoGtkExaminerViewer::processEvent(
+  GdkEvent * event )
 {
   // Upon first event detected, make sure the cursor is set correctly.
-  if (!this->defaultcursor) this->setCursorRepresentation(this->currentmode);
+//  if (!this->defaultCursor) this->setCursorRepresentation(this->currentmode);
   // Let parent class take care of any events which are common for
   // all viewer classes.
   if (this->processCommonEvents(event)) return;
 
   GtkWidget * canvas = this->getRenderAreaWidget();
   SbVec2s canvassize = this->getGlxSize();
+/*
   SbVec2s mousepos(canvas->mapFromGlobal(QCursor::pos()).x(),
                    canvas->mapFromGlobal(QCursor::pos()).y());
   // Convert from Qt coordinate system to OpenGL coordinate system.
@@ -669,7 +696,7 @@ SoGtkExaminerViewer::processEvent(GdkEvent * event)
         this->zoomByCursor(norm_mousepos);
         break;
 
-      default: /* include default to avoid compiler warnings. */
+      default: // include default to avoid compiler warnings.
         break;
       }
     }
@@ -689,11 +716,12 @@ SoGtkExaminerViewer::processEvent(GdkEvent * event)
     }
     break;
 
-  default: /* include default to avoid compiler warnings. */
+  default: // include default to avoid compiler warnings.
     break;
   }
 
   this->lastmouseposition = norm_mousepos;
+*/
 }
 
 // *************************************************************************
@@ -738,6 +766,7 @@ SoGtkExaminerViewer::actualRedraw(void)
 void
 SoGtkExaminerViewer::setModeFromState(const unsigned int state)
 {
+/*
   ViewerMode mode;
   const unsigned int maskedstate =
     state & (LeftButton|MidButton|ControlButton);
@@ -770,6 +799,7 @@ SoGtkExaminerViewer::setModeFromState(const unsigned int state)
   }
 
   this->setMode(mode);
+*/
 }
 
 // *************************************************************************
@@ -791,7 +821,7 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
     break;
 
   case DRAGGING:
-    this->projector->project(this->lastmouseposition);
+    this->projector->project(this->prevMousePosition);
     break;
 
   case PANNING:
@@ -801,7 +831,7 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
       // operation, so we should calculate this value here.
       SoCamera * cam = this->getCamera();
       SbViewVolume vv = cam->getViewVolume(this->getGlxAspectRatio());
-      this->panningplane = vv.getPlane(cam->focalDistance.getValue());
+      this->panningPlane = vv.getPlane(cam->focalDistance.getValue());
     }
     break;
 
@@ -809,7 +839,7 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
     break;
   }
 
-  this->currentmode = mode;
+  this->currentMode = mode;
 }
 
 // *************************************************************************
@@ -821,6 +851,7 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
 void
 SoGtkExaminerViewer::setCursorRepresentation(const ViewerMode mode)
 {
+/*
   GtkWidget * w = this->getRenderAreaWidget();
   assert(w);
 
@@ -880,6 +911,7 @@ SoGtkExaminerViewer::setCursorRepresentation(const ViewerMode mode)
 
   default: assert(0); break;
   }
+*/
 }
 
 // *************************************************************************
@@ -941,7 +973,7 @@ SoGtkExaminerViewer::drawAxisCross(void)
   // as a percentage of the total canvas size.
   SbVec2s view = this->getGlxSize();
   const int pixelarea =
-    int(float(this->axiscrossSize)/100.0f * exvMin(view[0], view[1]));
+    int(float(this->axisCrossSize)/100.0f * exvMin(view[0], view[1]));
 #if 0 // middle of canvas
   SbVec2s origin(view[0]/2 - pixelarea/2, view[1]/2 - pixelarea/2);
 #endif // middle of canvas
@@ -1128,10 +1160,10 @@ SoGtkExaminerViewer::pan(const SbVec2f & mousepos)
   SbLine line;
   vv.projectPointToLine(mousepos, line);
   SbVec3f current_planept;
-  this->panningplane.intersect(line, current_planept);
-  vv.projectPointToLine(this->lastmouseposition, line);
+  this->panningPlane.intersect(line, current_planept);
+  vv.projectPointToLine(this->prevMousePosition, line);
   SbVec3f old_planept;
-  this->panningplane.intersect(line, old_planept);
+  this->panningPlane.intersect(line, old_planept);
 
   // Reposition camera according to the vector difference between the
   // projected points.
@@ -1169,21 +1201,21 @@ SoGtkExaminerViewer::spin(const SbVec2f & mousepos)
 
   SbVec3f dummy_axis, newaxis;
   float acc_angle, newangle;
-  this->spinincrement.getValue(dummy_axis, acc_angle);
-  acc_angle *= this->spinsamplecounter; // weight
+  this->spinIncrement.getValue(dummy_axis, acc_angle);
+  acc_angle *= this->spinSampleCounter; // weight
   r.getValue(newaxis, newangle);
   acc_angle += newangle;
 
-  this->spinsamplecounter++;
-  acc_angle /= this->spinsamplecounter;
+  this->spinSampleCounter++;
+  acc_angle /= this->spinSampleCounter;
 
   // FIXME: accumulate and average axis vectors aswell? 990501 mortene.
-  this->spinincrement.setValue(newaxis, acc_angle);
+  this->spinIncrement.setValue(newaxis, acc_angle);
 
   // Don't carry too much baggage, as that'll give unwanted results
   // when the user quickly trigger (as in "click-drag-release") a spin
   // animation.
-  if (this->spinsamplecounter > 3) this->spinsamplecounter = 3;
+  if (this->spinSampleCounter > 3) this->spinSampleCounter = 3;
 }
 
 // *************************************************************************
@@ -1235,7 +1267,7 @@ SoGtkExaminerViewer::zoomByCursor(const SbVec2f & mousepos)
 {
   // There is no "geometrically correct" value, 20 just seems to give
   // about the right "feel".
-  this->zoom((mousepos[1] - this->lastmouseposition[1]) * 20.0f);
+  this->zoom((mousepos[1] - this->prevMousePosition[1]) * 20.0f);
 }
 
 // *************************************************************************
@@ -1245,10 +1277,10 @@ SoGtkExaminerViewer::zoomByCursor(const SbVec2f & mousepos)
 void
 SoGtkExaminerViewer::setEnableFeedbackControls(const SbBool flag)
 {
-  this->feedbacklabel1->setEnabled(flag);
-  this->feedbacklabel2->setEnabled(flag);
-  this->feedbackwheel->setEnabled(flag);
-  this->feedbackedit->setEnabled(flag);
+//  this->feedbackLabel1->setEnabled(flag);
+//  this->feedbackLabel2->setEnabled(flag);
+//  this->feedbackWheel->setEnabled(flag);
+//  this->feedbackEdit->setEnabled(flag);
 }
 
 // *************************************************************************
@@ -1267,19 +1299,19 @@ SoGtkExaminerViewer::timertriggeredCB(void * data, SoSensor *)
                          "spin samples: %d", thisp->spinsamplecounter);
 #endif // debug
 
-  if (thisp->spinsamplecounter < 2) {
+  if (thisp->spinSampleCounter < 2) {
     // FIXME: won't the first check here always equal TRUE? 990501
     // mortene.
     if (thisp->isAnimating()) thisp->stopAnimating();
 #if 0 // check hypothesis from above FIXME statement.
-    else thisp->timertrigger->unschedule();
+    else thisp->timerTrigger->unschedule();
 #else
     else assert(0);
 #endif
     return;
   }
 
-  thisp->reorientCamera(thisp->spinincrement);
+  thisp->reorientCamera(thisp->spinIncrement);
 }
 
 
@@ -1296,8 +1328,8 @@ SoGtkExaminerViewer::visibilityCB(void * data, SbBool visible)
   SoGtkExaminerViewer * thisp = (SoGtkExaminerViewer *)data;
 
   if (thisp->isAnimating()) {
-    if (visible) thisp->timertrigger->schedule();
-    else thisp->timertrigger->unschedule();
+//    if (visible) thisp->timerTrigger->schedule();
+//    else thisp->timerTrigger->unschedule();
   }
 }
 
@@ -1307,7 +1339,8 @@ SoGtkExaminerViewer::visibilityCB(void * data, SbBool visible)
   Pref sheet slot.
 */
 void
-SoGtkExaminerViewer::spinAnimationToggled(bool flag)
+SoGtkExaminerViewer::spinAnimationToggled(
+  SbBool flag )
 {
   this->setAnimationEnabled(flag);
 }
@@ -1318,7 +1351,8 @@ SoGtkExaminerViewer::spinAnimationToggled(bool flag)
   Pref sheet slot.
 */
 void
-SoGtkExaminerViewer::feedbackVisibilityToggle(bool flag)
+SoGtkExaminerViewer::feedbackVisibilityToggle(
+  SbBool flag )
 {
   this->setFeedbackVisibility(flag);
   this->setEnableFeedbackControls(flag);
@@ -1332,6 +1366,7 @@ SoGtkExaminerViewer::feedbackVisibilityToggle(bool flag)
 void
 SoGtkExaminerViewer::feedbackEditPressed()
 {
+/*
   int val;
   if ((sscanf(this->feedbackedit->text(), "%d", &val) == 1) && (val > 0.0f)) {
     this->feedbackwheel->setValue(float(val)/10.0f);
@@ -1342,6 +1377,7 @@ SoGtkExaminerViewer::feedbackEditPressed()
     s.setNum(this->getFeedbackSize());
     this->feedbackedit->setText(s);
   }
+*/
 }
 
 // *************************************************************************
@@ -1374,6 +1410,7 @@ SoGtkExaminerViewer::feedbackWheelReleased()
 void
 SoGtkExaminerViewer::feedbackSizeChanged(float val)
 {
+/*
   if (val <= 0.0f) {
     val = 0.1f;
     this->feedbackwheel->setValue(val);
@@ -1384,6 +1421,7 @@ SoGtkExaminerViewer::feedbackSizeChanged(float val)
   QString s;
   s.setNum(this->getFeedbackSize());
   this->feedbackedit->setText(s);
+*/
 }
 
 // *************************************************************************

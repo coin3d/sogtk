@@ -24,14 +24,6 @@
 
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
 
-class QPushButton;
-class QLayout;
-class QLabel;
-class QPopupMenu;
-class QLineEdit;
-class QSlider;
-class QtThumbwheel;
-
 // *************************************************************************
 
 class SoGtkFullViewer : public SoGtkViewer {
@@ -45,73 +37,77 @@ public:
     BUILD_ALL = 0xff,
   };
 
-  void setDecoration(const SbBool on);
+  void setDecoration( const SbBool enable );
   SbBool isDecoration(void) const;
 
-  void setPopupMenuEnabled(const SbBool on);
+  void setPopupMenuEnabled( const SbBool enable );
   SbBool isPopupMenuEnabled(void) const;
 
   GtkWidget * getAppPushButtonParent(void) const;
-  void addAppPushButton(GtkWidget * newButton);
-  void insertAppPushButton(GtkWidget * newButton, int index);
-  void removeAppPushButton(GtkWidget * oldButton);
-  int findAppPushButton(GtkWidget * oldButton) const;
+  void addAppPushButton( GtkWidget * button );
+  void insertAppPushButton( GtkWidget * button , int index);
+  void removeAppPushButton( GtkWidget * button );
+  int findAppPushButton( GtkWidget * button ) const;
   int lengthAppPushButton(void) const;
 
   GtkWidget * getRenderAreaWidget(void);
 
   // internal
   // These are overloaded to update user interface components.
-  virtual void setViewing(SbBool on);
-  virtual void setHeadlight(SbBool on);
-  virtual void setDrawStyle(SoGtkViewer::DrawType type,
-                            SoGtkViewer::DrawStyle style);
-  virtual void setBufferingType(SoGtkViewer::BufferType type);
-  virtual void setCamera(SoCamera * cam);
+  virtual void setViewing( SbBool enable );
+  virtual void setHeadlight( SbBool enable );
+  virtual void setDrawStyle(
+    SoGtkViewer::DrawType type, SoGtkViewer::DrawStyle style );
+  virtual void setBufferingType( SoGtkViewer::BufferType type );
+  virtual void setCamera( SoCamera * camera );
   virtual void hide(void);
 
 protected:
-  SoGtkFullViewer(GtkWidget * parent, const char * name, SbBool buildInsideParent,
-                 BuildFlag flag, Type type,
-                 SbBool buildNow);
+  SoGtkFullViewer(
+    GtkWidget * parent,
+    const char * name,
+    SbBool buildInsideParent,
+    BuildFlag flag,
+    Type type,
+    SbBool buildNow );
   ~SoGtkFullViewer(void);
 
-  virtual SbBool eventFilter(GtkObject * obj, GdkEvent * e);
+  virtual SbBool eventFilter( GtkObject * object, GdkEvent * event );
 
-  GtkWidget * buildWidget(GtkWidget * parent);
+  GtkWidget * buildWidget( GtkWidget * parent );
 
-  virtual void buildDecoration(GtkWidget * parent);
-  virtual GtkWidget * buildLeftTrim(GtkWidget * parent);
-  virtual GtkWidget * buildBottomTrim(GtkWidget * parent);
-  virtual GtkWidget * buildRightTrim(GtkWidget * parent);
-  GtkWidget * buildAppButtons(GtkWidget * parent);
-  GtkWidget * buildViewerButtons(GtkWidget * parent);
-  virtual void createViewerButtons(GtkWidget * parent, SbPList * buttonlist);
+  virtual void buildDecoration( GtkWidget * parent );
+  virtual GtkWidget * buildLeftTrim( GtkWidget * parent );
+  virtual GtkWidget * buildBottomTrim( GtkWidget * parent );
+  virtual GtkWidget * buildRightTrim( GtkWidget * parent );
+  GtkWidget * buildAppButtons( GtkWidget * parent );
+  GtkWidget * buildViewerButtons( GtkWidget * parent );
+  virtual void createViewerButtons( GtkWidget * parent, SbPList * buttonlist );
 
   virtual void buildPopupMenu(void);
-  void setPopupMenuString(const char * title);
-  GtkWidget * buildFunctionsSubmenu(GtkWidget * popup);
-  GtkWidget * buildDrawStyleSubmenu(GtkWidget * popup);
+  void setPopupMenuString( const char * title );
+  GtkWidget * buildFunctionsSubmenu( GtkWidget * popup );
+  GtkWidget * buildDrawStyleSubmenu( GtkWidget * popup );
 
-  virtual GtkWidget * makeSubPreferences(GtkWidget * parent);
-  void setPrefSheetString(const char * title);
+  virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
+  void setPrefSheetString( const char * title );
 
   virtual void leftWheelStart(void);
-  virtual void leftWheelMotion(float);
+  virtual void leftWheelMotion( float value );
   virtual void leftWheelFinish(void);
   float getLeftWheelValue(void) const;
   virtual void bottomWheelStart(void);
-  virtual void bottomWheelMotion(float);
+  virtual void bottomWheelMotion( float value );
   virtual void bottomWheelFinish(void);
   float getBottomWheelValue(void) const;
   virtual void rightWheelStart(void);
-  virtual void rightWheelMotion(float);
+  virtual void rightWheelMotion( float value );
   virtual void rightWheelFinish(void);
   float getRightWheelValue(void) const;
 
-  void setLeftWheelString(const char * name);
-  void setBottomWheelString(const char * name);
-  void setRightWheelString(const char * name);
+  void setLeftWheelString( const char * name );
+  void setBottomWheelString( const char * name );
+  void setRightWheelString( const char * name );
 
   virtual void openViewerHelpCard(void);
 
@@ -127,70 +123,71 @@ private:
   };
 
   GtkWidget * makePreferencesWindow(void);
-  GtkWidget * makeSeekPreferences(GtkWidget * parent);
-  GtkWidget * makeSeekDistancePreferences(GtkWidget * parent);
-  GtkWidget * makeZoomPreferences(GtkWidget * parent);
-  GtkWidget * makeAutoclipPreferences(GtkWidget * parent);
+  GtkWidget * makeSeekPreferences( GtkWidget * parent );
+  GtkWidget * makeSeekDistancePreferences( GtkWidget * parent );
+  GtkWidget * makeZoomPreferences( GtkWidget * parent );
+  GtkWidget * makeAutoclipPreferences( GtkWidget * parent );
 
 
-  GtkWidget * viewerwidget, * canvasparent, * canvas;
+  GtkWidget * viewerWidget, * canvasParent, * canvas;
   SbBool decorations;
-  float wheelvalues[NUMDECORATIONS];
-  QString wheelstrings[NUMDECORATIONS];
+  float wheelValues[NUMDECORATIONS];
+  GtkWidget * wheelStrings[NUMDECORATIONS];
   GtkWidget * wheels[NUMDECORATIONS];
-  QLabel * wheellabels[NUMDECORATIONS];
-  GtkWidget * decorform[NUMDECORATIONS];
+  GtkWidget * wheelLabels[NUMDECORATIONS];
+  GtkWidget * decorForm[NUMDECORATIONS];
 
-  SbString menutitle;
-  QPopupMenu * prefmenu;
-  SbBool menuenabled;
+  SbString menuTitle;
+  GtkWidget * prefMenu;
+  SbBool menuEnabled;
 
-  QLayout * mainlayout;
-  void showDecorationWidgets(SbBool onOff);
+  GtkWidget * mainLayout;
+  void showDecorationWidgets( SbBool enable );
 
-  QLayout * appbuttonlayout;
-  GtkWidget * appbuttonform;
-  SbPList * appbuttonlist;
-  void layoutAppButtons(GtkWidget * form);
+  GtkWidget * appButtonLayout;
+  GtkWidget * appButtonForm;
+  SbPList * appButtonList;
+  void layoutAppButtons( GtkWidget * form );
 
-  SbPList * viewerbuttons;
+  SbPList * viewerButtons;
 
-  GtkWidget * prefwindow;
-  SbString prefwindowtitle;
+  GtkWidget * prefWindow;
+  SbString prefWindowTitle;
 
-  QSlider * zoomslider;
-  QLineEdit * zoomfield, * zoomrangefrom, * zoomrangeto;
-  SbVec2f zoomrange;
+  GtkWidget * zoomSlider;
+  GtkWidget * zoomField, * zoomRangeFrom, * zoomRangeTo;
+  SbVec2f zoomRange;
 
-  void setCameraZoom(const float zoom);
+  void setCameraZoom( const float zoom );
   float getCameraZoom(void);
-  void setZoomSliderPosition(float zoom);
-  void setZoomFieldString(float zoom);
+  void setZoomSliderPosition( float zoom );
+  void setZoomFieldString( float zoom );
 
-  QtThumbwheel * seekdistancewheel;
-  QLineEdit * seekdistancefield;
+  GtkWidget * seekDistanceWheel;
+  GtkWidget * seekDistanceField;
 
-  QLabel * nearclippinglabel, * farclippinglabel;
-  QtThumbwheel * nearclippingwheel, * farclippingwheel;
-  QLineEdit * nearclippingedit, * farclippingedit;
+  GtkWidget * nearClippingLabel, * farClippingLabel;
+  GtkWidget * nearClippingWheel, * farClippingWheel;
+  GtkWidget * nearClippingEdit, * farClippingEdit;
 
-  void setDrawStyleMenuActivation(SoQtViewer::DrawType type,
-                                  SoQtViewer::DrawStyle val);
+  void setDrawStyleMenuActivation(
+    SoGtkViewer::DrawType type, SoGtkViewer::DrawStyle value );
 
-  void setEnabledClippingWidgets(SbBool flag);
+  void setEnabledClippingWidgets( SbBool flag );
 
-private slots:
+private: //  slots:
   // Thumbwheels.
   void leftWheelPressed(void);
-  void leftWheelChanged(float value);
+  void leftWheelChanged( float value );
   void leftWheelReleased(void);
   void rightWheelPressed(void);
-  void rightWheelChanged(float value);
+  void rightWheelChanged( float value );
   void rightWheelReleased(void);
   void bottomWheelPressed(void);
-  void bottomWheelChanged(float value);
+  void bottomWheelChanged( float value );
   void bottomWheelReleased(void);
 
+/*
   // Button row.
   void interactbuttonToggled(SbBool);
   void viewbuttonToggled(SbBool);
@@ -228,10 +225,11 @@ private slots:
   void farclippingwheelMoved(float val);
   void nearclipEditPressed();
   void farclipEditPressed();
+*/
 
   // Generic slots.
-  void increaseInteractiveCount();
-  void decreaseInteractiveCount();
+  void increaseInteractiveCount(void);
+  void decreaseInteractiveCount(void);
 
 }; // class SoGtkFullViewer
 

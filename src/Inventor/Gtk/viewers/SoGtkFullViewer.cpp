@@ -22,6 +22,11 @@ static const char rcsid[] =
 
 #include <assert.h>
 
+#include <gtk/gtk.h>
+#include <gtk/gtkvbox.h>
+#include <gtk/gtkhbox.h>
+#include <gtk/gtklabel.h>
+
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
 #include <Inventor/errors/SoDebugError.h>
@@ -104,6 +109,7 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
 
 // *************************************************************************
 
+/*
 void
 expandSize(QSize & result, const QSize & addend, LayoutOrientation o)
 {
@@ -116,13 +122,14 @@ expandSize(QSize & result, const QSize & addend, LayoutOrientation o)
     if (result.width() < addend.width()) result.setWidth(addend.width());
   }
 }
+*/
 
 ///////// FIXME end ////////////////////////////////////////////////////
 
 
 // FIXME: rewrite as inline function? 990221 mortene.
-#define VIEWERBUTTON(BUTTONIDX) \
-((QPushButton *)((*(this->viewerbuttons))[BUTTONIDX]))
+#define VIEWERBUTTON(idb) \
+  ((GtkWidget *)((*(this->viewerButtons))[idx]))
 
 // Button index values.
 enum {
@@ -184,69 +191,79 @@ enum {
   canvas after other setup tasks has been performed.
 */
 
-SoGtkFullViewer::SoGtkFullViewer(GtkWidget * parent, const char * name,
-                               SbBool buildInsideParent,
-                               SoGtkFullViewer::BuildFlag buildFlag,
-                               SoGtkViewer::Type t, SbBool buildNow)
-  : inherited(parent, name, buildInsideParent, t, FALSE)
+SoGtkFullViewer::SoGtkFullViewer(
+  GtkWidget * parent,
+  const char * name,
+  SbBool buildInsideParent,
+  SoGtkFullViewer::BuildFlag buildFlag,
+  SoGtkViewer::Type type,
+  SbBool buildNow )
+: inherited( parent, name, buildInsideParent, type, FALSE )
 {
-  this->viewerwidget = NULL;
+  this->viewerWidget = NULL;
   this->canvas = NULL;
-  this->canvasparent = NULL;
+  this->canvasParent = NULL;
 
   char axisindicator[] = { 'Y', 'X', 'Z' };
   for (int i = FIRSTDECORATION; i <= LASTDECORATION; i++) {
-    this->wheelstrings[i] = "Motion ";
-    this->wheelstrings[i] += axisindicator[i - FIRSTDECORATION];
-    this->decorform[i] = NULL;
-    this->wheellabels[i] = NULL;
+//    this->wheelStrings[i] = "Motion ";
+//    this->wheelStrings[i] += axisindicator[i - FIRSTDECORATION];
+    this->decorForm[i] = NULL;
+    this->wheelLabels[i] = NULL;
   }
 
-  this->zoomrange = SbVec2f(1.0f, 140.0f);
+  this->zoomRange = SbVec2f( 1.0f, 140.0f );
 
-  this->mainlayout = NULL;
-  this->appbuttonlayout = NULL;
+  this->mainLayout = NULL;
+  this->appButtonLayout = NULL;
 
-  this->prefwindow = NULL;
-  this->prefwindowtitle = "Viewer Preference Sheet";
+  this->prefWindow = NULL;
+  this->prefWindowTitle = "Viewer Preference Sheet";
 
-  this->menuenabled = buildFlag & SoGtkFullViewer::BUILD_POPUP;
+  this->menuEnabled = buildFlag & SoGtkFullViewer::BUILD_POPUP;
   this->decorations = buildFlag & SoGtkFullViewer::BUILD_DECORATION;
 
-  this->prefmenu = NULL;
-  this->menutitle = "Viewer Menu";
+  this->prefMenu = NULL;
+  this->menuTitle = "Viewer Menu";
 
-  this->viewerbuttons = new SbPList;
-  this->appbuttonlist = new SbPList;
-  this->appbuttonform = NULL;
+  this->viewerButtons = new SbPList;
+  this->appButtonList = new SbPList;
+  this->appButtonForm = NULL;
 
-  this->setSize(SbVec2s(500, 390));
-  this->setClassName("SoGtkFullViewer");
+  this->setClassName( "SoGtkFullViewer" );
 
-  if (buildNow) {
-    GtkWidget * w = this->buildWidget(this->getParentWidget());
-    this->setBaseWidget(w);
-  }
-}
+  if ( buildNow )
+    this->setBaseWidget( this->buildWidget( this->getParentWidget() ) );
+
+  // why isn't this working?
+  this->setSize( SbVec2s( 500, 390 ) );
+
+} // SoGtkFullViewer()
 
 // *************************************************************************
+
 /*!
   Destructor.
 */
-SoGtkFullViewer::~SoGtkFullViewer()
+
+SoGtkFullViewer::~SoGtkFullViewer(
+  void )
 {
-  delete this->viewerbuttons;
-  delete this->appbuttonlist;
-}
+  delete this->viewerButtons;
+  delete this->appButtonList;
+} // ~SoGtkFullViewer()
 
 // *************************************************************************
+
 /*!
   Turn the viewer decorations on or off.
 
   \sa isDecoration()
 */
+
 void
-SoGtkFullViewer::setDecoration(const SbBool on)
+SoGtkFullViewer::setDecoration(
+  const SbBool on )
 {
 #if SOGTK_DEBUG
   if ((on && this->isDecoration()) || (!on && !this->isDecoration())) {
@@ -258,24 +275,29 @@ SoGtkFullViewer::setDecoration(const SbBool on)
 #endif // SOGTK_DEBUG
 
   this->decorations = on;
-  if (this->prefmenu)
-    this->prefmenu->setItemChecked(DECORATION_ITEM, on);
-  if (this->viewerwidget) this->showDecorationWidgets(on);
+//  if ( this->prefMenu )
+//    this->prefMenu->setItemChecked( DECORATION_ITEM, on );
+  if ( this->viewerWidget )
+    this->showDecorationWidgets(on);
 }
 
 // *************************************************************************
+
 /*!
   Return \c TRUE if the viewer decorations are on, otherwise \c FALSE.
 
   \sa setDecoration()
 */
+
 SbBool
-SoGtkFullViewer::isDecoration(void) const
+SoGtkFullViewer::isDecoration(
+  void ) const
 {
   return this->decorations;
 }
 
 // *************************************************************************
+
 /*!
   Decide whether or not if clicking with the right mouse button on the
   OpenGL canvas should reveal a preferences popup menu when in viewing
@@ -283,8 +305,10 @@ SoGtkFullViewer::isDecoration(void) const
 
   \sa isPopupMenuEnabled()
 */
+
 void
-SoGtkFullViewer::setPopupMenuEnabled(const SbBool on)
+SoGtkFullViewer::setPopupMenuEnabled(
+  const SbBool on )
 {
 #if SOGTK_DEBUG
   if ((on && this->isPopupMenuEnabled()) ||
@@ -295,23 +319,27 @@ SoGtkFullViewer::setPopupMenuEnabled(const SbBool on)
     return;
   }
 #endif // SOGTK_DEBUG
-  this->menuenabled = on;
+  this->menuEnabled = on;
 }
 
 // *************************************************************************
+
 /*!
   Return \c TRUE if the popup preferences menu is enabled,
   otherwise \c FALSE.
 
   \sa setPopupMenuEnabled()
 */
+
 SbBool
-SoGtkFullViewer::isPopupMenuEnabled(void) const
+SoGtkFullViewer::isPopupMenuEnabled(
+  void ) const
 {
-  return this->menuenabled;
+  return this->menuEnabled;
 }
 
 // *************************************************************************
+
 /*!
   Returns the widget which is used as the parent of application
   specified buttons. The row of application buttons (if any) will be
@@ -319,13 +347,16 @@ SoGtkFullViewer::isPopupMenuEnabled(void) const
 
   \sa addAppPushButton(), insertAppPushButton(), removeAppPushButton()
 */
+
 GtkWidget *
-SoGtkFullViewer::getAppPushButtonParent(void) const
+SoGtkFullViewer::getAppPushButtonParent(
+  void ) const
 {
-  return this->appbuttonform;
-}
+  return this->appButtonForm;
+} // getAppPushButtonParent()
 
 // *************************************************************************
+
 /*!
   Add an application specific push button to the viewer decorations.
   Application buttons will be laid out in a vertical row from the
@@ -335,22 +366,28 @@ SoGtkFullViewer::getAppPushButtonParent(void) const
 
   \sa insertAppPushButton(), removeAppPushButton(), getAppPushButtonParent()
 */
+
 void
-SoGtkFullViewer::addAppPushButton(GtkWidget * newButton)
+SoGtkFullViewer::addAppPushButton(
+  GtkWidget * button )
 {
-  this->appbuttonlist->append(newButton);
-  this->layoutAppButtons(this->getAppPushButtonParent());
-}
+  this->appButtonList->append( button );
+  this->layoutAppButtons( this->getAppPushButtonParent() );
+} // addAppPushButton()
 
 // *************************************************************************
+
 /*!
   Insert an application specific push button to the viewer decorations
   at the given \c index.
 
   \sa addAppPushButton(), removeAppPushButton(), getAppPushButtonParent()
 */
+
 void
-SoGtkFullViewer::insertAppPushButton(GtkWidget * newButton, int index)
+SoGtkFullViewer::insertAppPushButton(
+  GtkWidget * newButton,
+  int index )
 {
 #if SOGTK_DEBUG
   if ((index < 0) || (index > this->lengthAppPushButton())) {
@@ -359,20 +396,23 @@ SoGtkFullViewer::insertAppPushButton(GtkWidget * newButton, int index)
     return;
   }
 #endif // SOGTK_DEBUG
-  this->appbuttonlist->insert(newButton, index);
+  this->appButtonList->insert(newButton, index);
   this->layoutAppButtons(this->getAppPushButtonParent());
 }
 
 // *************************************************************************
+
 /*!
   Remove one of the application specific buttons.
 
   \sa addAppPushButton(), insertAppPushButton()
 */
+
 void
-SoGtkFullViewer::removeAppPushButton(GtkWidget * oldButton)
+SoGtkFullViewer::removeAppPushButton(
+  GtkWidget * oldButton )
 {
-  int idx = this->appbuttonlist->find(oldButton);
+  int idx = this->appButtonList->find(oldButton);
 
 #if SOGTK_DEBUG
   if (idx == -1) {
@@ -382,46 +422,56 @@ SoGtkFullViewer::removeAppPushButton(GtkWidget * oldButton)
   }
 #endif // SOGTK_DEBUG
 
-  this->appbuttonlist->remove(idx);
+  this->appButtonList->remove(idx);
   this->layoutAppButtons(this->getAppPushButtonParent());
-}
+} // removeAppPushButton()
 
 // *************************************************************************
+
 /*!
   Return the index of a particular button that has been specified by
   the application, or -1 of the button has not been added.
 
   \sa addAppPushButton()
 */
+
 int
-SoGtkFullViewer::findAppPushButton(GtkWidget * oldButton) const
+SoGtkFullViewer::findAppPushButton(
+  GtkWidget * button ) const
 {
-  return this->appbuttonlist->find(oldButton);
-}
+  return this->appButtonList->find( button );
+} // findAppPushButton()
 
 // *************************************************************************
+
 /*!
   Return number of application specific buttons added.
 
   \sa addAppPushButton(), insertAddAppPushButton()
 */
+
 int
-SoGtkFullViewer::lengthAppPushButton(void) const
+SoGtkFullViewer::lengthAppPushButton(
+  void ) const
 {
-  return this->appbuttonlist->getLength();
-}
+  return this->appButtonList->getLength();
+} // lengthAppPushButton()
 
 // *************************************************************************
+
 /*!
   Returns the render area OpenGL canvas widget.
 */
+
 GtkWidget *
-SoGtkFullViewer::getRenderAreaWidget(void)
+SoGtkFullViewer::getRenderAreaWidget(
+  void )
 {
   return this->canvas;
-}
+} // getRenderAreaWidget()
 
 // *************************************************************************
+
 /*!
   Set a flag to indicate whether we're in viewing mode (where the
   user can drag the model or scene around), or in interaction mode (where
@@ -432,8 +482,10 @@ SoGtkFullViewer::getRenderAreaWidget(void)
   indicating interact or view mode, the respective item on the popup menu
   and to grey out the seek mode activation button while in interact mode.
 */
+
 void
-SoGtkFullViewer::setViewing(SbBool on)
+SoGtkFullViewer::setViewing(
+  SbBool on )
 {
   if ((on && this->isViewing()) || (!on && !this->isViewing())) {
 #if SOGTK_DEBUG
@@ -444,50 +496,63 @@ SoGtkFullViewer::setViewing(SbBool on)
   }
 
   inherited::setViewing(on);
-  if (this->prefmenu) this->prefmenu->setItemChecked(EXAMINING_ITEM, on);
-  VIEWERBUTTON(EXAMINE_BUTTON)->setOn(on);
-  VIEWERBUTTON(INTERACT_BUTTON)->setOn(on ? FALSE : TRUE);
-  VIEWERBUTTON(SEEK_BUTTON)->setEnabled(on);
-}
+//  if (this->prefmenu)
+//    this->prefMenu->setItemChecked(EXAMINING_ITEM, on);
+//  VIEWERBUTTON(EXAMINE_BUTTON)->setOn(on);
+//  VIEWERBUTTON(INTERACT_BUTTON)->setOn(on ? FALSE : TRUE);
+//  VIEWERBUTTON(SEEK_BUTTON)->setEnabled(on);
+} // setViewing()
 
 // *************************************************************************
+
 /*!
   Overloaded from parent to update user interface indicator for headlight
   on or off in the popup menu.
 */
+
 void
-SoGtkFullViewer::setHeadlight(SbBool on)
+SoGtkFullViewer::setHeadlight(
+  SbBool enable )
 {
-  inherited::setHeadlight(on);
-  if (this->prefmenu) this->prefmenu->setItemChecked(HEADLIGHT_ITEM, on);
-}
+  inherited::setHeadlight( enable );
+//  if ( this->prefMenu )
+//    this->prefMenu->setItemChecked( HEADLIGHT_ITEM, enable );
+} // setHeadlight()
 
 // *************************************************************************
+
 /*!
   Overloaded from parent to make sure the user interface indicator in
   the popup menu is updated correctly.
 */
+
 void
-SoGtkFullViewer::setDrawStyle(SoGtkViewer::DrawType type,
-                             SoGtkViewer::DrawStyle style)
+SoGtkFullViewer::setDrawStyle(
+  SoGtkViewer::DrawType type,
+  SoGtkViewer::DrawStyle style )
 {
-  inherited::setDrawStyle(type, style);
-  if (this->prefmenu) this->setDrawStyleMenuActivation(type, style);
-}
+  inherited::setDrawStyle( type, style );
+  if ( this->prefMenu )
+    this->setDrawStyleMenuActivation( type, style );
+} // setDrawStyle()
 
 // *************************************************************************
+
 /*!
   Overloaded from parent to make sure the user interface indicators in
   the popup menu are updated correctly.
 */
+
 void
-SoGtkFullViewer::setBufferingType(SoGtkViewer::BufferType type)
+SoGtkFullViewer::setBufferingType(
+  SoGtkViewer::BufferType type )
 {
   inherited::setBufferingType(type);
 
-  if (this->prefmenu) {
+  if (this->prefMenu) {
+/*
     QMenuData * m;
-    this->prefmenu->findItem(AS_IS_ITEM, &m);
+    this->prefMenu->findItem(AS_IS_ITEM, &m);
     assert(m);
 
     m->setItemChecked(SINGLE_BUFFER_ITEM,
@@ -496,44 +561,52 @@ SoGtkFullViewer::setBufferingType(SoGtkViewer::BufferType type)
                       type == SoGtkViewer::BUFFER_DOUBLE ? TRUE : FALSE);
     m->setItemChecked(INTERACTIVE_BUFFER_ITEM,
                       type == SoGtkViewer::BUFFER_INTERACTIVE ? TRUE : FALSE);
+*/
   }
 }
 
 // *************************************************************************
+
 /*!
   Overloaded from parent to make sure the user interface indicators on
   the camera features in the preferences sheet are updated correctly.
 */
+
 void
 SoGtkFullViewer::setCamera(SoCamera * newCamera)
 {
   inherited::setCamera(newCamera);
 
-  if (this->prefwindow) {
+  if (this->prefWindow) {
     this->setZoomSliderPosition(this->getCameraZoom());
     this->setZoomFieldString(this->getCameraZoom());
 
     SbBool on = newCamera ? TRUE : FALSE;
-    this->zoomslider->setEnabled(on);
-    this->zoomfield->setEnabled(on);
-    this->zoomrangefrom->setEnabled(on);
-    this->zoomrangeto->setEnabled(on);
+//    this->zoomSlider->setEnabled(on);
+//    this->zoomField->setEnabled(on);
+//    this->zoomRangeFrom->setEnabled(on);
+//    this->zoomRangeTo->setEnabled(on);
   }
 }
 
 // *************************************************************************
+
 /*!
   Overloaded from parent class to make sure the preferences window
   will be hidden automatically whenever the viewer window is hidden.
 */
+
 void
-SoGtkFullViewer::hide(void)
+SoGtkFullViewer::hide(
+  void )
 {
   inherited::hide();
-  if (this->prefwindow) this->prefwindow->hide();
-}
+//  if ( this->prefWindow )
+//    this->prefWindow->hide();
+} // hide()
 
 // *************************************************************************
+
 /*!
   \internal
 
@@ -541,9 +614,13 @@ SoGtkFullViewer::hide(void)
   events) and right mouse button presses (to pop up the
   preferences menu).
 */
-bool
-SoGtkFullViewer::eventFilter(QObject *obj, GdkEvent * e)
+
+SbBool
+SoGtkFullViewer::eventFilter(
+  GtkObject * obj,
+  GdkEvent * event )
 {
+/*
 #if 0 // debug
   switch (e->type()) {
   case Event_MouseButtonPress:
@@ -580,7 +657,7 @@ SoGtkFullViewer::eventFilter(QObject *obj, GdkEvent * e)
   }
 #endif // debug
 
-  inherited::eventFilter(obj, e);
+  inherited::eventFilter( obj, e );
 
   // Convert dblclick events to press events to get the "correct"
   // sequence of two press+release pairs under Qt 1.xx and Qt
@@ -618,49 +695,79 @@ SoGtkFullViewer::eventFilter(QObject *obj, GdkEvent * e)
     }
   }
 
+*/
   return FALSE;
 }
 
 // *************************************************************************
+
 /*!
   This will build the main view widgets, along with the decorations
   widgets and popup menu if they are enabled.
 */
+
 GtkWidget *
-SoGtkFullViewer::buildWidget(GtkWidget * parent)
+SoGtkFullViewer::buildWidget(
+  GtkWidget * parent )
 {
-  this->viewerwidget = new GtkWidget(parent);
-  this->viewerwidget->setBackgroundColor( QColor( 250, 0, 0 ) );
+  GtkWidget * root = gtk_vbox_new( FALSE, TRUE ); 
+  GtkWidget * croot = gtk_hbox_new( FALSE, TRUE ); 
+  g_return_val_if_fail( root != NULL, NULL );
+  g_return_val_if_fail( croot != NULL, NULL );
 
-  // Build and layout the widget components of the viewer window on
-  // top of the manager widget.
+  this->canvas = inherited::buildWidget( croot );
 
-  this->canvasparent = new GtkWidget(this->viewerwidget);
-  this->canvas = inherited::buildWidget(this->canvasparent);
+  this->viewerWidget = croot;
+  this->canvasParent = parent;
 
-  if (this->decorations) {
-    this->buildDecoration(this->viewerwidget);
-    this->showDecorationWidgets(TRUE);
+  if ( this->decorations ) {
+    this->buildDecoration( parent );
+//    this->showDecorationWidgets( TRUE );
   }
 
-  if (this->menuenabled) this->buildPopupMenu();
+  gtk_box_pack_start(
+    GTK_BOX(croot), this->decorForm[LEFTDECORATION], FALSE, TRUE, FALSE );
+  gtk_box_pack_start(
+    GTK_BOX(croot), this->canvas, TRUE, TRUE, FALSE );
+  gtk_box_pack_start(
+    GTK_BOX(croot), this->decorForm[RIGHTDECORATION], FALSE, TRUE, FALSE );
+  gtk_box_pack_start(
+    GTK_BOX(root), GTK_WIDGET(croot), TRUE, TRUE, FALSE );
+  gtk_box_pack_start(
+    GTK_BOX(root), GTK_WIDGET(this->decorForm[BOTTOMDECORATION]), FALSE, TRUE, FALSE );
+  gtk_container_add( GTK_CONTAINER(parent), GTK_WIDGET(root) );
 
-  return this->viewerwidget;
-}
+  gtk_widget_show( this->decorForm[ LEFTDECORATION ] );
+  gtk_widget_show( this->canvas );
+  gtk_widget_show( this->decorForm[ RIGHTDECORATION ] );
+  gtk_widget_show( croot );
+
+  gtk_widget_show( this->decorForm[ BOTTOMDECORATION ] );
+
+  if ( this->menuEnabled )
+    this->buildPopupMenu();
+
+  this->viewerWidget = root;
+  return this->viewerWidget;
+} // buildWidget()
 
 // *************************************************************************
+
 /*!
   Build viewer decorations.
 */
+
 void
-SoGtkFullViewer::buildDecoration(GtkWidget * parent)
+SoGtkFullViewer::buildDecoration(
+  GtkWidget * parent )
 {
-  this->decorform[LEFTDECORATION] = this->buildLeftTrim(parent);
-  this->decorform[BOTTOMDECORATION] = this->buildBottomTrim(parent);
-  this->decorform[RIGHTDECORATION] = this->buildRightTrim(parent);
-}
+  this->decorForm[ LEFTDECORATION ]    = this->buildLeftTrim( parent );
+  this->decorForm[ BOTTOMDECORATION ]  = this->buildBottomTrim( parent );
+  this->decorForm[ RIGHTDECORATION ]   = this->buildRightTrim( parent );
+} // buildDecoration()
 
 // *************************************************************************
+
 /*!
   Build decorations on the left of the render canvas.  Overload this
   method in subclasses if you want your own decorations on the viewer
@@ -672,11 +779,22 @@ SoGtkFullViewer::buildDecoration(GtkWidget * parent)
 */
 
 GtkWidget *
-SoGtkFullViewer::buildLeftTrim(GtkWidget * parent)
+SoGtkFullViewer::buildLeftTrim(
+  GtkWidget * parent )
 {
-  GtkWidget * w = new GtkWidget(parent);
-  w->setFixedWidth( 30 );
+  GtkWidget * trim = gtk_vbox_new( FALSE, TRUE );
+  g_return_val_if_fail( trim != NULL, NULL );
+  gtk_widget_set_usize( trim, 30, 0 );
+  // set background color
 
+  GtkWidget * wheel = gtk_thumbwheel_new( 1 );
+  g_return_val_if_fail( wheel != NULL, NULL );
+
+  gtk_box_pack_end( GTK_BOX(trim), wheel, FALSE, FALSE, TRUE );
+  gtk_widget_show( wheel );
+
+  return trim;
+/*
   QGridLayout * gl = new QGridLayout(w, 3, 1, 2, -1 ); // , 0, -1);
   gl->addWidget(this->buildAppButtons(w), 0, 0);
 
@@ -697,18 +815,49 @@ SoGtkFullViewer::buildLeftTrim(GtkWidget * parent)
 
   gl->addWidget(t, 2, 0, AlignBottom|AlignHCenter);
   gl->activate();
-
-  return w;
-}
+*/
+} // buildLeftTrim()
 
 // *************************************************************************
+
 /*!
   Build decorations on the bottom of the render canvas. Overload this
   method in subclasses if you want your own decorations on the viewer window.
 */
+
 GtkWidget *
-SoGtkFullViewer::buildBottomTrim(GtkWidget * parent)
+SoGtkFullViewer::buildBottomTrim(
+  GtkWidget * parent )
 {
+  GtkWidget * trim = gtk_hbox_new( FALSE, TRUE );
+  g_return_val_if_fail( trim != NULL, NULL );
+  gtk_widget_set_usize( trim, 0, 30 );
+
+  GtkWidget * l1, * l2, * l3;
+  l1 = gtk_label_new( "Roty" );
+  g_return_val_if_fail( l1 != NULL, NULL );
+  gtk_misc_set_padding( GTK_MISC(l1), 3, 0 );
+  l2 = gtk_label_new( "Rotx" );
+  g_return_val_if_fail( l2 != NULL, NULL );
+  gtk_misc_set_padding( GTK_MISC(l2), 3, 0 );
+  l3 = gtk_label_new( "Dolly" );
+  g_return_val_if_fail( l3 != NULL, NULL );
+  gtk_misc_set_padding( GTK_MISC(l3), 3, 0 );
+
+  GtkWidget * wheel = gtk_thumbwheel_new( 0 );
+  g_return_val_if_fail( wheel != NULL, NULL );
+
+  gtk_box_pack_start( GTK_BOX(trim), l1, FALSE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(trim), l2, FALSE, TRUE, FALSE );
+  gtk_box_pack_start( GTK_BOX(trim), wheel, FALSE, TRUE, TRUE );
+  gtk_box_pack_end( GTK_BOX(trim), l3, FALSE, TRUE, FALSE );
+  gtk_widget_show( l1 );
+  gtk_widget_show( l2 );
+  gtk_widget_show( wheel );
+  gtk_widget_show( l3 );
+
+  return trim;
+/*
   GtkWidget * w = new GtkWidget(parent);
   w->setFixedHeight( 30 );
 
@@ -740,25 +889,33 @@ SoGtkFullViewer::buildBottomTrim(GtkWidget * parent)
   gl->addWidget(this->wheellabels[BOTTOMDECORATION], 0, 1);
   gl->addWidget(t, 0, 2);
   gl->activate();
-  return w;
-}
+*/
+} // buildBottomTrim()
 
 // *************************************************************************
+
 /*!
   Build decorations on the right side of the render canvas. Overload this
   method in subclasses if you want your own decorations on the viewer window.
 */
-GtkWidget *
-SoGtkFullViewer::buildRightTrim(GtkWidget * parent)
-{
-  GtkWidget * w = new GtkWidget(parent);
-  w->setFixedWidth( 30 );
 
-  QtThumbwheel * t = this->wheels[RIGHTDECORATION] =
-    new QtThumbwheel(QtThumbwheel::Vertical, w);
-//  t->adjustSize();
-//  t->setMaximumSize(t->size());
-  t->setFixedSize( QSize( 24, 88 ) );
+GtkWidget *
+SoGtkFullViewer::buildRightTrim(
+  GtkWidget * parent )
+{
+  GtkWidget * trim = gtk_vbox_new( FALSE, TRUE );
+  g_return_val_if_fail( trim != NULL, NULL );
+  gtk_widget_set_usize( trim, 30, 0 );
+  // set background color
+
+  GtkWidget * wheel = gtk_thumbwheel_new( 1 );
+  g_return_val_if_fail( wheel != NULL, NULL );
+
+  gtk_box_pack_end( GTK_BOX(trim), wheel, FALSE, TRUE, TRUE );
+  gtk_widget_show( wheel );
+
+  return trim;
+/*
   t->setRangeBoundaryHandling( QtThumbwheel::ACCUMULATE );
 
   QObject::connect(t, SIGNAL(wheelMoved(float)),
@@ -769,39 +926,39 @@ SoGtkFullViewer::buildRightTrim(GtkWidget * parent)
                    this, SLOT(rightWheelReleased()));
 
   this->wheelvalues[RIGHTDECORATION] = t->value();
-
-  QGridLayout * l = new QGridLayout(w, 3, 1, 2, -1 );
-  l->addWidget(this->buildViewerButtons(w), 0, 0);
-  l->addWidget(t, 2, 0, AlignBottom|AlignHCenter);
-  l->activate();
-
-
-  return w;
-}
+*/
+} // buildRightTrim()
 
 // *************************************************************************
+
 /*!
   Build the application specified button row (if any buttons were
   set up).
 */
+
 GtkWidget *
 SoGtkFullViewer::buildAppButtons(GtkWidget * parent)
 {
+/*
   this->appbuttonform = new GtkWidget(parent);
 
   if (this->lengthAppPushButton() > 0)
     this->layoutAppButtons(this->appbuttonform);
 
-  return this->appbuttonform;
+*/
+  return this->appButtonForm;
 }
 
 // *************************************************************************
+
 /*!
   Build and layout viewer specified button row.
 */
+
 GtkWidget *
 SoGtkFullViewer::buildViewerButtons(GtkWidget * parent)
 {
+/*
   GtkWidget * w = new GtkWidget(parent);
   this->createViewerButtons(w, this->viewerbuttons);
 
@@ -818,15 +975,20 @@ SoGtkFullViewer::buildViewerButtons(GtkWidget * parent)
 
   l->activate();
   return w;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Set up the viewer buttons with pixmaps and event connections.
 */
+
 void
 SoGtkFullViewer::createViewerButtons(GtkWidget * parent, SbPList * buttonlist)
 {
+/*
   for (int i=0; i <= SEEK_BUTTON; i++) {
     QPushButton * p = new QPushButton(parent);
 
@@ -875,6 +1037,7 @@ SoGtkFullViewer::createViewerButtons(GtkWidget * parent, SbPList * buttonlist)
     p->adjustSize();
     buttonlist->append(p);
   }
+*/
 }
 
 // *************************************************************************
@@ -882,12 +1045,14 @@ SoGtkFullViewer::createViewerButtons(GtkWidget * parent, SbPList * buttonlist)
   Make a popup menu with preferences settings.
 */
 void
-SoGtkFullViewer::buildPopupMenu(void)
+SoGtkFullViewer::buildPopupMenu(
+  void )
 {
-  this->prefmenu = new QPopupMenu(NULL);
+/*
+  this->prefMenu = new QPopupMenu(NULL);
 
-  this->prefmenu->insertItem(this->menutitle.getString(), MENUTITLE_ITEM);
-  this->prefmenu->insertSeparator();
+  this->prefMenu->insertItem(this->menuTitle.getString(), MENUTITLE_ITEM);
+  this->prefMenu->insertSeparator();
 
   QPopupMenu * funcsub = (QPopupMenu *)this->buildFunctionsSubmenu(NULL);
   this->prefmenu->insertItem("Functions", funcsub, FUNCTIONS_ITEM);
@@ -916,27 +1081,36 @@ SoGtkFullViewer::buildPopupMenu(void)
 
   this->prefmenu->insertItem("Preferences...", this, SLOT(selectedPrefs()),
                              0, PREFERENCES_ITEM);
+*/
 }
 
 // *************************************************************************
+
 /*!
   Set title of popup menu.
 */
+
 void
-SoGtkFullViewer::setPopupMenuString(const char * str)
+SoGtkFullViewer::setPopupMenuString(
+  const char * str )
 {
-  this->menutitle = str ? str : "";
-  if (this->prefmenu) this->prefmenu->changeItem(this->menutitle.getString(),
-                                                 MENUTITLE_ITEM);
+  this->menuTitle = str ? str : "";
+//  if ( this->prefMenu )
+//    this->prefMenu->changeItem( this->menutitle.getString(),
+//                                MENUTITLE_ITEM );
 }
 
 // *************************************************************************
+
 /*!
   Build the sub-popupmenu with miscellaneous functions.
 */
+
 GtkWidget *
-SoGtkFullViewer::buildFunctionsSubmenu(GtkWidget * popup)
+SoGtkFullViewer::buildFunctionsSubmenu(
+  GtkWidget * popup )
 {
+/*
   QPopupMenu * m = new QPopupMenu(popup);
 
   m->insertItem("Help", this, SLOT(helpbuttonClicked()), 0, HELP_ITEM);
@@ -955,15 +1129,21 @@ SoGtkFullViewer::buildFunctionsSubmenu(GtkWidget * popup)
                 PASTE_VIEW_ITEM);
 
   return m;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Build the sub-popupmenu with the drawstyle settings.
 */
+
 GtkWidget *
-SoGtkFullViewer::buildDrawStyleSubmenu(GtkWidget * popup)
+SoGtkFullViewer::buildDrawStyleSubmenu(
+  GtkWidget * popup )
 {
+/*
   QPopupMenu * m = new QPopupMenu(popup);
 
   m->insertItem("as is", AS_IS_ITEM);
@@ -993,32 +1173,41 @@ SoGtkFullViewer::buildDrawStyleSubmenu(GtkWidget * popup)
   QObject::connect(m, SIGNAL(activated(int)), SLOT(drawstyleActivated(int)));
 
   return m;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Overload this method in subclass viewers to append more widgets to
   the bottom of the preferences sheet window.
 */
+
 GtkWidget *
-SoGtkFullViewer::makeSubPreferences(GtkWidget * /*parent*/)
+SoGtkFullViewer::makeSubPreferences(
+  GtkWidget * /*parent*/ )
 {
   return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Set title of preferences sheet.
 */
+
 void
-SoGtkFullViewer::setPrefSheetString(const char * title)
+SoGtkFullViewer::setPrefSheetString(
+  const char * title )
 {
-  this->prefwindowtitle = title ? title : "";
-  if (this->prefwindow)
-    this->prefwindow->setCaption(this->prefwindowtitle.getString());
+  this->prefWindowTitle = title ? title : "";
+//  if (this->prefwindow)
+//    this->prefwindow->setCaption(this->prefwindowtitle.getString());
 }
 
 // *************************************************************************
+
 /*!
   Called when the user start to drag the thumbwheel in the left frame.
   Overload this method in subclassed viewers to provide your own
@@ -1027,13 +1216,16 @@ SoGtkFullViewer::setPrefSheetString(const char * title)
   \sa leftWheelMotion(), leftWheelFinish()
   \sa bottomWheelStart(), rightWheelStart()
 */
+
 void
-SoGtkFullViewer::leftWheelStart(void)
+SoGtkFullViewer::leftWheelStart(
+  void )
 {
   this->interactiveCountInc();
 }
 
 // *************************************************************************
+
 /*!
   Called repeatedly as the user drags the thumbwheel in the left frame.
   Overload this method in subclassed viewers to provide your own
@@ -1042,13 +1234,16 @@ SoGtkFullViewer::leftWheelStart(void)
   \sa leftWheelStart(), leftWheelFinish()
   \sa bottomWheelStart(), rightWheelStart()
 */
+
 void
-SoGtkFullViewer::leftWheelMotion(float f)
+SoGtkFullViewer::leftWheelMotion(
+  float value )
 {
-  this->wheelvalues[LEFTDECORATION] = f;
+  this->wheelValues[LEFTDECORATION] = value;
 }
 
 // *************************************************************************
+
 /*!
   Called as the user let go of the thumbwheel in the left frame after
   a drag operation. Overload this method in subclassed viewers to provide
@@ -1057,25 +1252,31 @@ SoGtkFullViewer::leftWheelMotion(float f)
   \sa leftWheelStart(), leftWheelMotion()
   \sa bottomWheelStart(), rightWheelStart()
 */
+
 void
-SoGtkFullViewer::leftWheelFinish(void)
+SoGtkFullViewer::leftWheelFinish(
+  void )
 {
   this->interactiveCountDec();
 }
 
 // *************************************************************************
+
 /*!
   Get current value of the left thumbwheel.
 
   \sa leftWheelMotion()
 */
+
 float
-SoGtkFullViewer::getLeftWheelValue(void) const
+SoGtkFullViewer::getLeftWheelValue(
+  void ) const
 {
-  return this->wheelvalues[LEFTDECORATION];
+  return this->wheelValues[LEFTDECORATION];
 }
 
 // *************************************************************************
+
 /*!
   Called when the user start to drag the thumbwheel in the bottom frame.
   Overload this method in subclassed viewers to provide your own
@@ -1084,13 +1285,16 @@ SoGtkFullViewer::getLeftWheelValue(void) const
   \sa bottomWheelMotion(), bottomWheelFinish()
   \sa leftWheelStart(), rightWheelStart()
 */
+
 void
-SoGtkFullViewer::bottomWheelStart(void)
+SoGtkFullViewer::bottomWheelStart(
+  void )
 {
   this->interactiveCountInc();
 }
 
 // *************************************************************************
+
 /*!
   Called repeatedly as the user drags the thumbwheel in the bottom frame.
   Overload this method in subclassed viewers to provide your own
@@ -1099,13 +1303,16 @@ SoGtkFullViewer::bottomWheelStart(void)
   \sa bottomWheelStart(), bottomWheelFinish()
   \sa leftWheelStart(), rightWheelStart()
 */
+
 void
-SoGtkFullViewer::bottomWheelMotion(float f)
+SoGtkFullViewer::bottomWheelMotion(
+  float value )
 {
-  this->wheelvalues[BOTTOMDECORATION] = f;
+  this->wheelValues[BOTTOMDECORATION] = value;
 }
 
 // *************************************************************************
+
 /*!
   Called as the user let go of the thumbwheel in the bottom frame after
   a drag operation. Overload this method in subclassed viewers to provide
@@ -1114,25 +1321,31 @@ SoGtkFullViewer::bottomWheelMotion(float f)
   \sa bottomWheelStart(), bottomWheelMotion()
   \sa leftWheelStart(), rightWheelStart()
 */
+
 void
-SoGtkFullViewer::bottomWheelFinish(void)
+SoGtkFullViewer::bottomWheelFinish(
+  void )
 {
   this->interactiveCountDec();
 }
 
 // *************************************************************************
+
 /*!
   Get current value of the bottom thumbwheel.
 
   \sa bottomWheelMotion()
 */
+
 float
-SoGtkFullViewer::getBottomWheelValue(void) const
+SoGtkFullViewer::getBottomWheelValue(
+  void ) const
 {
-  return this->wheelvalues[BOTTOMDECORATION];
+  return this->wheelValues[ BOTTOMDECORATION ];
 }
 
 // *************************************************************************
+
 /*!
   Called when the user start to drag the thumbwheel in the right frame.
   Overload this method in subclassed viewers to provide your own
@@ -1141,13 +1354,16 @@ SoGtkFullViewer::getBottomWheelValue(void) const
   \sa rightWheelMotion(), rightWheelFinish()
   \sa leftWheelStart(), bottomWheelStart()
 */
+
 void
-SoGtkFullViewer::rightWheelStart(void)
+SoGtkFullViewer::rightWheelStart(
+  void )
 {
   this->interactiveCountInc();
 }
 
 // *************************************************************************
+
 /*!
   Called repeatedly as the user drags the thumbwheel in the right frame.
   Overload this method in subclassed viewers to provide your own
@@ -1156,13 +1372,16 @@ SoGtkFullViewer::rightWheelStart(void)
   \sa rightWheelStart(), rightWheelFinish()
   \sa leftWheelStart(), bottomWheelStart()
 */
+
 void
-SoGtkFullViewer::rightWheelMotion(float f)
+SoGtkFullViewer::rightWheelMotion(
+  float value )
 {
-  this->wheelvalues[RIGHTDECORATION] = f;
+  this->wheelValues[ RIGHTDECORATION ] = value;
 }
 
 // *************************************************************************
+
 /*!
   Called as the user let go of the thumbwheel in the right frame after
   a drag operation. Overload this method in subclassed viewers to provide
@@ -1171,97 +1390,123 @@ SoGtkFullViewer::rightWheelMotion(float f)
   \sa rightWheelStart(), rightWheelMotion()
   \sa leftWheelStart(), bottomWheelStart()
 */
+
 void
-SoGtkFullViewer::rightWheelFinish(void)
+SoGtkFullViewer::rightWheelFinish(
+  void )
 {
   this->interactiveCountDec();
 }
 
 // *************************************************************************
+
 /*!
   Get current value of the right thumbwheel.
 
   \sa rightWheelMotion()
 */
+
 float
-SoGtkFullViewer::getRightWheelValue(void) const
+SoGtkFullViewer::getRightWheelValue(
+  void ) const
 {
-  return this->wheelvalues[RIGHTDECORATION];
+  return this->wheelValues[ RIGHTDECORATION ];
 }
 
 // *************************************************************************
 // These are all private slots for catching Qt events.
+
 void SoGtkFullViewer::leftWheelPressed(void) { this->leftWheelStart(); }
-void SoGtkFullViewer::leftWheelChanged(float v) { this->leftWheelMotion(-v); }
+void SoGtkFullViewer::leftWheelChanged(float v) { this->leftWheelMotion(v); }
 void SoGtkFullViewer::leftWheelReleased(void) { this->leftWheelFinish(); }
 void SoGtkFullViewer::bottomWheelPressed(void) { this->bottomWheelStart(); }
 void SoGtkFullViewer::bottomWheelChanged(float v) { this->bottomWheelMotion(v);}
 void SoGtkFullViewer::bottomWheelReleased(void) { this->bottomWheelFinish(); }
 void SoGtkFullViewer::rightWheelPressed(void) { this->rightWheelStart(); }
-void SoGtkFullViewer::rightWheelChanged(float v) { this->rightWheelMotion(-v); }
+void SoGtkFullViewer::rightWheelChanged(float v) { this->rightWheelMotion(v); }
 void SoGtkFullViewer::rightWheelReleased(void) { this->rightWheelFinish(); }
 
 // *************************************************************************
+
 /*!
   Set label of the left thumbwheel.
 */
+
 void
-SoGtkFullViewer::setLeftWheelString(const char * str)
+SoGtkFullViewer::setLeftWheelString(
+  const char * str )
 {
-  this->wheelstrings[LEFTDECORATION] = str ? str : "";
+/*
+  this->wheelStrings[LEFTDECORATION] = str ? str : "";
   QLabel * l = this->wheellabels[LEFTDECORATION];
   if (l) l->setText(this->wheelstrings[LEFTDECORATION]);
+*/
 }
 
 // *************************************************************************
+
 /*!
   Set label of the bottom thumbwheel.
 */
+
 void
 SoGtkFullViewer::setBottomWheelString(const char * str)
 {
+/*
   this->wheelstrings[BOTTOMDECORATION] = str ? str : "";
   QLabel * l = this->wheellabels[BOTTOMDECORATION];
   if (l) l->setText(this->wheelstrings[BOTTOMDECORATION]);
+*/
 }
 
 // *************************************************************************
+
 /*!
   Set label of the right thumbwheel.
 */
+
 void
 SoGtkFullViewer::setRightWheelString(const char * str)
 {
+/*
   this->wheelstrings[RIGHTDECORATION] = str ? str : "";
   QLabel * l = this->wheellabels[RIGHTDECORATION];
   if (l) l->setText(this->wheelstrings[RIGHTDECORATION]);
+*/
 }
 
 // *************************************************************************
+
 /*!
   Overload this method to provide functionality when the user clicks
   the Help button. Default implementation does nothing.
 */
+
 void
 SoGtkFullViewer::openViewerHelpCard(void)
 {
 }
 
 // *************************************************************************
+
 /*!
   \internal
 
   Show or hide decorations. Will make and activate a Qt layout grid
   if we're turning the decorations on.
 */
+
 void
-SoGtkFullViewer::showDecorationWidgets(SbBool onOff)
+SoGtkFullViewer::showDecorationWidgets(
+  SbBool enable )
 {
-  if (this->mainlayout) delete this->mainlayout;
+//  if ( this->mainLayout )
+//    delete this->mainLayout;
 
-  assert(this->viewerwidget);
-  assert(this->canvasparent);
+  assert(this->viewerWidget);
+  assert(this->canvasParent);
 
+/*
   if (onOff) {
     for (int i = FIRSTDECORATION; i <= LASTDECORATION; i++) {
       assert(this->decorform[i]);
@@ -1294,16 +1539,22 @@ SoGtkFullViewer::showDecorationWidgets(SbBool onOff)
   }
 
   this->mainlayout->activate();
+*/
 }
 
 // *************************************************************************
+
 /*!
   Layout application specified buttons.
 */
+
 void
-SoGtkFullViewer::layoutAppButtons(GtkWidget * form)
+SoGtkFullViewer::layoutAppButtons(
+  GtkWidget * form )
 {
-  delete this->appbuttonlayout; this->appbuttonlayout = NULL;
+/*
+  delete this->appButtonLayout;
+  this->appButtonLayout = NULL;
 
   int nrbuttons = this->appbuttonlist->getLength();
   if (nrbuttons == 0) return;
@@ -1318,15 +1569,20 @@ SoGtkFullViewer::layoutAppButtons(GtkWidget * form)
   }
 
   this->appbuttonlayout->activate();
+*/
 }
 
 // *************************************************************************
+
 /*!
   Create preferences sheet.
 */
+
 GtkWidget *
-SoGtkFullViewer::makePreferencesWindow(void)
+SoGtkFullViewer::makePreferencesWindow(
+  void )
 {
+/*
   GtkWidget * top = new GtkWidget(NULL);
   top->setCaption(this->prefwindowtitle.getString());
   top->setIconText(this->prefwindowtitle.getString());
@@ -1349,16 +1605,22 @@ SoGtkFullViewer::makePreferencesWindow(void)
   layout->activate();
   top->adjustSize();
   return top;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Create the UI representation of the preferences' settings for the
   seek-to-point functionality.
 */
+
 GtkWidget *
-SoGtkFullViewer::makeSeekPreferences(GtkWidget * parent)
+SoGtkFullViewer::makeSeekPreferences(
+  GtkWidget * parent )
 {
+/*
   // FIXME: it'd be nice to show separation in the prefs sheet, but
   // this code doesn't work for some reason (because of the
   // layout objects?). 990221 mortene.
@@ -1448,16 +1710,22 @@ SoGtkFullViewer::makeSeekPreferences(GtkWidget * parent)
   w->resize(totalsize);
   toplayout->activate();
   return w;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Create the UI representation of the preferences' settings for the
   seek-to-point functionality.
 */
+
 GtkWidget *
-SoGtkFullViewer::makeSeekDistancePreferences(GtkWidget * parent)
+SoGtkFullViewer::makeSeekDistancePreferences(
+  GtkWidget * parent )
 {
+/*
   GtkWidget * w = new GtkWidget(parent);
 
   // Initialize objects keeping track of geometry data.
@@ -1534,16 +1802,22 @@ SoGtkFullViewer::makeSeekDistancePreferences(GtkWidget * parent)
   toplayout->activate();
 
   return w;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Create the UI representation of the preferences' settings for the
   camera zoom functionality.
 */
+
 GtkWidget *
-SoGtkFullViewer::makeZoomPreferences(GtkWidget * parent)
+SoGtkFullViewer::makeZoomPreferences(
+  GtkWidget * parent )
 {
+/*
   GtkWidget * w = new GtkWidget(parent);
 
   // Initialize objects keeping track of geometry data.
@@ -1644,16 +1918,22 @@ SoGtkFullViewer::makeZoomPreferences(GtkWidget * parent)
   toplayout->activate();
 
   return w;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Enable or disable interaction through the near and far clipping
   widgets.
 */
+
 void
-SoGtkFullViewer::setEnabledClippingWidgets(bool flag)
+SoGtkFullViewer::setEnabledClippingWidgets(
+  SbBool flag )
 {
+/*
   this->nearclippinglabel->setEnabled(flag);
   this->nearclippingwheel->setEnabled(flag);
   this->nearclippingedit->setEnabled(flag);
@@ -1672,16 +1952,21 @@ SoGtkFullViewer::setEnabledClippingWidgets(bool flag)
   this->nearclippingedit->setText(s);
   s.setNum(cam->farDistance.getValue(), 'f', 3);
   this->farclippingedit->setText(s);
+*/
 }
 
 // *************************************************************************
+
 /*!
   Create the UI representation of the preferences' settings for the
   manual control of the near and far clippping planes.
 */
+
 GtkWidget *
-SoGtkFullViewer::makeAutoclipPreferences(GtkWidget * dialog)
+SoGtkFullViewer::makeAutoclipPreferences(
+  GtkWidget * dialog )
 {
+/*
   GtkWidget * w = new GtkWidget(dialog);
 
   // Initialize objects keeping track of geometry data.
@@ -1784,12 +2069,16 @@ SoGtkFullViewer::makeAutoclipPreferences(GtkWidget * dialog)
   toplayout->activate();
 
   return w;
+*/
+  return NULL;
 }
 
 // *************************************************************************
+
 /*!
   Set camera zoom value.
 */
+
 void
 SoGtkFullViewer::setCameraZoom(const float val)
 {
@@ -1838,13 +2127,13 @@ SoGtkFullViewer::getCameraZoom(void)
 void
 SoGtkFullViewer::setZoomSliderPosition(float zoom)
 {
-  if (!this->prefwindow) return;
+  if (!this->prefWindow) return;
 
   float f =
-    (zoom - this->zoomrange[0]) / (this->zoomrange[1] - this->zoomrange[0]);
-  f = QMAX(0.0f, QMIN(f, 1.0f)) * ZOOMSLIDERRESOLUTION;
+    (zoom - this->zoomRange[0]) / (this->zoomRange[1] - this->zoomRange[0]);
+  f = SbMax(0.0f, SbMin(f, 1.0f)) * ZOOMSLIDERRESOLUTION;
 
-  this->zoomslider->setValue(f);
+//  this->zoomSlider->setValue(f);
 }
 
 // *************************************************************************
@@ -1854,111 +2143,149 @@ SoGtkFullViewer::setZoomSliderPosition(float zoom)
 void
 SoGtkFullViewer::setZoomFieldString(float zoom)
 {
-  if (!this->prefwindow) return;
+  if (!this->prefWindow) return;
 
+/*
   QString s;
   s.setNum(zoom, 'f', 1);
-  this->zoomfield->setText(s);
+  this->zoomField->setText(s);
+*/
 }
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::interactbuttonToggled(bool flag)
 {
   this->setViewing(!flag);
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::viewbuttonToggled(bool flag)
 {
   this->setViewing(flag);
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::helpbuttonClicked()
 {
   this->openViewerHelpCard();
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::homebuttonClicked()
 {
   this->resetToHomePosition();
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::sethomebuttonClicked()
 {
   this->saveHomePosition();
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::viewallbuttonClicked()
 {
   this->viewAll();
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::seekbuttonClicked()
 {
   this->setSeekMode(this->isSeekMode() ? FALSE : TRUE);
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::selectedViewing()
 {
   this->setViewing(this->isViewing() ? FALSE : TRUE);
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::selectedDecoration()
 {
   this->setDecoration(this->isDecoration() ? FALSE : TRUE);
 }
+*/
 
 // *************************************************************************
 
@@ -1966,42 +2293,56 @@ SoGtkFullViewer::selectedDecoration()
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::selectedHeadlight()
 {
   this->setHeadlight(this->isHeadlight() ? FALSE : TRUE);
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::copyviewSelected()
 {
   this->copyView(SbTime::getTimeOfDay());
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
   Qt slot.
 */
+
+/*
 void
 SoGtkFullViewer::pasteviewSelected()
 {
   this->pasteView(SbTime::getTimeOfDay());
 }
+*/
 
 // *************************************************************************
+
 /*!
   \internal
 */
+
 void
 SoGtkFullViewer::setDrawStyleMenuActivation(SoGtkViewer::DrawType type,
                                            SoGtkViewer::DrawStyle val)
 {
+/*
   QMenuData * m;
   assert(this->prefmenu);
   this->prefmenu->findItem(AS_IS_ITEM, &m);
@@ -2014,7 +2355,7 @@ SoGtkFullViewer::setDrawStyleMenuActivation(SoGtkViewer::DrawType type,
 
   for (int i = start; i <= end; i++) m->setItemChecked(i, FALSE);
 
-  int id = 0; /* set to dummy value to avoid compiler warning. */
+  int id = 0; // set to dummy value to avoid compiler warning.
 
   // FIXME: use a dict or two? 990220 mortene.
   if (type == SoGtkViewer::STILL) {
@@ -2044,6 +2385,7 @@ SoGtkFullViewer::setDrawStyleMenuActivation(SoGtkViewer::DrawType type,
   }
 
   m->setItemChecked(id, TRUE);
+*/
 }
 
 // *************************************************************************
@@ -2053,6 +2395,7 @@ SoGtkFullViewer::setDrawStyleMenuActivation(SoGtkViewer::DrawType type,
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::drawstyleActivated(
   int id )
@@ -2124,6 +2467,7 @@ SoGtkFullViewer::drawstyleActivated(
 
   this->setDrawStyle(type, val);
 } // drawstyleActivated()
+*/
 
 // *************************************************************************
 
@@ -2132,6 +2476,7 @@ SoGtkFullViewer::drawstyleActivated(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::selectedPrefs(void)
 {
@@ -2139,6 +2484,7 @@ SoGtkFullViewer::selectedPrefs(void)
   this->prefwindow->show();
   this->prefwindow->raise();
 } // selectedPrefs()
+*/
 
 // *************************************************************************
 
@@ -2147,6 +2493,7 @@ SoGtkFullViewer::selectedPrefs(void)
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::seekAnimationTimeChanged(
   const char * s )
@@ -2154,6 +2501,7 @@ SoGtkFullViewer::seekAnimationTimeChanged(
   float val;
   if ((sscanf(s, "%f", &val) == 1) && (val >= 0.0f)) this->setSeekTime(val);
 } // seekAnimationTimeChanged()
+*/
 
 // *************************************************************************
 
@@ -2162,6 +2510,7 @@ SoGtkFullViewer::seekAnimationTimeChanged(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::seekAnimationTimeChanged(
   const QString & s )
@@ -2170,6 +2519,7 @@ SoGtkFullViewer::seekAnimationTimeChanged(
   float val = s.toFloat(&ok);
   if (ok && (val >= 0.0f)) this->setSeekTime(val);
 } // seekAnimationTimeChanged()
+*/
 
 // *************************************************************************
 
@@ -2178,6 +2528,7 @@ SoGtkFullViewer::seekAnimationTimeChanged(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::seekDetailToggled(
   int id )
@@ -2186,6 +2537,7 @@ SoGtkFullViewer::seekDetailToggled(
   else if (id == 1) this->setDetailSeek(FALSE);
   else assert(0);
 } // seekDetailToggle()
+*/
 
 // *************************************************************************
 
@@ -2194,6 +2546,7 @@ SoGtkFullViewer::seekDetailToggled(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::seekDistanceWheelChanged(
   float val )
@@ -2209,6 +2562,7 @@ SoGtkFullViewer::seekDistanceWheelChanged(
   s.setNum(this->getSeekDistance(), 'f', 2);
   this->seekdistancefield->setText(s);
 } // seekDistanceWheelChanged()
+*/
 
 // *************************************************************************
 
@@ -2217,6 +2571,7 @@ SoGtkFullViewer::seekDistanceWheelChanged(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::seekDistanceEdit(
   void )
@@ -2233,6 +2588,7 @@ SoGtkFullViewer::seekDistanceEdit(
     this->seekdistancefield->setText(s);
   }
 } // seekDistanceEdit()
+*/
 
 // *************************************************************************
 
@@ -2241,12 +2597,14 @@ SoGtkFullViewer::seekDistanceEdit(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::seekDistanceTypeToggle(
   int id )
 {
   this->setSeekValueAsPercentage(id == 0 ? TRUE : FALSE);
 } // seekDistanceTypeToggle()
+*/
 
 // *************************************************************************
 
@@ -2255,6 +2613,7 @@ SoGtkFullViewer::seekDistanceTypeToggle(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::zoomSliderMoved(
   int val )
@@ -2265,6 +2624,7 @@ SoGtkFullViewer::zoomSliderMoved(
   this->setCameraZoom(f);
   this->setZoomFieldString(f);
 } // zoomSliderMoved()
+*/
 
 // *************************************************************************
 
@@ -2273,6 +2633,7 @@ SoGtkFullViewer::zoomSliderMoved(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::zoomFieldChanged(
   void )
@@ -2289,6 +2650,7 @@ SoGtkFullViewer::zoomFieldChanged(
     this->zoomfield->setText(s);
   }
 } // zoomFieldChanged()
+*/
 
 // *************************************************************************
 
@@ -2297,6 +2659,7 @@ SoGtkFullViewer::zoomFieldChanged(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::zoomRangeChanged1(
   void )
@@ -2314,6 +2677,7 @@ SoGtkFullViewer::zoomRangeChanged1(
     this->zoomrangefrom->setText(s);
   }
 } // zoomRangeChanged1()
+*/
 
 // *************************************************************************
 
@@ -2322,6 +2686,7 @@ SoGtkFullViewer::zoomRangeChanged1(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::zoomRangeChanged2(
   void )
@@ -2339,6 +2704,7 @@ SoGtkFullViewer::zoomRangeChanged2(
     this->zoomrangeto->setText(s);
   }
 } // zoomRangeChanged2()
+*/
 
 // *************************************************************************
 
@@ -2347,6 +2713,7 @@ SoGtkFullViewer::zoomRangeChanged2(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::clippingToggled(
   bool flag )
@@ -2354,6 +2721,7 @@ SoGtkFullViewer::clippingToggled(
   this->setAutoClipping(flag);
   this->setEnabledClippingWidgets(!flag);
 } // clippingToggled()
+*/
 
 // *************************************************************************
 
@@ -2390,6 +2758,7 @@ SoGtkFullViewer::decreaseInteractiveCount(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::nearclippingwheelMoved(
   float val )
@@ -2404,6 +2773,7 @@ SoGtkFullViewer::nearclippingwheelMoved(
   s.setNum(cam->nearDistance.getValue(), 'f', 3);
   this->nearclippingedit->setText(s);
 } // nearclippingwheelMoved()
+*/
 
 // *************************************************************************
 
@@ -2412,6 +2782,7 @@ SoGtkFullViewer::nearclippingwheelMoved(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::farclippingwheelMoved(
   float val )
@@ -2426,6 +2797,7 @@ SoGtkFullViewer::farclippingwheelMoved(
   s.setNum(cam->farDistance.getValue(), 'f', 3);
   this->farclippingedit->setText(s);
 } // farclippingwheelMoved()
+*/
 
 // *************************************************************************
 
@@ -2434,6 +2806,7 @@ SoGtkFullViewer::farclippingwheelMoved(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::nearclipEditPressed(
   void )
@@ -2453,6 +2826,7 @@ SoGtkFullViewer::nearclipEditPressed(
     this->nearclippingedit->setText(s);
   }
 } // nearclipEditPressed()
+*/
 
 // *************************************************************************
 
@@ -2461,6 +2835,7 @@ SoGtkFullViewer::nearclipEditPressed(
   Qt slot.
 */
 
+/*
 void
 SoGtkFullViewer::farclipEditPressed(
   void )
@@ -2480,5 +2855,6 @@ SoGtkFullViewer::farclipEditPressed(
     this->farclippingedit->setText(s);
   }
 } // farclipEditPressed()
+*/
 
 // *************************************************************************

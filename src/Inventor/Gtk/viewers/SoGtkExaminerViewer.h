@@ -33,24 +33,18 @@ class SoSwitch;
 class SoTranslation;
 class SoScale;
 
-class QPushButton;
-class QLabel;
-class QLineEdit;
-class QtThumbwheel;
-class QPixmap;
-class QTimer;
-
 // *************************************************************************
 
 class SoGtkExaminerViewer : public SoGtkFullViewer {
   typedef SoGtkFullViewer inherited;
 
 public:
-  SoGtkExaminerViewer( GtkWidget * parent = NULL,
-                     const char * name = NULL,
-                     SbBool buildInsideParent = TRUE,
-                     SoGtkFullViewer::BuildFlag flag = BUILD_ALL,
-                     SoGtkViewer::Type type = BROWSER);
+  SoGtkExaminerViewer(
+    GtkWidget * parent = NULL,
+    const char * name = NULL,
+    SbBool buildInsideParent = TRUE,
+    SoGtkFullViewer::BuildFlag flag = BUILD_ALL,
+    SoGtkViewer::Type type = BROWSER );
   ~SoGtkExaminerViewer(void);
 
   void setFeedbackVisibility(const SbBool on);
@@ -90,7 +84,7 @@ protected:
 
   virtual void openViewerHelpCard(void);
 
-  virtual void processEvent(GtkEvent * anyevent);
+  virtual void processEvent(GdkEvent * anyevent);
   virtual void setSeekMode(SbBool on);
   virtual void actualRedraw(void);
 
@@ -103,7 +97,7 @@ private:
     WAITING_FOR_PAN, PANNING,
   };
 
-  ViewerMode currentmode;
+  ViewerMode currentMode;
 
   void reorientCamera(const SbRotation & rot);
   void zoom(const float diffvalue);
@@ -117,38 +111,41 @@ private:
   void drawAxisCross(void);
   void drawArrow(void);
 
-  SbBool axiscrossOn;
-  int axiscrossSize;
+  SbBool axisCrossOn;
+  int axisCrossSize;
 
-  QPixmap * orthopixmap, * perspectivepixmap;
+  struct {
+    GtkWidget * orthogonal;
+    GtkWidget * perspective;
+  } pixmaps;
 
   void constructor(SbBool buildNow);
   static void visibilityCB(void * data, SbBool visible);
 
-  QTimer * spindetecttimer;
-  SbBool spinanimating, animatingallowed;
-  SoTimerSensor * timertrigger;
+//  QTimer * spinDetectTimer;
+  SbBool spinAnimating, animatingAllowed;
+  SoTimerSensor * timerTrigger;
   static void timertriggeredCB(void * data, SoSensor *);
 
   SbSphereSheetProjector * projector;
 
   void setCursorRepresentation(const ViewerMode mode);
-  QCursor * pancursor, * rotatecursor;
-  QCursor * defaultcursor, * zoomcursor;
+//  QCursor * panCursor, * rotateCursor;
+//  QCursor * defaultCursor, * zoomCursor;
 
-  SbVec2f lastmouseposition;
-  SbPlane panningplane;
+  SbVec2f prevMousePosition;
+  SbPlane panningPlane;
 
-  SbRotation spinincrement;
-  int spinsamplecounter;
+  SbRotation spinIncrement;
+  int spinSampleCounter;
 
-  QPushButton * cameratogglebutton;
-  QLabel * feedbacklabel1, * feedbacklabel2;
-  QtThumbwheel * feedbackwheel;
-  QLineEdit * feedbackedit;
+  GtkWidget * cameraToggleButton;
+  GtkWidget * feedbackLabel1, * feedbackLabel2;
+  GtkWidget * feedbackWheel;
+  GtkWidget * feedbackEdit;
   void setEnableFeedbackControls(const SbBool flag);
 
-private slots:
+private: // slots:
   // Pref sheet.
   void spinAnimationToggled(SbBool flag);
   void feedbackVisibilityToggle(SbBool flag);
