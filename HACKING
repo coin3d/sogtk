@@ -1,7 +1,7 @@
 If you want to work _with_ the SoGtk sourcecode (not just writing
 applications _using_ the SoGtk library) -- for helping us fixing bugs,
 improve performance, or whatever reasons -- this file contains some
-hints and tips for you.
+hints and tips for you.  This document is a work in progress...
 
 ==============================================================================
 
@@ -12,10 +12,34 @@ First of all, you should make sure you are building from the latest
 sources from the CVS branch you want to work with. This is done by
 using the Concurrent Versioning System for staying in sync with the
 sourcecode repository we at Systems in Motion are using.  Follow the
-instructions on the webpages at <URL:http://www.coin3d.org>.
+instructions on the webpages at <URL:http://www.coin3d.org/>.
 
 If you are not familiar with CVS, check out the CVS homepages at
 <URL:http://cvshome.org/>.
+
+
+2 Autoconf/Automake/Libtool/Gettext
+===================================
+
+We use Autoconf and Automake from the latest CVS development repositories,
+libtool 1.3.5, and gettext 0.10.35.  If you are to work on the build setup
+for SoGtk, you should use the same tool versions.
+
+
+3 Framerates
+============
+
+If you are doing work related to rendering performance, you will probably
+want to see frames-per-second statistics when spinning models, etc.
+If you set the environment variable COIN_SHOW_FPS_COUNTER to "1", a
+fps counter should show up in the bottom left corner of the GL canvas when
+you do animation (spinning, zooming ,etc) in the viewer components.
+
+You might also want to enable display list caching, which is enabled by
+setting the environment variable COIN_RENDER_CACHING to "1" (using SoGtk
+over Coin, of course), and setting the renderCaching field of SoSeparator
+nodes to ON.
+
 
 
 XXX FIXME: complete doc. XXX
@@ -28,7 +52,7 @@ XXX FIXME: complete doc. XXX
 			- full debug
                         - with profiling
                         - different platforms
-		o --enable-hacking (gives quick turn-around time)
+		o --enable-hacking (gives quick turn-around time) (not implemented)
 		o symlinks from install directory to avoid ``make install''
 		o ``make install'' from src/Inventor/Gtk instead of root
                 o make install-data
@@ -37,6 +61,7 @@ XXX FIXME: complete doc. XXX
                   dynamic libraries
 
 * Differences, MSWin
+	- mswin support not tested yet (GTK+ is immature)
 
 * Build hacking, autogen.sh/Autoconf/Automake/Libtool
 
@@ -49,6 +74,6 @@ XXX FIXME: complete doc. XXX
 
 * come work for us
         - interest in 3D visualization
-        - C++ expertise a definitive plus
+        - C/C++ expertise a definitive plus
 
 ==============================================================================

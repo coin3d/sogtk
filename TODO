@@ -2,4 +2,7 @@ TODO
 ====
 
 * [larsa:20000201] clean up all the Qt-related comments in the source code.
+* [larsa:20001230] fix `make dist*' (possibly with automake patches)
+* [larsa:20001230] remove TODO file, and use bugzilla instead
+* [larsa:20001230] stub and then implement missing components
 

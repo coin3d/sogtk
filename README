@@ -1,27 +1,23 @@
-README
-======
-
 SoGtk is a GTK+ toolkit library for using Open Inventor with GTK+.  It
-was developed as a replacement library for InventorXt for GTK+ users.
-SoGtk can be used on top of Coin (SIM's Open Inventor clone), SGI's Open
-Inventor, and TGS' Open Inventor.
+has been developed as a replacement library for InventorXt for GTK+ users.
+SoGtk should work equally well on top of Coin (SIM's Open Inventor clone),
+SGI's Open Inventor, and TGS' Open Inventor.
 
 To build SoGtk, you need the following libraries:
 
-  - GTK+ <URL:http://www.gtk.org/>.
+  - GTK+ <URL:http://www.gtk.org/> (glib + gtk).
   - The GtkGLArea widget <URL:http://www.student.oulu.fi/~jlof/gtkglarea/>.
-  - An Open Inventor library.
+  - An Open Inventor implementation.
 
 Although you can contact the author directly, please use the coin-discuss
 mailing-list for SoGtk-related questions.  Information on the coin mailing-
 lists can be found on the support page at <URL:http://www.coin3d.org/>.
+To browse previous discussions on coin-discuss (to see if the subject has
+already been discussed), look up the coin-discuss mailing list archive at
+<URL:http://www.coin3d.org/auto/coin-discuss/>.
 
-To build the SoGtk documentation, you need the Doxygen utility.  You can
-also access the documentation online at http://www.coin3d.org/sogtk-docs/
-
-If you want to avoid compiling the default set of materials (used by the
-SoGtkMaterialList component) into libSoGtk , you should set $COIN_HOME to
-${prefix}/share/Coin and add the option --disable-static-defaults to the
-configure options you use.
+To generate the SoGtk API documentation yourself, you need the Doxygen
+utility.  The documentation is also available online at the Coin web site,
+at <URL:http://www.coin3d.org/sogtk-docs/>.
 
   Lars J

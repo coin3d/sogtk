@@ -18,6 +18,36 @@ Cookbook Procedure
 
     $ make install
 
+
+SoGtk-Specific Configure Options
+================================
+
+  --disable-static-defaults
+
+    By default, a large set of materials are compiled into libSoGtk for use
+    by the SoGtkMaterialList component.  These materials take up papproximately
+    400K, and can be left out by specifying this option.
+
+    If you choose to do so, be sure you set the COIN_HOME environment variable
+    to ${prefix}/share/Coin.
+
+  --with-html
+
+    If you have Doxygen and want to generate the HTML API documentation, you must
+    specify this option to get build/sogtk.doxygen set up for HTML generation.
+
+  --with-man
+
+    If you have Doxygen and want to generate the man-page API documentation, you
+    must specify this option to get build/sogtk.doxygen set up for man generation.
+
+  --disable-build
+
+    If you just want to run configure to generate build/sogtk.doxygen, you can
+    specify this option to ignore all the library compilation configure tests
+    that aren't necessary.
+
+
 Basic Installation
 ==================
 
