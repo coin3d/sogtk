@@ -23,7 +23,7 @@ Version: @VERSION@
 Release: @sogtk_configure_date@
 Copyright: GNU Lesser General Public License (LGPL)
 Group: Development/Libraries
-URL: http://www.coin3d.org
+URL: http://www.coin3d.org/
 Vendor: Systems in Motion
 Packager: Morten Eriksen <mortene@sim.no>
 
@@ -80,27 +80,25 @@ strip @libdir@/libSoGtk.so.1.0.0
 @datadir@/aclocal/sogtk.m4
 @includedir@/Inventor/Gtk/SoGtk.h
 @includedir@/Inventor/Gtk/SoGtkBasic.h
+@includedir@/Inventor/Gtk/SoGtkObject.h
 @includedir@/Inventor/Gtk/SoGtkComponent.h
 @includedir@/Inventor/Gtk/SoGtkCursors.h
 @includedir@/Inventor/Gtk/SoGtkGLWidget.h
-@includedir@/Inventor/Gtk/SoGtkLightSliderSet.h
-@includedir@/Inventor/Gtk/SoGtkMaterialSliderSet.h
 @includedir@/Inventor/Gtk/SoGtkRenderArea.h
-@includedir@/Inventor/Gtk/SoGtkSliderSet.h
-@includedir@/Inventor/Gtk/SoGtkSliderSetBase.h
-@includedir@/Inventor/Gtk/SoGtkTransformSliderSet.h
+@includedir@/Inventor/Gtk/SoGtkRoster.h
+@includedir@/Inventor/Gtk/SoGtkGraphEditor.h
 @includedir@/Inventor/Gtk/devices/SoGtkDevice.h
 @includedir@/Inventor/Gtk/devices/SoGtkInputFocus.h
 @includedir@/Inventor/Gtk/devices/SoGtkKeyboard.h
 @includedir@/Inventor/Gtk/devices/SoGtkLinuxJoystick.h
 @includedir@/Inventor/Gtk/devices/SoGtkMouse.h
 @includedir@/Inventor/Gtk/devices/SoGtkSpaceball.h
-@includedir@/Inventor/Gtk/viewers/SoGtkConstrainedViewer.h
-@includedir@/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
-@includedir@/Inventor/Gtk/viewers/SoGtkFlyViewer.h
-@includedir@/Inventor/Gtk/viewers/SoGtkFullViewer.h
-@includedir@/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
 @includedir@/Inventor/Gtk/viewers/SoGtkViewer.h
+@includedir@/Inventor/Gtk/viewers/SoGtkFullViewer.h
+@includedir@/Inventor/Gtk/viewers/SoGtkExaminerViewer.h
+@includedir@/Inventor/Gtk/viewers/SoGtkPlaneViewer.h
+@includedir@/Inventor/Gtk/viewers/SoGtkConstrainedViewer.h
+@includedir@/Inventor/Gtk/viewers/SoGtkFlyViewer.h
 @includedir@/Inventor/Gtk/viewers/SoGtkWalkViewer.h
 @libdir@/libSoGtk.so.1
 @libdir@/libSoGtk.so.1.0.0
