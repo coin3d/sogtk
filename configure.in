@@ -494,6 +494,15 @@ SIM_AC_UNIQIFY_LIST(LIBS, $LIBS)
 fi
 
 # **************************************************************************
+
+COIN_COMPILER="$CXX"
+if $BUILD_WITH_MSVC; then
+  # don't use wrapmsvc from source hierarchy when later using sogtk-config.
+  COIN_COMPILER="wrapmsvc"
+fi
+AC_SUBST(COIN_COMPILER)
+
+# **************************************************************************
 # Variable substitutions for using libSoGtk in the generic code.
 
 AC_SUBST([GUI], [GTK])
