@@ -410,7 +410,20 @@ SoGtkComponent::show( // virtual
                          this->widget->size().height());
 #endif // debug
 
+  GtkWidget * window = gtk_widget_get_toplevel( this->widget );
+  if ( ! GTK_IS_WINDOW(window) ) {
+    // top widget not been hooked to window yet
+    gtk_container_add( GTK_CONTAINER(this->parent), this->widget );
+    if ( this->storeSize[0] != -1 ) {
+      window = gtk_widget_get_toplevel( this->widget );
+      if ( GTK_IS_WINDOW(window) ) {
+        gtk_window_set_default_size( GTK_WINDOW(window),
+          this->storeSize[0], this->storeSize[1] );
+      }
+    }
+  }
   gtk_widget_show( this->widget );
+
 #if SOGTKCOMP_RESIZE_DEBUG  // debug
   SoDebugError::postInfo("SoGtkComponent::show-3",
                          "showed %p: (%d, %d)",
@@ -584,13 +597,13 @@ SoGtkComponent::getParentWidget(
 
 void
 SoGtkComponent::setTitle(
-  const char * const newTitle )
+  const char * const title )
 {
-  this->captionText = newTitle;
+  this->captionText = title;
   if ( this->widget ) {
     GtkWidget * window = gtk_widget_get_toplevel( this->widget );
     assert( window != NULL );
-    gtk_window_set_title( GTK_WINDOW(window), newTitle );
+    gtk_window_set_title( GTK_WINDOW(window), title );
   }
 } // setTitle()
 
@@ -749,7 +762,9 @@ SoGtkComponent::setSize(
   this->storeSize = size;
   if ( this->widget ) {
     GtkWidget * window = gtk_widget_get_toplevel( GTK_WIDGET(this->widget) );
-    gtk_window_set_default_size( GTK_WINDOW(window), size[0], size[1] );
+    if ( GTK_IS_WINDOW(window) ) {
+      gtk_window_set_default_size( GTK_WINDOW(window), size[0], size[1] );
+    }
     this->sizeChanged( size );
   }
 } // setSize()
