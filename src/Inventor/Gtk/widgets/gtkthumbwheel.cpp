@@ -90,7 +90,6 @@ static const guint GTK_THUMBWHEEL_WHEEL_LENGTH =
   (GTK_THUMBWHEEL_DEFAULT_LENGTH - 2 * GTK_THUMBWHEEL_PAD_LENGTH) ;
 
 enum {
-  THUMBWHEEL_DISABLED,
   THUMBWHEEL_IDLE,
   THUMBWHEEL_DRAGGING
 };
@@ -384,6 +383,21 @@ gtk_thumbwheel_expose(
   if (GTK_WIDGET_DRAWABLE(widget))
     {
       GtkThumbWheel *thumbwheel = GTK_THUMBWHEEL (widget);
+      SoAnyThumbWheel *anywheel = (SoAnyThumbWheel *) thumbwheel->wheel ;
+
+      /* setting sensitivity generates expose events */
+      int img = anywheel->getBitmapForValue (thumbwheel->tempvalue,
+        GTK_WIDGET_IS_SENSITIVE(widget) ?
+          SoAnyThumbWheel::ENABLED : SoAnyThumbWheel::DISABLED );
+
+      if ( img != thumbwheel->img )
+      {
+        anywheel->drawBitmap (img,
+          (void *) thumbwheel->bitmap,
+          (thumbwheel->vertical != 0) ?
+          SoAnyThumbWheel::VERTICAL : SoAnyThumbWheel::HORIZONTAL);
+        thumbwheel->img = img ;
+      }
 
       gtk_thumbwheel_paint(widget, &event->area );
     }
@@ -556,24 +570,6 @@ gtk_thumbwheel_get_value(
     return thumbwheel->tempvalue;
   return thumbwheel->value;
 } // gtk_thumbwheel_get_value()
-
-// *************************************************************************
-
-void
-gtk_thumbwheel_enable(
-  GtkThumbWheel * thumbwheel )
-{
-  thumbwheel->state = THUMBWHEEL_IDLE;
-} // gtk_thumbwheel_enable()
-
-// *************************************************************************
-
-void
-gtk_thumbwheel_disable(
-  GtkThumbWheel * thumbwheel)
-{
-  thumbwheel->state = THUMBWHEEL_DISABLED;
-} // gtk_thumbwheel_disable()
 
 // *************************************************************************
 

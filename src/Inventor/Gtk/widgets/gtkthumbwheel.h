@@ -102,9 +102,6 @@ void         gtk_thumbwheel_set_value         (GtkThumbWheel * thumbwheel,
                                                gfloat value);
 gfloat       gtk_thumbwheel_get_value         (GtkThumbWheel * thumbwheel);
 
-void         gtk_thumbwheel_enable            (GtkThumbWheel * thumbwheel);
-void         gtk_thumbwheel_disable           (GtkThumbWheel * thumbwheel);
-
 void         gtk_thumbwheel_set_range_boundary_handling(
   GtkThumbWheel * thumbwheel,
   GtkThumbWheelBoundaryType handling);
