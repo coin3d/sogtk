@@ -421,7 +421,9 @@ SoGtkKeyboard::translateEvent( // virtual
       SoGtkDevice::setEventPosition( this->kbdevent, pos[0], pos[1] );
       char printable = 0;
       this->kbdevent->setKey( getKeyForKeyCode( event->keyval, printable ) );
+#if 0 // disabled. Breaks build when compiling against OIV
       if (printable) this->kbdevent->setPrintableCharacter(printable);
+#endif // disabled
       this->kbdevent->setState( SoButtonEvent::DOWN );
       this->kbdevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
       this->kbdevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
@@ -440,7 +442,9 @@ SoGtkKeyboard::translateEvent( // virtual
       SoGtkDevice::setEventPosition( this->kbdevent, pos[0], pos[1] );
       char printable = 0;
       this->kbdevent->setKey( getKeyForKeyCode( event->keyval, printable ) );
+#if 0 // disabled. Breaks build when compiling against OIV
       if (printable) this->kbdevent->setPrintableCharacter(printable);
+#endif // disabled
       this->kbdevent->setState( SoButtonEvent::UP );
       this->kbdevent->setShiftDown( (event->state & GDK_SHIFT_MASK) ? TRUE : FALSE );
       this->kbdevent->setCtrlDown( (event->state & GDK_CONTROL_MASK) ? TRUE : FALSE );
