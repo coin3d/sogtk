@@ -5,3 +5,4 @@ config.h.in
 configure
 stamp-h.in
 stuff
+autom4te.cache
