@@ -59,6 +59,9 @@ public:
   GtkWidget * getNormalWidget(void) const;
   GtkWidget * getOverlayWidget(void) const;
 
+  SbBool hasOverlayGLArea(void) const;
+  SbBool hasNormalGLArea(void) const;
+
 protected:
   SoGtkGLWidget(
     GtkWidget * const parent = (GtkWidget *) NULL,
@@ -72,15 +75,18 @@ protected:
 
   GtkWidget * buildWidget( GtkWidget * parent );
 
-  GtkWidget * getGtkGLArea(void);
-  GtkWidget * getGLWidget(void) { return this->getGtkGLArea(); }
+  GtkWidget * getGtkGLArea(void) const;
+  GtkWidget * getGLWidget(void) const { return this->getGtkGLArea(); }
 
   virtual void redraw(void) = 0;
+  virtual void redrawOverlay(void);
 
   virtual void sizeChanged( const SbVec2s size );
   virtual void widgetChanged( GtkWidget * widget );
 
   virtual void afterRealizeHook(void);
+  virtual void initGraphic(void);
+  virtual void initOverlayGraphic(void);
 
   void setGLSize( const SbVec2s size );
   const SbVec2s getGLSize(void) const;
@@ -90,19 +96,24 @@ protected:
   void setGlxSize( const SbVec2s size ) { this->setGLSize( size ); }
   const SbVec2s getGlxSize(void) const { return this->getGLSize(); }
   float getGlxAspectRatio(void) const { return this->getGLAspectRatio(); }
+  void setStereoBuffer(SbBool flag) {
+    this->setQuadBufferStereo(flag);
+  }
+  SbBool isStereoBuffer(void) const {
+    return this->isQuadBufferStereo();
+  }
+  SbBool isRGBMode(void);
 
-  SbBool isOverlayRender(void) const;
-  void setOverlayRender( const SbBool enable );
+  void glLockNormal(void);
+  void glUnlockNormal(void);
 
-  void glLock(void);
-  void glUnlock(void);
+  void glLockOverlay(void);
+  void glUnlockOverlay(void);
+
   void glSwapBuffers(void);
   void glFlushBuffer(void);
-  int getLockLevel(void) const;
 
-  virtual void glInit(void);
-  virtual void glReshape( int width, int height );
-  virtual void glRender(void);
+  virtual SbBool glScheduleRedraw(void);
 
   SbBool waitForExpose;
 

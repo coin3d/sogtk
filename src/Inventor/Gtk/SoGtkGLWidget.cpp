@@ -73,8 +73,8 @@ public:
   SoGtkGLWidgetP( SoGtkGLWidget * publ );
   ~SoGtkGLWidgetP(void);
 
-  int glLockLevel;
-  SbBool currentIsNormal;
+  SbBool wasresized;
+  SbVec2s glSize;
 
   GtkWidget * glParent;
   GtkWidget * glWidget;
@@ -124,6 +124,8 @@ SoGtkGLWidget::SoGtkGLWidget(
   this->pimpl = new SoGtkGLWidgetP( this );
 
   this->waitForExpose = TRUE;
+  PRIVATE(this)->wasresized = FALSE;
+  PRIVATE(this)->glSize = SbVec2s(0,0);
 
   PRIVATE(this)->glModeBits = glModes;
 
@@ -196,12 +198,12 @@ SoGtkGLWidget::buildWidget(
   gtk_widget_size_request( PRIVATE(this)->glWidget, &req );
   
   gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->glWidget), "realize",
-    GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLInit), (void *) this );
+                      GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLInit), (void *) this );
   gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->glWidget), "configure_event",
-    GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLReshape), (void *) this );
+                      GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLReshape), (void *) this );
   gtk_signal_connect( GTK_OBJECT(PRIVATE(this)->glWidget), "expose_event",
-    GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLDraw), (void *) this );
-
+                      GTK_SIGNAL_FUNC(SoGtkGLWidgetP::sGLDraw), (void *) this );
+  
   PRIVATE(this)->container = gtk_frame_new(0);
   gtk_frame_set_shadow_type(GTK_FRAME(PRIVATE(this)->container), GTK_SHADOW_IN);
   gtk_container_set_border_width( GTK_CONTAINER(PRIVATE(this)->container),
@@ -331,11 +333,11 @@ SbBool
 SoGtkGLWidget::isDoubleBuffer(
   void ) const
 {
-/*
-  if ( PRIVATE(this)->glWidget )
+  /*
+    if ( PRIVATE(this)->glWidget )
     return PRIVATE(this)->glWidget->doubleBuffer();
-  else
-*/
+    else
+  */
   return (PRIVATE(this)->glModeBits & SO_GL_DOUBLE) ? TRUE : FALSE;
 } // isDoubleBuffer()
 
@@ -346,8 +348,7 @@ SoGtkGLWidget::isDoubleBuffer(
 */
 
 void
-SoGtkGLWidget::setDrawToFrontBufferEnable(
-  const SbBool enable )
+SoGtkGLWidget::setDrawToFrontBufferEnable(const SbBool enable)
 {
   PRIVATE(this)->drawFrontBuff = enable;
 } // setDrawToFrontBufferEnable()
@@ -357,8 +358,7 @@ SoGtkGLWidget::setDrawToFrontBufferEnable(
 */
 
 SbBool
-SoGtkGLWidget::isDrawToFrontBufferEnable(
-  void ) const
+SoGtkGLWidget::isDrawToFrontBufferEnable(void) const
 {
   return PRIVATE(this)->drawFrontBuff;
 } // isDrawToFrontBufferEnable()
@@ -396,8 +396,7 @@ GtkWidget *
 SoGtkGLWidget::getNormalWidget(
   void ) const
 {
-  SOGTK_STUB();
-  return (GtkWidget *) NULL;
+  return this->getGLWidget();
 } // getNormalWidget()
 
 /*!
@@ -408,7 +407,6 @@ GtkWidget *
 SoGtkGLWidget::getOverlayWidget(
   void ) const
 {
-  SOGTK_STUB();
   return (GtkWidget *) NULL;
 } // getOverlayWidget()
 
@@ -456,7 +454,7 @@ SoGtkGLWidget::getGLAspectRatio(
   if ( ! PRIVATE(this)->glWidget )
     return 1.0f;
   return (float) PRIVATE(this)->glWidget->allocation.width /
-         (float) PRIVATE(this)->glWidget->allocation.height;
+    (float) PRIVATE(this)->glWidget->allocation.height;
 } // getGLAspectRatio()
 
 /*!
@@ -484,8 +482,7 @@ SoGtkGLWidget::getGLAspectRatio(
 */
 
 GtkWidget *
-SoGtkGLWidget::getGtkGLArea(
-  void )
+SoGtkGLWidget::getGtkGLArea(void) const
 {
   return PRIVATE(this)->glWidget;
 } // getGtkGLArea()
@@ -513,7 +510,7 @@ SoGtkGLWidget::sizeChanged(
 
 void
 SoGtkGLWidget::widgetChanged( // virtual
-  GtkWidget * widget )
+    GtkWidget * widget )
 {
 } // widgetChanged()
 
@@ -525,26 +522,11 @@ SoGtkGLWidget::widgetChanged( // virtual
 
 void
 SoGtkGLWidget::processEvent( // virtual
-  GdkEvent * event )
+                            GdkEvent * event )
 {
   // FIXME: anything to do here?
 } // processEvent()
 
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkGLWidget::glInit(
-  void )
-{
-  this->setOverlayRender( FALSE );
-  this->glLock();
-  glEnable( GL_DEPTH_TEST );
-  this->glUnlock();
-} // glInit()
 
 /*!
   FIXME: write doc
@@ -556,7 +538,7 @@ SoGtkGLWidgetP::sGLInit( // static
   void * closure )
 {
   SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
-  glwidget->glInit();
+  glwidget->initGraphic();
   return TRUE;
 } // sGLInit()
 
@@ -565,33 +547,6 @@ SoGtkGLWidgetP::sGLInit( // static
 /*!
   FIXME: write doc
 */
-
-void
-SoGtkGLWidget::glReshape( // virtual
-  int width,
-  int height )
-{
-} // glReshape()
-
-/*!
-  FIXME: write doc
-*/
-
-gint
-SoGtkGLWidgetP::glReshape(
-  GtkWidget * widget,
-  GdkEventConfigure * event )
-{
-  assert( this->glWidget != NULL );
-  PUBLIC(this)->glReshape( this->glWidget->allocation.width,
-                   this->glWidget->allocation.height );
-  return TRUE;
-} // glReshape()
-
-/*!
-  FIXME: write doc
-*/
-
 gint
 SoGtkGLWidgetP::sGLReshape( // static
   GtkWidget * widget,
@@ -599,40 +554,13 @@ SoGtkGLWidgetP::sGLReshape( // static
   void * closure )
 {
   SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
-  return PRIVATE(glwidget)->glReshape( widget, event );
+  PRIVATE(glwidget)->wasresized = TRUE;
+  PRIVATE(glwidget)->glSize = SbVec2s(PRIVATE(glwidget)->glWidget->allocation.width,
+                                      PRIVATE(glwidget)->glWidget->allocation.height);
+  return TRUE;
 } // sGLReshape()
 
 // *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkGLWidget::glRender( // virtual
-  void )
-{
-} // glRender()
-
-/*!
-  FIXME: write doc
-*/
-
-gint
-SoGtkGLWidgetP::glDraw(
-  GtkWidget * widget,
-  GdkEventExpose * event )
-{
-  PUBLIC(this)->glRender();
-//  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) ) )
-//    return TRUE;
-
-//  this->redraw();
-//  gtk_gl_area_swapbuffers( GTK_GL_AREA(this->glWidget) );
-
-  return TRUE;
-} // glDraw()
-
 
 // Callback function for expose events.
 
@@ -643,55 +571,62 @@ SoGtkGLWidgetP::sGLDraw( // static
   void * closure )
 {
   SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
-  gint result = PRIVATE(glwidget)->glDraw( widget, event );
   glwidget->waitForExpose = FALSE; // Gets flipped from TRUE on first expose.
-  return result;
+  if (PRIVATE(glwidget)->wasresized) {
+    PRIVATE(glwidget)->wasresized = FALSE;
+    glwidget->sizeChanged(PRIVATE(glwidget)->glSize);
+  }
+
+  if (!glwidget->glScheduleRedraw()) {
+    glwidget->redraw();
+  }
+  return TRUE;
 } // sGLDraw()
 
 // *************************************************************************
 
 /*!
-  This method returns the number of times glLock() has been called.
-*/
-
-int
-SoGtkGLWidget::getLockLevel(
-  void ) const
-{
-  return PRIVATE(this)->glLockLevel;
-} // getLockLevel()
-
-/*!
   This method invokes makecurrent on the GL appropriate context.
 */
-
 void
-SoGtkGLWidget::glLock(
-  void )
+SoGtkGLWidget::glLockNormal(void)
 {
-  if ( GTK_IS_GL_AREA(PRIVATE(this)->glWidget) )
-    gtk_gl_area_make_current( GTK_GL_AREA(PRIVATE(this)->glWidget) );
-  PRIVATE(this)->glLockLevel++;
-} // glLock()
+  if (GTK_IS_GL_AREA(PRIVATE(this)->glWidget))
+    gtk_gl_area_make_current( GTK_GL_AREA(PRIVATE(this)->glWidget));
+} // glLockNormal()
 
 /*!
   This method unlocks the locked GL context.
 */
 
 void
-SoGtkGLWidget::glUnlock(
-  void )
+SoGtkGLWidget::glUnlockNormal(void)
 {
-  PRIVATE(this)->glLockLevel--;
-} // glUnlock()
+} // glUnlockNormal()
+
+/*!
+  This method invokes makecurrent on the GL appropriate context.
+*/
+void
+SoGtkGLWidget::glLockOverlay(void)
+{
+} // glLockOverlay()
+
+/*!
+  This method unlocks the locked GL context.
+*/
+
+void
+SoGtkGLWidget::glUnlockOverlay(void)
+{
+} // glUnlockOverlay()
 
 /*!
   FIXME: write doc
 */
 
 void
-SoGtkGLWidget::glSwapBuffers(
-  void )
+SoGtkGLWidget::glSwapBuffers(void)
 {
   if ( GTK_IS_GL_AREA(PRIVATE(this)->glWidget) )
     gtk_gl_area_swapbuffers( GTK_GL_AREA(PRIVATE(this)->glWidget) );
@@ -702,8 +637,7 @@ SoGtkGLWidget::glSwapBuffers(
 */
 
 void
-SoGtkGLWidget::glFlushBuffer(
-  void )
+SoGtkGLWidget::glFlushBuffer(void)
 {
   glFlush();
 } // glFlushBuffer()
@@ -723,32 +657,78 @@ SoGtkGLWidget::afterRealizeHook( // virtual, protected
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
-
-SbBool
-SoGtkGLWidget::isOverlayRender(
-  void ) const
+void 
+SoGtkGLWidget::redrawOverlay(void)
 {
-  return THIS->currentIsNormal ? FALSE : TRUE;
-} // isOverlayRender()
+  // should be empty
+}
 
 /*!
-  FIXME: write doc
+  Should return TRUE if an overlay GL drawing area exists.
 */
-
-void
-SoGtkGLWidget::setOverlayRender(
-  const SbBool enable )
+SbBool 
+SoGtkGLWidget::hasOverlayGLArea(void) const 
 {
-#if SOGTK_DEBUG
-  if ( THIS->glLockLevel > 0 ) {
-  }
-#endif
+  return this->getOverlayWidget() != NULL;
+}
 
-  THIS->currentIsNormal = enable ? FALSE : TRUE;
-} // setOverlayRender()
+/*!
+  Should return TRUE if a normal GL drawing area exists.
+*/
+SbBool 
+SoGtkGLWidget::hasNormalGLArea(void) const 
+{
+  return this->getNormalWidget() != NULL;
+}
+
+/*!
+  Will be called when GL widget should initialize graphic, after
+  the widget has been created. Default method enabled GL_DEPTH_TEST.
+*/
+void 
+SoGtkGLWidget::initGraphic(void)
+{
+  this->glLockNormal();
+  // Need to set this explicitly when running on top of Open Inventor,
+  // as it seems to have been forgotten there.
+  // This code should be invoked from SoQtRenderArea::initGraphics()
+  glEnable( GL_DEPTH_TEST );
+  this->glUnlockNormal();
+}
+
+/*!
+  Will be called after the overlay widget has been created, and subclasses
+  should overload this to initialize overlay stuff.
+
+  Default method does nothing.
+*/
+void 
+SoGtkGLWidget::initOverlayGraphic(void)
+{
+}
+
+/*!
+  Will be called whenever scene graph needs to be redrawn().
+  If this method return FALSE, redraw() will be called immediately.
+  
+  Default method simply returns FALSE. Overload this method to
+  schedule a redraw and return TRUE if you're trying to do The Right
+  Thing.  
+*/
+SbBool 
+SoGtkGLWidget::glScheduleRedraw(void)
+{
+  return FALSE;
+}
+
+/*!
+  Should return TRUE if we're in RGB mode.
+*/
+SbBool 
+SoGtkGLWidget::isRGBMode(void)
+{
+  return TRUE; // FIXME
+}
 
 // *************************************************************************
 
@@ -756,8 +736,6 @@ SoGtkGLWidgetP::SoGtkGLWidgetP(
   SoGtkGLWidget * publ )
 {
   this->pub = publ;
-  this->glLockLevel = 0;
-  this->currentIsNormal = TRUE;
 } // SoGtkGLWidgetP()
 
 SoGtkGLWidgetP::~SoGtkGLWidgetP(

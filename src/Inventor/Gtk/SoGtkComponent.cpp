@@ -662,7 +662,10 @@ SoGtkComponent::setIconTitle(
   if ( PRIVATE(this)->widget ) {
     GtkWidget * window = gtk_widget_get_toplevel( PRIVATE(this)->widget );
     assert( window != NULL );
+    gdk_window_set_icon_name( (GTK_WIDGET(PRIVATE(this)->parent))->window, title ? title : "" );
+#if 0
     gdk_window_set_icon_name( window->window, title ? title : "" );
+#endif
   }
 } // setIconTitle()
 
