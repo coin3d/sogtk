@@ -99,36 +99,12 @@ SbPList * SoGtk::component_callbacks = (SbPList *) NULL;
 // *************************************************************************
 
 /*!
-  This method is provided for easier porting/compatibility with the
-  Open Inventor SoXt component classes.  It just adds dummy \a argc and
-  \a argv arguments and calls the SoGtk::init() method below.
-*/
-GtkWidget *
-SoGtk::init(const char * const appName,
-            const char * const className)
-{
-  if (appName != NULL) {
-    char buf[1025];
-    strncpy(buf, appName, 1024);
-    char * array[2] = { buf, (char *) NULL };
-    int argc = 1;
-    return SoGtk::init(argc, array, appName, className);
-  }
-  else {
-    int argc = 0;
-    return SoGtk::init(argc, (char **) NULL, appName, className);
-  }
-}
-
-// *************************************************************************
-
-/*!
   Calls \a SoDB::init(), \a SoNodeKit::init() and \a SoInteraction::init().
   Assumes you are creating your own QApplication and main widget.
   \a topLevelWidget should be your application's main widget.
 */
 void
-SoGtk::init(GtkWidget * const topLevelWidget)
+SoGtk::internal_init(GtkWidget * toplevelwidget)
 {
   if (SoGtk::mainWidget != NULL) {
 #if SOGTK_DEBUG
@@ -145,7 +121,7 @@ SoGtk::init(GtkWidget * const topLevelWidget)
 
   SoDB::getSensorManager()->setChangedCallback(SoGtk::sensorQueueChanged,
                                                NULL);
-  SoGtk::mainWidget = topLevelWidget;
+  SoGtk::mainWidget = toplevelwidget;
 #if defined(ENABLE_NLS)
   char *txt = bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
@@ -173,8 +149,8 @@ SoGtkObject::init(void)
   \sa getApplication()
 */
 GtkWidget *
-SoGtk::init(int & argc, char ** argv,
-            const char * const appName, const char * const className)
+SoGtk::internal_init(int & argc, char ** argv,
+                     const char * appname, const char * classname)
 {
   if (SoGtk::mainWidget) {
 #if SOGTK_DEBUG
@@ -189,7 +165,7 @@ SoGtk::init(int & argc, char ** argv,
   GtkWidget * mainwin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   SoGtk::init(mainwin);
 
-  if (appName) { gtk_window_set_title(GTK_WINDOW(mainwin), appName); }
+  if (appname) { gtk_window_set_title(GTK_WINDOW(mainwin), appname); }
 
   return SoGtk::mainWidget;
 }
