@@ -34,7 +34,7 @@ static const char rcsid[] =
 /*!
   \class SoGtkInputFocus SoGtkInputFocus.h Inventor/Gtk/devices/SoGtkInputFocus.h
   \brief The SoGtkInputFocus class ...
-  \ingroup sogtkdevices
+  \ingroup devices
 
   FIXME: write class doc
 */
@@ -42,6 +42,28 @@ static const char rcsid[] =
 // *************************************************************************
 
 SOGTK_OBJECT_SOURCE(SoGtkInputFocus);
+
+// *************************************************************************
+
+/*!
+  \enum SoGtkInputFocus::Events
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkInputFocus::Events SoGtkInputFocus::ENTER_WINDOW
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkInputFocus::Events SoGtkInputFocus::LEAVE_WINDOW
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkInputFocus::Events SoGtkInputFocus::ALL_EVENTS
+  FIXME: write doc
+*/
 
 // *************************************************************************
 

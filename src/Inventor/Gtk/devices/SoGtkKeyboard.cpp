@@ -43,10 +43,32 @@ static const char rcsid[] =
   \class SoGtkKeyboard Inventor/Gtk/devices/SoGtkKeyboard.h
   \brief The SoGtkKeyboard class translates GdkEventKey events into
   SoKeyboardEvent events.
-  \ingroup sogtkdevices
+  \ingroup devices
 */
 
 SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
+
+// *************************************************************************
+
+/*!
+  \enum SoGtkKeyboard::Events
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkKeyboard::Events SoGtkKeyboard::KEY_PRESS
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkKeyboard::Events SoGtkKeyboard::KEY_RELEASE
+  FIXME: write doc
+*/
+
+/*!
+  \var SoGtkKeyboard::Events SoGtkKeyboard::ALL_EVENTS
+  FIXME: write doc
+*/
 
 // *************************************************************************
 
@@ -80,7 +102,7 @@ SoGtkKeyboard::~SoGtkKeyboard(
 void
 SoGtkKeyboard::enable(
   GtkWidget *, // w,
-  SoGtkEventHandler, // f,
+  SoGtkEventHandler *, // f,
   void * ) // data )
 {
   // TODO: implement
@@ -93,7 +115,7 @@ SoGtkKeyboard::enable(
 void
 SoGtkKeyboard::disable(
   GtkWidget *, // w,
-  SoGtkEventHandler, // f,
+  SoGtkEventHandler *, // f,
   void * ) // data )
 {
   // TODO: implement

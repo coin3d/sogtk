@@ -41,7 +41,7 @@ static const char rcsid[] =
 /*!
   \class SoGtkDevice SoGtkDevice.h Inventor/Gtk/devices/SoGtkDevice.h
   \brief The SoGtkDevice class ...
-  \ingroup sogtkdevices
+  \ingroup devices
 
   FIXME: write class doc
 */
@@ -49,6 +49,10 @@ static const char rcsid[] =
 // *************************************************************************
 
 SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkDevice);
+
+/*!
+  This function initializes the type system for all the device classes.
+*/
 
 void
 SoGtkDevice::initClasses( // static
@@ -73,19 +77,19 @@ SbVec2s SoGtkDevice::lastEventPosition; // static
 // *************************************************************************
 
 /*!
-  \typedef void (SoGtkDevice::SoGtkEventHandler)( GtkWidget *, void *, GdkEvent *, bool * )
+  \typedef void SoGtkDevice::SoGtkEventHandler( GtkWidget *, GdkEvent *, gpointer )
 
   FIXME: write doc
 */
 
 /*!
-  \fn void SoGtkDevice::enable( GtkWidget * w, SoGtkEventHandler * f, void * data)
+  \fn void SoGtkDevice::enable( GtkWidget * w, SoGtkEventHandler * f, void * closure ) = 0
 
   FIXME: write doc
 */
 
 /*!
-  \fn void SoGtkDevice::disable( GtkWidget * w, SoQtEventHandler * f, void * data)
+  \fn void SoGtkDevice::disable( GtkWidget * w, SoGtkEventHandler * f, void * closure ) = 0
   FIXME: write doc
 */
 

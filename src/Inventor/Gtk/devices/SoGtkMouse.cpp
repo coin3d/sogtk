@@ -41,7 +41,7 @@ static const char rcsid[] =
 /*!
   \class SoGtkMouse SoGtkMouse.h Inventor/Gtk/devices/SoGtkMouse.h
   \brief The SoGtkMouse class ...
-  \ingroup sogtkdevices
+  \ingroup devices
 
   FIXME: write class doc
 */
@@ -53,27 +53,27 @@ SOGTK_OBJECT_SOURCE(SoGtkMouse);
 // *************************************************************************
 
 /*!
-  \enum SoGtkMouse::SoGtkMouseEventMask
+  \enum SoGtkMouse::Events
   FIXME: write documentation for enum
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::BUTTON_PRESS
+  \var SoGtkMouse::Events SoGtkMouse::BUTTON_PRESS
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::BUTTON_RELEASE
+  \var SoGtkMouse::Events SoGtkMouse::BUTTON_RELEASE
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::POINTER_MOTION
+  \var SoGtkMouse::Events SoGtkMouse::POINTER_MOTION
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::BUTTON_MOTION
+  \var SoGtkMouse::Events SoGtkMouse::BUTTON_MOTION
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkMouse::SoGtkMouseEventMask SoGtkMouse::ALL_EVENTS
+  \var SoGtkMouse::Events SoGtkMouse::ALL_EVENTS
   FIXME: write documentation for enum definition
 */
 

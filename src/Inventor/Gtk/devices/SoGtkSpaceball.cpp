@@ -34,7 +34,7 @@ static const char rcsid[] =
 /*!
   \class SoGtkSpaceball SoGtkSpaceball.h Inventor/Gtk/devices/SoGtkSpaceball.h
   \brief The SoGtkSpaceball class ...
-  \ingroup sogtkdevices
+  \ingroup devices
 
   FIXME: write class doc
 */
@@ -54,23 +54,23 @@ SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
 */
 
 /*!
-  \enum SoGtkSpaceball::Mask
+  \enum SoGtkSpaceball::Events
   FIXME: write documentation for enum
 */
 /*!
-  \var SoGtkSpaceball::Mask SoGtkSpaceball::MOTION
+  \var SoGtkSpaceball::Events SoGtkSpaceball::MOTION
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkSpaceball::Mask SoGtkSpaceball::BUTTON_PRESS
+  \var SoGtkSpaceball::Events SoGtkSpaceball::BUTTON_PRESS
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkSpaceball::Mask SoGtkSpaceball::BUTTON_RELEASE
+  \var SoGtkSpaceball::Events SoGtkSpaceball::BUTTON_RELEASE
   FIXME: write documentation for enum definition
 */
 /*!
-  \var SoGtkSpaceball::Mask SoGtkSpaceball::ALL_EVENTS
+  \var SoGtkSpaceball::Events SoGtkSpaceball::ALL_EVENTS
   FIXME: write documentation for enum definition
 */
 
@@ -102,7 +102,7 @@ SoGtkSpaceball::~SoGtkSpaceball()
 */
 
 void
-SoGtkSpaceball::enable(GtkWidget * /*w*/, SoGtkEventHandler /*f*/, void * /*data*/)
+SoGtkSpaceball::enable(GtkWidget * /*w*/, SoGtkEventHandler * /*f*/, void * /*data*/)
 {
   // TODO: implement
 }
@@ -111,7 +111,7 @@ SoGtkSpaceball::enable(GtkWidget * /*w*/, SoGtkEventHandler /*f*/, void * /*data
   FIXME: write function documentation
 */
 void
-SoGtkSpaceball::disable(GtkWidget * /*w*/, SoGtkEventHandler /*f*/, void * /*data*/)
+SoGtkSpaceball::disable(GtkWidget * /*w*/, SoGtkEventHandler * /*f*/, void * /*data*/)
 {
   // TODO: implement
 }

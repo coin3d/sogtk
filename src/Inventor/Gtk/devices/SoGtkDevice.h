@@ -22,10 +22,6 @@
 #ifndef SOGTK_DEVICE_H
 #define SOGTK_DEVICE_H
 
-/*!
-  \defgroup sogtkdevices SoGtk Device Classes
-*/
-
 #include <gtk/gtk.h>
 
 #include <Inventor/SbLinear.h>
