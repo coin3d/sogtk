@@ -30,7 +30,7 @@ static const char rcsid[] =
 
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/SoType.h>
-#include <Inventor/lists/SoTypeList.h>
+#include <Inventor/SoLists.h>
 #include <Inventor/SbPList.h>
 
 #include <sogtkdefs.h>
