@@ -86,7 +86,7 @@ SOGTK_OBJECT_SOURCE(SoGtkMouse);
 SoGtkMouse::SoGtkMouse(
   const int eventbits)
 {
-  this->events = eventbits & SoGtkMouse::ALL_EVENTS;
+  this->eventmask = eventbits & SoGtkMouse::ALL_EVENTS;
   this->buttonevent = new SoMouseButtonEvent;
   this->locationevent = new SoLocation2Event;
 } // SoGtkMouse()
@@ -116,27 +116,27 @@ SoGtkMouse::enable(
 {
   if (func)
   {
-    if (this->events & SoGtkMouse::BUTTON_PRESS)
+    if (this->eventmask & SoGtkMouse::BUTTON_PRESS)
     {
       gtk_signal_connect(GTK_OBJECT(widget), "button_press_event",
         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_BUTTON_PRESS_MASK);
     }
-    if (this->events & SoGtkMouse::BUTTON_RELEASE)
+    if (this->eventmask & SoGtkMouse::BUTTON_RELEASE)
     {
       gtk_signal_connect(GTK_OBJECT(widget), "button_release_event",
         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_BUTTON_RELEASE_MASK);
     }
-    if (this->events & SoGtkMouse::POINTER_MOTION)
+    if (this->eventmask & SoGtkMouse::POINTER_MOTION)
     {
       gtk_signal_connect(GTK_OBJECT(widget), "motion_notify_event",
         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_POINTER_MOTION_MASK);
     }
-    if (this->events & SoGtkMouse::BUTTON_MOTION)
+    if (this->eventmask & SoGtkMouse::BUTTON_MOTION)
     {
-      if (!(this->events & SoGtkMouse::POINTER_MOTION))
+      if (!(this->eventmask & SoGtkMouse::POINTER_MOTION))
         gtk_signal_connect(GTK_OBJECT(widget), "motion_notify_event",
           GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_BUTTON_MOTION_MASK);

@@ -84,7 +84,7 @@ SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
 SoGtkKeyboard::SoGtkKeyboard(
   const int eventbits)
 {
-  this->events = eventbits & SoGtkKeyboard::ALL_EVENTS;
+  this->eventmask = eventbits & SoGtkKeyboard::ALL_EVENTS;
   this->kbdevent = new SoKeyboardEvent;
 } // SoGtkKeyboard()
 
@@ -106,10 +106,10 @@ SoGtkKeyboard::~SoGtkKeyboard(
   focus, when a mouse pointer enters a widget connected to a SoGtkKeyboard.
 */
 
-gboolean SoGtkKeyboard::EnterHandler(
-  GtkWidget *widget,
-  GdkEventCrossing *event,
-  gpointer user_data)
+static gboolean
+EnterHandler(GtkWidget *widget,
+             GdkEventCrossing *event,
+             gpointer user_data)
 {
   if (!GTK_WIDGET_HAS_FOCUS(widget))
     gtk_widget_grab_focus(widget);
@@ -128,13 +128,13 @@ SoGtkKeyboard::enable(
 {
   if (func)
   {
-    if (this->events & SoGtkKeyboard::KEY_PRESS)
+    if (this->eventmask & SoGtkKeyboard::KEY_PRESS)
     {
       gtk_signal_connect(GTK_OBJECT(widget), "key_press_event",
         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_PRESS_MASK);
     }
-    if (this->events & SoGtkKeyboard::KEY_RELEASE)
+    if (this->eventmask & SoGtkKeyboard::KEY_RELEASE)
     {
       gtk_signal_connect(GTK_OBJECT(widget), "key_release_event",
         GTK_SIGNAL_FUNC(func), closure);
@@ -412,7 +412,7 @@ SoGtkKeyboard::translateEvent(// virtual
 {
   switch (ev->type) {
   case GDK_KEY_PRESS:
-    if (this->events & KEY_PRESS) {
+    if (this->eventmask & KEY_PRESS) {
       const GdkEventKey * const event = (GdkEventKey *) ev;
       SbTime stamp;
       stamp.setMsecValue(event->time);
@@ -433,7 +433,7 @@ SoGtkKeyboard::translateEvent(// virtual
     break;
 
   case GDK_KEY_RELEASE:
-    if (this->events & KEY_RELEASE) {
+    if (this->eventmask & KEY_RELEASE) {
       const GdkEventKey * const event = (GdkEventKey *) ev;
       SbTime stamp;
       stamp.setMsecValue(event->time);

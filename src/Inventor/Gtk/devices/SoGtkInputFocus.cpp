@@ -86,15 +86,14 @@ SOGTK_OBJECT_SOURCE(SoGtkInputFocus);
 SoGtkInputFocus::SoGtkInputFocus(
   const int eventbits)
 {
-  this->events = eventbits;
+  this->eventmask = eventbits;
 } // SoGtkInputFocus()
 
 /*!
   Destructor.
 */
 
-SoGtkInputFocus::~SoGtkInputFocus(
-  void)
+SoGtkInputFocus::~SoGtkInputFocus()
 {
 } // ~SoGtkInputFocus()
 
