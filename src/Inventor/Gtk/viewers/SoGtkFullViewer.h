@@ -90,8 +90,6 @@ protected:
 
   virtual void buildPopupMenu(void);
   void setPopupMenuString( const char * title );
-  GtkWidget * buildFunctionsSubmenu( GtkWidget * popup );
-  GtkWidget * buildDrawStyleSubmenu( GtkWidget * popup );
   void openPopupMenu(const SbVec2s position);
 
   virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
@@ -118,6 +116,10 @@ protected:
   virtual void openViewerHelpCard(void);
 
   SoAnyPopupMenu * prefmenu;
+
+protected:
+  GtkWidget * leftWheel;
+  GtkWidget * leftWheelLabel;
 
 private:
   enum {
@@ -195,11 +197,6 @@ private: //  slots:
   // Button row.
   void interactbuttonToggled(SbBool);
   void viewbuttonToggled(SbBool);
-  void helpbuttonClicked();
-  void homebuttonClicked();
-  void sethomebuttonClicked();
-  void viewallbuttonClicked();
-  void seekbuttonClicked();
 
   // Menu items.
   void selectedViewing();
@@ -237,8 +234,25 @@ private: //  slots:
 
 private:
   void selectedPrefs(void);
-  void seekbuttonClicked(void);
   void drawstyleActivated(int drawstyle);
+
+  static struct SoGtkViewerButton SoGtkFullViewerButtons[];
+
+  void interactbuttonClicked(void);
+  static void interactbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  void viewbuttonClicked(void);
+  static void viewbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+
+  void helpbuttonClicked(void);
+  static void helpbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  void homebuttonClicked(void);
+  static void homebuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  void sethomebuttonClicked(void);
+  static void sethomebuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  void viewallbuttonClicked(void);
+  static void viewallbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
+  void seekbuttonClicked(void);
+  static void seekbuttonClickedCB( GtkWidget *, GdkEvent *, gpointer );
 
 private:
   SoAnyFullViewer * const common;
