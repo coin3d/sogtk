@@ -119,10 +119,12 @@ SoGtkGLWidget::buildWidget(
     GDK_EXPOSURE_MASK | GDK_KEY_PRESS_MASK );
 
   /* configure_event should probably be moved to SoGtkRenderArea? */
-  gtk_signal_connect( GTK_OBJECT(this->glWidget), "expose_event",
-    GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLDraw), (void *) this );
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "realize",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLInit), (void *) this );
+  gtk_signal_connect( GTK_OBJECT(this->glWidget), "configure_event",
+    GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLReshape), (void *) this );
+  gtk_signal_connect( GTK_OBJECT(this->glWidget), "expose_event",
+    GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLDraw), (void *) this );
 
   this->container = gtk_vbox_new( FALSE, 0 );
   gtk_container_set_border_width( GTK_CONTAINER(this->container),
@@ -383,6 +385,20 @@ SoGtkGLWidget::setGlxSize(
   gtk_widget_size_request( GTK_WIDGET(this->container), &req );
 } // setGlxSize()
 
+void
+SoGtkGLWidget::setGLSize(
+  const SbVec2s size )
+{
+  assert( this->container );
+
+  GtkRequisition req = {
+    size[0] + this->borderThickness * 2,
+    size[1] + this->borderThickness * 2
+  };
+
+  gtk_widget_size_request( GTK_WIDGET(this->container), &req );
+} // setGLSize()
+
 // *************************************************************************
 
 /*!
@@ -396,6 +412,14 @@ SoGtkGLWidget::getGlxSize(
   return SbVec2s( this->glWidget->allocation.width,
                   this->glWidget->allocation.height );
 } // getGlxSize()
+
+const SbVec2s
+SoGtkGLWidget::getGLSize(
+  void ) const
+{
+  return SbVec2s( this->glWidget->allocation.width,
+                  this->glWidget->allocation.height );
+} // getGLSize()
 
 // *************************************************************************
 
@@ -411,6 +435,15 @@ SoGtkGLWidget::getGlxAspectRatio(
   return (float) this->glWidget->allocation.width /
          (float) this->glWidget->allocation.height;
 } // getGlxAspectRatio()
+
+float
+SoGtkGLWidget::getGLAspectRatio(
+  void ) const
+{
+  assert( this->glWidget );
+  return (float) this->glWidget->allocation.width /
+         (float) this->glWidget->allocation.height;
+} // getGLAspectRatio()
 
 // *************************************************************************
 
@@ -467,6 +500,12 @@ SoGtkGLWidget::processEvent(
 
 // *************************************************************************
 
+void
+SoGtkGLWidget::glInit(
+  void )
+{
+} // glInit()
+
 /*!
   FIXME: write doc
 */
@@ -475,8 +514,9 @@ gint
 SoGtkGLWidget::glInit(
   GtkWidget * widget )
 {
-  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) ) )
-    return TRUE;
+  this->glInit();
+//  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) ) )
+//    return TRUE;
 
   /* glEnable( GL_DEPTH_TEST ); */
 
@@ -498,6 +538,43 @@ SoGtkGLWidget::sGLInit( // static
 
 // *************************************************************************
 
+void
+SoGtkGLWidget::glReshape( // virtual
+  int width,
+  int height )
+{
+} // glReshape()
+
+
+gint
+SoGtkGLWidget::glReshape(
+  GtkWidget * widget,
+  GdkEventConfigure * event )
+{
+  assert( this->glWidget != NULL );
+  this->glReshape( this->glWidget->allocation.width,
+                   this->glWidget->allocation.height );
+  return TRUE;
+} // glReshape()
+
+gint
+SoGtkGLWidget::sGLReshape( // static
+  GtkWidget * widget,
+  GdkEventConfigure * event, 
+  void * userData )
+{
+  SoGtkGLWidget * that = (SoGtkGLWidget *) userData;
+  return that->glReshape( widget, event );
+} // sGLReshape()
+
+// *************************************************************************
+
+void
+SoGtkGLWidget::glRender( // virtual
+  void )
+{
+} // glRender()
+
 /*!
   FIXME: write doc
 */
@@ -507,11 +584,12 @@ SoGtkGLWidget::glDraw(
   GtkWidget * widget,
   GdkEventExpose * event )
 {
-  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) ) )
-    return TRUE;
+  this->glRender();
+//  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) ) )
+//    return TRUE;
 
-  this->redraw();
-  gtk_gl_area_swapbuffers( GTK_GL_AREA(this->glWidget) );
+//  this->redraw();
+//  gtk_gl_area_swapbuffers( GTK_GL_AREA(this->glWidget) );
 
   return TRUE;
 } // glDraw()
@@ -529,5 +607,34 @@ SoGtkGLWidget::sGLDraw( // static
   SoGtkGLWidget * that = (SoGtkGLWidget *) userData;
   return that->glDraw( widget, event );
 } // sGLDraw()
+
+// *************************************************************************
+
+void
+SoGtkGLWidget::glLock(
+  void )
+{
+  gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) );
+} // glLock()
+
+void
+SoGtkGLWidget::glUnlock(
+  void )
+{
+} // glUnlock()
+
+void
+SoGtkGLWidget::glSwapBuffers(
+  void )
+{
+  gtk_gl_area_swapbuffers( GTK_GL_AREA(this->glWidget) );
+} // glSwapBuffers()
+
+void
+SoGtkGLWidget::glFlushBuffer(
+  void )
+{
+  glFlush();
+} // glFlushBuffer()
 
 // *************************************************************************
