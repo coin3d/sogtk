@@ -1,9 +1,2 @@
-COPYING
-=======
-
-See the file LICENSE.LGPL for the GNU Lesser General Pulic License, which
-applies to all source files libSoGtk is built from.
-
-See the file LICENSE.GPL for the GNU General Public License, which applies
-to the autoconf/automake/libtool setup used during the build process.
-
+SoGtk is licensed under the GNU Lesser General Public License, version 2.1.
+See the file LICENSE.LGPL for all the details.
