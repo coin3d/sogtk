@@ -287,18 +287,6 @@ SoGtkWalkViewer::buildLeftTrim(GtkWidget * parent)
 }
 
 // ************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkWalkViewer::openViewerHelpCard(void)
-{
-  this->openHelpCard("SoGtkWalkViewer.help");
-}
-
-// ************************************************************************
 //
 //  Private implementation
 //

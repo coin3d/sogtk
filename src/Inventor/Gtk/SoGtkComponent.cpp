@@ -734,21 +734,6 @@ SoGtkComponent::sizeChanged(const SbVec2s & size)
 // *************************************************************************
 
 /*!
-  Open a dialog providing help about use of this component.
-
-  NB: no help system has been implemented yet, so for the time being
-  this will only pop up an error message.
-*/
-void
-SoGtkComponent::openHelpCard(const char * const card)
-{
-  SoGtk::createSimpleErrorDialog(PRIVATE(this)->widget, _("Not Implemented"),
-                                 _("The help card system has not been implemented yet."));
-}
-
-// *************************************************************************
-
-/*!
   Set up a callback function to use when the component gets closed. A
   component must be a toplevel shell for this to have any effect.
 

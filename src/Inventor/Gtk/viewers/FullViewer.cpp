@@ -64,7 +64,6 @@
 // Button icons.
 #include <Inventor/Gtk/common/pixmaps/pick.xpm>
 #include <Inventor/Gtk/common/pixmaps/view.xpm>
-#include <Inventor/Gtk/common/pixmaps/help.xpm>
 #include <Inventor/Gtk/common/pixmaps/home.xpm>
 #include <Inventor/Gtk/common/pixmaps/set_home.xpm>
 #include <Inventor/Gtk/common/pixmaps/view_all.xpm>
@@ -217,7 +216,6 @@ static const int ZOOMSLIDERRESOLUTION = 200;
 enum {
   INTERACT_BUTTON = 0,
   EXAMINE_BUTTON,
-  HELP_BUTTON,
   HOME_BUTTON,
   SET_HOME_BUTTON,
   VIEW_ALL_BUTTON,
@@ -240,11 +238,6 @@ SoGtkFullViewerP::SoGtkFullViewerButtons[] = {
     N_("view"), "E",
     (GtkSignalFunc) SoGtkFullViewerP::viewbuttonClickedCB,
     view_xpm
-  },
-  { // help
-    N_("help"), "?",
-    (GtkSignalFunc) SoGtkFullViewerP::helpbuttonClickedCB,
-    help_xpm
   },
   { // home
     N_("home"), "h",
@@ -1005,12 +998,6 @@ SoGtkFullViewerP::viewbuttonClicked(void)
 }
 
 void
-SoGtkFullViewerP::helpbuttonClicked(void)
-{
-  PUBLIC(this)->openViewerHelpCard();
-}
-
-void
 SoGtkFullViewerP::homebuttonClicked(void)
 {
   PUBLIC(this)->resetToHomePosition();
@@ -1207,14 +1194,6 @@ SoGtkFullViewerP::viewbuttonClickedCB(GtkWidget * w, gpointer closure)
   SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
   if (!viewer->isViewing()) 
     viewer->setViewing(TRUE);
-}
-
-void
-SoGtkFullViewerP::helpbuttonClickedCB(GtkWidget *, gpointer closure)
-{
-  assert(closure != NULL);
-  SoGtkFullViewer * const viewer = (SoGtkFullViewer *) closure;
-  PRIVATE(viewer)->helpbuttonClicked();
 }
 
 void

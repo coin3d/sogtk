@@ -83,7 +83,6 @@ public:
 
   static void interactbuttonClickedCB(GtkWidget *, gpointer);
   static void viewbuttonClickedCB(GtkWidget *, gpointer);
-  static void helpbuttonClickedCB(GtkWidget *, gpointer);
   static void homebuttonClickedCB(GtkWidget *, gpointer);
   static void sethomebuttonClickedCB(GtkWidget *, gpointer);
   static void viewallbuttonClickedCB(GtkWidget *, gpointer);
@@ -107,7 +106,6 @@ public:
   // button selections
   void interactbuttonClicked(void);
   void viewbuttonClicked(void);
-  void helpbuttonClicked(void);
   void homebuttonClicked(void);
   void sethomebuttonClicked(void);
   void viewallbuttonClicked(void);
