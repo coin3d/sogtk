@@ -22,8 +22,7 @@
 #include <gtk/gtkmain.h>
 #include <gtk/gtksignal.h>
 
-#include <Inventor/Gtk/common/ThumbWheel.h>
-
+#include <Inventor/Gtk/widgets/SoAnyThumbWheel.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
 /*
@@ -190,9 +189,9 @@ gtk_thumbwheel_init(
   thumbwheel->downpos = 0;
   thumbwheel->value = 0.0f;
   thumbwheel->tempvalue = 0.0f;
-  ThumbWheel * wheel = new ThumbWheel;
-  wheel->SetWheelMotionMethod( ThumbWheel::UNIFORM );
-  wheel->SetWheelRangeBoundaryHandling( ThumbWheel::MODULATE );
+  SoAnyThumbWheel * wheel = new SoAnyThumbWheel;
+  wheel->SetWheelMotionMethod( SoAnyThumbWheel::UNIFORM );
+  wheel->SetWheelRangeBoundaryHandling( SoAnyThumbWheel::MODULATE );
   thumbwheel->wheel = (void *) wheel;
 } // gtk_thumbwheel_init()
 
@@ -403,20 +402,20 @@ gtk_thumbwheel_expose(
   static guchar bitmap[90*26*4*4]; // just "enough" for now
 
   if ( thumbwheel->vertical != 0 ) {
-    ((ThumbWheel *)thumbwheel->wheel)->SetWheelSize(
+    ((SoAnyThumbWheel *)thumbwheel->wheel)->SetWheelSize(
       widget->allocation.height - 20, widget->allocation.width - 12 );
   } else {
-    ((ThumbWheel *)thumbwheel->wheel)->SetWheelSize(
+    ((SoAnyThumbWheel *)thumbwheel->wheel)->SetWheelSize(
       widget->allocation.width - 20, widget->allocation.height - 12 );
   }
 
-  int img = ((ThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
-    thumbwheel->tempvalue, ThumbWheel::ENABLED );
+  int img = ((SoAnyThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
+    thumbwheel->tempvalue, SoAnyThumbWheel::ENABLED );
 
-  ((ThumbWheel *)thumbwheel->wheel)->SetGraphicsByteOrder( ThumbWheel::ABGR );
-  ((ThumbWheel *)thumbwheel->wheel)->SetColor( 0, 150, 200 );
-  ((ThumbWheel *)thumbwheel->wheel)->DrawBitmap( img, (void *) bitmap,
-    (thumbwheel->vertical != 0) ? ThumbWheel::VERTICAL : ThumbWheel::HORIZONTAL );
+  ((SoAnyThumbWheel *)thumbwheel->wheel)->SetGraphicsByteOrder( SoAnyThumbWheel::ABGR );
+  ((SoAnyThumbWheel *)thumbwheel->wheel)->SetColor( 0, 150, 200 );
+  ((SoAnyThumbWheel *)thumbwheel->wheel)->DrawBitmap( img, (void *) bitmap,
+    (thumbwheel->vertical != 0) ? SoAnyThumbWheel::VERTICAL : SoAnyThumbWheel::HORIZONTAL );
 
   if ( thumbwheel->vertical != 0 ) {
     gdk_draw_rgb_32_image(
@@ -515,12 +514,12 @@ gtk_thumbwheel_motion(
   gint position = ( thumbwheel->vertical != FALSE ) ? y : x;
 
   thumbwheel->tempvalue =
-    ((ThumbWheel *)thumbwheel->wheel)->CalculateValue( thumbwheel->value,
+    ((SoAnyThumbWheel *)thumbwheel->wheel)->CalculateValue( thumbwheel->value,
       thumbwheel->downpos, position - thumbwheel->downpos );
 
   static int bmp = -1;
-  int img = ((ThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
-    thumbwheel->tempvalue, ThumbWheel::ENABLED );
+  int img = ((SoAnyThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
+    thumbwheel->tempvalue, SoAnyThumbWheel::ENABLED );
   if ( img != bmp )
     gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
   bmp = img;

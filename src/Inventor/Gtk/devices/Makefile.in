@@ -106,7 +106,7 @@ noinst_LTLIBRARIES = libSoGtkDevices.la
 
 LIBS = 
 
-INCLUDES = -I$(top_srcdir)/src
+INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 
 libSoGtkDevices_la_SOURCES = \
 	SoGtkDevice.cpp \

@@ -17,8 +17,8 @@
  *
 \**************************************************************************/
 
-#ifndef __GTK_THUMBWHEEL_H__
-#define __GTK_THUMBWHEEL_H__
+#ifndef SOGTK_THUMBWHEEL_H
+#define SOGTK_THUMBWHEEL_H
 
 #include <gdk/gdk.h>
 #include <gtk/gtkadjustment.h>
@@ -94,4 +94,4 @@ void         gtk_thumbwheel_set_range_boundary_handling
 }; /* extern "C" */
 #endif /* __cplusplus */
 
-#endif /* ! __GTK_THUMBWHEEL_H__ */
+#endif /* ! SOGTK_THUMBWHEEL_H */

@@ -6,7 +6,7 @@ noinst_LTLIBRARIES = libSoGtkDevices.la
 ## needed in the submodules -- only in the toplevel libSoQt build.
 LIBS = 
 
-INCLUDES = -I$(top_srcdir)/src
+INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
 
 ## All source files used when building this submodule, including all
 ## headers.

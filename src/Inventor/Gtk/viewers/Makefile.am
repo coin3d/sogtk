@@ -4,20 +4,23 @@ LIBS =
 
 noinst_LTLIBRARIES = libSoGtkViewers.la
 
+BUILT_SOURCES = \
+	SoGtkViewer.cpp \
+	SoGtkViewer.h \
+	SoAnyFullViewer.cpp \
+	SoAnyFullViewer.h \
+	SoAnyExaminerViewer.cpp \
+	SoAnyExaminerViewer.h \
+	SoAnyPlaneViewer.cpp \
+	SoAnyPlaneViewer.h
+
 libSoGtkViewers_la_SOURCES = \
-	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
-	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.h \
+	$(BUILT_SOURCES) \
 	SoGtkViewerExtra.cpp \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.h \
 	SoGtkExaminerViewer.cpp \
 	SoGtkExaminerViewer.h
-#	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp \
-#	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.h \
 #	SoGtkPlaneViewer.cpp \
 #	SoGtkPlaneViewer.h
 
@@ -31,37 +34,45 @@ libSoGtkViewersinc_HEADERS = \
 
 ############################################################################
 
-SoGtkViewer.h: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyViewer.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.h )
+SoGtkViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.h )
 
-SoGtkViewer.cpp: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyViewer.cpp.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.cpp )
+SoGtkViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.cpp )
 
-############################################################################
+SoAnyFullViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyFullViewer.h )
 
-SoAnyFullViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp
-	source='$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp' \
-	object='$@' libtool=yes \
-	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
-	$(CXXDEPMODE) $(depcomp) \
-	$(LTCXXCOMPILE) -c -o $@ \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp
+SoAnyFullViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyFullViewer.cpp )
 
-SoAnyExaminerViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp
-	source='$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp' \
-	object='$@' libtool=yes \
-	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
-	$(CXXDEPMODE) $(depcomp) \
-	$(LTCXXCOMPILE) -c -o $@ \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp
+SoAnyExaminerViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyExaminerViewer.h )
 
-SoAnyPlaneViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp
-	source='$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp' \
-	object='$@' libtool=yes \
-	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
-	$(CXXDEPMODE) $(depcomp) \
-	$(LTCXXCOMPILE) -c -o $@ \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp
+SoAnyExaminerViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyExaminerViewer.cpp )
+
+SoAnyPlaneViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyPlaneViewer.h )
+
+SoAnyPlaneViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp )
 
 ############################################################################
 ## FIXME: this is a temporary workaround for a bug in Automake. The

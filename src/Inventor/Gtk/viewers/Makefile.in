@@ -107,21 +107,25 @@ LIBS =
 
 noinst_LTLIBRARIES = libSoGtkViewers.la
 
+BUILT_SOURCES = \
+	SoGtkViewer.cpp \
+	SoGtkViewer.h \
+	SoAnyFullViewer.cpp \
+	SoAnyFullViewer.h \
+	SoAnyExaminerViewer.cpp \
+	SoAnyExaminerViewer.h \
+	SoAnyPlaneViewer.cpp \
+	SoAnyPlaneViewer.h
+
+
 libSoGtkViewers_la_SOURCES = \
-	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
-	$(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.h \
+	$(BUILT_SOURCES) \
 	SoGtkViewerExtra.cpp \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.h \
 	SoGtkExaminerViewer.cpp \
 	SoGtkExaminerViewer.h
 
-#	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp \
-#	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.h \
 #	SoGtkPlaneViewer.cpp \
 #	SoGtkPlaneViewer.h
 
@@ -149,8 +153,8 @@ X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtkViewers_la_LDFLAGS = 
 libSoGtkViewers_la_LIBADD = 
 am_libSoGtkViewers_la_OBJECTS =  SoGtkViewer.lo SoAnyFullViewer.lo \
-SoGtkViewerExtra.lo SoGtkFullViewer.lo SoAnyExaminerViewer.lo \
-SoGtkExaminerViewer.lo
+SoAnyExaminerViewer.lo SoAnyPlaneViewer.lo SoGtkViewerExtra.lo \
+SoGtkFullViewer.lo SoGtkExaminerViewer.lo
 libSoGtkViewers_la_OBJECTS =  $(am_libSoGtkViewers_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -173,9 +177,9 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 GZIP_ENV = --best
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/SoAnyExaminerViewer.Plo \
-$(DEPDIR)/SoAnyFullViewer.Plo $(DEPDIR)/SoGtkExaminerViewer.Plo \
-$(DEPDIR)/SoGtkFullViewer.Plo $(DEPDIR)/SoGtkViewer.Plo \
-$(DEPDIR)/SoGtkViewerExtra.Plo
+$(DEPDIR)/SoAnyFullViewer.Plo $(DEPDIR)/SoAnyPlaneViewer.Plo \
+$(DEPDIR)/SoGtkExaminerViewer.Plo $(DEPDIR)/SoGtkFullViewer.Plo \
+$(DEPDIR)/SoGtkViewer.Plo $(DEPDIR)/SoGtkViewerExtra.Plo
 SOURCES = $(libSoGtkViewers_la_SOURCES)
 OBJECTS = $(am_libSoGtkViewers_la_OBJECTS)
 
@@ -218,11 +222,6 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
-SoGtkViewer.lo: $(top_builddir)/src/Inventor/Gtk/viewers/SoGtkViewer.cpp
-SoAnyFullViewer.lo: \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp
-SoAnyExaminerViewer.lo: \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp
 
 libSoGtkViewers.la: $(libSoGtkViewers_la_OBJECTS) $(libSoGtkViewers_la_DEPENDENCIES)
 	$(CXXLINK)  $(libSoGtkViewers_la_LDFLAGS) $(libSoGtkViewers_la_OBJECTS) $(libSoGtkViewers_la_LIBADD) $(LIBS)
@@ -278,6 +277,7 @@ distdir: $(DISTFILES)
 
 @AMDEP@include $(DEPDIR)/SoAnyExaminerViewer.Plo
 @AMDEP@include $(DEPDIR)/SoAnyFullViewer.Plo
+@AMDEP@include $(DEPDIR)/SoAnyPlaneViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkExaminerViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkFullViewer.Plo
 @AMDEP@include $(DEPDIR)/SoGtkViewer.Plo
@@ -343,6 +343,7 @@ distclean-generic:
 
 maintainer-clean-generic:
 	-rm -f Makefile.in
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-noinstLTLIBRARIES mostlyclean-compile \
 		mostlyclean-libtool mostlyclean-tags mostlyclean-depend \
 		mostlyclean-generic
@@ -389,37 +390,45 @@ mostlyclean distclean maintainer-clean
 
 ############################################################################
 
-SoGtkViewer.h: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyViewer.h.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.h )
+SoGtkViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.h )
 
-SoGtkViewer.cpp: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyViewer.cpp.in
-	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.cpp )
+SoGtkViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoGtkViewer.cpp )
 
-############################################################################
+SoAnyFullViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyFullViewer.h )
 
-SoAnyFullViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp
-	source='$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp' \
-	object='$@' libtool=yes \
-	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
-	$(CXXDEPMODE) $(depcomp) \
-	$(LTCXXCOMPILE) -c -o $@ \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp
+SoAnyFullViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyFullViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyFullViewer.cpp )
 
-SoAnyExaminerViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp
-	source='$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp' \
-	object='$@' libtool=yes \
-	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
-	$(CXXDEPMODE) $(depcomp) \
-	$(LTCXXCOMPILE) -c -o $@ \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp
+SoAnyExaminerViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyExaminerViewer.h )
 
-SoAnyPlaneViewer.lo: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp
-	source='$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp' \
-	object='$@' libtool=yes \
-	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' \
-	$(CXXDEPMODE) $(depcomp) \
-	$(LTCXXCOMPILE) -c -o $@ \
-	$(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp
+SoAnyExaminerViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyExaminerViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyExaminerViewer.cpp )
+
+SoAnyPlaneViewer.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.h.in
+	@( cd $(top_builddir); \
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyPlaneViewer.h )
+
+SoAnyPlaneViewer.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyPlaneViewer.cpp.in
+	@( cd $(top_builddir);
+	   $(MAKE) src/Inventor/Gtk/viewers/SoAnyPlaneViewer.cpp )
 
 ############################################################################
 

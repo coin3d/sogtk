@@ -102,21 +102,26 @@ install_sh = @install_sh@
 sim_ac_conf_cmd = @sim_ac_conf_cmd@
 
 
-SUBDIRS = devices viewers widgets
+SUBDIRS = devices widgets viewers
 
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
+
+BUILT_SOURCES = \
+	SoGtkBasic.h \
+	SoGtkRenderArea.h \
+	SoGtkRenderArea.cpp
+
 
 lib_LTLIBRARIES = libSoGtk.la
 
 libSoGtk_la_SOURCES = \
+	$(BUILT_SOURCES) \
 	SoGtk.cpp \
 	SoGtk.h \
 	SoGtkComponent.cpp \
 	SoGtkComponent.h \
 	SoGtkGLWidget.cpp \
 	SoGtkGLWidget.h \
-	$(top_builddir)/src/Inventor/Gtk/SoGtkRenderArea.cpp \
-	$(top_builddir)/src/Inventor/Gtk/SoGtkRenderArea.h \
 	SoGtkRenderAreaExtra.cpp
 
 
@@ -143,8 +148,8 @@ X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtk_la_LDFLAGS = 
 libSoGtk_la_DEPENDENCIES =  devices/libSoGtkDevices.la \
 viewers/libSoGtkViewers.la widgets/libSoGtkWidgets.la
-am_libSoGtk_la_OBJECTS =  SoGtk.lo SoGtkComponent.lo SoGtkGLWidget.lo \
-SoGtkRenderArea.lo SoGtkRenderAreaExtra.lo
+am_libSoGtk_la_OBJECTS =  SoGtkRenderArea.lo SoGtk.lo SoGtkComponent.lo \
+SoGtkGLWidget.lo SoGtkRenderAreaExtra.lo
 libSoGtk_la_OBJECTS =  $(am_libSoGtk_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -226,7 +231,6 @@ clean-libtool:
 distclean-libtool:
 
 maintainer-clean-libtool:
-SoGtkRenderArea.lo: $(top_builddir)/src/Inventor/Gtk/SoGtkRenderArea.cpp
 
 libSoGtk.la: $(libSoGtk_la_OBJECTS) $(libSoGtk_la_DEPENDENCIES)
 	$(CXXLINK) -rpath $(libdir) $(libSoGtk_la_LDFLAGS) $(libSoGtk_la_OBJECTS) $(libSoGtk_la_LIBADD) $(LIBS)
@@ -412,6 +416,7 @@ distclean-generic:
 
 maintainer-clean-generic:
 	-rm -f Makefile.in
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-libLTLIBRARIES mostlyclean-compile \
 		mostlyclean-libtool mostlyclean-tags mostlyclean-depend \
 		mostlyclean-generic
@@ -462,10 +467,16 @@ maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 ############################################################################
 
-SoGtkRenderArea.h: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyRenderArea.h.in
+SoGtkBasic.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkBasic.h )
+
+SoGtkRenderArea.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkRenderArea.h )
 
-SoGtkRenderArea.cpp: $(top_srcdir)/src/Inventor/Gtk/common/SoAnyRenderArea.cpp.in
+SoGtkRenderArea.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkRenderArea.cpp )
 
 ############################################################################
