@@ -44,8 +44,11 @@ public:
 
   virtual void show(void);
   virtual void hide(void);
-  SbBool isVisible(void);
 
+  SbBool isFullScreen(void) const;
+  void goFullScreen(const SbBool onoff);
+
+  SbBool isVisible(void);
   GtkWidget * getWidget(void) const;
   GtkWidget * baseWidget(void) const;
   SbBool isTopLevelShell(void) const;

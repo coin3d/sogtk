@@ -79,6 +79,7 @@ public:
   GtkWidget * widget;
   GtkWidget * parent;
   SbBool embedded;
+  SbBool fullscreen;
   SbBool shelled;
   char * className;
   char * widgetName;
@@ -912,6 +913,7 @@ SoGtkComponentP::SoGtkComponentP(
   this->widget = NULL;
   this->parent = NULL;
   this->embedded = FALSE;
+  this->fullscreen = FALSE;
   this->shelled = FALSE;
   this->widget = NULL;
   this->closeCB = NULL;
@@ -965,6 +967,27 @@ SoGtkComponentP::realizeHandlerCB( // static
   component->afterRealizeHook();
   return FALSE;
 } // realizeHandlerCB()
+
+// *************************************************************************
+
+/*!
+  Toggle full screen mode for this component.
+*/
+void 
+SoGtkComponent::goFullScreen(const SbBool onoff)
+{
+  if (onoff == THIS->fullscreen) return;
+  SOGTK_STUB();
+}
+
+/*!
+  Returns if this widget/component is in full screen mode.
+*/
+SbBool 
+SoGtkComponent::isFullScreen(void) const
+{
+  return THIS->fullscreen;
+}
 
 // *************************************************************************
 
