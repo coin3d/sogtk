@@ -197,7 +197,7 @@ SoGtkFullViewer::SoGtkFullViewerButtons[] = {
     (GtkSignalFunc) SoGtkFullViewer::sethomebuttonClickedCB,
     set_home_xpm,
     NULL, NULL
-  }, 
+  },
   { // view all
     "view_all", "V",
     (GtkSignalFunc) SoGtkFullViewer::viewallbuttonClickedCB,
@@ -324,8 +324,6 @@ SoGtkFullViewer::setDecoration(
 #endif // SOGTK_DEBUG
 
   this->decorations = enable;
-  if ( this->prefmenu )
-    this->prefmenu->setMenuItemMarked( DECORATION_ITEM, enable );
   if ( this->viewerWidget )
     this->showDecorationWidgets(enable);
 }
@@ -545,9 +543,6 @@ SoGtkFullViewer::setViewing(
     return;
   }
 
-  if ( this->prefmenu )
-    this->prefmenu->setMenuItemMarked( EXAMINING_ITEM, enable );
-
   inherited::setViewing( enable );
 
   GtkWidget * interact_button = findButton( "interact" );
@@ -564,57 +559,6 @@ SoGtkFullViewer::setViewing(
 //  GtkWidget * seek_button = findButton( "seek" );
 //  VIEWERBUTTON(SEEK_BUTTON)->setEnabled(enable);
 } // setViewing()
-
-// *************************************************************************
-
-/*!
-  Overloaded from parent to update user interface indicator for headlight
-  on or off in the popup menu.
-*/
-
-void
-SoGtkFullViewer::setHeadlight(
-  SbBool enable )
-{
-  inherited::setHeadlight( enable );
-  if ( this->prefmenu )
-    this->prefmenu->setMenuItemMarked( HEADLIGHT_ITEM, enable );
-} // setHeadlight()
-
-// *************************************************************************
-
-/*!
-  Overloaded from parent to make sure the user interface indicator in
-  the popup menu is updated correctly.
-*/
-
-void
-SoGtkFullViewer::setDrawStyle(
-  SoGtkViewer::DrawType type,
-  SoGtkViewer::DrawStyle style )
-{
-  inherited::setDrawStyle( type, style );
-  if ( this->prefmenu )
-    common->setDrawStyleMenuActivation( type, style );
-} // setDrawStyle()
-
-// *************************************************************************
-
-/*!
-  Overloaded from parent to make sure the user interface indicators in
-  the popup menu are updated correctly.
-*/
-
-void
-SoGtkFullViewer::setBufferingType(
-  SoGtkViewer::BufferType type )
-{
-  inherited::setBufferingType( type );
-
-  if ( this->prefmenu ) {
-    //
-  }
-}
 
 // *************************************************************************
 
@@ -687,9 +631,9 @@ GtkWidget *
 SoGtkFullViewer::buildWidget(
   GtkWidget * parent )
 {
-  GtkWidget * root = gtk_vbox_new( FALSE, 0 ); 
+  GtkWidget * root = gtk_vbox_new( FALSE, 0 );
   g_return_val_if_fail( root != NULL, NULL );
-  GtkWidget * croot = gtk_hbox_new( FALSE, 0 ); 
+  GtkWidget * croot = gtk_hbox_new( FALSE, 0 );
   g_return_val_if_fail( croot != NULL, NULL );
 
   this->canvas = inherited::buildWidget( croot );
@@ -939,8 +883,8 @@ SoGtkFullViewer::createViewerButtons( // virtual
     gtk_tooltips_set_tip (tooltips, widget,
       this->buttons[button].keyword, NULL);
 
-    GdkPixmap * gdk_pixmap = 
-      gdk_pixmap_colormap_create_from_xpm_d (NULL, colormap, 
+    GdkPixmap * gdk_pixmap =
+      gdk_pixmap_colormap_create_from_xpm_d (NULL, colormap,
         &mask, NULL,
         this->buttons[button].xpm_data);
     GtkWidget * label = gtk_pixmap_new( gdk_pixmap, mask );
@@ -992,12 +936,6 @@ SoGtkFullViewer::buildPopupMenu(
 {
   this->prefmenu = common->setupStandardPopupMenu();
   assert( this->prefmenu != NULL );
-  if ( this->isViewing() )
-    this->prefmenu->setMenuItemMarked( EXAMINING_ITEM, TRUE );
-  if ( this->isDecoration() )
-    this->prefmenu->setMenuItemMarked( DECORATION_ITEM, TRUE );
-  if ( this->isHeadlight() )
-    this->prefmenu->setMenuItemMarked( HEADLIGHT_ITEM, TRUE );
 } // buildPopupMenu()
 
 // *************************************************************************
@@ -1011,6 +949,8 @@ SoGtkFullViewer::setPopupMenuString(
   const char * str )
 {
   this->menuTitle = str ? str : "";
+  SOGTK_STUB();
+
 //  if ( this->prefMenu )
 //    this->prefMenu->changeItem( this->menutitle.getString(),
 //                                MENUTITLE_ITEM );
@@ -1028,8 +968,10 @@ SoGtkFullViewer::openPopupMenu(
 {
   if ( ! this->prefmenu && this->menuEnabled )
     this->buildPopupMenu();
-  if ( this->prefmenu )
+  if ( this->prefmenu ) {
+    this->common->prepareMenu( this->prefmenu );
     this->prefmenu->popUp( this->getGLWidget(), position[0], position[1] );
+  }
 } // openPopupMenu()
 
 // *************************************************************************
@@ -1435,7 +1377,7 @@ SoGtkFullViewer::makePreferencesWindow(
   void )
 {
   this->prefwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (this->prefwindow), 
+  gtk_window_set_title (GTK_WINDOW (this->prefwindow),
     this->prefwindowtitle.getString());
   gtk_window_set_position (GTK_WINDOW (this->prefwindow),  GTK_WIN_POS_MOUSE);
 
@@ -1452,7 +1394,7 @@ SoGtkFullViewer::makePreferencesWindow(
 
 #if 0
   w = makeAutoclipPreferences(form);
-  
+
 //  w = makeStereoPreferences(form);
 
 //  w = makeSpinAnimationPreferences(form);
@@ -1535,14 +1477,14 @@ SoGtkFullViewer::makeSeekPreferences(
   rbg1 = gtk_radio_button_group (GTK_RADIO_BUTTON (rb1));
   gtk_widget_show (rb1);
   gtk_box_pack_start (GTK_BOX (hbox3), rb1, FALSE, FALSE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb1), 
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb1),
     this->isDetailSeek());
 
   GtkWidget *rb2 = gtk_radio_button_new_with_label (rbg1, "object" );
   rbg1 = gtk_radio_button_group (GTK_RADIO_BUTTON (rb2));
   gtk_widget_show (rb2);
   gtk_box_pack_start (GTK_BOX (hbox3), rb2, FALSE, FALSE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb1), 
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rb1),
     !this->isDetailSeek());
 
   gtk_signal_connect (GTK_OBJECT (entry3), "activate",
@@ -1610,14 +1552,14 @@ SoGtkFullViewer::makeSeekDistancePreferences(
   bg = gtk_radio_button_group (GTK_RADIO_BUTTON (r1));
   gtk_widget_show (r1);
   gtk_box_pack_start (GTK_BOX (hbox5), r1, FALSE, FALSE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (r1), 
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (r1),
     this->isSeekValuePercentage() );
 
   GtkWidget *r2 = gtk_radio_button_new_with_label (bg, "absolute" );
   bg = gtk_radio_button_group (GTK_RADIO_BUTTON (r2));
   gtk_widget_show (r2);
   gtk_box_pack_start (GTK_BOX (hbox5), r2, FALSE, FALSE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (r2), 
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (r2),
     !this->isSeekValuePercentage() );
 
   gtk_signal_connect (GTK_OBJECT (this->seekdistancefield), "activate",
@@ -1629,7 +1571,7 @@ SoGtkFullViewer::makeSeekDistancePreferences(
   gtk_signal_connect (GTK_OBJECT (r1), "toggled",
                       GTK_SIGNAL_FUNC (seekDistanceTypeToggle),
                       (gpointer) this);
-  
+
   return form;
 }
 
@@ -2027,7 +1969,7 @@ SoGtkFullViewer::seekAnimationTimeChanged(
 
 void
 SoGtkFullViewer::seekDetailToggled(
-  GtkToggleButton	*button,  
+  GtkToggleButton	*button,
   gpointer            	closure )
 {
   SoGtkFullViewer *viewer = (SoGtkFullViewer*) closure ;
@@ -2078,10 +2020,10 @@ SoGtkFullViewer::seekDistanceEdit(
   char *s = gtk_editable_get_chars(editable,0,-1);
   float val;
 
-  if ((sscanf(s, "%f", &val) == 1) && (val > 0.0f)) 
+  if ((sscanf(s, "%f", &val) == 1) && (val > 0.0f))
   {
     viewer->setSeekDistance(val);
-    gtk_thumbwheel_set_value( GTK_THUMBWHEEL(viewer->seekdistancewheel), 
+    gtk_thumbwheel_set_value( GTK_THUMBWHEEL(viewer->seekdistancewheel),
       sqrt(val));
   }
   g_free(s);
@@ -2720,4 +2662,3 @@ SoGtkFullViewer::getCurrentPointer(
 #if SOGTK_DEBUG
 static const char * getSoGtkFullViewerRCSId(void) { return rcsid; }
 #endif // SOGTK_DEBUG
-

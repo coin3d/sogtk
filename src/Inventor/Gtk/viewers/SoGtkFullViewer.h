@@ -60,10 +60,6 @@ public:
   // internal
   // These are overloaded to update user interface components.
   virtual void setViewing( SbBool enable );
-  virtual void setHeadlight( SbBool enable );
-  virtual void setDrawStyle(
-    SoGtkViewer::DrawType type, SoGtkViewer::DrawStyle style );
-  virtual void setBufferingType( SoGtkViewer::BufferType type );
   virtual void setCamera( SoCamera * camera );
   virtual void hide(void);
 
@@ -219,7 +215,7 @@ private: //  slots:
   // Pref sheet.
 #endif
   static void preferencesDestroyed(
-    GtkObject           *object, 
+    GtkObject           *object,
     gpointer            closure);
 
   //  seek settings
