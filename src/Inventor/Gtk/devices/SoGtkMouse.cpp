@@ -17,6 +17,10 @@
  *
  **************************************************************************/
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif // HAVE_CONFIG_H
+
 #include <gdk/gdktypes.h>
 
 #include <Inventor/errors/SoDebugError.h>
@@ -26,242 +30,175 @@
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkMouse.h>
-
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif // HAVE_CONFIG_H
+#include <Inventor/Gtk/devices/SoGuiMouseP.h>
 
 // *************************************************************************
 
-/*!
-  \class SoGtkMouse SoGtkMouse.h Inventor/Gtk/devices/SoGtkMouse.h
-  \brief The SoGtkMouse class ...
-  \ingroup devices
-
-  FIXME: write class doc
-*/
+class SoGtkMouseP : public SoGuiMouseP {
+public:
+  SoGtkMouseP(SoGtkMouse * p) : SoGuiMouseP(p) { }
+};
 
 // *************************************************************************
 
-/*!
-  \enum SoGtkMouse::Events
-  FIXME: write documentation for enum
-*/
-/*!
-  \var SoGtkMouse::Events SoGtkMouse::BUTTON_PRESS
-  FIXME: write documentation for enum definition
-*/
-/*!
-  \var SoGtkMouse::Events SoGtkMouse::BUTTON_RELEASE
-  FIXME: write documentation for enum definition
-*/
-/*!
-  \var SoGtkMouse::Events SoGtkMouse::POINTER_MOTION
-  FIXME: write documentation for enum definition
-*/
-/*!
-  \var SoGtkMouse::Events SoGtkMouse::BUTTON_MOTION
-  FIXME: write documentation for enum definition
-*/
-/*!
-  \var SoGtkMouse::Events SoGtkMouse::ALL_EVENTS
-  FIXME: write documentation for enum definition
-*/
-
-// *************************************************************************
-
-SOGTK_OBJECT_SOURCE(SoGtkMouse);
-
-// *************************************************************************
-
-/*!
-  Constructor.
-*/
-
-SoGtkMouse::SoGtkMouse(
-  int eventbits)
+SoGtkMouse::SoGtkMouse(int eventbits)
 {
-  this->eventmask = eventbits & SoGtkMouse::ALL_EVENTS;
-  this->buttonevent = new SoMouseButtonEvent;
-  this->locationevent = new SoLocation2Event;
-} // SoGtkMouse()
+  PRIVATE(this) = new SoGtkMouseP(this);
+  PRIVATE(this)->eventmask = eventbits & SoGtkMouse::ALL_EVENTS;
+}
 
-/*!
-  Destructor.
-*/
-
-SoGtkMouse::~SoGtkMouse(
-  void)
+SoGtkMouse::~SoGtkMouse()
 {
-  delete this->buttonevent;
-  delete this->locationevent;
-} // ~SoGtkMouse()
+  delete PRIVATE(this);
+}
 
 // *************************************************************************
-
-/*!
-  FIXME: write function documentation
-*/
 
 void
-SoGtkMouse::enable(
-  GtkWidget * widget,
-  SoGtkEventHandler * func,
-  gpointer closure)
+SoGtkMouse::enable(GtkWidget * widget,
+                   SoGtkEventHandler * func,
+                   gpointer closure)
 {
-  if (func)
-  {
-    if (this->eventmask & SoGtkMouse::BUTTON_PRESS)
-    {
+  if (func) {
+    if (PRIVATE(this)->eventmask & SoGtkMouse::BUTTON_PRESS) {
       gtk_signal_connect(GTK_OBJECT(widget), "button_press_event",
-        GTK_SIGNAL_FUNC(func), closure);
+                         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_BUTTON_PRESS_MASK);
     }
-    if (this->eventmask & SoGtkMouse::BUTTON_RELEASE)
-    {
+    if (PRIVATE(this)->eventmask & SoGtkMouse::BUTTON_RELEASE) {
       gtk_signal_connect(GTK_OBJECT(widget), "button_release_event",
-        GTK_SIGNAL_FUNC(func), closure);
+                         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_BUTTON_RELEASE_MASK);
     }
-    if (this->eventmask & SoGtkMouse::POINTER_MOTION)
-    {
+    if (PRIVATE(this)->eventmask & SoGtkMouse::POINTER_MOTION) {
       gtk_signal_connect(GTK_OBJECT(widget), "motion_notify_event",
-        GTK_SIGNAL_FUNC(func), closure);
+                         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_POINTER_MOTION_MASK);
     }
-    if (this->eventmask & SoGtkMouse::BUTTON_MOTION)
-    {
-      if (!(this->eventmask & SoGtkMouse::POINTER_MOTION))
+    if (PRIVATE(this)->eventmask & SoGtkMouse::BUTTON_MOTION) {
+      if (!(PRIVATE(this)->eventmask & SoGtkMouse::POINTER_MOTION)) {
         gtk_signal_connect(GTK_OBJECT(widget), "motion_notify_event",
-          GTK_SIGNAL_FUNC(func), closure);
-      gtk_widget_add_events(GTK_WIDGET(widget),GDK_BUTTON_MOTION_MASK);
+                           GTK_SIGNAL_FUNC(func), closure);
+        gtk_widget_add_events(GTK_WIDGET(widget),GDK_BUTTON_MOTION_MASK);
+      }
     }
   }
-} // enable()
-
-/*!
-  FIXME: write function documentation
-*/
+}
 
 void
-SoGtkMouse::disable(
-  GtkWidget * widget,
-  SoGtkEventHandler * func,
-  gpointer closure)
+SoGtkMouse::disable(GtkWidget * widget,
+                    SoGtkEventHandler * func,
+                    gpointer closure)
 {
-  if (func)
+  if (func) {
     gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
-      GTK_SIGNAL_FUNC(func), closure);
-} // disable()
+                                  GTK_SIGNAL_FUNC(func), closure);
+  }
+}
 
 // *************************************************************************
 
-/*!
-  FIXME: write function documentation
-*/
-
 const SoEvent *
-SoGtkMouse::translateEvent(
-  GdkEvent * ev)
+SoGtkMouse::translateEvent(GdkEvent * ev)
 {
   switch (ev->type) {
   case GDK_BUTTON_PRESS:
     do {
       GdkEventButton * event = (GdkEventButton *) ev;
-      this->buttonevent->setState(SoButtonEvent::DOWN);
-      this->buttonevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
-      this->buttonevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
-      this->buttonevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->buttonevent->setState(SoButtonEvent::DOWN);
+      PRIVATE(this)->buttonevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->buttonevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->buttonevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
       SbTime stamp;
       stamp.setMsecValue(event->time);
-      this->buttonevent->setTime(stamp);
-      SoGtkDevice::setEventPosition(this->buttonevent,
-        (int) event->x, (int) event->y);
+      PRIVATE(this)->buttonevent->setTime(stamp);
+      this->setEventPosition(PRIVATE(this)->buttonevent,
+                                    (int) event->x, (int) event->y);
       switch (event->button) {
       case 1:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
         break;
       case 2:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
         break;
       case 3:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
         break;
 #ifdef HAVE_SOMOUSEBUTTONEVENT_BUTTON5
       case 4:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON4);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON4);
         break;
       case 5:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON5);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON5);
         break;
 #endif // HAVE_SOMOUSEBUTTONEVENT_BUTTON5
       default:
-        this->buttonevent->setButton(SoMouseButtonEvent::ANY);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::ANY);
         break;
       }
     } while (FALSE);
-    return this->buttonevent;
+    return PRIVATE(this)->buttonevent;
     break;
 
   case GDK_BUTTON_RELEASE:
     do {
       GdkEventButton * event = (GdkEventButton *) ev;
-      this->buttonevent->setState(SoButtonEvent::UP);
-      this->buttonevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
-      this->buttonevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
-      this->buttonevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->buttonevent->setState(SoButtonEvent::UP);
+      PRIVATE(this)->buttonevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->buttonevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->buttonevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
       SbTime stamp;
       stamp.setMsecValue(event->time);
-      this->buttonevent->setTime(stamp);
-      SoGtkDevice::setEventPosition(this->buttonevent,
-        (int) event->x, (int) event->y);
+      PRIVATE(this)->buttonevent->setTime(stamp);
+      this->setEventPosition(PRIVATE(this)->buttonevent,
+                             (int) event->x, (int) event->y);
       switch (event->button) {
       case 1:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
         break;
       case 2:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
         break;
       case 3:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
         break;
 #ifdef HAVE_SOMOUSEBUTTONEVENT_BUTTON5
       case 4:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON4);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON4);
         break;
       case 5:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON5);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::BUTTON5);
         break;
 #endif // HAVE_SOMOUSEBUTTONEVENT_BUTTON5
       default:
-        this->buttonevent->setButton(SoMouseButtonEvent::ANY);
+        PRIVATE(this)->buttonevent->setButton(SoMouseButtonEvent::ANY);
         break;
       }
     } while (FALSE);
-    return this->buttonevent;
+    return PRIVATE(this)->buttonevent;
     break;
 
   case GDK_MOTION_NOTIFY:
     do {
       GdkEventMotion * event = (GdkEventMotion *) ev;
-      this->locationevent->setShiftDown(event->state & GDK_SHIFT_MASK);
-      this->locationevent->setCtrlDown(event->state & GDK_CONTROL_MASK);
-      this->locationevent->setAltDown(event->state & GDK_MOD1_MASK);
+      PRIVATE(this)->locationevent->setShiftDown(event->state & GDK_SHIFT_MASK);
+      PRIVATE(this)->locationevent->setCtrlDown(event->state & GDK_CONTROL_MASK);
+      PRIVATE(this)->locationevent->setAltDown(event->state & GDK_MOD1_MASK);
       SbTime stamp;
       stamp.setMsecValue(event->time);
-      this->locationevent->setTime(stamp);
-      SoGtkDevice::setEventPosition(this->locationevent,
-        (int) event->x, (int) event->y);
+      PRIVATE(this)->locationevent->setTime(stamp);
+      this->setEventPosition(PRIVATE(this)->locationevent,
+                             (int) event->x, (int) event->y);
     } while (0);
-    return this->locationevent;
+    return PRIVATE(this)->locationevent;
     break;
 
   default:
     return (SoEvent *) NULL;
 
-  } // switch (ev->type)
+  }
 
   return (const SoEvent *) NULL;
-} // translateEvent()
+}
 
 // *************************************************************************

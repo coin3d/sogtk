@@ -24,84 +24,37 @@
 #include <config.h>
 #endif // HAVE_CONFIG_H
 
-#if SOGTK_DEBUG
 #include <Inventor/errors/SoDebugError.h>
-#endif // SOGTK_DEBUG
 #include <Inventor/events/SoKeyboardEvent.h>
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkKeyboard.h>
+#include <Inventor/Gtk/devices/SoGuiKeyboardP.h>
 #include <Inventor/Gtk/devices/SoGtkInputFocus.h>
 
 // *************************************************************************
 
-/*!
-  \class SoGtkKeyboard Inventor/Gtk/devices/SoGtkKeyboard.h
-  \brief The SoGtkKeyboard class translates GdkEventKey events into
-  SoKeyboardEvent events.
-  \ingroup devices
-*/
+class SoGtkKeyboardP : public SoGuiKeyboardP {
+};
 
 // *************************************************************************
 
-/*!
-  \enum SoGtkKeyboard::Events
-  FIXME: write doc
-*/
-
-/*!
-  \var SoGtkKeyboard::Events SoGtkKeyboard::KEY_PRESS
-  FIXME: write doc
-*/
-
-/*!
-  \var SoGtkKeyboard::Events SoGtkKeyboard::KEY_RELEASE
-  FIXME: write doc
-*/
-
-/*!
-  \var SoGtkKeyboard::Events SoGtkKeyboard::ALL_EVENTS
-  FIXME: write doc
-*/
-
-// *************************************************************************
-
-SOGTK_OBJECT_SOURCE(SoGtkKeyboard);
-
-// *************************************************************************
-
-/*!
-  Constructor.
-
-  The \a eventbits argument decides which events are handled.
-  It defaults to SoGtkKeyboard::ALL_EVENTS.
-*/
-
-SoGtkKeyboard::SoGtkKeyboard(
-  int eventbits)
+SoGtkKeyboard::SoGtkKeyboard(int eventbits)
 {
-  this->eventmask = eventbits & SoGtkKeyboard::ALL_EVENTS;
-  this->kbdevent = new SoKeyboardEvent;
-} // SoGtkKeyboard()
+  PRIVATE(this) = new SoGtkKeyboardP;
+  PRIVATE(this)->eventmask = eventbits & SoGtkKeyboard::ALL_EVENTS;
+}
 
-/*!
-  Destructor.
-*/
-
-SoGtkKeyboard::~SoGtkKeyboard(
-  void)
+SoGtkKeyboard::~SoGtkKeyboard()
 {
-  delete this->kbdevent;
-} // ~SoGtkKeyboard()
+  delete PRIVATE(this);
+}
 
 // *************************************************************************
 
-/*!
-  \internal
-  A Gtk-event handler internally used to automatically grab the keyboard
-  focus, when a mouse pointer enters a widget connected to a SoGtkKeyboard.
-*/
-
+// A Gtk-event handler internally used to automatically grab the
+// keyboard focus, when a mouse pointer enters a widget connected to a
+// SoGtkKeyboard.
 static gboolean
 EnterHandler(GtkWidget *widget,
              GdkEventCrossing *event,
@@ -115,62 +68,52 @@ EnterHandler(GtkWidget *widget,
   return FALSE;
 }
 
-/*!
-  FIXME: write function documentation
-*/
-
 void
-SoGtkKeyboard::enable(
-  GtkWidget * widget,
-  SoGtkEventHandler *func,
-  gpointer closure)
+SoGtkKeyboard::enable(GtkWidget * widget, SoGtkEventHandler * func,
+                      gpointer closure)
 {
-  if (func)
-  {
-    if (this->eventmask & SoGtkKeyboard::KEY_PRESS)
-    {
+  if (func) {
+    if (PRIVATE(this)->eventmask & SoGtkKeyboard::KEY_PRESS) {
       gtk_signal_connect(GTK_OBJECT(widget), "key_press_event",
-        GTK_SIGNAL_FUNC(func), closure);
+                         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_PRESS_MASK);
     }
-    if (this->eventmask & SoGtkKeyboard::KEY_RELEASE)
-    {
+    if (PRIVATE(this)->eventmask & SoGtkKeyboard::KEY_RELEASE) {
       gtk_signal_connect(GTK_OBJECT(widget), "key_release_event",
-        GTK_SIGNAL_FUNC(func), closure);
+                         GTK_SIGNAL_FUNC(func), closure);
       gtk_widget_add_events(GTK_WIDGET(widget),GDK_KEY_RELEASE_MASK);
     }
   }
-  // When entering the window, we want to have
-  // the keyboard focus. G.Barrand.
-  if (this->eventmask & SoGtkInputFocus::ENTER_WINDOW)
-    {
-      gtk_signal_connect(GTK_OBJECT(widget), "enter_notify_event",
-			 GTK_SIGNAL_FUNC(EnterHandler), closure);
-      gtk_widget_add_events(GTK_WIDGET(widget),GDK_ENTER_NOTIFY_MASK);
-    }
-} // enable()
 
-/*!
-  FIXME: write function documentation
-*/
+  // When entering the window, we want to have the keyboard
+  // focus. G.Barrand.
+  //
+  // FIXME: this seems bogus, as we're checking our eventmask against
+  // a flag in SoGtkInputFocus? Does it work? If so, is it by sheer
+  // luck? 20020625 mortene.
+  if (PRIVATE(this)->eventmask & SoGtkInputFocus::ENTER_WINDOW) {
+    gtk_signal_connect(GTK_OBJECT(widget), "enter_notify_event",
+                       GTK_SIGNAL_FUNC(EnterHandler), closure);
+    gtk_widget_add_events(GTK_WIDGET(widget), GDK_ENTER_NOTIFY_MASK);
+  }
+}
 
 void
-SoGtkKeyboard::disable(
-  GtkWidget * widget,
-  SoGtkEventHandler * func,
-  gpointer closure)
+SoGtkKeyboard::disable(GtkWidget * widget,
+                       SoGtkEventHandler * func,
+                       gpointer closure)
 {
-  if (func)
+  if (func) {
     gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
-      GTK_SIGNAL_FUNC(func), closure);
-} // disable()
+                                  GTK_SIGNAL_FUNC(func), closure);
+  }
+}
 
 // *************************************************************************
 
 static
 SoKeyboardEvent::Key
-getKeyForKeyCode(
-  guint keycode, char & printable)
+getKeyForKeyCode(guint keycode, char & printable)
 {
   switch (keycode) {
   case GDK_Shift_L:        return SoKeyboardEvent::LEFT_SHIFT;
@@ -402,69 +345,64 @@ getKeyForKeyCode(
 
   default:
     break;
-  } // switch (keycode)
+  }
 
   return SoKeyboardEvent::ANY;
-} // getKeyForKeyCode()
+}
 
 // *************************************************************************
 
-/*!
-  FIXME: write function documentation
-*/
-
 const SoEvent *
-SoGtkKeyboard::translateEvent(// virtual
-  GdkEvent * ev)
+SoGtkKeyboard::translateEvent(GdkEvent * ev)
 {
   switch (ev->type) {
   case GDK_KEY_PRESS:
-    if (this->eventmask & KEY_PRESS) {
+    if (PRIVATE(this)->eventmask & KEY_PRESS) {
       const GdkEventKey * const event = (GdkEventKey *) ev;
       SbTime stamp;
       stamp.setMsecValue(event->time);
-      this->kbdevent->setTime(stamp);
+      PRIVATE(this)->kbdevent->setTime(stamp);
       const SbVec2s pos = SoGtkDevice::getLastEventPosition();
-      SoGtkDevice::setEventPosition(this->kbdevent, pos[0], pos[1]);
+      SoGtkDevice::setEventPosition(PRIVATE(this)->kbdevent, pos[0], pos[1]);
       char printable = 0;
-      this->kbdevent->setKey(getKeyForKeyCode(event->keyval, printable));
+      PRIVATE(this)->kbdevent->setKey(getKeyForKeyCode(event->keyval, printable));
 #if 0 // disabled. Breaks build when compiling against OIV
-      if (printable) this->kbdevent->setPrintableCharacter(printable);
+      if (printable) PRIVATE(this)->kbdevent->setPrintableCharacter(printable);
 #endif // disabled
-      this->kbdevent->setState(SoButtonEvent::DOWN);
-      this->kbdevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
-      this->kbdevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
-      this->kbdevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
-      return this->kbdevent;
+      PRIVATE(this)->kbdevent->setState(SoButtonEvent::DOWN);
+      PRIVATE(this)->kbdevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->kbdevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->kbdevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
+      return PRIVATE(this)->kbdevent;
     }
     break;
 
   case GDK_KEY_RELEASE:
-    if (this->eventmask & KEY_RELEASE) {
+    if (PRIVATE(this)->eventmask & KEY_RELEASE) {
       const GdkEventKey * const event = (GdkEventKey *) ev;
       SbTime stamp;
       stamp.setMsecValue(event->time);
-      this->kbdevent->setTime(stamp);
+      PRIVATE(this)->kbdevent->setTime(stamp);
       const SbVec2s pos = SoGtkDevice::getLastEventPosition();
-      SoGtkDevice::setEventPosition(this->kbdevent, pos[0], pos[1]);
+      SoGtkDevice::setEventPosition(PRIVATE(this)->kbdevent, pos[0], pos[1]);
       char printable = 0;
-      this->kbdevent->setKey(getKeyForKeyCode(event->keyval, printable));
+      PRIVATE(this)->kbdevent->setKey(getKeyForKeyCode(event->keyval, printable));
 #if 0 // disabled. Breaks build when compiling against OIV
-      if (printable) this->kbdevent->setPrintableCharacter(printable);
+      if (printable) PRIVATE(this)->kbdevent->setPrintableCharacter(printable);
 #endif // disabled
-      this->kbdevent->setState(SoButtonEvent::UP);
-      this->kbdevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
-      this->kbdevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
-      this->kbdevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
-      return this->kbdevent;
+      PRIVATE(this)->kbdevent->setState(SoButtonEvent::UP);
+      PRIVATE(this)->kbdevent->setShiftDown((event->state & GDK_SHIFT_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->kbdevent->setCtrlDown((event->state & GDK_CONTROL_MASK) ? TRUE : FALSE);
+      PRIVATE(this)->kbdevent->setAltDown((event->state & GDK_MOD1_MASK) ? TRUE : FALSE);
+      return PRIVATE(this)->kbdevent;
     }
     break;
 
   default:
     break;
-  } // switch (ev->type)
+  }
 
   return (const SoEvent *) NULL;
-} // translateEvent()
+}
 
 // *************************************************************************
