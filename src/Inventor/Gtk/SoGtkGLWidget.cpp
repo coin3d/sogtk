@@ -60,18 +60,6 @@
   FIXME: write doc
 */
 
-/*!
-  \fn void SoGtkGLWidget::setStereoBuffer(SbBool flag)
-  
-  Sets whether OpenGL stereo buffers (quad buffer stereo) should be used.
-*/
-
-/*!
-  \fn SbBool SoGtkGLWidget::isStereoBuffer(void) const
-
-  Returns whether OpenGL stereo buffers are being used.
-*/
-
 static const int SO_BORDER_THICKNESS = 2;
 
 // *************************************************************************
@@ -84,13 +72,12 @@ SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkGLWidget);
   FIXME: write function documentation
 */
 
-SoGtkGLWidget::SoGtkGLWidget(
-  GtkWidget * const parent,
-  const char * const name,
-  const SbBool embed,
-  const int glModes,
-  const SbBool build)
-: inherited(parent, name, embed)
+SoGtkGLWidget::SoGtkGLWidget(GtkWidget * const parent,
+                             const char * const name,
+                             const SbBool embed,
+                             const int glModes,
+                             const SbBool build)
+  : inherited(parent, name, embed)
 {
   this->pimpl = new SoGtkGLWidgetP(this);
 
@@ -125,8 +112,7 @@ SoGtkGLWidget::SoGtkGLWidget(
   The destructor.
 */
 
-SoGtkGLWidget::~SoGtkGLWidget(
-  void)
+SoGtkGLWidget::~SoGtkGLWidget()
 {
   if (PRIVATE(this)->glWidget) SoAny::si()->unregisterGLContext((void*) this);
   delete this->pimpl;
@@ -134,7 +120,7 @@ SoGtkGLWidget::~SoGtkGLWidget(
 
 // *************************************************************************
 
-void   // private
+void
 SoGtkGLWidget::buildGLWidget(void)
 {
   SOGTK_STUB();
@@ -217,9 +203,8 @@ SoGtkGLWidget::buildWidget(GtkWidget * parent)
 */
 
 SbBool
-SoGtkGLWidget::eventFilter(
-  GtkWidget * obj,
-  GdkEvent * ev)
+SoGtkGLWidget::eventFilter(GtkWidget * obj,
+                           GdkEvent * ev)
 {
   if (inherited::eventFilter(obj, ev)) return TRUE;
   if (! GTK_IS_WIDGET(obj))
@@ -236,13 +221,12 @@ SoGtkGLWidget::eventFilter(
 */
 
 gint
-SoGtkGLWidget::eventHandler(// static, protected
-  GtkWidget * object,
-  GdkEvent * event,
-  gpointer closure)
+SoGtkGLWidgetP::eventHandler(GtkWidget * object,
+                             GdkEvent * event,
+                             gpointer closure)
 {
   assert(closure != NULL);
-  // SoDebugError::postInfo("SoGtkGLWidget::eventHandler", "[invoked]");
+  // SoDebugError::postInfo("SoGtkGLWidgetP::eventHandler", "[invoked]");
   SoGtkGLWidget * component = (SoGtkGLWidget *) closure;
   component->eventFilter(object, event);
   return FALSE;
@@ -257,8 +241,7 @@ SoGtkGLWidget::eventHandler(// static, protected
 */
 
 void
-SoGtkGLWidget::setBorder(
-  const SbBool enable)
+SoGtkGLWidget::setBorder(const SbBool enable)
 {
   PRIVATE(this)->borderThickness = enable ? SO_BORDER_THICKNESS : 0;
   // update canvas if it is created
@@ -271,8 +254,7 @@ SoGtkGLWidget::setBorder(
 */
 
 SbBool
-SoGtkGLWidget::isBorder(
-  void) const
+SoGtkGLWidget::isBorder(void) const
 {
   return (PRIVATE(this)->borderThickness != 0) ? TRUE : FALSE;
 }
@@ -304,8 +286,7 @@ SoGtkGLWidget::isOverlayRender(void) const
 */
 
 void
-SoGtkGLWidget::setDoubleBuffer(
-  const SbBool enable)
+SoGtkGLWidget::setDoubleBuffer(const SbBool enable)
 {
   if (PRIVATE(this)->glWidget) {
 /*
@@ -445,8 +426,7 @@ SoGtkGLWidget::isQuadBufferStereo(void) const
 */
 
 GtkWidget *
-SoGtkGLWidget::getNormalWidget(
-  void) const
+SoGtkGLWidget::getNormalWidget(void) const
 {
   return this->getGLWidget();
 }
@@ -456,8 +436,7 @@ SoGtkGLWidget::getNormalWidget(
 */
 
 GtkWidget *
-SoGtkGLWidget::getOverlayWidget(
-  void) const
+SoGtkGLWidget::getOverlayWidget(void) const
 {
   return (GtkWidget *) NULL;
 }
@@ -469,8 +448,7 @@ SoGtkGLWidget::getOverlayWidget(
 */
 
 void
-SoGtkGLWidget::setGLSize(
-  const SbVec2s size)
+SoGtkGLWidget::setGLSize(const SbVec2s size)
 {
   assert(PRIVATE(this)->container);
   GtkRequisition req = {
@@ -552,8 +530,7 @@ SoGtkGLWidget::sizeChanged(const SbVec2s & size)
 */
 
 void
-SoGtkGLWidget::widgetChanged(// virtual
-    GtkWidget * widget)
+SoGtkGLWidget::widgetChanged(GtkWidget * widget)
 {
 }
 
@@ -568,8 +545,7 @@ SoGtkGLWidget::widgetChanged(// virtual
   events to the scenegraph.
 */
 void
-SoGtkGLWidget::processEvent(// virtual
-                            GdkEvent * event)
+SoGtkGLWidget::processEvent(GdkEvent * event)
 {
   // Nothing is done here for the SoGtkGLWidget, as realize, resize
   // and expose events are caught by explicitly attaching signal
@@ -582,9 +558,8 @@ SoGtkGLWidget::processEvent(// virtual
 */
 
 gint
-SoGtkGLWidgetP::sGLInit(// static
-  GtkWidget * widget,
-  void * closure)
+SoGtkGLWidgetP::sGLInit(GtkWidget * widget,
+                        void * closure)
 {
   SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
   glwidget->initGraphic();
@@ -597,10 +572,9 @@ SoGtkGLWidgetP::sGLInit(// static
   FIXME: write doc
 */
 gint
-SoGtkGLWidgetP::sGLReshape(// static
-  GtkWidget * widget,
-  GdkEventConfigure * event, 
-  void * closure)
+SoGtkGLWidgetP::sGLReshape(GtkWidget * widget,
+                           GdkEventConfigure * event, 
+                           void * closure)
 {
   SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
   PRIVATE(glwidget)->wasresized = TRUE;
@@ -614,10 +588,9 @@ SoGtkGLWidgetP::sGLReshape(// static
 // Callback function for expose events.
 
 gint
-SoGtkGLWidgetP::sGLDraw(// static
-  GtkWidget * widget,
-  GdkEventExpose * event, 
-  void * closure)
+SoGtkGLWidgetP::sGLDraw(GtkWidget * widget,
+                        GdkEventExpose * event, 
+                        void * closure)
 {
   SoGtkGLWidget * glwidget = (SoGtkGLWidget *) closure;
   glwidget->waitForExpose = FALSE; // Gets flipped from TRUE on first expose.

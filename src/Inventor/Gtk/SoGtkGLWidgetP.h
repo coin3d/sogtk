@@ -37,6 +37,8 @@ public:
   SoGtkGLWidgetP(SoGtkGLWidget * publ);
   ~SoGtkGLWidgetP();
 
+  static gint eventHandler(GtkWidget * object, GdkEvent * event, gpointer closure);
+
   SbBool wasresized;
   SbVec2s glSize;
 
