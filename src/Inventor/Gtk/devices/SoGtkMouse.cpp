@@ -143,6 +143,9 @@ SoGtkMouse::translateEvent(
       this->buttonevent->setShiftDown( event->state & GDK_SHIFT_MASK );
       this->buttonevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
       this->buttonevent->setAltDown( event->state & GDK_MOD1_MASK );
+      SbTime stamp;
+      stamp.setMsecValue( event->time );
+      this->buttonevent->setTime( stamp );
       SoGtkDevice::setEventPosition( this->buttonevent,
         (int) event->x, (int) event->y );
       switch ( event->button ) {
@@ -178,6 +181,9 @@ SoGtkMouse::translateEvent(
       this->buttonevent->setShiftDown( event->state & GDK_SHIFT_MASK );
       this->buttonevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
       this->buttonevent->setAltDown( event->state & GDK_MOD1_MASK );
+      SbTime stamp;
+      stamp.setMsecValue( event->time );
+      this->buttonevent->setTime( stamp );
       SoGtkDevice::setEventPosition( this->buttonevent,
         (int) event->x, (int) event->y );
       switch ( event->button ) {
@@ -212,6 +218,9 @@ SoGtkMouse::translateEvent(
       this->locationevent->setShiftDown( event->state & GDK_SHIFT_MASK );
       this->locationevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
       this->locationevent->setAltDown( event->state & GDK_MOD1_MASK );
+      SbTime stamp;
+      stamp.setMsecValue( event->time );
+      this->locationevent->setTime( stamp );
       SoGtkDevice::setEventPosition( this->locationevent,
         (int) event->x, (int) event->y );
     } while ( 0 );
@@ -222,9 +231,6 @@ SoGtkMouse::translateEvent(
     return (SoEvent *) NULL;
 
   } // switch ( ev->type )
-
-  if ( super )
-    super->setTime(SbTime::getTimeOfDay());
 
   return super;
 } // translateEvent()
