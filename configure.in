@@ -243,12 +243,9 @@ fi
 # **************************************************************************
 # Compiler control.
 
-SIM_COMPILE_DEBUG
-if test $enable_debug = yes; then
-  CXXFLAGS="$CXXFLAGS -DSOGTK_DEBUG=1"
-else
-  CXXFLAGS="$CXXFLAGS -DSOGTK_DEBUG=0"
-fi
+SIM_AC_COMPILE_DEBUG(
+  [CPPFLAGS="$CPPFLAGS -DSOGTK_DEBUG=1"],
+  [CPPFLAGS="$CPPFLAGS -DSOGTK_DEBUG=0"])
 
 SIM_AC_DEBUGSYMBOLS
 SIM_AC_RTTI_SUPPORT
