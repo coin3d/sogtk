@@ -45,43 +45,68 @@ public:
   SoGtkExaminerViewer(
     GtkWidget * parent = NULL,
     const char * name = NULL,
-    SbBool buildInsideParent = TRUE,
-    SoGtkFullViewer::BuildFlag flag = BUILD_ALL,
+    SbBool embed = TRUE,
+    SoGtkFullViewer::BuildFlag flags = BUILD_ALL,
     SoGtkViewer::Type type = BROWSER );
   ~SoGtkExaminerViewer(void);
 
-  virtual void setViewing(SbBool on);
-  virtual void setCamera(SoCamera * cam);
-  virtual void setCursorEnabled(SbBool on);
+  virtual void setViewing( SbBool enable );
+
+  void setAnimationEnabled( const SbBool enable );
+  SbBool isAnimationEnabled(void) const;
+      
+  void stopAnimating(void);
+  SbBool isAnimating(void) const;
+	  
+  void setFeedbackVisibility( const SbBool enable );
+  SbBool isFeedbackVisible(void) const;
+
+  void setFeedbackSize( const int size );
+  int getFeedbackSize(void) const;
+
+  virtual void setCamera( SoCamera * camera );
 
 protected:
   SoGtkExaminerViewer(
     GtkWidget * parent,
     const char * name,
-    SbBool buildInsideParent,
-    SoGtkFullViewer::BuildFlag flag,
+    SbBool embed,
+    SoGtkFullViewer::BuildFlag flags,
     SoGtkViewer::Type type,
-    SbBool buildNow );
+    SbBool build );
 
-  virtual void leftWheelMotion(float val);
-  virtual void bottomWheelMotion(float val);
-  virtual void rightWheelMotion(float val);
+  virtual void actualRedraw(void);
 
-  virtual GtkWidget * makeSubPreferences(GtkWidget * parent);
-  virtual void createViewerButtons(GtkWidget * parent, SbPList * buttonlist);
+  virtual void setSeekMode( SbBool enable );
+
+  virtual void processEvent( GdkEvent * event );
+  virtual void afterRealizeHook(void);
+
+  virtual SbBool processSoEvent( const SoEvent * const event );
+
+  virtual void leftWheelStart(void);
+  virtual void leftWheelMotion( float value );
+  virtual void bottomWheelStart(void);
+  virtual void bottomWheelMotion( float value );
+  virtual void rightWheelMotion( float value );
+
+  virtual void openViewerHelpCard(void);
 
   virtual const char * getDefaultWidgetName(void) const;
   virtual const char * getDefaultTitle(void) const;
   virtual const char * getDefaultIconTitle(void) const;
 
-  virtual void openViewerHelpCard(void);
+  virtual void createViewerButtons( GtkWidget * parent, SbPList * buttonlist );
+  void camerabuttonClicked(void);
+  static void camerabuttonClickedCB( GtkWidget *, gpointer );
 
-  virtual SbBool processSoEvent(const SoEvent * const event);
-  virtual void processEvent(GdkEvent * anyevent);
-  virtual void setSeekMode( SbBool enable );
-  virtual void actualRedraw(void);
+  virtual void createPrefSheet(void);
+
+  virtual GtkWidget * makeSubPreferences( GtkWidget * parent );
 
 private:
+  void constructor( const SbBool build );
+
   enum ViewerMode {
     INTERACT,
     EXAMINE, DRAGGING,
@@ -92,40 +117,34 @@ private:
 
   ViewerMode currentMode;
 
-  void setMode(const ViewerMode mode);
-  void setModeFromState(const unsigned int state);
+  void setMode( const ViewerMode mode );
+  void setModeFromState( const unsigned int state );
 
   struct {
     GtkWidget * orthogonal;
     GtkWidget * perspective;
   } pixmaps;
 
-  void constructor(SbBool buildNow);
-  void visibilityCallback( SbBool visible );
-  static void visibilityCB( void * data, SbBool visible );
 
-//  QTimer * spinDetectTimer;
-
-  void setCursorRepresentation(const ViewerMode mode);
-//  QCursor * panCursor, * rotateCursor;
-//  QCursor * defaultCursor, * zoomCursor;
+  void setCursorRepresentation( const ViewerMode mode );
 
   GtkWidget * cameraToggleButton;
-  GtkWidget * feedbackLabel1, * feedbackLabel2;
+  GtkWidget * feedbackLabel1;
+  GtkWidget * feedbackLabel2;
   GtkWidget * feedbackWheel;
   GtkWidget * feedbackEdit;
-  void setEnableFeedbackControls(const SbBool flag);
+  void setEnableFeedbackControls( const SbBool flag );
 
 private: // slots:
   // Pref sheet.
-  void spinAnimationToggled(SbBool flag);
-  void feedbackVisibilityToggle(SbBool flag);
-  void feedbackEditPressed();
-  void feedbackWheelPressed();
-  void feedbackSizeChanged(float val);
-  void feedbackWheelReleased();
+  void spinAnimationToggled( SbBool flag );
+  void feedbackVisibilityToggle( SbBool flag );
+  void feedbackEditPressed(void);
+  void feedbackWheelPressed(void);
+  void feedbackSizeChanged( float val );
+  void feedbackWheelReleased(void);
   // Button row.
-  void cameratoggleClicked();
+  void cameratoggleClicked(void);
 
 private:
   SoAnyExaminerViewer * const common;

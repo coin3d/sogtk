@@ -26,14 +26,12 @@ static const char rcsid[] =
 
 #include <GL/gl.h>
 
+#include <Inventor/errors/SoDebugError.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
 #include <Inventor/fields/SoSFTime.h>
 #include <Inventor/sensors/SoTimerSensor.h>
 #include <Inventor/projectors/SbSphereSheetProjector.h>
-#if SOGTK_DEBUG
-#include <Inventor/errors/SoDebugError.h>
-#endif // SOGTK_DEBUG
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkCursors.h>
@@ -42,7 +40,6 @@ static const char rcsid[] =
 #include <Inventor/Gtk/viewers/SoAnyExaminerViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkExaminerViewer.h>
 
-// Icon graphic for the camera button.
 #include <Inventor/Gtk/common/pixmaps/ortho.xpm>
 #include <Inventor/Gtk/common/pixmaps/perspective.xpm>
 
@@ -56,10 +53,10 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
 ///////// FIXME end ////////////////////////////////////////////////////
 
 /*!
-  \class SoGtkExaminerViewer SoGtkExaminerViewer.h Inventor/Qt/viewers/SoGtkExaminerViewer.h
+  \class SoGtkExaminerViewer Inventor/Gtk/viewers/SoGtkExaminerViewer.h
   \brief The SoGtkExaminerViewer class is a full-fledged model viewer
   with functionality for rotation, pan, zoom, etc.
-  \ingroup qtviewers
+  \ingroup gtkviewers
 
   TODO: more doc
   ...overview of what this class provides over parent class...
@@ -74,10 +71,6 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
   \sa SoGtkWalkViewer, SoGtkFlyViewer, SoGtkPlaneViewer, SoGtkCollisionViewer
 */
 
-/*¡
-  SoGtkExaminerViewer is missing the class description documentation.
-*/
-
 // *************************************************************************
 
 /*!
@@ -85,36 +78,36 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
   Calling this constructor will make sure the examiner viewer widget
   will be built immediately.
 */
+
 SoGtkExaminerViewer::SoGtkExaminerViewer(
   GtkWidget * parent,
   const char * name,
-  SbBool buildInsideParent,
-  SoGtkFullViewer::BuildFlag b,
-  SoGtkViewer::Type t )
-: inherited(parent, name, buildInsideParent, b, t, FALSE)
+  SbBool embed,
+  SoGtkFullViewer::BuildFlag flags,
+  SoGtkViewer::Type type )
+: inherited( parent, name, embed, flags, type, FALSE )
 , common( new SoAnyExaminerViewer( this ) )
 {
-  this->constructor(TRUE);
-}
+  this->constructor( TRUE );
+} // SoGtkExaminerViewer()
 
-// *************************************************************************
 /*!
   Constructor. See parent class for explanation of arguments.
 */
-SoGtkExaminerViewer::SoGtkExaminerViewer(
+
+SoGtkExaminerViewer::SoGtkExaminerViewer( // protected
   GtkWidget * parent,
   const char * name,
-  SbBool buildInsideParent,
-  SoGtkFullViewer::BuildFlag b,
-  SoGtkViewer::Type t,
-  SbBool buildNow )
-: inherited(parent, name, buildInsideParent, b, t, FALSE)
+  SbBool embed,
+  SoGtkFullViewer::BuildFlag flags,
+  SoGtkViewer::Type type,
+  SbBool build )
+: inherited( parent, name, embed, flags, type, FALSE )
 , common( new SoAnyExaminerViewer( this ) )
 {
-  this->constructor(buildNow);
-}
+  this->constructor( build );
+} // SoGtkExaminerViewer()
 
-// *************************************************************************
 /*!
   \internal
 
@@ -123,8 +116,8 @@ SoGtkExaminerViewer::SoGtkExaminerViewer(
 */
 
 void
-SoGtkExaminerViewer::constructor(
-  SbBool buildNow )
+SoGtkExaminerViewer::constructor( // private
+  const SbBool build )
 {
   // FIXME: use a smaller sphere than the default one to have a larger
   // area close to the borders that gives us "z-axis rotation"?
@@ -142,7 +135,7 @@ SoGtkExaminerViewer::constructor(
 
   this->setClassName("SoGtkExaminerViewer");
 
-  this->addVisibilityChangeCallback( SoGtkExaminerViewer::visibilityCB, this );
+//  this->addVisibilityChangeCallback( SoGtkExaminerViewer::visibilityCB, this );
 
   this->setPopupMenuString( "Examiner Viewer" );
   this->setPrefSheetString( "Examiner Viewer Preference Sheet" );
@@ -151,16 +144,16 @@ SoGtkExaminerViewer::constructor(
   this->setBottomWheelString( "Roty" );
   this->setRightWheelString( "Dolly" );
 
-  if ( buildNow ) {
+  if ( build ) {
     GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
     this->setBaseWidget( viewer );
   }
-}
+} // constructor()
 
-// *************************************************************************
 /*!
   Destructor.
 */
+
 SoGtkExaminerViewer::~SoGtkExaminerViewer(
   void )
 {
@@ -171,12 +164,12 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer(
 //  delete this->defaultCursor;
 
   // Button pixmaps.
-  delete this->pixmaps.orthogonal;
-  delete this->pixmaps.perspective;
+//  delete this->pixmaps.orthogonal;
+//  delete this->pixmaps.perspective;
 
   // Variables used in the spin animation code.
 //  delete this->spinDetectTimer;
-}
+} // ~SoGtkExaminerViewer()
 
 // *************************************************************************
 
@@ -186,175 +179,221 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer(
 */
 
 void
-SoGtkExaminerViewer::setViewing(SbBool on)
+SoGtkExaminerViewer::setViewing( // virtual
+  SbBool enable )
 {
-  this->setMode(on ? EXAMINE : INTERACT);
-  inherited::setViewing(on);
+  this->setMode( enable ? EXAMINE : INTERACT );
+  inherited::setViewing( enable );
 } // setViewing()
 
 // *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkExaminerViewer::setAnimationEnabled(
+  const SbBool enable )
+{
+  common->setAnimationEnabled( enable );
+} // setAnimationEnabled()
+ 
+/*!
+*/
+
+SbBool
+SoGtkExaminerViewer::isAnimationEnabled(
+  void ) const
+{
+  return common->isAnimationEnabled();
+} // isAnimationEnabled()
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkExaminerViewer::stopAnimating(
+  void )
+{
+  common->stopAnimating();
+} // stopAnimating()
+
+/*!
+*/
+
+SbBool
+SoGtkExaminerViewer::isAnimating(
+  void ) const
+{
+  return common->isAnimating();
+} // isAnimating()
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkExaminerViewer::setFeedbackVisibility(
+  const SbBool enable )
+{
+  common->setFeedbackVisibility( enable );
+} // setFeedbackVisibility()
+
+/*!
+*/
+
+SbBool
+SoGtkExaminerViewer::isFeedbackVisible(
+  void ) const
+{
+  return common->isFeedbackVisible();
+} // isFeedbackVisible()
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkExaminerViewer::setFeedbackSize(
+  const int size )
+{
+  common->setFeedbackSize( size );
+} // setFeedbackSize()
+
+/*!
+*/
+
+int
+SoGtkExaminerViewer::getFeedbackSize(
+  void ) const
+{
+  return common->getFeedbackSize();
+} // getFeedbackSize()
+
+// *************************************************************************
+
 /*!
   This method overloaded from parent class to toggle the camera type
   selection button pixmap and string of the zoom/dolly thumbwheel.
 */
 
 void
-SoGtkExaminerViewer::setCamera(
-  SoCamera * newCamera )
+SoGtkExaminerViewer::setCamera( // virtual
+  SoCamera * camera )
 {
-  if (newCamera) {
-    SoType camtype = newCamera->getTypeId();
-    SbBool orthotype =
+  if ( camera ) {
+    const SoType camtype( camera->getTypeId() );
+    const SbBool orthotype =
       camtype.isDerivedFrom( SoOrthographicCamera::getClassTypeId() );
 
     this->setRightWheelString( orthotype ? "Zoom" : "Dolly");
-    if (this->cameraToggleButton) {
+//    if (this->cameraToggleButton) {
 //      this->cameraToggleButton->setPixmap( orthotype ?
 //        *(this->pixmaps.orthogonal) : *(this->pixmaps.perspective) );
-    }
+//    }
   }
-
-  inherited::setCamera(newCamera);
-}
+  inherited::setCamera( camera );
+} // setCamera()
 
 // *************************************************************************
+
 /*!
   Decide whether or not the mouse pointer cursor should be visible in the
   rendering canvas.
 */
+
+/*
 void
 SoGtkExaminerViewer::setCursorEnabled(SbBool on)
 {
   inherited::setCursorEnabled(on);
   this->setCursorRepresentation(this->currentMode);
 }
+*/
 
 // *************************************************************************
+
+/*!
+  Overloaded to stop spin animation when wheel is being handled.
+*/
+
+void
+SoGtkExaminerViewer::leftWheelStart( // virtual
+  void )
+{
+  if ( common->isAnimating() )
+    common->stopAnimating();
+  inherited::leftWheelStart();
+} // leftWheelStart()
+
 /*!
   Overloaded to provide the examiner viewer functionality on the left
   thumbwheel (x axis rotation).
 */
-void
-SoGtkExaminerViewer::leftWheelMotion(float val)
-{
-  common->reorientCamera(SbRotation(SbVec3f(1.0f, 0.0f, 0.0f),
-                                  val - this->getLeftWheelValue()));
-  inherited::leftWheelMotion(val);
-}
 
-// *************************************************************************
+void
+SoGtkExaminerViewer::leftWheelMotion( // virtual
+  float value )
+{
+  inherited::leftWheelMotion(
+    common->rotXWheelMotion( value, this->getLeftWheelValue() ) );
+} // leftWheelMotion()
+
+/*!
+  Overloaded to stop spin animation when wheel is being handled.
+*/
+
+void
+SoGtkExaminerViewer::bottomWheelStart( // virtual
+  void )
+{
+  if ( this->isAnimating() )
+    common->stopAnimating();
+  inherited::bottomWheelStart();
+} // bottomWheelStart()
+
 /*!
   Overloaded to provide the examiner viewer functionality on the bottom
   thumbwheel (y axis rotation).
 */
-void
-SoGtkExaminerViewer::bottomWheelMotion(float val)
-{
-  common->reorientCamera(SbRotation(SbVec3f(0.0f, 1.0f, 0.0f),
-                                  this->getBottomWheelValue() - val));
-  inherited::bottomWheelMotion(val);
-}
 
-// *************************************************************************
+void
+SoGtkExaminerViewer::bottomWheelMotion( // virtual
+  float value )
+{
+  inherited::bottomWheelMotion(
+    common->rotYWheelMotion( value, this->getBottomWheelValue() ) );
+} // bottomWheelMotion()
+
 /*!
   Overloaded to provide the examiner viewer functionality on the left
   thumbwheel (dolly/zoom).
 */
+
 void
-SoGtkExaminerViewer::rightWheelMotion(float val)
+SoGtkExaminerViewer::rightWheelMotion( // virtual
+  float value )
 {
-  common->zoom(val - this->getRightWheelValue());
-  inherited::rightWheelMotion(val);
-}
+  common->zoom( this->getRightWheelValue() - value );
+  inherited::rightWheelMotion( value );
+} // rightWheelMotion()
 
 // *************************************************************************
+
 /*!
   Overloaded to add preferences settings for examiner viewer
   specific stuff (enable/disable possible spin animation,
   enable/disable/configure axis cross graphics).
 */
+
 GtkWidget *
-SoGtkExaminerViewer::makeSubPreferences(GtkWidget * parent)
+SoGtkExaminerViewer::makeSubPreferences(
+  GtkWidget * parent )
 {
-/*
-  GtkWidget * w = new GtkWidget(parent);
-//  w->setBackgroundColor( QColor( 250, 0, 0 ) );
-
-  // Initialize objects keeping track of geometry data.
-
-  QSize totalsize(0, 0);
-  QVBoxLayout * toplayout = new QVBoxLayout(w);
-
-  // First, do the single widget on the uppermost row (a checkbox).
-
-  QCheckBox * c1 = new QCheckBox("Enable spin animation", w);
-  c1->adjustSize();
-  c1->setChecked(this->animatingallowed);
-  QObject::connect(c1, SIGNAL(toggled(bool)),
-                   this, SLOT(spinAnimationToggled(bool)));
-
-  // Layout row 1.
-  toplayout->addWidget(c1, c1->height());
-  expandSize(totalsize, c1->size(), LayoutVertical);
-
-  // Do the single widget on the second row (a checkbox).
-
-  QCheckBox * c2 = new QCheckBox("Show point of rotation axes", w);
-  c2->adjustSize();
-  c2->setChecked(this->isFeedbackVisible());
-  QObject::connect(c2, SIGNAL(toggled(bool)),
-                   this, SLOT(feedbackVisibilityToggle(bool)));
-
-  // Layout row 2.
-  toplayout->addWidget(c2, c2->height());
-  expandSize(totalsize, c2->size(), LayoutVertical);
-
-
-  // Do the four widgets on the third row (label, thumbwheel,
-  // lineedit, label).
-
-  QSize tmpsize = QSize(0, 0);
-
-  this->feedbacklabel1 = new QLabel("axes size", w);
-  this->feedbacklabel1->adjustSize();
-  expandSize(tmpsize, this->feedbacklabel1->size(), LayoutHorizontal);
-
-  this->feedbackwheel = new QtThumbwheel(QtThumbwheel::Horizontal, w);
-  QObject::connect(this->feedbackwheel, SIGNAL(wheelMoved(float)),
-                   this, SLOT(feedbackSizeChanged(float)));
-  this->feedbackwheel->setValue(float(this->getFeedbackSize())/10.0f);
-  this->feedbackwheel->adjustSize();
-  expandSize(tmpsize, this->feedbackwheel->size(), LayoutHorizontal);
-
-  this->feedbackedit = new QLineEdit(w);
-  QObject::connect(this->feedbackedit, SIGNAL(returnPressed()),
-                   this, SLOT(feedbackEditPressed()));
-  QString s;
-  s.setNum(this->getFeedbackSize());
-  this->feedbackedit->setText(s);
-  this->feedbackedit->adjustSize();
-  expandSize(tmpsize, this->feedbackedit->size(), LayoutHorizontal);
-
-  this->feedbacklabel2 = new QLabel("size", w);
-  this->feedbacklabel2->adjustSize();
-  expandSize(tmpsize, this->feedbacklabel2->size(), LayoutHorizontal);
-
-  // Layout row 3.
-  QHBoxLayout * layout = new QHBoxLayout;
-  toplayout->addLayout(layout, tmpsize.height());
-  layout->addWidget(this->feedbacklabel1, this->feedbacklabel1->width());
-  layout->addWidget(this->feedbackwheel, this->feedbackwheel->width());
-  layout->addWidget(this->feedbackedit, this->feedbackedit->width());
-  layout->addWidget(this->feedbacklabel2, this->feedbacklabel2->width());
-  expandSize(totalsize, tmpsize, LayoutVertical);
-
-  w->resize(totalsize);
-  toplayout->activate();
-
-  this->setEnableFeedbackControls(this->isFeedbackVisible());
-
-  return w;
-*/
   return NULL;
 }
 
@@ -371,32 +410,6 @@ SoGtkExaminerViewer::createViewerButtons(
   SbPList * buttonlist )
 {
   inherited::createViewerButtons(parent, buttonlist);
-
-/*
-  this->cameratogglebutton = new QPushButton(parent);
-  assert(this->perspectivepixmap);
-  assert(this->orthopixmap);
-  // Doesn't really matter which pixmap, this is just to make sure
-  // that the adjustSize() call will come out right.
-  QPixmap * p = this->orthopixmap;
-  SoCamera * cam = this->getCamera();
-  if (cam) {
-    SoType t = cam->getTypeId();
-    if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId()))
-      p = this->orthopixmap;
-    else if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId()))
-      p = this->perspectivepixmap;
-    else assert(0);
-  }
-
-  this->cameratogglebutton->setPixmap(*p);
-  this->cameratogglebutton->adjustSize();
-
-  QObject::connect(this->cameratogglebutton, SIGNAL(clicked()),
-                   this, SLOT(cameratoggleClicked()));
-
-  buttonlist->append(this->cameratogglebutton);
-*/
 }
 
 // *************************************************************************
@@ -408,10 +421,9 @@ SoGtkExaminerViewer::createViewerButtons(
 const char *
 SoGtkExaminerViewer::getDefaultWidgetName(void) const
 {
-  return "SoGtkExaminerViewer";
-}
-
-// *************************************************************************
+  static const char defaultWidgetName[] = "SoGtkExaminerViewer";
+  return defaultWidgetName;
+} // getDefaultWidgetName()
 
 /*!
   Overloaded to provide ``title'' of class.
@@ -420,10 +432,9 @@ SoGtkExaminerViewer::getDefaultWidgetName(void) const
 const char *
 SoGtkExaminerViewer::getDefaultTitle(void) const
 {
-  return "Examiner Viewer";
-}
-
-// *************************************************************************
+  static const char defaultTitle[] = "Examiner Viewer";
+  return defaultTitle;
+} // getDefaultTitle()
 
 /*!
   Overloaded to provide ``title'' of class.
@@ -432,8 +443,9 @@ SoGtkExaminerViewer::getDefaultTitle(void) const
 const char *
 SoGtkExaminerViewer::getDefaultIconTitle(void) const
 {
-  return "Examiner Viewer";
-}
+  static const char defaultIconTitle[] = "Examiner Viewer";
+  return defaultIconTitle;
+} // getDefaultIconTitle()
 
 // *************************************************************************
 /*!
@@ -443,15 +455,19 @@ void
 SoGtkExaminerViewer::openViewerHelpCard(void)
 {
   this->openHelpCard("SoGtkExaminerViewer.help");
-}
+} // openViewerHelpCard()
 
 // *************************************************************************
+
+/*!
+*/
 
 SbBool
 SoGtkExaminerViewer::processSoEvent( // virtual
   const SoEvent * const event )
 {
-  if ( common->processSoEvent(event) ) return TRUE;
+  if ( common->processSoEvent(event) )
+    return TRUE;
   return inherited::processSoEvent(event);
 } // processSoEvent()
 
@@ -504,20 +520,23 @@ SoGtkExaminerViewer::actualRedraw(
 {
   common->actualRedraw();
   inherited::actualRedraw();
-  if (common->isFeedbackVisible())
+  if ( common->isFeedbackVisible() )
     common->drawAxisCross();
-  if (common->isAnimating())
+  if ( common->isAnimating() )
     this->scheduleRedraw();
 } // actualRedraw()
 
 // *************************************************************************
+
 /*!
   \internal
 
   Set the viewer mode based on the given mouse and keyboard state setting.
 */
+
 void
-SoGtkExaminerViewer::setModeFromState(const unsigned int state)
+SoGtkExaminerViewer::setModeFromState(
+  const unsigned int state )
 {
 /*
   ViewerMode mode;
@@ -556,14 +575,17 @@ SoGtkExaminerViewer::setModeFromState(const unsigned int state)
 }
 
 // *************************************************************************
+
 /*!
   \internal
 
   The viewer is a state machine, and all changes to the current state
   are made through this call.
 */
+
 void
-SoGtkExaminerViewer::setMode(const ViewerMode mode)
+SoGtkExaminerViewer::setMode(
+  const ViewerMode mode )
 {
   this->setCursorRepresentation(mode);
 
@@ -593,16 +615,19 @@ SoGtkExaminerViewer::setMode(const ViewerMode mode)
   }
 
   this->currentMode = mode;
-}
+} // setMode()
 
 // *************************************************************************
+
 /*!
   \internal
 
   Set cursor graphics according to mode.
 */
+
 void
-SoGtkExaminerViewer::setCursorRepresentation(const ViewerMode mode)
+SoGtkExaminerViewer::setCursorRepresentation(
+  const ViewerMode mode )
 {
 /*
   GtkWidget * w = this->getRenderAreaWidget();
@@ -672,88 +697,16 @@ SoGtkExaminerViewer::setCursorRepresentation(const ViewerMode mode)
 /*!
   \internal
 */
+
 void
-SoGtkExaminerViewer::setEnableFeedbackControls(const SbBool flag)
+SoGtkExaminerViewer::setEnableFeedbackControls(
+  const SbBool flag )
 {
 //  this->feedbackLabel1->setEnabled(flag);
 //  this->feedbackLabel2->setEnabled(flag);
 //  this->feedbackWheel->setEnabled(flag);
 //  this->feedbackEdit->setEnabled(flag);
-}
-
-// *************************************************************************
-/*!
-  \internal
-
-  This is the regularly called code which makes the spin animation run.
-*/
-/*
-void
-SoGtkExaminerViewer::timertriggeredCB(void * data, SoSensor *)
-{
-  SoGtkExaminerViewer * thisp = (SoGtkExaminerViewer *)data;
-
-#if 0 // debug
-  SoDebugError::postInfo("SoGtkExaminerViewer::timertriggeredCB",
-                         "spin samples: %d", thisp->spinsamplecounter);
-#endif // debug
-
-  if (thisp->spinSampleCounter < 2) {
-    // FIXME: won't the first check here always equal TRUE? 990501
-    // mortene.
-    if (thisp->isAnimating()) thisp->stopAnimating();
-#if 0 // check hypothesis from above FIXME statement.
-    else thisp->timerTrigger->unschedule();
-#else
-    else assert(0);
-#endif
-    return;
-  }
-
-  thisp->reorientCamera(thisp->spinIncrement);
-}
-*/
-
-// *************************************************************************
-void
-SoGtkExaminerViewer::visibilityCallback(
-  SbBool visible )
-{
-  if ( common->isAnimating() ) {
-/*
-    if ( visible )
-      common->timertrigger->schedule();
-    else
-      common->timertrigger->unschedule();
-*/
-  }
-} // visibilityCallback()
-
-
-/*!
-  \internal
-
-  This gets called whenever the visibility status of the viewer widget
-  changes (for instance on iconization/deiconization).
-*/
-
-void
-SoGtkExaminerViewer::visibilityCB(void * data, SbBool visible)
-{
-  ((SoGtkExaminerViewer *) data)->visibilityCallback( visible);
-}
-
-// *************************************************************************
-/*!
-  \internal
-  Pref sheet slot.
-*/
-void
-SoGtkExaminerViewer::spinAnimationToggled(
-  SbBool flag )
-{
-  common->setAnimationEnabled(flag);
-}
+} // setEnableFeedbackControls()
 
 // *************************************************************************
 /*!
@@ -802,10 +755,12 @@ SoGtkExaminerViewer::feedbackWheelPressed()
 }
 
 // *************************************************************************
+
 /*!
   \internal
   Pref sheet slot.
 */
+
 void
 SoGtkExaminerViewer::feedbackWheelReleased()
 {
@@ -845,6 +800,51 @@ SoGtkExaminerViewer::cameratoggleClicked()
 {
   this->toggleCameraType();
 }
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkExaminerViewer::camerabuttonClicked(
+  void )
+{
+  SOGTK_STUB();
+} // camerabuttonClicked()
+
+/*!
+*/
+
+void
+SoGtkExaminerViewer::camerabuttonClickedCB(
+  GtkWidget *,
+  gpointer closure )
+{
+  assert( closure != NULL );
+  SoGtkExaminerViewer * viewer = (SoGtkExaminerViewer *) closure;
+  viewer->camerabuttonClicked();
+} // camerabuttonClickedCB()
+
+// *************************************************************************
+
+/*!
+*/
+
+void
+SoGtkExaminerViewer::afterRealizeHook( // virtual
+  void )
+{
+} // afterRealizeHook()
+
+/*!
+*/
+
+void
+SoGtkExaminerViewer::createPrefSheet( // virtual
+  void )
+{
+} // createPrefSheet()
 
 // *************************************************************************
 
