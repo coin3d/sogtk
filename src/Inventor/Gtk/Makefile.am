@@ -23,7 +23,6 @@ libSoGtk@SUFFIX@_la_SOURCES = \
 	SoGtk.cpp \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.cpp \
-	SoGtkMaterialList.cpp \
 	SoGtkGraphEditor.h \
 	SoGtkGraphEditor.cpp \
 	SoGtkRoster.h \
@@ -56,8 +55,7 @@ nodist_SoGtkinc_HEADERS = \
 	SoGtkCursor.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
-	SoGtkRenderArea.h \
-	SoGtkMaterialList.h
+	SoGtkRenderArea.h
 
 install-SoGtkincHEADERS: $(SoGtkinc_HEADERS)
 	@$(NORMAL_INSTALL)

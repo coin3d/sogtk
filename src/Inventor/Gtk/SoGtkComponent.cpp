@@ -35,7 +35,6 @@
 #include <Inventor/Gtk/SoGtkCursor.h>
 #include <Inventor/Gtk/SoGtkGLWidget.h>
 #include <Inventor/Gtk/SoGtkGraphEditor.h>
-#include <Inventor/Gtk/SoGtkMaterialList.h>
 #include <Inventor/Gtk/SoGtkRenderArea.h>
 #include <Inventor/Gtk/SoGtkRoster.h>
 #include <Inventor/Gtk/viewers/SoGtkConstrainedViewer.h>
@@ -124,7 +123,6 @@ SoGtkComponent::initClasses(void)
   SoGtkConstrainedViewer::initClass();
   SoGtkWalkViewer::initClass();
   SoGtkFlyViewer::initClass();
-  SoGtkMaterialList::initClass();
   SoGtkGraphEditor::initClass();
   SoGtkRoster::initClass();
 } // initClasses()
