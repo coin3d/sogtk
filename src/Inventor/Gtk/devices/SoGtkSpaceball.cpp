@@ -23,16 +23,7 @@
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/devices/SoGtkSpaceball.h>
-
-// *************************************************************************
-
-/*!
-  \class SoGtkSpaceball SoGtkSpaceball.h Inventor/Gtk/devices/SoGtkSpaceball.h
-  \brief The SoGtkSpaceball class ...
-  \ingroup devices
-
-  FIXME: write class doc
-*/
+#include <Inventor/Gtk/devices/SoGtkSpaceballP.h>
 
 // *************************************************************************
 
@@ -42,65 +33,16 @@
 //    PC equipment? wheel mice, joysticks, ....
 //  - implement XInput support
 
-/*!
-  \enum SoGtkSpaceball::Events
-  FIXME: write documentation for enum
-*/
-
-/*!
-  \var SoGtkSpaceball::Events SoGtkSpaceball::MOTION
-  FIXME: write documentation for enum definition
-*/
-
-/*!
-  \var SoGtkSpaceball::Events SoGtkSpaceball::BUTTON_PRESS
-  FIXME: write documentation for enum definition
-*/
-
-/*!
-  \var SoGtkSpaceball::Events SoGtkSpaceball::BUTTON_RELEASE
-  FIXME: write documentation for enum definition
-*/
-
-/*!
-  \var SoGtkSpaceball::Events SoGtkSpaceball::ALL_EVENTS
-  FIXME: write documentation for enum definition
-*/
-
 // *************************************************************************
-
-class SoGtkSpaceballP {
-public:
-  int events;
-  float rotationscale;
-  float translationscale;
-  SbBool focustowindow;
-};
-
-#define PRIVATE(p) (p->pimpl)
-
-// *************************************************************************
-
-SOGTK_OBJECT_SOURCE(SoGtkSpaceball);
-
-// *************************************************************************
-
-/*!
-  Constructor.
-*/
 
 SoGtkSpaceball::SoGtkSpaceball(int eventbits)
 {
-  PRIVATE(this) = new SoGtkSpaceballP;
+  PRIVATE(this) = new SoGtkSpaceballP(this);
   PRIVATE(this)->events = eventbits;
   PRIVATE(this)->rotationscale = 0.006f;
   PRIVATE(this)->translationscale = 0.006f;
   PRIVATE(this)->focustowindow = FALSE;
 }
-
-/*!
-  Destructor.
-*/
 
 SoGtkSpaceball::~SoGtkSpaceball()
 {
@@ -109,10 +51,6 @@ SoGtkSpaceball::~SoGtkSpaceball()
 
 // *************************************************************************
 
-/*!
-  FIXME: write function documentation
-*/
-
 void
 SoGtkSpaceball::enable(GtkWidget * widget,
                        SoGtkEventHandler * func,
@@ -120,12 +58,8 @@ SoGtkSpaceball::enable(GtkWidget * widget,
 {
   if (func)
     gtk_signal_connect(GTK_OBJECT(widget), "event",
-      GTK_SIGNAL_FUNC(func), closure);
+                       GTK_SIGNAL_FUNC(func), closure);
 }
-
-/*!
-  FIXME: write function documentation
-*/
 
 void
 SoGtkSpaceball::disable(GtkWidget * widget,
@@ -134,88 +68,34 @@ SoGtkSpaceball::disable(GtkWidget * widget,
 {
   if (func)
     gtk_signal_disconnect_by_func(GTK_OBJECT(widget),
-      GTK_SIGNAL_FUNC(func), closure);
+                                  GTK_SIGNAL_FUNC(func), closure);
 }
 
 // *************************************************************************
 
-/*!
-  FIXME: write function documentation
-*/
-
 const SoEvent *
 SoGtkSpaceball::translateEvent(GdkEvent * /*event*/)
 {
-  // TODO: implement
+  // FIXME: implement
+  SOGTK_STUB();
   return NULL;
 }
 
 // *************************************************************************
 
-/*!
-  FIXME: write function documentation
-*/
-
-void
-SoGtkSpaceball::setRotationScaleFactor(float f)
-{
-  PRIVATE(this)->rotationscale = f;
-}
-
-/*!
-  FIXME: write function documentation
-*/
-
-float
-SoGtkSpaceball::getRotationScaleFactor(void) const
-{
-  return PRIVATE(this)->rotationscale;
-}
-
-/*!
-  FIXME: write function documentation
-*/
-
-void
-SoGtkSpaceball::setTranslationScaleFactor(float f)
-{
-  PRIVATE(this)->translationscale = f;
-}
-
-/*!
-  FIXME: write function documentation
-*/
-
-float
-SoGtkSpaceball::getTranslationScaleFactor(void) const
-{
-  return PRIVATE(this)->translationscale;
-}
-
-/*!
-  FIXME: write function documentation
-*/
-
 SbBool
 SoGtkSpaceball::exists(void)
 {
-  // TODO: implement
+  // FIXME: implement
+  SOGTK_STUB();
   return FALSE;
 }
-
-/*!
-  FIXME: write function documentation
-*/
 
 void
 SoGtkSpaceball::setFocusToWindow(SbBool flag)
 {
   PRIVATE(this)->focustowindow = flag;
 }
-
-/*!
-  FIXME: write function documentation
-*/
 
 SbBool
 SoGtkSpaceball::isFocusToWindow(void) const
