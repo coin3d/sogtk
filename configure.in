@@ -119,12 +119,12 @@ AC_LANG(C)
 AC_LANG(C++)
 
 #  These are used for constructing the sogtk-config file.
-SOGTK_EXTRA_CPPFLAGS=
-SOGTK_EXTRA_LDFLAGS=
-SOGTK_EXTRA_LIBS=
-AC_SUBST(SOGTK_EXTRA_CPPFLAGS)
-AC_SUBST(SOGTK_EXTRA_LDFLAGS)
-AC_SUBST(SOGTK_EXTRA_LIBS)
+SOGUI_EXTRA_CPPFLAGS=
+SOGUI_EXTRA_LDFLAGS=
+SOGUI_EXTRA_LIBS=
+AC_SUBST(SOGUI_EXTRA_CPPFLAGS)
+AC_SUBST(SOGUI_EXTRA_LDFLAGS)
+AC_SUBST(SOGUI_EXTRA_LIBS)
 
 SIM_EXPAND_DIR_VARS
 
@@ -166,20 +166,20 @@ AC_SUBST(SUFFIX)
 
 if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
   SIM_AC_CHECK_DL([
-    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_dl_cppflags"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_dl_ldflags"
-    SOGTK_EXTRA_LIBS="$sim_ac_dl_libs $SOGTK_EXTRA_LIBS"
+    SOGUI_EXTRA_CPPFLAGS="$SOGUI_EXTRA_CPPFLAGS $sim_ac_dl_cppflags"
+    SOGUI_EXTRA_LDFLAGS="$SOGUI_EXTRA_LDFLAGS $sim_ac_dl_ldflags"
+    SOGUI_EXTRA_LIBS="$sim_ac_dl_libs $SOGUI_EXTRA_LIBS"
   ])
 
   SIM_AC_CHECK_X11([
-    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_x11_cppflags"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_x11_ldflags"
-    SOGTK_EXTRA_LIBS="$sim_ac_x11_libs $SOGTK_EXTRA_LIBS"
+    SOGUI_EXTRA_CPPFLAGS="$SOGUI_EXTRA_CPPFLAGS $sim_ac_x11_cppflags"
+    SOGUI_EXTRA_LDFLAGS="$SOGUI_EXTRA_LDFLAGS $sim_ac_x11_ldflags"
+    SOGUI_EXTRA_LIBS="$sim_ac_x11_libs $SOGUI_EXTRA_LIBS"
 
     SIM_AC_CHECK_X11SHMEM([
-      SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_x11shmem_cppflags"
-      SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_x11shmem_ldflags"
-      SOGTK_EXTRA_LIBS="$sim_ac_x11shmem_libs $SOGTK_EXTRA_LIBS"
+      SOGUI_EXTRA_CPPFLAGS="$SOGUI_EXTRA_CPPFLAGS $sim_ac_x11shmem_cppflags"
+      SOGUI_EXTRA_LDFLAGS="$SOGUI_EXTRA_LDFLAGS $sim_ac_x11shmem_ldflags"
+      SOGUI_EXTRA_LIBS="$sim_ac_x11shmem_libs $SOGUI_EXTRA_LIBS"
     ], [
       AC_MSG_WARN([couldn't use X11 shared memory extension - may cause problems with OpenGL linking later])
     ])
@@ -188,30 +188,26 @@ if test -n "$with_inventor" -a x"$with_inventor" != x"no"; then
   ])
 
   SIM_AC_CHECK_OPENGL([
-    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gl_cppflags"
-    SOGTK_EXTRA_CFLAGS="$SOGTK_EXTRA_CFLAGS $sim_ac_gl_cflags"
-    SOGTK_EXTRA_CXXFLAGS="$SOGTK_EXTRA_CXXFLAGS $sim_ac_gl_cxxflags"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gl_ldflags"
-    SOGTK_EXTRA_LIBS="$sim_ac_gl_libs $SOGTK_EXTRA_LIBS"
+    SOGUI_EXTRA_CPPFLAGS="$SOGUI_EXTRA_CPPFLAGS $sim_ac_gl_cppflags"
+    SOGUI_EXTRA_LDFLAGS="$SOGUI_EXTRA_LDFLAGS $sim_ac_gl_ldflags"
+    SOGUI_EXTRA_LIBS="$sim_ac_gl_libs $SOGUI_EXTRA_LIBS"
     CPPFLAGS="$CPPFLAGS $sim_ac_gl_cppflags"
-    CFLAGS="$CFLAGS $sim_ac_gl_cflags"
-    CXXFLAGS="$CXXFLAGS $sim_ac_gl_cxxflags"
     LDFLAGS="$LDFLAGS $sim_ac_gl_ldflags"
     LIBS="$sim_ac_gl_libs $LIBS"
   ], [AC_MSG_ERROR([need OpenGL-compatible development system installation])])
 
   SIM_AC_CHECK_GLU([
-    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_glu_cppflags"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_glu_ldflags"
-    SOGTK_EXTRA_LIBS="$sim_ac_glu_libs $SOGTK_EXTRA_LIBS"
+    SOGUI_EXTRA_CPPFLAGS="$SOGUI_EXTRA_CPPFLAGS $sim_ac_glu_cppflags"
+    SOGUI_EXTRA_LDFLAGS="$SOGUI_EXTRA_LDFLAGS $sim_ac_glu_ldflags"
+    SOGUI_EXTRA_LIBS="$sim_ac_glu_libs $SOGUI_EXTRA_LIBS"
   ], [
     AC_MSG_ERROR([need OpenGL utility library])
   ])
 
   SIM_AC_HAVE_INVENTOR_IFELSE([
-    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_inventor_cppflags"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_inventor_ldflags"
-    SOGTK_EXTRA_LIBS="$sim_ac_inventor_libs $SOGTK_EXTRA_LIBS"
+    SOGUI_EXTRA_CPPFLAGS="$SOGUI_EXTRA_CPPFLAGS $sim_ac_inventor_cppflags"
+    SOGUI_EXTRA_LDFLAGS="$SOGUI_EXTRA_LDFLAGS $sim_ac_inventor_ldflags"
+    SOGUI_EXTRA_LIBS="$sim_ac_inventor_libs $SOGUI_EXTRA_LIBS"
     CPPFLAGS="$CPPFLAGS $sim_ac_inventor_cppflags"
     LDFLAGS="$LDFLAGS $sim_ac_inventor_ldflags"
     LIBS="$sim_ac_inventor_libs $LIBS"
@@ -227,9 +223,9 @@ else
     CPPFLAGS="$CPPFLAGS $sim_ac_coin_cppflags"
     LDFLAGS="$CPPFLAGS $sim_ac_coin_ldflags"
     LIBS="$sim_ac_coin_libs $LIBS"
-    SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_coin_cppflags"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_coin_ldflags"
-    SOGTK_EXTRA_LIBS="$sim_ac_coin_libs $SOGTK_EXTRA_LIBS"
+    SOGUI_EXTRA_CPPFLAGS="$SOGUI_EXTRA_CPPFLAGS $sim_ac_coin_cppflags"
+    SOGUI_EXTRA_LDFLAGS="$SOGUI_EXTRA_LDFLAGS $sim_ac_coin_ldflags"
+    SOGUI_EXTRA_LIBS="$sim_ac_coin_libs $SOGUI_EXTRA_LIBS"
   ], [
     AC_MSG_ERROR([couldn't compile and link against Coin])
   ])
@@ -274,7 +270,7 @@ LIBS=
 
 AC_LANG_PUSH(C)
 AM_PATH_GTK(1.2.6,
-  [SOGTK_EXTRA_CPPFLAGS="$GTK_CFLAGS $SOGTK_EXTRA_CPPFLAGS"
+  [SOGUI_EXTRA_CPPFLAGS="$GTK_CFLAGS $SOGUI_EXTRA_CPPFLAGS"
    CPPFLAGS="$GTK_CFLAGS $CPPFLAGS"],
   AC_MSG_ERROR(Test for Gtk+ failed.))
 AC_LANG_POP
@@ -287,10 +283,10 @@ LIBS=$sim_ac_gtk_store_libs
 for i in $GTK_LIBS; do
   if test -n "`echo $i | egrep '^-L'`"; then
     LDFLAGS="$LDFLAGS $i"
-    SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $i"
+    SOGUI_EXTRA_LDFLAGS="$SOGUI_EXTRA_LDFLAGS $i"
   else
     LIBS="$LIBS $i"
-    SOGTK_EXTRA_LIBS="$SOGTK_EXTRA_LIBS $i"
+    SOGUI_EXTRA_LIBS="$SOGUI_EXTRA_LIBS $i"
   fi
 done
 
@@ -307,7 +303,7 @@ AC_CACHE_CHECK([whether the GtkGLArea widget is available],
 if test x"$sim_cv_lib_gtkgl" != xyes; then
   AC_MSG_ERROR(Test for GtkGLArea extensions widget failed.)
 else
-  SOGTK_EXTRA_LIBS="-lgtkgl $SOGTK_EXTRA_LIBS"
+  SOGUI_EXTRA_LIBS="-lgtkgl $SOGUI_EXTRA_LIBS"
 fi
 
 # **************************************************************************
@@ -366,28 +362,13 @@ AM_CONDITIONAL([BUILD_INTL], test x"$GMSGFMT" = x"")
 AC_CONFIG_SUBDIRS(data)
 
 # **************************************************************************
-# FIXME: avoid the shift magic
 
 # this will depend on platform in a while (Window will use sogtk$major)
 SOGTK_LIBNAME=-lSoGtk
 
-SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_CPPFLAGS, -I$includedir $SOGTK_EXTRA_CPPFLAGS)
-set : $SOGTK_EXTRA_CPPFLAGS
-shift
-shift
-SOGTK_EXTRA_CPPFLAGS=$@
-
-SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_LDFLAGS, -L$libdir $SOGTK_EXTRA_LDFLAGS)
-set : $SOGTK_EXTRA_LDFLAGS
-shift
-shift
-SOGTK_EXTRA_LDFLAGS=$@
-
-SIM_AC_UNIQIFY_LIST(SOGTK_EXTRA_LIBS, $SOGTK_LIBNAME $SOGTK_EXTRA_LIBS)
-set : $SOGTK_EXTRA_LIBS
-shift
-shift
-SOGTK_EXTRA_LIBS=$@
+SIM_AC_UNIQIFY_LIST(SOGUI_EXTRA_CPPFLAGS, -I$includedir $SOGUI_EXTRA_CPPFLAGS)
+SIM_AC_UNIQIFY_LIST(SOGUI_EXTRA_LDFLAGS, -L$libdir $SOGUI_EXTRA_LDFLAGS)
+SIM_AC_UNIQIFY_LIST(SOGUI_EXTRA_LIBS, $SOGTK_LIBNAME $SOGUI_EXTRA_LIBS)
 
 SIM_AC_UNIQIFY_LIST(CPPFLAGS, $CPPFLAGS)
 SIM_AC_UNIQIFY_LIST(LDFLAGS, $LDFLAGS)
@@ -474,7 +455,7 @@ SIM_AC_CONFIGURATION_SETTING([Install Prefix], [$prefix])
 # List all makefiles configure must automatically generate.
 
 AC_OUTPUT([
-	sogtk-$CONFIG.cfg:sogtk.cfg.in
+	sogtk-$CONFIG.cfg:src/Inventor/Gtk/common/sogui.cfg.in
 	Makefile
 	src/Inventor/Gtk/Makefile
 	src/Inventor/Gtk/devices/Makefile
@@ -488,8 +469,6 @@ AC_OUTPUT([
 	test-code/Makefile
 	test-code/components/Makefile
 	test-code/widgets/Makefile
-], [
-	chmod a+x sogtk-config
 ])
 
 SIM_AC_CONFIGURATION_SUMMARY

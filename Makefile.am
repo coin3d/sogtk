@@ -64,16 +64,17 @@ bin_SCRIPTS = so@gui@-config
 EXTRA_DIST = \
 	so@gui@.m4 \
 	src/Inventor/Gtk/common/soguidefs.h.in \
+	src/Inventor/Gtk/common/sogui-config.in \
 	src/Inventor/Gtk/common/gl.h.in
 
 m4datadir = $(datadir)/aclocal
 m4data_DATA = so@gui@.m4
 
 cfgdatadir = $(datadir)/Coin/conf
-cfgdata_DATA = sogtk-@CONFIG@.cfg
+cfgdata_DATA = so@gui@-@CONFIG@.cfg
 
-sogtk-@CONFIG@.cfg: $(srcdir)/sogtk.cfg.in Makefile config.status
-	@$(SHELL) config.status --file=$@:sogtk.cfg.in
+so@gui@-config: Makefile config.status $(srcdir)/src/Inventor/@Gui@/common/sogui-config.in
+	@$(SHELL) config.status --file=$@:src/Inventor/@Gui@/common/sogui-config.in
 
 Makefile: $(BUILT_SOURCES)
 
