@@ -24,14 +24,10 @@
 
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 
-class SoAnyPlaneViewer;
-struct SoGtkViewerButton;
-
 // *************************************************************************
 
 class SOGTK_DLL_API SoGtkPlaneViewer : public SoGtkFullViewer {
   SOGTK_OBJECT_HEADER(SoGtkPlaneViewer, SoGtkFullViewer);
-  friend class SoAnyPlaneViewer;
 
 public:
   SoGtkPlaneViewer(
@@ -79,14 +75,15 @@ private:
   void constructor( const SbBool build );
   void zoom( const float difference );
 
-  static SoGtkViewerButton SoGtkPlaneViewerButtons[];
+  static struct SoGtkViewerButton SoGtkPlaneViewerButtons[];
 
   static void xbuttonCB( GtkWidget *, gpointer );
   static void ybuttonCB( GtkWidget *, gpointer );
   static void zbuttonCB( GtkWidget *, gpointer );
   static void camerabuttonCB( GtkWidget *, gpointer );
 
-  SoAnyPlaneViewer * common;
+  class SoAnyPlaneViewer * common;
+  friend class SoAnyPlaneViewer;
 
 }; // class SoGtkPlaneViewer
 

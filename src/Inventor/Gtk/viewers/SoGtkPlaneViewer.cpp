@@ -43,14 +43,15 @@ static const char rcsid[] =
 #include <Inventor/Gtk/common/pixmaps/perspective.xpm>
 #include <Inventor/Gtk/common/pixmaps/ortho.xpm>
 
+// *************************************************************************
+
 /*!
   \class SoGtkPlaneViewer Inventor/Gtk/viewers/SoGtkPlaneViewer.h
-  \brief The SoGtkPlaneViewer class is for examining 3D models by
-  moving the camera in planes.
-  \ingroup viewers
-*/
+  \brief The SoGtkPlaneViewer class is for examining 3D models by moving the camera in orthogonal planes.
+  \ingroup components viewers
 
-// *************************************************************************
+  FIXME: write doc
+*/
 
 SOGTK_OBJECT_SOURCE(SoGtkPlaneViewer);
 

@@ -83,13 +83,14 @@ SbVec2s SoGtkDevice::lastEventPosition; // static
 */
 
 /*!
-  \fn void SoGtkDevice::enable( GtkWidget * w, SoGtkEventHandler * f, void * closure ) = 0
+  \fn void SoGtkDevice::enable( GtkWidget * widget, SoGtkEventHandler * func, void * closure ) = 0
 
   FIXME: write doc
 */
 
 /*!
-  \fn void SoGtkDevice::disable( GtkWidget * w, SoGtkEventHandler * f, void * closure ) = 0
+  \fn void SoGtkDevice::disable( GtkWidget * widget, SoGtkEventHandler * func, void * closure ) = 0
+
   FIXME: write doc
 */
 

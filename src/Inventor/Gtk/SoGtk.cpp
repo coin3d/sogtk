@@ -46,7 +46,7 @@ static const char rcsid[] =
 /*!
   \mainpage
 
-  SoGtk is a C++ GUI toolkit for using Coin with GTK+.  It can also be
+  %SoGtk is a C++ GUI toolkit for using Coin with GTK+.  It can also be
   used on top of Open Inventor from SGI and TGS.  The API is based on the
   InventorXt API originally from SGI.
 

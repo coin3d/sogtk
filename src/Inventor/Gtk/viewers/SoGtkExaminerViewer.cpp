@@ -54,11 +54,12 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
 //                        LayoutOrientation o);
 ///////// FIXME end ////////////////////////////////////////////////////
 
+// *************************************************************************
+
 /*!
   \class SoGtkExaminerViewer Inventor/Gtk/viewers/SoGtkExaminerViewer.h
-  \brief The SoGtkExaminerViewer class is a full-fledged model viewer
-  with functionality for rotation, pan, zoom, etc.
-  \ingroup viewers
+  \brief The SoGtkExaminerViewer class is a full-fledged model viewer with functionality for rotation, pan, zoom, etc.
+  \ingroup components viewers
 
   TODO: more doc
   ...overview of what this class provides over parent class...
@@ -69,11 +70,7 @@ enum LayoutOrientation { LayoutVertical, LayoutHorizontal };
   useful for...
   ...screenshot...
   ...example code...
-
-  \sa SoGtkWalkViewer, SoGtkFlyViewer, SoGtkPlaneViewer, SoGtkCollisionViewer
 */
-
-// *************************************************************************
 
 SOGTK_OBJECT_SOURCE(SoGtkExaminerViewer);
 

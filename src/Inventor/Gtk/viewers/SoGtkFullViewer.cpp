@@ -59,7 +59,7 @@ static const char rcsid[] =
 #include <Inventor/Gtk/common/pixmaps/seek.xpm>
 
 /*!
-  \class SoGtkFullViewer SoGtkFullViewer.h Inventor/Qt/viewers/SoGtkFullViewer.h
+  \class SoGtkFullViewer Inventor/Gtk/viewers/SoGtkFullViewer.h
   \brief The SoGtkFullViewer class adds decorations to the simple viewer of the parent.
   \ingroup viewers
 
@@ -70,8 +70,6 @@ static const char rcsid[] =
   camera, not the scene...
   ...viewer modes (examine vs interact) w/ explanation of what they are
   useful for...
-
-  \sa SoGtkConstrainedViewer, SoGtkExaminerViewer, SoGtkPlaneViewer
 */
 
 // *************************************************************************
@@ -79,16 +77,6 @@ static const char rcsid[] =
 SOGTK_OBJECT_ABSTRACT_SOURCE(SoGtkFullViewer);
 
 // *************************************************************************
-
-/*¡
-  SoGtkFullViewer is missing the class description documentation.
-
-  TODO, low priority:
-  <UL>
-  <LI>add tooltips to the widgets?</LI>
-  <LI>trim length of edit fields</LI>
-  </UL>
-*/
 
 /*!
   \enum SoGtkFullViewer::BuildFlag
