@@ -27,7 +27,7 @@ cppflags="-I@includedir@ @SOGTK_EXTRA_CPPFLAGS@"
 ldflags="-L@libdir@ @SOGTK_EXTRA_LDFLAGS@"
 libs="-lSoGtk @SOGTK_EXTRA_LIBS@"
 
-datadir="@sogtk_data_dir@"
+datadir="@datadir@"
 
 while test $# -gt 0
 do
@@ -85,4 +85,3 @@ do
 done
 
 exit 0
-

@@ -104,18 +104,7 @@ AC_SUBST(SOGTK_EXTRA_CPPFLAGS)
 AC_SUBST(SOGTK_EXTRA_LDFLAGS)
 AC_SUBST(SOGTK_EXTRA_LIBS)
 
-AC_SUBST(sogtk_src_dir)
-AC_SUBST(sogtk_build_dir)
-AC_SUBST(sogtk_data_dir)
-
 SIM_EXPAND_DIR_VARS
-
-sogtk_build_dir=`pwd`
-cd $srcdir
-sogtk_src_dir=`pwd`
-cd $sogtk_build_dir
-sogtk_data_dir=/usr/local/share/Coin
-test x"$exec_prefix" != xNONE && sogtk_data_dir=$exec_prefix/share/Coin
 
 # **************************************************************************
 
