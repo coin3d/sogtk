@@ -1124,6 +1124,13 @@ SoGtkFullViewer::getLeftWheelValue(
   return this->leftWheelVal;
 } // getLeftWheelValue()
 
+void
+SoGtkFullViewer::setLeftWheelValue(
+  const float value )
+{
+  this->leftWheelVal = value;
+} // setLeftWheelValue()
+
 // *************************************************************************
 
 /*!
@@ -1187,6 +1194,13 @@ SoGtkFullViewer::getBottomWheelValue(
   return this->bottomWheelVal;
 } // getBottomWheelValue()
 
+void
+SoGtkFullViewer::setBottomWheelValue(
+  const float value )
+{
+  this->bottomWheelVal = value;
+} // setBottomWheelValue()
+
 // *************************************************************************
 
 /*!
@@ -1249,6 +1263,13 @@ SoGtkFullViewer::getRightWheelValue(
 {
   return this->rightWheelVal;
 } // getRightWheelValue()
+
+void
+SoGtkFullViewer::setRightWheelValue(
+  const float value )
+{
+  this->rightWheelVal = value;
+} // setRightWheelValue()
 
 // *************************************************************************
 

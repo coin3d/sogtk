@@ -100,14 +100,19 @@ protected:
   virtual void leftWheelMotion( float value );
   virtual void leftWheelFinish(void);
   float getLeftWheelValue(void) const;
+  void setLeftWheelValue( const float value );
+
   virtual void bottomWheelStart(void);
   virtual void bottomWheelMotion( float value );
   virtual void bottomWheelFinish(void);
   float getBottomWheelValue(void) const;
+  void setBottomWheelValue( const float value );
+
   virtual void rightWheelStart(void);
   virtual void rightWheelMotion( float value );
   virtual void rightWheelFinish(void);
   float getRightWheelValue(void) const;
+  void setRightWheelValue( const float value );
 
   void setLeftWheelString( const char * name );
   void setBottomWheelString( const char * name );
