@@ -37,12 +37,14 @@ libSoGtkDevices_la_SOURCES = \
 #	spwinput.h \
 #	spwinput_x11.cpp
 
+nodist_libSoGtkDevices_la_SOURCES = \
+	$(SoGui_src_Inventor_Gui_devices_BuiltFiles)
+
 # **************************************************************************
 
 SoGtkdevicesincdir = $(includedir)/Inventor/Gtk/devices
 SoGtkdevicesinc_HEADERS = \
 	SoGtkDevice.h \
-	SoGtkInputFocus.h \
 	SoGtkKeyboard.h \
 	SoGtkMouse.h \
 	SoGtkSpaceball.h
