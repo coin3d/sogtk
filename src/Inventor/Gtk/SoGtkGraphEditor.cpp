@@ -17,11 +17,6 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif
-
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -541,8 +536,3 @@ SoGtkGraphEditor::getDefaultIconTitle(// virtual, protected
 } // getDefaultIconTitle()
 
 // *************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkGraphEditorRCSId(void) { return rcsid; }
-#endif
-

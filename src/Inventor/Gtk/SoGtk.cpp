@@ -17,11 +17,6 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
-
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif

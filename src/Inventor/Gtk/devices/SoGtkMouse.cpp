@@ -17,11 +17,6 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
-
 #include <gdk/gdktypes.h>
 
 #include <Inventor/errors/SoDebugError.h>
@@ -270,8 +265,3 @@ SoGtkMouse::translateEvent(
 } // translateEvent()
 
 // *************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkMouseRCSId(void) { return rcsid; }
-#endif // SOGTK_DEBUG
-

@@ -17,11 +17,6 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
-
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -309,7 +304,3 @@ SoGtkMaterialList::getDefaultIconTitle(// virtual, protected
 } // getDefaultIconTitle()
 
 // *************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkMaterialListRCSId(void) { return rcsid; }
-#endif

@@ -17,11 +17,6 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
-
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif // HAVE_CONFIG_H
@@ -845,8 +840,3 @@ SoGtkGLWidgetP::~SoGtkGLWidgetP(
 } // ~SoGtkGLWidgetP()
 
 // *************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkGLWidgetRCSId(void) { return rcsid; }
-#endif // SOGTK_DEBUG
-

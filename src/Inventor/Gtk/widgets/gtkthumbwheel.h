@@ -17,8 +17,6 @@
  *
  **************************************************************************/
 
-/*  $Id$ */
-
 #ifndef SOGTK_THUMBWHEEL_H
 #define SOGTK_THUMBWHEEL_H
 

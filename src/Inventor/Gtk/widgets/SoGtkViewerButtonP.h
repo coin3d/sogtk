@@ -17,8 +17,6 @@
  *
  **************************************************************************/
 
-// $Id$
-
 #ifndef SOGTK_VIEWERBUTTONP_H
 #define SOGTK_VIEWERBUTTONP_H
 

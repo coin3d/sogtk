@@ -17,8 +17,6 @@
  *
  **************************************************************************/
 
-//  $Id$
-
 #ifndef SOGTK_GTKNATIVEPOPUPMENU_H
 #define SOGTK_GTKNATIVEPOPUPMENU_H
 

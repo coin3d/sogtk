@@ -17,8 +17,6 @@
  *
  **************************************************************************/
 
-// $Id$
-
 #ifndef SOGTK_GRAPHEDITOR_H
 #define SOGTK_GRAPHEDITOR_H
 

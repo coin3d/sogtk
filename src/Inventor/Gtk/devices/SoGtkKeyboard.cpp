@@ -17,11 +17,6 @@
  *
  **************************************************************************/
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
-
 #include <gdk/gdktypes.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -473,8 +468,3 @@ SoGtkKeyboard::translateEvent(// virtual
 } // translateEvent()
 
 // *************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkKeyboardRCSId(void) { return rcsid; }
-#endif // SOGTK_DEBUG
-
