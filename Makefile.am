@@ -11,17 +11,20 @@ else
 TESTDIR =
 endif
 
-SUBDIRS = . src/Inventor/Gtk $(TESTDIR)
+SUBDIRS = . data src/Inventor/Gtk $(TESTDIR)
 
 bin_SCRIPTS = sogtk-config
 
 BUILT_SOURCES = \
 	sogtkdefs.h \
 	src/Inventor/Gtk/SoGtkBasic.h \
-	src/Inventor/Gtk/SoGtkRenderArea.h \
-	src/Inventor/Gtk/SoGtkRenderArea.cpp \
 	src/Inventor/Gtk/SoGtkCursors.h \
 	src/Inventor/Gtk/SoGtkCursors.cpp \
+	src/Inventor/Gtk/SoGtkRenderArea.h \
+	src/Inventor/Gtk/SoGtkRenderArea.cpp \
+	src/Inventor/Gtk/SoAnyMaterialList.h \
+	src/Inventor/Gtk/SoAnyMaterialList.cpp \
+	src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp \
 	src/Inventor/Gtk/viewers/SoGtkViewer.h \
 	src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
 	src/Inventor/Gtk/viewers/SoAnyFullViewer.h \
@@ -49,6 +52,14 @@ src/Inventor/Gtk/SoGtkBasic.h: \
 	@./config.status --file=-:src/Inventor/Gtk/common/SoGuiBasic.h.in | \
 	./config.status --header=$@:-
 
+src/Inventor/Gtk/SoGtkCursors.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.h.in
+
+src/Inventor/Gtk/SoGtkCursors.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.cpp.in
+
 src/Inventor/Gtk/SoGtkRenderArea.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiRenderArea.h.in
@@ -57,13 +68,17 @@ src/Inventor/Gtk/SoGtkRenderArea.cpp: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
 
-src/Inventor/Gtk/SoGtkCursors.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.h.in
+src/Inventor/Gtk/SoAnyMaterialList.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialList.h.in
 
-src/Inventor/Gtk/SoGtkCursors.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.cpp.in
+src/Inventor/Gtk/SoAnyMaterialList.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
+
+src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
 
 src/Inventor/Gtk/viewers/SoGtkViewer.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiViewer.h.in

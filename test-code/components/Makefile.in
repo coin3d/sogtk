@@ -108,6 +108,9 @@ WIDGET = @WIDGET@
 gui = @gui@
 install_sh = @install_sh@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
+soxt_build_dir = @soxt_build_dir@
+soxt_data_dir = @soxt_data_dir@
+soxt_src_dir = @soxt_src_dir@
 
 ############################################################################
 

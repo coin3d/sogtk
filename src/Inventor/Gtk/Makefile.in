@@ -108,6 +108,9 @@ WIDGET = @WIDGET@
 gui = @gui@
 install_sh = @install_sh@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
+soxt_build_dir = @soxt_build_dir@
+soxt_data_dir = @soxt_data_dir@
+soxt_src_dir = @soxt_src_dir@
 
 
 SUBDIRS = devices widgets viewers
@@ -119,7 +122,10 @@ BUILT_SOURCES = \
 	SoGtkCursors.h \
 	SoGtkCursors.cpp \
 	SoGtkRenderArea.h \
-	SoGtkRenderArea.cpp
+	SoGtkRenderArea.cpp \
+	SoAnyMaterialList.h \
+	SoAnyMaterialList.cpp \
+	SoAnyMaterialListBuiltins.cpp
 
 
 lib_LTLIBRARIES = libSoGtk.la
@@ -134,6 +140,8 @@ libSoGtk_la_SOURCES = \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.h \
 	SoGtkGLWidget.cpp \
+	SoGtkMaterialList.h \
+	SoGtkMaterialList.cpp \
 	SoGtkGraphEditor.h \
 	SoGtkGraphEditor.cpp
 
@@ -149,11 +157,12 @@ libSoGtkinc_HEADERS = \
 	SoGtkBasic.h \
 	SoGtk.h \
 	SoGtkObject.h \
+	SoGtkCursors.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
 	SoGtkRenderArea.h \
 	SoGtkGraphEditor.h \
-	SoGtkCursors.h
+	SoGtkMaterialList.h
 
 subdir = src/Inventor/Gtk
 mkinstalldirs = $(SHELL) $(top_srcdir)/cfg/mkinstalldirs
@@ -173,8 +182,10 @@ X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtk_la_LDFLAGS = 
 libSoGtk_la_DEPENDENCIES =  devices/libSoGtkDevices.la \
 viewers/libSoGtkViewers.la widgets/libSoGtkWidgets.la
-am_libSoGtk_la_OBJECTS =  SoGtkCursors.lo SoGtkRenderArea.lo SoGtk.lo \
-SoGtkObject.lo SoGtkComponent.lo SoGtkGLWidget.lo SoGtkGraphEditor.lo
+am_libSoGtk_la_OBJECTS =  SoGtkCursors.lo SoGtkRenderArea.lo \
+SoAnyMaterialList.lo SoAnyMaterialListBuiltins.lo SoGtk.lo \
+SoGtkObject.lo SoGtkComponent.lo SoGtkGLWidget.lo SoGtkMaterialList.lo \
+SoGtkGraphEditor.lo
 libSoGtk_la_OBJECTS =  $(am_libSoGtk_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -190,9 +201,11 @@ DIST_SOURCES =  $(libSoGtk_la_SOURCES)
 HEADERS =  $(libSoGtkinc_HEADERS)
 
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/SoGtk.Plo $(DEPDIR)/SoGtkComponent.Plo \
-$(DEPDIR)/SoGtkCursors.Plo $(DEPDIR)/SoGtkGLWidget.Plo \
-$(DEPDIR)/SoGtkGraphEditor.Plo $(DEPDIR)/SoGtkObject.Plo \
+DEP_FILES =  @AMDEP@ $(DEPDIR)/SoAnyMaterialList.Plo \
+$(DEPDIR)/SoAnyMaterialListBuiltins.Plo $(DEPDIR)/SoGtk.Plo \
+$(DEPDIR)/SoGtkComponent.Plo $(DEPDIR)/SoGtkCursors.Plo \
+$(DEPDIR)/SoGtkGLWidget.Plo $(DEPDIR)/SoGtkGraphEditor.Plo \
+$(DEPDIR)/SoGtkMaterialList.Plo $(DEPDIR)/SoGtkObject.Plo \
 $(DEPDIR)/SoGtkRenderArea.Plo
 DIST_COMMON =  $(libSoGtkinc_HEADERS) Makefile.am Makefile.in
 
@@ -381,11 +394,14 @@ distclean-tags:
 
 maintainer-clean-tags:
 
+@AMDEP@include $(DEPDIR)/SoAnyMaterialList.Plo
+@AMDEP@include $(DEPDIR)/SoAnyMaterialListBuiltins.Plo
 @AMDEP@include $(DEPDIR)/SoGtk.Plo
 @AMDEP@include $(DEPDIR)/SoGtkComponent.Plo
 @AMDEP@include $(DEPDIR)/SoGtkCursors.Plo
 @AMDEP@include $(DEPDIR)/SoGtkGLWidget.Plo
 @AMDEP@include $(DEPDIR)/SoGtkGraphEditor.Plo
+@AMDEP@include $(DEPDIR)/SoGtkMaterialList.Plo
 @AMDEP@include $(DEPDIR)/SoGtkObject.Plo
 @AMDEP@include $(DEPDIR)/SoGtkRenderArea.Plo
 
@@ -545,6 +561,18 @@ SoGtkRenderArea.h: \
 SoGtkRenderArea.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkRenderArea.cpp )
+
+SoAnyMaterialList.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialList.h )
+
+SoAnyMaterialList.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialList.cpp )
+
+SoAnyMaterialListBuiltins.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp )
 
 ############################################################################
 

@@ -11,6 +11,7 @@ AC_CONFIG_AUX_DIR(cfg)
 sim_ac_cvs_syncproblem=false;
 
 sim_ac_macro_dir=${srcdir}/cfg/m4
+sim_ac_data_dir=${srcdir}/data
 
 if test ! -d $sim_ac_macro_dir; then
   if test "x${with_auto_cvs_update+set}" = "xset"; then
@@ -26,6 +27,20 @@ if test ! -d $sim_ac_macro_dir; then
   fi
 fi
 
+if test ! -d $sim_ac_data_dir; then
+  if test "x${with_auto_cvs_update+set}" = "xset"; then
+    echo "Trying to honor the --with-auto-cvs-update option."
+    sim_ac_save_cwd="`pwd`"
+    cd ${srcdir}
+    if test -d data -o ! -f ./CVS/Entries; then
+      AC_MSG_ERROR([something failed horribly - can't do auto-cvs-update])
+    fi
+    cvs co SoGtkData
+    cd ${sim_ac_save_cwd}
+    echo "Done.  Proceeding..."
+  fi
+fi
+
 if test ! -d $sim_ac_macro_dir; then
   cat <<EOF
 
@@ -35,6 +50,22 @@ if test ! -d $sim_ac_macro_dir; then
 
     $ rm -rf conf-macros
     $ cvs co SoGtkMacros
+
+  You can also run configure with the option --with-auto-cvs-update
+  to allow the configure script to try to take care of this.  This
+  option is a bit experimental - use at your own risk.
+EOF
+  sim_ac_cvs_syncproblem=true
+fi
+
+if test ! -d $sim_ac_data_dir; then
+  cat <<EOF
+
+  You appear to have an old setup of the SoGtk source repository.
+  Parts of it have changed structurally, and you need to do the
+  following in the SoGtk source directory:
+
+    $ cvs co SoGtkData
 
   You can also run configure with the option --with-auto-cvs-update
   to allow the configure script to try to take care of this.  This
@@ -126,7 +157,20 @@ AC_SUBST(SOGTK_EXTRA_CPPFLAGS)
 AC_SUBST(SOGTK_EXTRA_LDFLAGS)
 AC_SUBST(SOGTK_EXTRA_LIBS)
 
+soxt_build_dir=`pwd`
+cd $srcdir
+soxt_src_dir=`pwd`
+cd $soxt_build_dir
+soxt_data_dir=/usr/local/share/Coin
+test x"$exec_prefix" != xNONE && soxt_data_dir=$exec_prefix/share/Coin
+
+AC_SUBST(soxt_src_dir)
+AC_SUBST(soxt_build_dir)
+AC_SUBST(soxt_data_dir)
+
 SIM_EXPAND_DIR_VARS
+
+AC_CONFIG_SUBDIRS(data)
 
 # **************************************************************************
 
@@ -327,7 +371,7 @@ AC_OUTPUT([
 	test-code/Makefile
 	test-code/components/Makefile
 	test-code/widgets/Makefile
-],[
+], [
 	chmod a+x sogtk-config
 ])
 

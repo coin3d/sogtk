@@ -108,6 +108,9 @@ WIDGET = @WIDGET@
 gui = @gui@
 install_sh = @install_sh@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
+soxt_build_dir = @soxt_build_dir@
+soxt_data_dir = @soxt_data_dir@
+soxt_src_dir = @soxt_src_dir@
 
 ############################################################################
 
@@ -117,17 +120,20 @@ sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
 @BUILD_TESTS_TRUE@TESTDIR = @BUILD_TESTS_TRUE@test-code
 @BUILD_TESTS_FALSE@TESTDIR = 
 
-SUBDIRS = . src/Inventor/Gtk $(TESTDIR)
+SUBDIRS = . data src/Inventor/Gtk $(TESTDIR)
 
 bin_SCRIPTS = sogtk-config
 
 BUILT_SOURCES = \
 	sogtkdefs.h \
 	src/Inventor/Gtk/SoGtkBasic.h \
-	src/Inventor/Gtk/SoGtkRenderArea.h \
-	src/Inventor/Gtk/SoGtkRenderArea.cpp \
 	src/Inventor/Gtk/SoGtkCursors.h \
 	src/Inventor/Gtk/SoGtkCursors.cpp \
+	src/Inventor/Gtk/SoGtkRenderArea.h \
+	src/Inventor/Gtk/SoGtkRenderArea.cpp \
+	src/Inventor/Gtk/SoAnyMaterialList.h \
+	src/Inventor/Gtk/SoAnyMaterialList.cpp \
+	src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp \
 	src/Inventor/Gtk/viewers/SoGtkViewer.h \
 	src/Inventor/Gtk/viewers/SoGtkViewer.cpp \
 	src/Inventor/Gtk/viewers/SoAnyFullViewer.h \
@@ -165,7 +171,7 @@ configure.in sogtk-config.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
-DIST_SUBDIRS =  . src/Inventor/Gtk test-code
+DIST_SUBDIRS =  . data src/Inventor/Gtk test-code
 all: all-redirect
 .SUFFIXES:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
@@ -514,6 +520,14 @@ src/Inventor/Gtk/SoGtkBasic.h: \
 	@./config.status --file=-:src/Inventor/Gtk/common/SoGuiBasic.h.in | \
 	./config.status --header=$@:-
 
+src/Inventor/Gtk/SoGtkCursors.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.h.in
+
+src/Inventor/Gtk/SoGtkCursors.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.cpp.in
+
 src/Inventor/Gtk/SoGtkRenderArea.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.h.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiRenderArea.h.in
@@ -522,13 +536,17 @@ src/Inventor/Gtk/SoGtkRenderArea.cpp: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
 	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
 
-src/Inventor/Gtk/SoGtkCursors.h: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.h.in
+src/Inventor/Gtk/SoAnyMaterialList.h: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.h.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialList.h.in
 
-src/Inventor/Gtk/SoGtkCursors.cpp: \
-  $(srcdir)/src/Inventor/Gtk/common/SoGuiCursors.cpp.in
-	@./config.status --file=$@:src/Inventor/Gtk/common/SoGuiCursors.cpp.in
+src/Inventor/Gtk/SoAnyMaterialList.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
+
+src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp: \
+  $(srcdir)/src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
+	@./config.status --file=$@:src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
 
 src/Inventor/Gtk/viewers/SoGtkViewer.h: \
   $(srcdir)/src/Inventor/Gtk/common/SoGuiViewer.h.in

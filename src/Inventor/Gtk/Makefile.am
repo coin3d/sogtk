@@ -8,7 +8,10 @@ BUILT_SOURCES = \
 	SoGtkCursors.h \
 	SoGtkCursors.cpp \
 	SoGtkRenderArea.h \
-	SoGtkRenderArea.cpp
+	SoGtkRenderArea.cpp \
+	SoAnyMaterialList.h \
+	SoAnyMaterialList.cpp \
+	SoAnyMaterialListBuiltins.cpp
 
 lib_LTLIBRARIES = libSoGtk.la
 
@@ -22,6 +25,8 @@ libSoGtk_la_SOURCES = \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.h \
 	SoGtkGLWidget.cpp \
+	SoGtkMaterialList.h \
+	SoGtkMaterialList.cpp \
 	SoGtkGraphEditor.h \
 	SoGtkGraphEditor.cpp
 
@@ -35,11 +40,12 @@ libSoGtkinc_HEADERS = \
 	SoGtkBasic.h \
 	SoGtk.h \
 	SoGtkObject.h \
+	SoGtkCursors.h \
 	SoGtkComponent.h \
 	SoGtkGLWidget.h \
 	SoGtkRenderArea.h \
 	SoGtkGraphEditor.h \
-	SoGtkCursors.h
+	SoGtkMaterialList.h
 
 ############################################################################
 
@@ -62,5 +68,17 @@ SoGtkRenderArea.h: \
 SoGtkRenderArea.cpp: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiRenderArea.cpp.in
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkRenderArea.cpp )
+
+SoAnyMaterialList.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialList.h )
+
+SoAnyMaterialList.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialList.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialList.cpp )
+
+SoAnyMaterialListBuiltins.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoAnyMaterialListBuiltins.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoAnyMaterialListBuiltins.cpp )
 
 ############################################################################
