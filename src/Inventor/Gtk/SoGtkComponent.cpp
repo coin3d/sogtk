@@ -29,9 +29,7 @@ static const char rcsid[] =
 #include <stdio.h>
 #include <string.h>
 
-#if SOGTK_DEBUG
 #include <Inventor/errors/SoDebugError.h>
-#endif // SOGTK_DEBUG
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtk.h>
