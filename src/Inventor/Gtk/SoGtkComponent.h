@@ -100,8 +100,8 @@ private:
   SbPList * visibilityChangeCBs;
   SbVec2s storeSize;
 
-  static SbPList soGtkCompList;
-  static SbPList gtkWidgetList;
+  static SbPList * soGtkCompList;
+  static SbPList * gtkWidgetList;
 
 }; // class SoGtkComponent
 

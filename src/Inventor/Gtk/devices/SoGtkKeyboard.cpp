@@ -34,7 +34,7 @@ static const char rcsid[] =
 #include <Inventor/events/SoKeyboardEvent.h>
 
 #include <Inventor/Gtk/devices/SoGtkKeyboard.h>
-
+#include <assert.h>
 
 /*
 // FIXME: get rid of this before 1.0 release (convert everything to Qt
@@ -440,9 +440,8 @@ static struct key1map GtkToSoMapping[] = {
 };
 
 
-// FIXME: use a dict class from Qt instead. 990213 mortene.
-SbDict SoGtkKeyboard::translatetable;
-SbBool SoGtkKeyboard::madetable = FALSE;
+// FIXME: use a dict class from Glib instead? 20000311 mortene.
+SbDict * SoGtkKeyboard::translatetable = NULL;
 
 /*!
   Constructor.
@@ -486,16 +485,18 @@ SoGtkKeyboard::disable(GtkWidget * /*w*/, SoGtkEventHandler /*f*/, void * /*data
 void
 SoGtkKeyboard::makeTranslationTable(void)
 {
+  assert(SoGtkKeyboard::translatetable == NULL);
+  // FIXME: deallocate on exit. 20000311 mortene.
+  SoGtkKeyboard::translatetable = new SbDict;
+
   int i=0;
   while (GtkToSoMapping[i].from != 0) {
     // FIXME: nasty casting going on -- design broken, should be
-    // repaired somehow. 990212 mortene.
-    SoGtkKeyboard::translatetable.enter(GtkToSoMapping[i].from,
-                                       (void *)GtkToSoMapping[i].to);
+    // repaired somehow. 19990212 mortene.
+    SoGtkKeyboard::translatetable->enter(GtkToSoMapping[i].from,
+                                         (void *)GtkToSoMapping[i].to);
     i++;
   }
-
-  SoGtkKeyboard::madetable = TRUE;
 }
 
 /*!
@@ -509,7 +510,7 @@ SoGtkKeyboard::translateEvent(GdkEvent * event)
        (event->type() == Event_KeyRelease)) &&
       (this->eventmask & (SoGtkKeyPressMask | SoGtkKeyReleaseMask))) {
 
-    if (!SoGtkKeyboard::madetable) SoGtkKeyboard::makeTranslationTable();
+    if (!SoGtkKeyboard::translatetable) SoGtkKeyboard::makeTranslationTable();
 
     QKeyEvent * keyevent = (QKeyEvent *)event;
 
@@ -521,7 +522,7 @@ SoGtkKeyboard::translateEvent(GdkEvent * event)
 
     // Translate keycode Qt -> So
     void * sokey;
-    if (SoGtkKeyboard::translatetable.find(keyevent->key(), sokey)) {
+    if (SoGtkKeyboard::translatetable->find(keyevent->key(), sokey)) {
       this->kbdevent->setKey((SoKeyboardEvent::Key)(int)sokey);
     }
     else {

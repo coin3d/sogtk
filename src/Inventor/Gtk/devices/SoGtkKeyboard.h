@@ -53,8 +53,7 @@ private:
   SoKeyboardEvent * kbdevent;
 
   static void makeTranslationTable(void);
-  static SbDict translatetable;
-  static SbBool madetable;
+  static SbDict * translatetable;
 
 }; // class SoGtkKeyboard
 

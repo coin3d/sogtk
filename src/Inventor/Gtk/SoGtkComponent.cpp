@@ -59,8 +59,8 @@ static const char rcsid[] =
 
 // *************************************************************************
 
-SbPList SoGtkComponent::soGtkCompList;
-SbPList SoGtkComponent::gtkWidgetList;
+SbPList * SoGtkComponent::soGtkCompList = NULL;
+SbPList * SoGtkComponent::gtkWidgetList = NULL;
 
 // *************************************************************************
 
@@ -82,6 +82,10 @@ SoGtkComponent::SoGtkComponent(
   const char * const name,
   const SbBool buildInsideParent )
 {
+  // FIXME: deallocate on exit. 20000311 mortene.
+  if (!SoGtkComponent::soGtkCompList) SoGtkComponent::soGtkCompList = new SbPList;
+  if (!SoGtkComponent::gtkWidgetList) SoGtkComponent::gtkWidgetList = new SbPList;
+
   this->parent = parent;
   this->widget = NULL;
   this->closeCB = NULL;
@@ -107,10 +111,10 @@ SoGtkComponent::~SoGtkComponent( // virtual
 {
   // Link us out of the static QWidget<->SoGtkComponent "correlation"
   // lists.
-  int idx = SoGtkComponent::gtkWidgetList.find( this->widget );
+  int idx = SoGtkComponent::gtkWidgetList->find( this->widget );
   assert(idx != -1);
-  SoGtkComponent::gtkWidgetList.remove(idx);
-  SoGtkComponent::soGtkCompList.remove(idx);
+  SoGtkComponent::gtkWidgetList->remove(idx);
+  SoGtkComponent::soGtkCompList->remove(idx);
 
   delete this->visibilityChangeCBs;
 
@@ -852,9 +856,9 @@ SoGtkComponent *
 SoGtkComponent::getComponent(
   GtkWidget * const widget )
 {
-  int idx = SoGtkComponent::gtkWidgetList.find( widget );
+  int idx = SoGtkComponent::gtkWidgetList->find( widget );
   if ( idx != -1 )
-    return (SoGtkComponent *) SoGtkComponent::soGtkCompList[idx];
+    return (SoGtkComponent *) (*SoGtkComponent::soGtkCompList)[idx];
   else
     return NULL;
 } // getComponent()
