@@ -795,6 +795,8 @@ void
 SoGtkExaminerViewer::afterRealizeHook( // virtual
   void )
 {
+  this->setCursorRepresentation( this->common->currentmode );
+  inherited::afterRealizeHook();
 } // afterRealizeHook()
 
 /*!
