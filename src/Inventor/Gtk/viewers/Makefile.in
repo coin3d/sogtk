@@ -102,7 +102,6 @@ LT_RELEASE = @LT_RELEASE@
 LT_REVISION = @LT_REVISION@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
 OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
@@ -110,6 +109,8 @@ POFILES = @POFILES@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
 SOGTK_BINARY_AGE = @SOGTK_BINARY_AGE@
+SOGTK_DOC_HTML = @SOGTK_DOC_HTML@
+SOGTK_DOC_MAN = @SOGTK_DOC_MAN@
 SOGTK_EXTRA_CPPFLAGS = @SOGTK_EXTRA_CPPFLAGS@
 SOGTK_EXTRA_LDFLAGS = @SOGTK_EXTRA_LDFLAGS@
 SOGTK_EXTRA_LIBS = @SOGTK_EXTRA_LIBS@
@@ -126,6 +127,10 @@ gui = @gui@
 install_sh = @install_sh@
 l = @l@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
+sim_ac_doxygen_exe = @sim_ac_doxygen_exe@
+sim_ac_perl_exe = @sim_ac_perl_exe@
+sogtk_dox_build_dir = @sogtk_dox_build_dir@
+sogtk_dox_src_dir = @sogtk_dox_src_dir@
 
 
 INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
