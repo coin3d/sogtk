@@ -2,7 +2,7 @@
 # SoGtk/configure.in
 # $Id$
 
-AC_INIT(src/Inventor/Gtk/SoGtk.h)
+AC_INIT(src/Inventor/Gtk/SoGtk.cpp)
 AC_CONFIG_AUX_DIR(cfg)
 
 # If the Microsoft Visual C++ cl.exe compiler is available, set us up for

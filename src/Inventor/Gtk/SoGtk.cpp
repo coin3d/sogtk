@@ -111,9 +111,11 @@ SoGtk::init(
     char buf[1025];
     strncpy(buf, appName, 1024);
     char * array[2] = { buf, (char *) NULL };
-    return SoGtk::init(1, array, appName, className);
+    int argc = 1;
+    return SoGtk::init(argc, array, appName, className);
   } else {
-    return SoGtk::init(0, (char **) NULL, appName, className);
+    int argc = 0;
+    return SoGtk::init(argc, (char **) NULL, appName, className);
   }
 } // init()
 
@@ -175,7 +177,7 @@ SoGtkObject::init(// static
 
 GtkWidget *
 SoGtk::init(
-  int argc,
+  int & argc,
   char ** argv,
   const char * const appName,
   const char * const className)
