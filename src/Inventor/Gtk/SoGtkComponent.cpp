@@ -791,10 +791,7 @@ SoGtkComponent::getComponent(GtkWidget * const widget)
 
 // *************************************************************************
 
-/*!
-  A function "hook" / callback invoked just after the window for the
-  component has been realized.
-*/
+// Documented in common/SoGuiComponentCommon.cpp.in.
 void
 SoGtkComponent::afterRealizeHook(void)
 {
