@@ -17,12 +17,15 @@
  *
 \**************************************************************************/
 
+/*  $Id$ */
+
 #ifndef SOGTK_THUMBWHEEL_H
 #define SOGTK_THUMBWHEEL_H
 
 #include <gdk/gdk.h>
-#include <gtk/gtkadjustment.h>
+//#include <gtk/gtkadjustment.h>
 #include <gtk/gtkwidget.h>
+#include <gtk/gtkmisc.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,7 +54,7 @@ typedef struct _GtkThumbWheel       GtkThumbWheel;
 typedef struct _GtkThumbWheelClass  GtkThumbWheelClass;
 
 struct _GtkThumbWheel {
-  GtkWidget widget;
+  GtkMisc misc;
 
   guint8 state : 2;
   guint8 policy : 2;
@@ -63,7 +66,7 @@ struct _GtkThumbWheel {
 }; // GtkThumbWheel
 
 struct _GtkThumbWheelClass {
-  GtkWidgetClass parent_class;
+  GtkMiscClass parent_class;
 
   void (* attached)       ( GtkThumbWheel * thumbwheel );
   void (* value_changed)  ( GtkThumbWheel * thumbwheel, gfloat value );
@@ -84,9 +87,11 @@ gfloat       gtk_thumbwheel_get_value         (GtkThumbWheel * thumbwheel);
 void         gtk_thumbwheel_enable            (GtkThumbWheel * thumbwheel);
 void         gtk_thumbwheel_disable           (GtkThumbWheel * thumbwheel);
 
+/*
 void         gtk_thumbwheel_set_motion_method (GtkThumbWheel * thumbwheel);
 void         gtk_thumbwheel_set_range_boundary_handling
                                               (GtkThumbWheel * thumbwheel);
+*/
 
 /* ********************************************************************** */
 

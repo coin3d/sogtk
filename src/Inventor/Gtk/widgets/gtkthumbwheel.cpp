@@ -17,10 +17,17 @@
  *
 \**************************************************************************/
 
+#if SOGTK_DEBUG
+static const char rcsid[] =
+  "$Id$";
+#endif // SOGTK_DEBUG
+
 #include <stdio.h>
 
 #include <gtk/gtkmain.h>
 #include <gtk/gtksignal.h>
+
+#include <Inventor/errors/SoDebugError.h>
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/widgets/SoAnyThumbWheel.h>
@@ -33,7 +40,6 @@
  * - cache pregenerated thumbwheel pixmaps
  * - track mouse motion and update wheel values / wheel graphics
  * - create thumbwheel configuration/state methods
- * - implement (emit) and check/debug thumbwheel signals
  * - make widget un-resizable
  * - document some stuff
  *
@@ -45,45 +51,31 @@
 // *************************************************************************
 
 extern "C" {
-
-void gtk_thumbwheel_update(
-  GtkThumbWheel * thumbwheel );
-gint gtk_thumbwheel_timer(
-  GtkThumbWheel * thumbwheel );
-gint gtk_thumbwheel_motion_notify(
-  GtkWidget * widget, GdkEventMotion * event );
-gint gtk_thumbwheel_button_release(
-  GtkWidget * widget, GdkEventButton * event );
-gint gtk_thumbwheel_button_press(
-  GtkWidget * widget, GdkEventButton * event );
-gint gtk_thumbwheel_expose(
-  GtkWidget * widget, GdkEventExpose * event );
-void gtk_thumbwheel_size_allocate(
-  GtkWidget * widget, GtkAllocation * allocation );
-void gtk_thumbwheel_size_request(
-  GtkWidget * widget, GtkRequisition * requisition );
-void gtk_thumbwheel_realize(
-  GtkWidget * widget );
-void gtk_thumbwheel_destroy(
-  GtkObject * object );
-void gtk_thumbwheel_init(
-  GtkThumbWheel * thumbwheel );
-void gtk_thumbwheel_class_init(
-  GtkThumbWheelClass * cclass );
-
+void gtk_thumbwheel_update( GtkThumbWheel * thumbwheel );
+gint gtk_thumbwheel_timer( GtkThumbWheel * thumbwheel );
+gint gtk_thumbwheel_motion_notify( GtkWidget * widget, GdkEventMotion * event );
+gint gtk_thumbwheel_button_release( GtkWidget * widget, GdkEventButton * event );
+gint gtk_thumbwheel_button_press( GtkWidget * widget, GdkEventButton * event );
+gint gtk_thumbwheel_expose( GtkWidget * widget, GdkEventExpose * event );
+void gtk_thumbwheel_size_allocate( GtkWidget * widget, GtkAllocation * allocation );
+void gtk_thumbwheel_size_request( GtkWidget * widget, GtkRequisition * requisition );
+void gtk_thumbwheel_realize( GtkWidget * widget );
+void gtk_thumbwheel_destroy( GtkObject * object );
+void gtk_thumbwheel_init( GtkThumbWheel * thumbwheel );
+void gtk_thumbwheel_class_init( GtkThumbWheelClass * cclass );
 }; /* extern "C" */
 
 enum {
-    ATTACHED,
-    VALUE_CHANGED,
-    RELEASED,
-    NUM_SIGNALS
+  ATTACHED,
+  VALUE_CHANGED,
+  RELEASED,
+  NUM_SIGNALS
 };
 
-static GtkWidgetClass * parent_class = NULL;
+static GtkMiscClass * parent_class = NULL;
 static guint thumbwheel_signals[NUM_SIGNALS] = { 0 };
 
-static const guint GTK_THUMBWHEEL_DEFAULT_WIDTH = 24;
+static const guint GTK_THUMBWHEEL_DEFAULT_WIDTH  = 24;
 static const guint GTK_THUMBWHEEL_DEFAULT_LENGTH = 90;
 
 enum {
@@ -111,7 +103,7 @@ gtk_thumbwheel_get_type(
       (GtkClassInitFunc) NULL
     };
     thumbwheel_type =
-      gtk_type_unique( gtk_widget_get_type(), &thumbwheel_info );
+      gtk_type_unique( gtk_misc_get_type(), &thumbwheel_info );
   }
   return thumbwheel_type;
 } // gtk_thumbwheel_get_type()
@@ -124,11 +116,12 @@ gtk_thumbwheel_class_init(
   GtkThumbWheelClass * cclass )
 {
   GtkObjectClass * object_class = (GtkObjectClass *) cclass;
+  GtkMiscClass * misc_class = (GtkMiscClass *) cclass;
   GtkWidgetClass * widget_class = (GtkWidgetClass *) cclass;
 
   gdk_rgb_init();
 
-  parent_class = (GtkWidgetClass *) gtk_type_class( gtk_widget_get_type() );
+  parent_class = (GtkMiscClass *) gtk_type_class( gtk_misc_get_type() );
 
   object_class->destroy = gtk_thumbwheel_destroy;
 
@@ -192,9 +185,8 @@ gtk_thumbwheel_init(
   thumbwheel->tempvalue = 0.0f;
   SoAnyThumbWheel * wheel = new SoAnyThumbWheel;
   wheel->SetWheelMotionMethod( SoAnyThumbWheel::UNIFORM );
-  wheel->SetWheelRangeBoundaryHandling( SoAnyThumbWheel::MODULATE );
+  wheel->SetWheelRangeBoundaryHandling( SoAnyThumbWheel::ACCUMULATE );
   wheel->SetGraphicsByteOrder( SoAnyThumbWheel::ABGR );
-//  wheel->SetColor( 0, 150, 200 );
   thumbwheel->wheel = (void *) wheel;
 } // gtk_thumbwheel_init()
 
@@ -450,16 +442,14 @@ gtk_thumbwheel_button_press(
   if ( thumbwheel->state != THUMBWHEEL_IDLE )
     return FALSE;
 
-
-  fprintf( stderr, "> press\n" );
-
-  if ( thumbwheel->vertical != 0 ) {
+  if ( thumbwheel->vertical != 0 )
     thumbwheel->downpos = (gint) event->y;
-  } else {
+  else
     thumbwheel->downpos = (gint) event->x;
-  }
 
   thumbwheel->state = THUMBWHEEL_DRAGGING;
+
+  gtk_signal_emit( GTK_OBJECT(widget), thumbwheel_signals[ ATTACHED ] );
 
   return FALSE;
 } // gtk_thumbwheel_button_press()
@@ -481,10 +471,10 @@ gtk_thumbwheel_button_release(
   if ( thumbwheel->state != THUMBWHEEL_DRAGGING )
     return FALSE;
 
-  fprintf( stderr, "> release\n" );
-
-  thumbwheel->tempvalue = thumbwheel->value;
+  thumbwheel->value = thumbwheel->tempvalue;
   thumbwheel->state = THUMBWHEEL_IDLE;
+
+  gtk_signal_emit( GTK_OBJECT(widget), thumbwheel_signals[ RELEASED ] );
 
   return FALSE;
 } // gtk_thumbwheel_button_release()
@@ -521,8 +511,10 @@ gtk_thumbwheel_motion(
   static int bmp = -1;
   int img = ((SoAnyThumbWheel *)thumbwheel->wheel)->GetBitmapForValue(
     thumbwheel->tempvalue, SoAnyThumbWheel::ENABLED );
-  if ( img != bmp )
+  if ( img != bmp ) {
     gtk_widget_draw( GTK_WIDGET(thumbwheel), NULL );
+    gtk_signal_emit( GTK_OBJECT(widget), thumbwheel_signals[ VALUE_CHANGED ] );
+  }
   bmp = img;
 
   gtk_timeout_add( 100, (gint (*)(void *)) gtk_thumbwheel_motion, (gpointer) thumbwheel );
@@ -565,6 +557,8 @@ gfloat
 gtk_thumbwheel_get_value(
   GtkThumbWheel * thumbwheel )
 {
+  if ( thumbwheel->state == THUMBWHEEL_DRAGGING )
+    return thumbwheel->tempvalue;
   return thumbwheel->value;
 } // gtk_thumbwheel_get_value()
 
