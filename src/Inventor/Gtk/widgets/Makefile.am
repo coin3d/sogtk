@@ -20,8 +20,8 @@ noinst_LTLIBRARIES = libSoGtkWidgets.la
 libSoGtkWidgets_la_SOURCES = \
 	gtkthumbwheel.h \
 	gtkthumbwheel.cpp \
-	SoGtkPopupMenu.h \
-	SoGtkPopupMenu.cpp
+	GtkNativePopupMenu.h \
+	GtkNativePopupMenu.cpp
 
 nodist_libSoGtkWidgets_la_SOURCES = \
 	$(SoGui_src_Inventor_Gui_widgets_BuiltFiles) \

@@ -19,8 +19,8 @@
 
 //  $Id$
 
-#ifndef SOGTK_POPUPMENU_H
-#define SOGTK_POPUPMENU_H
+#ifndef SOGTK_GTKNATIVEPOPUPMENU_H
+#define SOGTK_GTKNATIVEPOPUPMENU_H
 
 #include <Inventor/Gtk/SoGtkBasic.h>
 #include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
@@ -30,10 +30,10 @@ struct ItemRecord;
 
 // *************************************************************************
 
-class SOGTK_DLL_API SoGtkPopupMenu : public SoAnyPopupMenu {
+class SOGTK_DLL_API GtkNativePopupMenu : public SoAnyPopupMenu {
 public:
-  SoGtkPopupMenu(void);
-  ~SoGtkPopupMenu(void);
+  GtkNativePopupMenu(void);
+  ~GtkNativePopupMenu(void);
 
   virtual int newMenu(const char * name, int menuid = -1);
   virtual int getMenu(const char * name);
@@ -79,8 +79,8 @@ private:
   GtkWidget * popup;
   SbBool dirty;
 
-}; // class SoGtkPopupMenu
+}; // class GtkNativePopupMenu
 
 // *************************************************************************
 
-#endif // ! SOGTK_POPUPMENU_H
+#endif // ! SOGTK_GTKNATIVEPOPUPMENU_H

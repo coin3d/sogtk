@@ -39,7 +39,7 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkBasic.h>
 #include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
-#include <Inventor/Gtk/widgets/SoGtkPopupMenu.h>
+#include <Inventor/Gtk/widgets/GtkNativePopupMenu.h>
 
 // *************************************************************************
 
@@ -54,7 +54,7 @@ struct MenuRecord {
 }; // struct MenuRecord
 
 struct ItemRecord {
-  SoGtkPopupMenu * context;
+  GtkNativePopupMenu * context;
   int itemid;
   int flags;
   int pos;
@@ -74,20 +74,20 @@ struct ItemRecord {
   Constructor.
 */
 
-SoGtkPopupMenu::SoGtkPopupMenu(
+GtkNativePopupMenu::GtkNativePopupMenu(
   void)
 {
   this->items = new SbPList;
   this->menus = new SbPList;
   this->dirty = TRUE;
   this->popup = (GtkWidget *) NULL;
-} // SoGtkPopupMenu()
+} // GtkNativePopupMenu()
 
 /*!
   Destructor.
 */
 
-SoGtkPopupMenu::~SoGtkPopupMenu(
+GtkNativePopupMenu::~GtkNativePopupMenu(
   void)
 {
   int i;
@@ -107,7 +107,7 @@ SoGtkPopupMenu::~SoGtkPopupMenu(
     delete rec;
   }
   delete this->menus;
-} // ~SoGtkPopupMenu()
+} // ~GtkNativePopupMenu()
 
 // *************************************************************************
 
@@ -115,7 +115,7 @@ SoGtkPopupMenu::~SoGtkPopupMenu(
 */
 
 int
-SoGtkPopupMenu::newMenu(
+GtkNativePopupMenu::newMenu(
   const char * name,
   int menuid)
 {
@@ -126,7 +126,7 @@ SoGtkPopupMenu::newMenu(
   } else {
     if (this->getMenuRecord(id) != NULL) {
 #if SOGTK_DEBUG
-      SoDebugError::postInfo("SoGtkPopupMenu::NewMenu",
+      SoDebugError::postInfo("GtkNativePopupMenu::NewMenu",
         "requested menuid already taken");
 #endif // SOGTK_DEBUG
       return -1;
@@ -143,7 +143,7 @@ SoGtkPopupMenu::newMenu(
 */
 
 int
-SoGtkPopupMenu::getMenu(
+GtkNativePopupMenu::getMenu(
   const char * name)
 {
   const int numMenus = this->menus->getLength();
@@ -160,13 +160,13 @@ SoGtkPopupMenu::getMenu(
 */
 
 void
-SoGtkPopupMenu::setMenuTitle(
+GtkNativePopupMenu::setMenuTitle(
   int menuid,
   const char * title)
 {
   MenuRecord * rec = this->getMenuRecord(menuid);
   if (rec == NULL) {
-    SoDebugError::postWarning("SoGtkPopupMenu::SetMenuTitle",
+    SoDebugError::postWarning("GtkNativePopupMenu::SetMenuTitle",
       "no such menu (%d.title = \"%s\")", menuid, title);
     return;
   }
@@ -182,7 +182,7 @@ SoGtkPopupMenu::setMenuTitle(
 */
 
 const char *
-SoGtkPopupMenu::getMenuTitle(
+GtkNativePopupMenu::getMenuTitle(
   int menuid)
 {
   MenuRecord * rec = this->getMenuRecord(menuid);
@@ -197,7 +197,7 @@ SoGtkPopupMenu::getMenuTitle(
 */
 
 int
-SoGtkPopupMenu::newMenuItem(
+GtkNativePopupMenu::newMenuItem(
   const char * name,
   int itemid)
 {
@@ -209,7 +209,7 @@ SoGtkPopupMenu::newMenuItem(
   } else {
     if (this->getItemRecord(itemid) != NULL) {
 #if SOGTK_DEBUG
-      SoDebugError::postInfo("SoGtkPopupMenu::NewMenuItem",
+      SoDebugError::postInfo("GtkNativePopupMenu::NewMenuItem",
         "requested itemid already taken");
 #endif // SOGTK_DEBUG
       return -1;
@@ -225,7 +225,7 @@ SoGtkPopupMenu::newMenuItem(
 */
 
 int
-SoGtkPopupMenu::getMenuItem(
+GtkNativePopupMenu::getMenuItem(
   const char * name)
 {
   const int numItems = this->items->getLength();
@@ -242,7 +242,7 @@ SoGtkPopupMenu::getMenuItem(
 */
 
 void
-SoGtkPopupMenu::setMenuItemTitle(
+GtkNativePopupMenu::setMenuItemTitle(
   int itemid,
   const char * title)
 {
@@ -261,7 +261,7 @@ SoGtkPopupMenu::setMenuItemTitle(
 */
 
 const char *
-SoGtkPopupMenu::getMenuItemTitle(
+GtkNativePopupMenu::getMenuItemTitle(
   int itemid)
 {
   ItemRecord * rec = this->getItemRecord(itemid);
@@ -274,7 +274,7 @@ SoGtkPopupMenu::getMenuItemTitle(
 */
 
 void
-SoGtkPopupMenu::setMenuItemEnabled(
+GtkNativePopupMenu::setMenuItemEnabled(
   int itemid,
   SbBool enabled)
 {
@@ -285,7 +285,7 @@ SoGtkPopupMenu::setMenuItemEnabled(
 */
 
 SbBool
-SoGtkPopupMenu::getMenuItemEnabled(
+GtkNativePopupMenu::getMenuItemEnabled(
   int itemid)
 {
   SOGTK_STUB();
@@ -296,17 +296,17 @@ SoGtkPopupMenu::getMenuItemEnabled(
 */
 
 void
-SoGtkPopupMenu::_setMenuItemMarked(
+GtkNativePopupMenu::_setMenuItemMarked(
   int itemid,
   SbBool marked)
 {
 #if SOGTK_DEBUG && 0
-  SoDebugError::postInfo("SoGtkPopupMenu::SetMenuItemMarked", "item %d to %s",
+  SoDebugError::postInfo("GtkNativePopupMenu::SetMenuItemMarked", "item %d to %s",
     itemid, marked ? "true" : "false");
 #endif // SOGTK_DEBUG && 0
   ItemRecord * item = getItemRecord(itemid);
   if (! item) {
-    SoDebugError::postInfo("SoGtkPopupMenu::SetMenuItemMarked",
+    SoDebugError::postInfo("GtkNativePopupMenu::SetMenuItemMarked",
       "no such item (%d).", itemid);
     return;
   }
@@ -328,12 +328,12 @@ SoGtkPopupMenu::_setMenuItemMarked(
 */
 
 SbBool
-SoGtkPopupMenu::getMenuItemMarked(
+GtkNativePopupMenu::getMenuItemMarked(
   int itemid)
 {
   ItemRecord * item = getItemRecord(itemid);
   if (! item) {
-    SoDebugError::postInfo("SoGtkPopupMenu::SetMenuItemMarked",
+    SoDebugError::postInfo("GtkNativePopupMenu::SetMenuItemMarked",
       "no such item (%d).", itemid);
     return FALSE;
   }
@@ -348,7 +348,7 @@ SoGtkPopupMenu::getMenuItemMarked(
 */
 
 void
-SoGtkPopupMenu::addMenu(
+GtkNativePopupMenu::addMenu(
   int menuid,
   int submenuid,
   int pos)
@@ -357,7 +357,7 @@ SoGtkPopupMenu::addMenu(
   MenuRecord * sub = this->getMenuRecord(submenuid);
   if (super == NULL || sub == NULL) {
 #if SOGTK_DEBUG
-    SoDebugError::postInfo("SoGtkPopupMenu::AddMenu",
+    SoDebugError::postInfo("GtkNativePopupMenu::AddMenu",
       "no such menu (super = 0x%08x, sub = 0x%08x)", super, sub);
 #endif // SOGTK_DEBUG
     return;
@@ -402,7 +402,7 @@ SoGtkPopupMenu::addMenu(
 */
 
 void
-SoGtkPopupMenu::addMenuItem(
+GtkNativePopupMenu::addMenuItem(
   int menuid,
   int itemid,
   int pos)
@@ -411,7 +411,7 @@ SoGtkPopupMenu::addMenuItem(
   ItemRecord * item = this->getItemRecord(itemid);
   if (menu == NULL || item == NULL) {
 #if SOGTK_DEBUG
-    SoDebugError::postInfo("SoGtkPopupMenu::AddMenuItem",
+    SoDebugError::postInfo("GtkNativePopupMenu::AddMenuItem",
       "no such item (menu = 0x%08x, item = 0x%08x)", menu, item);
 #endif // SOGTK_DEBUG
     return;
@@ -456,14 +456,14 @@ SoGtkPopupMenu::addMenuItem(
 */
 
 void
-SoGtkPopupMenu::addSeparator(
+GtkNativePopupMenu::addSeparator(
   int menuid,
   int pos)
 {
   MenuRecord * menu = this->getMenuRecord(menuid);
   if (menu == NULL) {
 #if SOGTK_DEBUG
-    SoDebugError::postWarning("SoGtkPopupMenu::AddSeparator",
+    SoDebugError::postWarning("GtkNativePopupMenu::AddSeparator",
       "no such menu (%d)", menuid);
 #endif // SOGTK_DEBUG
     return;
@@ -511,26 +511,26 @@ SoGtkPopupMenu::addSeparator(
 */
 
 void
-SoGtkPopupMenu::removeMenu(
+GtkNativePopupMenu::removeMenu(
   int menuid)
 {
   MenuRecord * rec = this->getMenuRecord(menuid);
 /*
   if (rec == NULL) {
 #if SOGTK_DEBUG
-    SoDebugError::postInfo("SoGtkPopupMenu::RemoveMenu", "no such menu");
+    SoDebugError::postInfo("GtkNativePopupMenu::RemoveMenu", "no such menu");
 #endif // SOGTK_DEBUG
     return;
   }
   if (rec->menuid == 0) {
 #if SOGTK_DEBUG
-    SoDebugError::postInfo("SoGtkPopupMenu::RemoveMenu", "can't remove root");
+    SoDebugError::postInfo("GtkNativePopupMenu::RemoveMenu", "can't remove root");
 #endif // SOGTK_DEBUG
     return;
   }
   if (rec->parent == NULL) {
 #if SOGTK_DEBUG
-    SoDebugError::postInfo("SoGtkPopupMenu::RemoveMenu", "menu not attached");
+    SoDebugError::postInfo("GtkNativePopupMenu::RemoveMenu", "menu not attached");
 #endif // SOGTK_DEBUG
     return;
   }
@@ -543,20 +543,20 @@ SoGtkPopupMenu::removeMenu(
 */
 
 void
-SoGtkPopupMenu::removeMenuItem(
+GtkNativePopupMenu::removeMenuItem(
   int itemid)
 {
   ItemRecord * rec = this->getItemRecord(itemid);
   if (rec == NULL) {
 #if SOGTK_DEBUG
-    SoDebugError::postInfo("SoGtkPopupMenu::RemoveMenu", "no such item");
+    SoDebugError::postInfo("GtkNativePopupMenu::RemoveMenu", "no such item");
 #endif // SOGTK_DEBUG
     return;
   }
 /*
   if (rec->parent == NULL) {
 #if SOGTK_DEBUG
-    SoDebugError::postInfo("SoGtkPopupMenu::RemoveMenu", "item not attached");
+    SoDebugError::postInfo("GtkNativePopupMenu::RemoveMenu", "item not attached");
 #endif // SOGTK_DEBUG
     return;
   }
@@ -571,7 +571,7 @@ SoGtkPopupMenu::removeMenuItem(
 */
 
 void
-SoGtkPopupMenu::popUp(
+GtkNativePopupMenu::popUp(
   GtkWidget * inside,
   int x,
   int y)
@@ -579,7 +579,7 @@ SoGtkPopupMenu::popUp(
   MenuRecord * root = this->getMenuRecord(0);
   if (! root) {
 #if SOGTK_DEBUG
-    SoDebugError::postInfo("SoGtkPopupMenu::PopUp", "no root menu");
+    SoDebugError::postInfo("GtkNativePopupMenu::PopUp", "no root menu");
 #endif // SOGTK_DEBUG
     return;
   }
@@ -601,7 +601,7 @@ SoGtkPopupMenu::popUp(
 */
 
 void
-SoGtkPopupMenu::createSeparator(// private
+GtkNativePopupMenu::createSeparator(// private
   ItemRecord * item)
 {
   item->item = GTK_WIDGET(gtk_menu_item_new());
@@ -614,14 +614,14 @@ SoGtkPopupMenu::createSeparator(// private
 */
 
 void
-SoGtkPopupMenu::createMenuItem(// private
+GtkNativePopupMenu::createMenuItem(// private
   ItemRecord * item)
 {
   item->item = GTK_WIDGET(gtk_check_menu_item_new_with_label(item->title));
   if (item->flags & ITEM_MARKED)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->item), TRUE);
   gtk_signal_connect(GTK_OBJECT(item->item), "activate",
-    GTK_SIGNAL_FUNC(SoGtkPopupMenu::selectionCB), (gpointer) item);
+    GTK_SIGNAL_FUNC(GtkNativePopupMenu::selectionCB), (gpointer) item);
 } // createMenuItem()
 
 // *************************************************************************
@@ -630,7 +630,7 @@ SoGtkPopupMenu::createMenuItem(// private
 */
 
 void
-SoGtkPopupMenu::traverseBuild(
+GtkNativePopupMenu::traverseBuild(
   GtkWidget * parent,
   MenuRecord * menu,
   int indent)
@@ -690,7 +690,7 @@ SoGtkPopupMenu::traverseBuild(
 */
 
 GtkWidget *
-SoGtkPopupMenu::build(
+GtkNativePopupMenu::build(
   GtkWidget *)
 {
   MenuRecord * root = this->getMenuRecord(0);
@@ -708,7 +708,7 @@ SoGtkPopupMenu::build(
 */
 
 MenuRecord *
-SoGtkPopupMenu::getMenuRecord(
+GtkNativePopupMenu::getMenuRecord(
   int menuid)
 {
   const int nummenus = this->menus->getLength();
@@ -724,7 +724,7 @@ SoGtkPopupMenu::getMenuRecord(
 */
 
 ItemRecord *
-SoGtkPopupMenu::getItemRecord(
+GtkNativePopupMenu::getItemRecord(
   int itemid)
 {
   const int numitems = this->items->getLength();
@@ -740,7 +740,7 @@ SoGtkPopupMenu::getItemRecord(
 */
 
 MenuRecord *
-SoGtkPopupMenu::createMenuRecord(
+GtkNativePopupMenu::createMenuRecord(
   const char * name)
 {
   MenuRecord * rec = new MenuRecord;
@@ -758,7 +758,7 @@ SoGtkPopupMenu::createMenuRecord(
 */
 
 ItemRecord *
-SoGtkPopupMenu::createItemRecord(
+GtkNativePopupMenu::createItemRecord(
   const char * name)
 {
   ItemRecord * rec = new ItemRecord;
@@ -776,14 +776,14 @@ SoGtkPopupMenu::createItemRecord(
 // *************************************************************************
 
 void
-SoGtkPopupMenu::selection(
+GtkNativePopupMenu::selection(
   int itemid)
 {
   this->invokeMenuSelection(itemid);
 } // selection()
 
 void
-SoGtkPopupMenu::selectionCB(// static
+GtkNativePopupMenu::selectionCB(// static
   GtkWidget *,
   gpointer closure)
 {
@@ -794,6 +794,6 @@ SoGtkPopupMenu::selectionCB(// static
 // *************************************************************************
 
 #if SOGTK_DEBUG
-static const char * getSoGtkPopupMenuRCSId(void) { return rcsid; }
+static const char * getGtkNativePopupMenuRCSId(void) { return rcsid; }
 #endif // SOGTK_DEBUG
 
