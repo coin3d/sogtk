@@ -51,6 +51,9 @@ public:
   void setDrawToFrontBufferEnable( const SbBool enable ); // FIXME: set virtual
   SbBool isDrawToFrontBufferEnable(void) const; // FIXME: change name
 
+  void setQuadBufferStereo(const SbBool enable);
+  SbBool isQuadBufferStereo(void) const;
+
 protected:
   SoGtkGLWidget( GtkWidget * const parent = NULL,
                  const char * const name = NULL,
