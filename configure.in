@@ -157,16 +157,16 @@ AC_SUBST(SOGTK_EXTRA_CPPFLAGS)
 AC_SUBST(SOGTK_EXTRA_LDFLAGS)
 AC_SUBST(SOGTK_EXTRA_LIBS)
 
-soxt_build_dir=`pwd`
+sogtk_build_dir=`pwd`
 cd $srcdir
-soxt_src_dir=`pwd`
-cd $soxt_build_dir
-soxt_data_dir=/usr/local/share/Coin
-test x"$exec_prefix" != xNONE && soxt_data_dir=$exec_prefix/share/Coin
+sogtk_src_dir=`pwd`
+cd $sogtk_build_dir
+sogtk_data_dir=/usr/local/share/Coin
+test x"$exec_prefix" != xNONE && sogtk_data_dir=$exec_prefix/share/Coin
 
-AC_SUBST(soxt_src_dir)
-AC_SUBST(soxt_build_dir)
-AC_SUBST(soxt_data_dir)
+AC_SUBST(sogtk_src_dir)
+AC_SUBST(sogtk_build_dir)
+AC_SUBST(sogtk_data_dir)
 
 SIM_EXPAND_DIR_VARS
 
@@ -316,6 +316,8 @@ SIM_COMPILER_WARNINGS
 
 # * --with-test-code is a silent option
 AM_CONDITIONAL(BUILD_TESTS, test "x${with_test_code+set}" = "xset")
+
+SIM_AC_SOGUI_STATIC_DEFAULTS
 
 # **************************************************************************
 # Variable substitutions for using libSoGtk in the generic code.

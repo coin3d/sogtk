@@ -1,7 +1,7 @@
 
 SUBDIRS = devices widgets viewers
 
-INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
+INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src -I$(top_builddir)/data
 
 BUILT_SOURCES = \
 	SoGtkBasic.h \

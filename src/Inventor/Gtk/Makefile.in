@@ -108,14 +108,14 @@ WIDGET = @WIDGET@
 gui = @gui@
 install_sh = @install_sh@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
-soxt_build_dir = @soxt_build_dir@
-soxt_data_dir = @soxt_data_dir@
-soxt_src_dir = @soxt_src_dir@
+sogtk_build_dir = @sogtk_build_dir@
+sogtk_data_dir = @sogtk_data_dir@
+sogtk_src_dir = @sogtk_src_dir@
 
 
 SUBDIRS = devices widgets viewers
 
-INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src
+INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src -I$(top_builddir)/data
 
 BUILT_SOURCES = \
 	SoGtkBasic.h \
