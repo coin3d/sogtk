@@ -853,8 +853,9 @@ SoGtkComponent::afterRealizeHook(void)
   gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->widget), "event",
                      GTK_SIGNAL_FUNC(SoGtkComponent::eventHandler),
                      (gpointer) this);
-  if(GTK_IS_WINDOW(PRIVATE(this)->parent))
+  if (GTK_IS_WINDOW(PRIVATE(this)->parent)) {
     gtk_window_set_title(GTK_WINDOW(PRIVATE(this)->parent), this->getTitle());
+  }
 }
 
 // *************************************************************************
