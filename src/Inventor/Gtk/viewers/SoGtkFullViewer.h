@@ -24,7 +24,7 @@
 
 #include <Inventor/Gtk/viewers/SoGtkViewer.h>
 
-class SoAnyPopupMenu;
+class SoGtkPopupMenu;
 
 // *************************************************************************
 
@@ -113,7 +113,7 @@ protected:
   virtual SbBool processSoEvent(const SoEvent * const event);
   virtual void openViewerHelpCard(void);
 
-  SoAnyPopupMenu * prefmenu;
+  SoGtkPopupMenu * prefmenu;
 
 protected:
   GtkWidget * leftDecoration;

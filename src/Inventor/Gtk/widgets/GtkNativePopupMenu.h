@@ -23,14 +23,14 @@
 #define SOGTK_GTKNATIVEPOPUPMENU_H
 
 #include <Inventor/Gtk/SoGtkBasic.h>
-#include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
+#include <Inventor/Gtk/widgets/SoGtkPopupMenu.h>
 
 struct MenuRecord;
 struct ItemRecord;
 
 // *************************************************************************
 
-class SOGTK_DLL_API GtkNativePopupMenu : public SoAnyPopupMenu {
+class SOGTK_DLL_API GtkNativePopupMenu : public SoGtkPopupMenu {
 public:
   GtkNativePopupMenu(void);
   ~GtkNativePopupMenu(void);

@@ -45,7 +45,7 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtk.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
-#include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
+#include <Inventor/Gtk/widgets/SoGtkPopupMenu.h>
 
 #include <Inventor/Gtk/viewers/SoAnyFullViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
@@ -196,7 +196,7 @@ static const char rcsid[] =
 */
 
 /*!
-  \var SoAnyPopupMenu * SoGtkFullViewer::prefmenu
+  \var SoGtkPopupMenu * SoGtkFullViewer::prefmenu
 
   This variable contains the popup menu object or NULL if it has not been
   created yet.
@@ -438,7 +438,7 @@ SoGtkFullViewer::SoGtkFullViewer(
 
   this->setClassName("SoGtkFullViewer");
 
-  this->prefmenu = (SoAnyPopupMenu *) NULL;
+  this->prefmenu = (SoGtkPopupMenu *) NULL;
 
   PRIVATE(this)->menuEnabled = buildFlag & SoGtkFullViewer::BUILD_POPUP;
   PRIVATE(this)->decorations = buildFlag & SoGtkFullViewer::BUILD_DECORATION;

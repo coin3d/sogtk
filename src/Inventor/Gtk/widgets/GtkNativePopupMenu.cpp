@@ -38,7 +38,6 @@ static const char rcsid[] =
 
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/SoGtkBasic.h>
-#include <Inventor/Gtk/widgets/SoAnyPopupMenu.h>
 #include <Inventor/Gtk/widgets/GtkNativePopupMenu.h>
 
 // *************************************************************************
