@@ -17,8 +17,10 @@
  *
 \**************************************************************************/
 
+#if SOGTK_DEBUG
 static const char rcsid[] =
   "$Id$";
+#endif // SOGTK_DEBUG
 
 #include <assert.h>
 
@@ -469,21 +471,24 @@ SoGtkExaminerViewer::processEvent( // virtual
   Overload this method to make sure any animations are stopped before
   we go into seek mode.
 */
+
 void
-SoGtkExaminerViewer::setSeekMode(SbBool on)
+SoGtkExaminerViewer::setSeekMode( // virtual
+  SbBool enable )
 {
+  SoDebugError::postInfo( "SoGtkExaminerViewer::setSeekMode", "[invoked]" );
 #if SOGTK_DEBUG
-  if (on == this->isSeekMode()) {
-    SoDebugError::postWarning("SoGtkExaminerViewer::setSeekMode",
-                              "seek mode already %sset", on ? "" : "un");
+  if ( enable == this->isSeekMode() ) {
+    SoDebugError::postWarning( "SoGtkExaminerViewer::setSeekMode",
+                               "seek mode already %sset", enable ? "" : "un");
     return;
   }
 #endif // SOGTK_DEBUG
-
-  if (common->isAnimating()) common->stopAnimating();
-  inherited::setSeekMode(on);
-  this->setMode(on ? WAITING_FOR_SEEK : EXAMINE);
-}
+  if ( common->isAnimating() )
+    common->stopAnimating();
+  inherited::setSeekMode( enable );
+//  this->setMode(on ? WAITING_FOR_SEEK : EXAMINE);
+} // setSeekMode()
 
 // *************************************************************************
 
@@ -841,3 +846,8 @@ SoGtkExaminerViewer::cameratoggleClicked()
 }
 
 // *************************************************************************
+
+#if SOGTK_DEBUG
+static const char * getSoGtkExaminerViewerRCSId(void) { return rcsid; }
+#endif // SOGTK_DEBUG
+

@@ -78,7 +78,7 @@ protected:
 
   virtual SbBool processSoEvent(const SoEvent * const event);
   virtual void processEvent(GdkEvent * anyevent);
-  virtual void setSeekMode(SbBool on);
+  virtual void setSeekMode( SbBool enable );
   virtual void actualRedraw(void);
 
 private:
