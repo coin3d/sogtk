@@ -36,6 +36,7 @@ static const char rcsid[] =
 #include <Inventor/projectors/SbSphereSheetProjector.h>
 
 #include <sogtkdefs.h>
+#include <Inventor/Gtk/viewers/SoGtkFullViewerP.h>
 #include <Inventor/Gtk/SoGtkCursors.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 
@@ -133,15 +134,22 @@ void
 SoGtkExaminerViewer::constructor( // private
   const SbBool build )
 {
-//  this->defaultcursor = NULL;
-//  this->rotatecursor = NULL;
-//  this->pancursor = NULL;
-//  this->zoomcursor = NULL;
+  // Cursors.
+  this->rotatecursor = (GdkCursor*) 0;
+  this->pancursor = (GdkCursor*) 0;
+  this->zoomcursor = (GdkCursor*) 0;
+  this->crosscursor = (GdkCursor*) 0 ;
+  this->arrowcursor = (GdkCursor*) 0 ;
 
+  GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
 
-//  this->pixmaps.orthogonal = new QPixmap((const char **)ortho_xpm);
-//  this->pixmaps.perspective = new QPixmap((const char **)perspective_xpm);
-//  assert(this->poxmaps.orthogonal->size() == this->pixmaps.perspective->size());
+  this->orthopixmap =
+      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
+        &this->orthomask, (GdkColor *) 0, ortho_xpm );
+
+  this->perspectivepixmap =
+      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
+        &this->perspectivemask, (GdkColor *) 0, perspective_xpm );
 
   this->setClassName("SoGtkExaminerViewer");
 
@@ -167,17 +175,28 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer(
   void )
 {
   // Cursors.
-//  delete this->zoomcursor;
-//  delete this->pancursor;
-//  delete this->rotatecursor;
-//  delete this->defaultcursor;
+  if ( this->zoomcursor ) 
+    gdk_cursor_destroy( this->zoomcursor );
+  if ( this->pancursor )
+    gdk_cursor_destroy( this->pancursor );
+  if ( this->rotatecursor ) 
+    gdk_cursor_destroy( this->rotatecursor );
+  if ( this->arrowcursor ) 
+    gdk_cursor_destroy( this->arrowcursor );
+  if ( this->crosscursor ) 
+    gdk_cursor_destroy( this->crosscursor );
 
   // Button pixmaps.
-//  delete this->pixmaps.orthogonal;
-//  delete this->pixmaps.perspective;
+  gdk_pixmap_unref( this->orthopixmap );
+  gdk_bitmap_unref( this->orthomask );
+
+  gdk_pixmap_unref( this->perspectivepixmap );
+  gdk_bitmap_unref( this->perspectivemask );
 
   // Variables used in the spin animation code.
 //  delete this->spinDetectTimer;
+
+  delete this->common ;
 } // ~SoGtkExaminerViewer()
 
 // *************************************************************************
@@ -310,10 +329,12 @@ SoGtkExaminerViewer::setCamera( // virtual
       camtype.isDerivedFrom( SoOrthographicCamera::getClassTypeId() );
 
     this->setRightWheelString( orthotype ? _( "Zoom" ) : _( "Dolly" ));
-//    if (this->cameratogglebutton) {
-//      this->cameratogglebutton->setPixmap( orthotype ?
-//        *(this->pixmaps.orthogonal) : *(this->pixmaps.perspective) );
-//    }
+    if (this->cameratogglebutton) {
+      GtkWidget *label = GTK_BIN(this->cameratogglebutton)->child;
+      gtk_pixmap_set( GTK_PIXMAP(label),
+        (orthotype ? this->orthopixmap : this->perspectivepixmap),
+        (orthotype ? this->orthomask : this->perspectivemask) );
+    }
   }
   inherited::setCamera( newCamera );
 } // setCamera()
@@ -493,6 +514,63 @@ SoGtkExaminerViewer::createViewerButtons(
   SbPList * buttonlist )
 {
   inherited::createViewerButtons(parent, buttonlist);
+  
+  GtkTooltips * tooltips = gtk_tooltips_new();
+  GdkColormap * colormap = gtk_widget_get_colormap( parent );
+
+  const size_t buttons = sizeof(SoGtkExaminerViewerButtons) / sizeof(SoGtkViewerButton) ;
+  for ( size_t button = 0; button < buttons; button++ ) {
+    GtkWidget	*widget = (GtkWidget*) 0 ;
+
+    switch(button)
+    {
+    case CAMERA_BUTTON :
+      this->cameratogglebutton = widget = gtk_button_new();
+      break ;
+    default:
+      break ;
+    }
+
+    gtk_tooltips_set_tip( tooltips, widget, 
+      _( SoGtkExaminerViewerButtons[button].keyword ), NULL );
+
+    GdkPixmap * gdk_pixmap = (GdkPixmap *) 0;
+    GdkBitmap * gdk_mask   = (GdkBitmap *) 0;
+
+    switch(button)
+    {
+    case CAMERA_BUTTON :
+      {
+        SoType t = this->getCameraType();
+        if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId()))
+        {
+          gdk_pixmap = this->orthopixmap;
+          gdk_mask   = this->orthomask;
+        }
+        else if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId()))
+        {
+          gdk_pixmap = this->perspectivepixmap;
+          gdk_mask   = this->perspectivemask;
+        }
+        else assert(0 && "unsupported cameratype");
+      }
+      break ;
+    default:
+      break ;
+    }
+
+    GtkWidget * label = gtk_pixmap_new( gdk_pixmap, gdk_mask );
+    gtk_widget_show( label );
+
+    gtk_container_add( GTK_CONTAINER(widget), GTK_WIDGET(label) );
+    if ( SoGtkExaminerViewerButtons[button].pressed != NULL ) {
+      gtk_signal_connect( GTK_OBJECT(widget), "pressed",
+        GTK_SIGNAL_FUNC(SoGtkExaminerViewerButtons[button].pressed),
+        (gpointer) this );
+    }
+
+    buttonlist->append( widget );
+  }
 }
 
 // *************************************************************************
@@ -628,64 +706,106 @@ SoGtkExaminerViewer::setCursorRepresentation(
   GtkWidget * w = this->getGLWidget();
   assert(w);
 
-/*
-  if (!this->defaultcursor) {
-    this->defaultcursor = new QCursor(w->cursor());
+  if (!this->arrowcursor) {
+    if ( GTK_WIDGET_NO_WINDOW(w) )
+    {
+#if SOGTK_DEBUG
+  // FIXME: This should not happen, but there seems to be a bug in 
+  // SoGtk's event handling causing this. 20001219 RC.
+       SoDebugError::postWarning( 
+         "SoGtkExaminerViewer::setCursorRepresentation",
+          "widget %x: NO WINDOW\n", (int) w );
+#endif
+      return ;
+    }
 
-    QBitmap zoomBtm(so_qt_zoom_width, so_qt_zoom_height,
-                    (uchar*)so_qt_zoom_bitmap, FALSE);
-    QBitmap zoomMask(so_qt_zoom_width, so_qt_zoom_height,
-                     (uchar*)so_qt_zoom_mask_bitmap, FALSE);
-    QBitmap panBtm(so_qt_pan_width, so_qt_pan_height,
-                   (uchar*)so_qt_pan_bitmap, FALSE);
-    QBitmap panMask(so_qt_pan_width, so_qt_pan_height,
-                    (uchar*)so_qt_pan_mask_bitmap, FALSE);
-    QBitmap rotateBtm(so_qt_rotate_width, so_qt_rotate_height,
-                      (uchar*)so_qt_rotate_bitmap, FALSE);
-    QBitmap rotateMask(so_qt_rotate_width, so_qt_rotate_height,
-                       (uchar*)so_qt_rotate_mask_bitmap, FALSE);
+    GdkWindow *window = w->window ;
+    if ( window == (GdkWindow*) 0 ) 
+    {
+#if SOGTK_DEBUG
+  // FIXME: This should not happen, but there seems to be a bug in 
+  // SoGtk's event handling causing this. 20001219 RC.
+       SoDebugError::postWarning( 
+         "SoGtkExaminerViewer::setCursorRepresentation",
+          "widget %x: widget->window == 0\n", (int) w );
+#endif
+      return ;
+    }
 
-    this->zoomcursor = new QCursor(zoomBtm, zoomMask,
-                                   so_qt_zoom_x_hot, so_qt_zoom_y_hot);
-    this->pancursor = new QCursor(panBtm, panMask,
-                                  so_qt_pan_x_hot, so_qt_pan_y_hot);
-    this->rotatecursor = new QCursor(rotateBtm, rotateMask,
-                                     so_qt_rotate_x_hot, so_qt_rotate_y_hot);
+    GtkStyle *style = w->style ;
+    GdkColor fg = style->black ;
+    GdkColor bg = style->white ;
+
+    this->arrowcursor = gdk_cursor_new( GDK_TOP_LEFT_ARROW );
+    this->crosscursor = gdk_cursor_new( GDK_CROSSHAIR );
+
+    GdkPixmap *zoomBtm = 
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_zoom_bitmap,
+        so_gtk_zoom_width, so_gtk_zoom_height);
+    GdkPixmap *zoomMask =
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_zoom_mask_bitmap,
+        so_gtk_zoom_width, so_gtk_zoom_height);
+    this->zoomcursor = gdk_cursor_new_from_pixmap (
+      zoomBtm, zoomMask, 
+      &fg, &bg,
+      so_gtk_zoom_x_hot, so_gtk_zoom_y_hot);
+    gdk_pixmap_unref (zoomBtm);
+    gdk_pixmap_unref (zoomMask);
+
+    GdkPixmap *panBtm = 
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_pan_bitmap,
+        so_gtk_pan_width, so_gtk_pan_height);
+    GdkPixmap *panMask =
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_pan_mask_bitmap,
+        so_gtk_pan_width, so_gtk_pan_height);
+    this->pancursor = gdk_cursor_new_from_pixmap (
+      panBtm, panMask, 
+      &fg, &bg, 
+      so_gtk_pan_x_hot, so_gtk_pan_y_hot);
+    gdk_pixmap_unref (panBtm);
+    gdk_pixmap_unref (panMask);
+
+    GdkPixmap *rotateBtm = 
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_rotate_bitmap,
+        so_gtk_rotate_width, so_gtk_rotate_height);
+    GdkPixmap *rotateMask =
+      gdk_bitmap_create_from_data(NULL, (const gchar *) so_gtk_rotate_mask_bitmap,
+        so_gtk_rotate_width, so_gtk_rotate_height);
+    this->rotatecursor = gdk_cursor_new_from_pixmap (
+      rotateBtm, rotateMask, 
+      &fg, &bg, 
+      so_gtk_rotate_x_hot, so_gtk_rotate_y_hot);
+    gdk_pixmap_unref (rotateBtm);
+    gdk_pixmap_unref (rotateMask);
   }
 
-
-
   if (!this->isCursorEnabled()) {
-    w->setCursor(blankCursor);
+    gdk_window_set_cursor( w->window, (GdkCursor*) 0 );
     return;
   }
 
   switch (mode) {
   case SoAnyExaminerViewer::INTERACT:
-    w->setCursor(arrowCursor);
+    gdk_window_set_cursor( w->window, this->arrowcursor );
     break;
-
   case SoAnyExaminerViewer::EXAMINE:
   case SoAnyExaminerViewer::DRAGGING:
-    w->setCursor(* this->rotatecursor);
+    gdk_window_set_cursor( w->window, this->rotatecursor);
     break;
-
   case SoAnyExaminerViewer::ZOOMING:
-    w->setCursor(* this->zoomcursor);
+    gdk_window_set_cursor( w->window, this->zoomcursor );
     break;
-
   case SoAnyExaminerViewer::WAITING_FOR_SEEK:
-    w->setCursor(crossCursor);
+    gdk_window_set_cursor( w->window, this->crosscursor );
     break;
-
   case SoAnyExaminerViewer::WAITING_FOR_PAN:
   case SoAnyExaminerViewer::PANNING:
-    w->setCursor(* this->pancursor);
+    gdk_window_set_cursor( w->window, this->pancursor);
     break;
-
-  default: assert(0); break;
+  default: 
+    assert(0); 
+    break;
   }
-*/
 }
 
 // *************************************************************************
@@ -833,7 +953,8 @@ SoGtkExaminerViewer::feedbackSizeChanged(
 // *************************************************************************
 
 /*!
-  FIXME: write doc
+  \internal
+  Gtk Signal Handler.
 */
 
 void

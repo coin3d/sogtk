@@ -108,7 +108,7 @@ private:
 
   void setCursorRepresentation( int mode );
   GdkCursor * pancursor, * rotatecursor;
-  GdkCursor * defaultcursor, * zoomcursor;
+  GdkCursor * zoomcursor;
   GdkCursor * arrowcursor, * crosscursor ;
 
   GtkWidget * cameratogglebutton;
