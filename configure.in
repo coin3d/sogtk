@@ -160,7 +160,7 @@ if test x"$with_inventor" = xyes; then
     ])
   fi
 
-  SIM_CHECK_OPENGL([
+  SIM_AC_CHECK_OPENGL([
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gl_cppflags"
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gl_ldflags"
     SOGTK_EXTRA_LIBS="$sim_ac_gl_libs $SOGTK_EXTRA_LIBS"
