@@ -84,7 +84,7 @@ SoGtkComponent::SoGtkComponent(
   // FIXME: deallocate on exit. 20000311 mortene.
   if (!SoGtkComponent::soGtkCompList) SoGtkComponent::soGtkCompList = new SbPList;
 
-  SoGtkComponent::sogtkcomplist->append(this);
+  SoGtkComponent::soGtkCompList->append(this);
 
   this->parent = parent;
   this->widget = NULL;
@@ -109,7 +109,7 @@ SoGtkComponent::SoGtkComponent(
 SoGtkComponent::~SoGtkComponent( // virtual
   void )
 {
-  int idx = SoQtComponent::soGtkCompList->find(this);
+  int idx = SoGtkComponent::soGtkCompList->find(this);
   assert(idx != -1);
   SoGtkComponent::soGtkCompList->remove(idx);
 
