@@ -117,26 +117,26 @@ done
 automakedir=`echo $automakedir | sed 's:/*$::g;s:/[^/]*$::'`/share/automake
 
 # set up automake template symlinks
-echo "Setting up automake customizations..."
-cd cfg/am
-for file in $automakedir/*; do
-  base=`basename $file`
-  test -f $base || ln -s $file .
-done
-cd ../..
+#echo "Setting up automake customizations..."
+#cd cfg/am
+#for file in $automakedir/*; do
+#  base=`basename $file`
+#  test -f $base || ln -s $file .
+#done
+#cd ../..
 
 # generate Makefile.in templates
 echo "Running automake..."
 echo "[ignore any \"directory should not contain '/'\" warning]"
-automake --amdir=cfg/am
+automake # --amdir=cfg/am
 
 # remove symlinks
-echo "Clearing away automake customizations..."
-cd cfg/am
-for file in *; do
-  test -L $file && rm $file
-done
-cd ../..
+#echo "Clearing away automake customizations..."
+#cd cfg/am
+#for file in *; do
+#  test -L $file && rm $file
+#done
+#cd ../..
 
 # generate configure
 echo "Running autoconf..."

@@ -69,7 +69,6 @@ AMTAR = @AMTAR@
 AS = @AS@
 AWK = @AWK@
 CC = @CC@
-CHA = @CHA@
 COMPONENTHEADER = @COMPONENTHEADER@
 CPP = @CPP@
 CXX = @CXX@
@@ -90,7 +89,6 @@ LT_RELEASE = @LT_RELEASE@
 LT_REVISION = @LT_REVISION@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-NOCHA = @NOCHA@
 OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
@@ -231,20 +229,14 @@ libSoGtkDevices.la: $(libSoGtkDevices_la_OBJECTS) $(libSoGtkDevices_la_DEPENDENC
 install-libSoGtkdevicesincHEADERS: $(libSoGtkdevicesinc_HEADERS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(libSoGtkdevicesincdir)
-@CHA@	@list='$(libSoGtkdevicesinc_HEADERS)'; for p in $$list; do \
-@CHA@	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
-@CHA@	  f="`echo $$p | sed -e 's|^.*/||'`"; \
-@CHA@	  if cmp -s $$d$$p $(DESTDIR)$(libSoGtkdevicesincdir)/$$f; then :; else \
-@CHA@	    echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkdevicesincdir)/$$f"; \
-@CHA@	    $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkdevicesincdir)/$$f; \
-@CHA@	  fi; \
-@CHA@	done
-@NOCHA@	@list='$(libSoGtkdevicesinc_HEADERS)'; for p in $$list; do \
-@NOCHA@	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
-@NOCHA@	  f="`echo $$p | sed -e 's|^.*/||'`"; \
-@NOCHA@	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkdevicesincdir)/$$f"; \
-@NOCHA@	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkdevicesincdir)/$$f; \
-@NOCHA@	done
+	@list='$(libSoGtkdevicesinc_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  if cmp -s $$d$$p $(DESTDIR)$(libSoGtkdevicesincdir)/$$f; then :; else \
+	    echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkdevicesincdir)/$$f"; \
+	    $(INSTALL_DATA) $$d$$p $(DESTDIR)$(libSoGtkdevicesincdir)/$$f; \
+	  fi; \
+	done
 
 uninstall-libSoGtkdevicesincHEADERS:
 	@$(NORMAL_UNINSTALL)
