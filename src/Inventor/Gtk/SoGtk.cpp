@@ -40,6 +40,7 @@ static const char rcsid[] =
 #include <Inventor/Gtk/SoGtkObject.h>
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 #include <Inventor/Gtk/SoGtkComponent.h>
+#include <Inventor/Gtk/SoAny.h>
 #include <string.h>
 
 // *************************************************************************
@@ -686,3 +687,14 @@ SoGtk::getComponents(
 } // getComponents()
 
 // *************************************************************************
+
+// Documented in SoWin.cpp, along with doc for the callback function
+// typedef and the enums.
+//
+// FIXME: find a way to collect the documentation of the public API
+// for all common So[Win|Qt|Gtk|Xt|Mac] classes. 20011014 mortene.
+SoGtk::FatalErrorCB *
+SoGtk::setFatalErrorHandler(SoGtk::FatalErrorCB * cb, void * userdata)
+{
+  return SoAny::si()->setFatalErrorHandler(cb, userdata);
+}
