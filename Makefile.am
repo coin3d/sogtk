@@ -4,8 +4,6 @@
 
 include src/Inventor/Gtk/common/Makefile.common
 
-ACLOCAL_AMFLAGS = -I cfg/m4
-
 ############################################################################
 # Automake conditional stuff
 
@@ -64,7 +62,7 @@ EXTRA_DIST = \
 	build/Makefile.in \
 	build/README \
 	build/sogtk.spec.in \
-	cfg/m4/sogtk.m4 \
+	cfg/sogtk.m4 \
 	po/ChangeLog \
 	po/Makefile.in.in \
 	po/POTFILES.in \
@@ -78,7 +76,7 @@ bin_SCRIPTS = so@gui@-config
 m4datadir = $(datadir)/aclocal
 # Don't replace "gtk" with "@gui@" here, as it will pøkk up
 # for ``make dist''.
-dist_m4data_DATA = cfg/m4/sogtk.m4
+dist_m4data_DATA = cfg/sogtk.m4
 
 cfgdatadir = $(datadir)/Coin/conf
 cfgdata_DATA = so@gui@-@CONFIG@.cfg

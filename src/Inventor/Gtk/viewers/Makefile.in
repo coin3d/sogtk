@@ -149,6 +149,7 @@ htmldir = @htmldir@
 install_sh = @install_sh@
 l = @l@
 meta_prefix = @meta_prefix@
+path_tag = @path_tag@
 sim_ac_coin_configcmd = @sim_ac_coin_configcmd@
 sim_ac_doxygen_exe = @sim_ac_doxygen_exe@
 sim_ac_perl_exe = @sim_ac_perl_exe@
@@ -190,6 +191,8 @@ SoGui_src_Inventor_Gui_BuiltFiles = \
   $(top_builddir)/src/Inventor/@Gui@/So@Gui@GLWidgetCommon.cpp \
   $(top_builddir)/src/Inventor/@Gui@/So@Gui@RenderArea.h \
   $(top_builddir)/src/Inventor/@Gui@/So@Gui@RenderArea.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/So@Gui@ColorEditor.h \
+  $(top_builddir)/src/Inventor/@Gui@/So@Gui@MaterialEditor.h \
   $(SoGui_src_Inventor_Gui_common_BuiltFiles)
 
 
@@ -215,6 +218,57 @@ SoGui_src_Inventor_Gui_devices_BuiltFiles = \
   $(top_builddir)/src/Inventor/@Gui@/devices/So@Gui@SpaceballCommon.cpp \
   $(top_builddir)/src/Inventor/@Gui@/devices/So@Gui@Spaceball.h \
   $(top_builddir)/src/Inventor/@Gui@/devices/SoGuiSpaceballP.h
+
+
+SoGui_src_Inventor_Gui_editors_BuiltFiles = \
+  $(top_builddir)/src/Inventor/@Gui@/editors/So@Gui@ColorEditor.h \
+  $(top_builddir)/src/Inventor/@Gui@/editors/ColorEditor.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/editors/So@Gui@MaterialEditor.h \
+  $(top_builddir)/src/Inventor/@Gui@/editors/MaterialEditor.cpp
+
+
+SoGui_src_Inventor_Gui_nodes_BuiltFiles = \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiNodes.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Nodes.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiSceneTexture2.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SceneTexture2.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiViewportFix.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/ViewportFix.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiPane.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Pane.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiPosition.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Position.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiTranslation.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Translation.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiFrame.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Frame.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiImage.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Image.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiLabel.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Label.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiToggleButton.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/ToggleButton.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiRadioButton.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/RadioButton.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiClickCounter.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/ClickCounter.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiSlider1.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Slider1.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiSlider2.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/Slider2.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiColorEditor.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/ColorEditor.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiMaterialEditor.h \
+  $(top_builddir)/src/Inventor/@Gui@/nodes/MaterialEditor.cpp
+
+
+SoGui_src_Inventor_Gui_engines_BuiltFiles = \
+  $(top_builddir)/src/Inventor/@Gui@/engines/SoGuiEngines.h \
+  $(top_builddir)/src/Inventor/@Gui@/engines/Engines.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/engines/SoGuiRadioGroup.h \
+  $(top_builddir)/src/Inventor/@Gui@/engines/RadioGroup.cpp \
+  $(top_builddir)/src/Inventor/@Gui@/engines/SoGuiFormat.h \
+  $(top_builddir)/src/Inventor/@Gui@/engines/Format.cpp
 
 
 SoGui_src_Inventor_Gui_viewers_BuiltFiles = \
@@ -253,6 +307,9 @@ SoGuiBuiltFiles = \
   $(SoGui_src_Inventor_BuiltFiles) \
   $(SoGui_src_Inventor_Gui_BuiltFiles) \
   $(SoGui_src_Inventor_Gui_devices_BuiltFiles) \
+  $(SoGui_src_Inventor_Gui_editors_BuiltFiles) \
+  $(SoGui_src_Inventor_Gui_engines_BuiltFiles) \
+  $(SoGui_src_Inventor_Gui_nodes_BuiltFiles) \
   $(SoGui_src_Inventor_Gui_viewers_BuiltFiles) \
   $(SoGui_src_Inventor_Gui_widgets_BuiltFiles) \
   $(SoGui_man_man1_BuiltFiles)
@@ -263,14 +320,14 @@ SoGuiBuiltFiles = \
 @BUILD_METAFILES_TRUE@SoGui_src_Inventor_BuiltMetaFiles = 
 
 @BUILD_METAFILES_TRUE@SoGui_src_Inventor_Gui_BuiltMetaFiles = \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@P.cpp \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@ComponentP.cpp \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@GLWidgetP.cpp
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@P.icc \
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@ComponentP.icc \
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@GLWidgetP.icc
 
 @BUILD_METAFILES_FALSE@SoGui_src_Inventor_Gui_BuiltMetaFiles = 
 
 @BUILD_METAFILES_TRUE@@HAVE_JOYSTICK_LINUX_TRUE@SoGui_src_Inventor_Gui_devices_LinuxJoystickMetaFiles = \
-@BUILD_METAFILES_TRUE@@HAVE_JOYSTICK_LINUX_TRUE@  $(top_builddir)/src/Inventor/@Gui@/devices/@meta_prefix@So@Gui@LinuxJoystickP.cpp
+@BUILD_METAFILES_TRUE@@HAVE_JOYSTICK_LINUX_TRUE@  $(top_builddir)/src/Inventor/@Gui@/devices/@meta_prefix@So@Gui@LinuxJoystickP.icc
 
 @BUILD_METAFILES_TRUE@@HAVE_JOYSTICK_LINUX_FALSE@SoGui_src_Inventor_Gui_devices_LinuxJoystickMetaFiles = 
 
@@ -280,16 +337,16 @@ SoGuiBuiltFiles = \
 @BUILD_METAFILES_FALSE@SoGui_src_Inventor_Gui_devices_BuiltMetaFiles = 
 
 @BUILD_METAFILES_TRUE@SoGui_src_Inventor_Gui_viewers_BuiltMetaFiles = \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.icc \
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.icc \
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.icc
 
 @BUILD_METAFILES_FALSE@SoGui_src_Inventor_Gui_viewers_BuiltMetaFiles = 
 
 @BUILD_METAFILES_TRUE@SoGui_src_Inventor_Gui_widgets_BuiltMetaFiles = \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@@Gui@NativePopupMenu.cpp \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@GLArea.cpp \
-@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@ThumbWheel.cpp
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@@Gui@NativePopupMenu.icc \
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@GLArea.icc \
+@BUILD_METAFILES_TRUE@  $(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@ThumbWheel.icc
 
 @BUILD_METAFILES_FALSE@SoGui_src_Inventor_Gui_widgets_BuiltMetaFiles = 
 
@@ -299,6 +356,9 @@ SoGuiBuiltMetaFiles = \
   $(SoGui_src_Inventor_BuiltMetaFiles) \
   $(SoGui_src_Inventor_Gui_BuiltMetaFiles) \
   $(SoGui_src_Inventor_Gui_devices_BuiltMetaFiles) \
+  $(SoGui_src_Inventor_Gui_editors_BuiltMetaFiles) \
+  $(SoGui_src_Inventor_Gui_engines_BuiltMetaFiles) \
+  $(SoGui_src_Inventor_Gui_nodes_BuiltMetaFiles) \
   $(SoGui_src_Inventor_Gui_viewers_BuiltMetaFiles) \
   $(SoGui_src_Inventor_Gui_widgets_BuiltMetaFiles)
 
@@ -309,13 +369,13 @@ SoGuiAllBuiltFiles = \
 
 
 SoGuiCommonDistFiles = \
-  LICENSE.GPL \
-  HACKING \
+  BUGS.txt \
+  src/Inventor/@Gui@/common/BUGS.txt \
   \
-  cfg/m4/errors.txt \
-  cfg/m4/doxy4win.pl \
-  cfg/m4/wrapmsvc.cpp \
-  cfg/m4/wrapmsvc.exe \
+  cfg/errors.txt \
+  cfg/doxy4win.pl \
+  cfg/gendsp.sh \
+  cfg/wrapmsvc.exe \
   \
   src/Inventor/@Gui@/common/ChangeLog \
   src/Inventor/@Gui@/common/Makefile.common \
@@ -339,6 +399,8 @@ SoGuiCommonDistFiles = \
   src/Inventor/@Gui@/common/SoGuiGLWidgetCommon.cpp.in \
   src/Inventor/@Gui@/common/SoGuiRenderArea.h.in \
   src/Inventor/@Gui@/common/SoGuiRenderArea.cpp.in \
+  src/Inventor/@Gui@/common/SoGuiColorEditor.h \
+  src/Inventor/@Gui@/common/SoGuiMaterialEditor.h \
   src/Inventor/@Gui@/common/SbGuiList.h \
   src/Inventor/@Gui@/common/SoAny.h.in \
   src/Inventor/@Gui@/common/SoAny.cpp.in \
@@ -365,6 +427,48 @@ SoGuiCommonDistFiles = \
   src/Inventor/@Gui@/common/devices/SoGuiSpaceball.cpp.in \
   src/Inventor/@Gui@/common/devices/SoGuiSpaceball.h.in \
   src/Inventor/@Gui@/common/devices/SoGuiSpaceballP.h.in \
+  src/Inventor/@Gui@/common/editors/ColorEditor.h.in \
+  src/Inventor/@Gui@/common/editors/ColorEditor.cpp.in \
+  src/Inventor/@Gui@/common/editors/MaterialEditor.h.in \
+  src/Inventor/@Gui@/common/editors/MaterialEditor.cpp.in \
+  src/Inventor/@Gui@/common/engines/Engines.h.in \
+  src/Inventor/@Gui@/common/engines/Engines.cpp.in \
+  src/Inventor/@Gui@/common/engines/RadioGroup.h.in \
+  src/Inventor/@Gui@/common/engines/RadioGroup.cpp.in \
+  src/Inventor/@Gui@/common/engines/Format.h.in \
+  src/Inventor/@Gui@/common/engines/Format.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Nodes.h.in \
+  src/Inventor/@Gui@/common/nodes/Nodes.cpp.in \
+  src/Inventor/@Gui@/common/nodes/SceneTexture2.h.in \
+  src/Inventor/@Gui@/common/nodes/SceneTexture2.cpp.in \
+  src/Inventor/@Gui@/common/nodes/ViewportFix.h.in \
+  src/Inventor/@Gui@/common/nodes/ViewportFix.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Pane.h.in \
+  src/Inventor/@Gui@/common/nodes/Pane.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Position.h.in \
+  src/Inventor/@Gui@/common/nodes/Position.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Translation.h.in \
+  src/Inventor/@Gui@/common/nodes/Translation.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Frame.h.in \
+  src/Inventor/@Gui@/common/nodes/Frame.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Image.h.in \
+  src/Inventor/@Gui@/common/nodes/Image.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Label.h.in \
+  src/Inventor/@Gui@/common/nodes/Label.cpp.in \
+  src/Inventor/@Gui@/common/nodes/ToggleButton.h.in \
+  src/Inventor/@Gui@/common/nodes/ToggleButton.cpp.in \
+  src/Inventor/@Gui@/common/nodes/RadioButton.h.in \
+  src/Inventor/@Gui@/common/nodes/RadioButton.cpp.in \
+  src/Inventor/@Gui@/common/nodes/ClickCounter.h.in \
+  src/Inventor/@Gui@/common/nodes/ClickCounter.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Slider1.h.in \
+  src/Inventor/@Gui@/common/nodes/Slider1.cpp.in \
+  src/Inventor/@Gui@/common/nodes/Slider2.h.in \
+  src/Inventor/@Gui@/common/nodes/Slider2.cpp.in \
+  src/Inventor/@Gui@/common/nodes/ColorEditor.h.in \
+  src/Inventor/@Gui@/common/nodes/ColorEditor.cpp.in \
+  src/Inventor/@Gui@/common/nodes/MaterialEditor.h.in \
+  src/Inventor/@Gui@/common/nodes/MaterialEditor.cpp.in \
   src/Inventor/@Gui@/common/viewers/SoGuiConstrainedViewer.cpp.in \
   src/Inventor/@Gui@/common/viewers/SoGuiConstrainedViewer.h.in \
   src/Inventor/@Gui@/common/viewers/SoGuiFlyViewer.cpp.in \
@@ -457,10 +561,7 @@ am_libSoGtkViewers_la_OBJECTS = PlaneViewer.lo FullViewer.lo \
 @BUILD_METAFILES_TRUE@	So@Gui@ConstrainedViewer.lo \
 @BUILD_METAFILES_TRUE@	So@Gui@FlyViewer.lo So@Gui@FullViewer.lo \
 @BUILD_METAFILES_TRUE@	So@Gui@ExaminerViewer.lo \
-@BUILD_METAFILES_TRUE@	So@Gui@PlaneViewer.lo \
-@BUILD_METAFILES_TRUE@	@meta_prefix@So@Gui@FullViewerP.lo \
-@BUILD_METAFILES_TRUE@	@meta_prefix@So@Gui@ExaminerViewerP.lo \
-@BUILD_METAFILES_TRUE@	@meta_prefix@So@Gui@PlaneViewerP.lo
+@BUILD_METAFILES_TRUE@	So@Gui@PlaneViewer.lo
 @BUILD_METAFILES_FALSE@nodist_libSoGtkViewers_la_OBJECTS = \
 @BUILD_METAFILES_FALSE@	So@Gui@Viewer.lo \
 @BUILD_METAFILES_FALSE@	So@Gui@ConstrainedViewer.lo \
@@ -475,11 +576,7 @@ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)/src
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 depcomp = $(SHELL) $(top_srcdir)/cfg/depcomp
-@AMDEP_TRUE@DEP_FILES = \
-@AMDEP_TRUE@	$(DEPDIR)/@meta_prefix@So@Gui@ExaminerViewerP.Plo \
-@AMDEP_TRUE@	$(DEPDIR)/@meta_prefix@So@Gui@FullViewerP.Plo \
-@AMDEP_TRUE@	$(DEPDIR)/@meta_prefix@So@Gui@PlaneViewerP.Plo \
-@AMDEP_TRUE@	$(DEPDIR)/ExaminerViewer.Plo \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/ExaminerViewer.Plo \
 @AMDEP_TRUE@	$(DEPDIR)/FullViewer.Plo $(DEPDIR)/PlaneViewer.Plo \
 @AMDEP_TRUE@	$(DEPDIR)/So@Gui@ConstrainedViewer.Plo \
 @AMDEP_TRUE@	$(DEPDIR)/So@Gui@ExaminerViewer.Plo \
@@ -546,12 +643,6 @@ So@Gui@ExaminerViewer.lo: \
 	$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.cpp
 So@Gui@PlaneViewer.lo: \
 	$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp
-@meta_prefix@So@Gui@FullViewerP.lo: \
-	$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp
-@meta_prefix@So@Gui@ExaminerViewerP.lo: \
-	$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp
-@meta_prefix@So@Gui@PlaneViewerP.lo: \
-	$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp
 libSoGtkViewers.la: $(libSoGtkViewers_la_OBJECTS) $(libSoGtkViewers_la_DEPENDENCIES) 
 	$(CXXLINK)  $(libSoGtkViewers_la_LDFLAGS) $(libSoGtkViewers_la_OBJECTS) $(libSoGtkViewers_la_LIBADD) $(LIBS)
 
@@ -561,9 +652,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/@meta_prefix@So@Gui@ExaminerViewerP.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/@meta_prefix@So@Gui@FullViewerP.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/@meta_prefix@So@Gui@PlaneViewerP.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ExaminerViewer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/FullViewer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/PlaneViewer.Plo@am__quote@
@@ -587,7 +675,7 @@ distclean-depend:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+	$(CXXCOMPILE) -c -o $@ `( test -f $< || echo -n '$(srcdir)/'; echo -n $< ) | xargs cygpath -w`
 
 .cpp.lo:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
@@ -605,7 +693,7 @@ So@Gui@Viewer.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Viewer.cpp
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Viewer.cpp' object='So@Gui@Viewer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/So@Gui@Viewer.Po' tmpdepfile='$(DEPDIR)/So@Gui@Viewer.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@Viewer.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Viewer.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@Viewer.obj `( test -f $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Viewer.cpp || echo -n '$(srcdir)/'; echo -n $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Viewer.cpp ) | xargs cygpath -w`
 
 So@Gui@Viewer.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Viewer.cpp
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Viewer.cpp' object='So@Gui@Viewer.lo' libtool=yes @AMDEPBACKSLASH@
@@ -623,7 +711,7 @@ So@Gui@ConstrainedViewer.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ConstrainedViewer.cpp' object='So@Gui@ConstrainedViewer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/So@Gui@ConstrainedViewer.Po' tmpdepfile='$(DEPDIR)/So@Gui@ConstrainedViewer.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@ConstrainedViewer.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ConstrainedViewer.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@ConstrainedViewer.obj `( test -f $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ConstrainedViewer.cpp || echo -n '$(srcdir)/'; echo -n $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ConstrainedViewer.cpp ) | xargs cygpath -w`
 
 So@Gui@ConstrainedViewer.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ConstrainedViewer.cpp
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ConstrainedViewer.cpp' object='So@Gui@ConstrainedViewer.lo' libtool=yes @AMDEPBACKSLASH@
@@ -641,7 +729,7 @@ So@Gui@FlyViewer.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewe
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.cpp' object='So@Gui@FlyViewer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/So@Gui@FlyViewer.Po' tmpdepfile='$(DEPDIR)/So@Gui@FlyViewer.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@FlyViewer.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@FlyViewer.obj `( test -f $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.cpp || echo -n '$(srcdir)/'; echo -n $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.cpp ) | xargs cygpath -w`
 
 So@Gui@FlyViewer.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.cpp
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FlyViewer.cpp' object='So@Gui@FlyViewer.lo' libtool=yes @AMDEPBACKSLASH@
@@ -659,7 +747,7 @@ So@Gui@FullViewer.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullVie
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp' object='So@Gui@FullViewer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/So@Gui@FullViewer.Po' tmpdepfile='$(DEPDIR)/So@Gui@FullViewer.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@FullViewer.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@FullViewer.obj `( test -f $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp || echo -n '$(srcdir)/'; echo -n $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp ) | xargs cygpath -w`
 
 So@Gui@FullViewer.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewer.cpp' object='So@Gui@FullViewer.lo' libtool=yes @AMDEPBACKSLASH@
@@ -677,7 +765,7 @@ So@Gui@ExaminerViewer.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Exa
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.cpp' object='So@Gui@ExaminerViewer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/So@Gui@ExaminerViewer.Po' tmpdepfile='$(DEPDIR)/So@Gui@ExaminerViewer.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@ExaminerViewer.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@ExaminerViewer.obj `( test -f $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.cpp || echo -n '$(srcdir)/'; echo -n $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.cpp ) | xargs cygpath -w`
 
 So@Gui@ExaminerViewer.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.cpp
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewer.cpp' object='So@Gui@ExaminerViewer.lo' libtool=yes @AMDEPBACKSLASH@
@@ -695,67 +783,13 @@ So@Gui@PlaneViewer.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneV
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp' object='So@Gui@PlaneViewer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/So@Gui@PlaneViewer.Po' tmpdepfile='$(DEPDIR)/So@Gui@PlaneViewer.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@PlaneViewer.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp`
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@PlaneViewer.obj `( test -f $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp || echo -n '$(srcdir)/'; echo -n $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp ) | xargs cygpath -w`
 
 So@Gui@PlaneViewer.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp
 @AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp' object='So@Gui@PlaneViewer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/So@Gui@PlaneViewer.Plo' tmpdepfile='$(DEPDIR)/So@Gui@PlaneViewer.TPlo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o So@Gui@PlaneViewer.lo `test -f $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp || echo '$(srcdir)/'`$(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewer.cpp
-
-@meta_prefix@So@Gui@FullViewerP.o: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp' object='@meta_prefix@So@Gui@FullViewerP.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@FullViewerP.Po' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@FullViewerP.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@FullViewerP.o `test -f $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp || echo '$(srcdir)/'`$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp
-
-@meta_prefix@So@Gui@FullViewerP.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp' object='@meta_prefix@So@Gui@FullViewerP.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@FullViewerP.Po' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@FullViewerP.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@FullViewerP.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp`
-
-@meta_prefix@So@Gui@FullViewerP.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp' object='@meta_prefix@So@Gui@FullViewerP.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@FullViewerP.Plo' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@FullViewerP.TPlo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@FullViewerP.lo `test -f $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp || echo '$(srcdir)/'`$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp
-
-@meta_prefix@So@Gui@ExaminerViewerP.o: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp' object='@meta_prefix@So@Gui@ExaminerViewerP.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@ExaminerViewerP.Po' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@ExaminerViewerP.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@ExaminerViewerP.o `test -f $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp || echo '$(srcdir)/'`$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp
-
-@meta_prefix@So@Gui@ExaminerViewerP.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp' object='@meta_prefix@So@Gui@ExaminerViewerP.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@ExaminerViewerP.Po' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@ExaminerViewerP.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@ExaminerViewerP.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp`
-
-@meta_prefix@So@Gui@ExaminerViewerP.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp' object='@meta_prefix@So@Gui@ExaminerViewerP.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@ExaminerViewerP.Plo' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@ExaminerViewerP.TPlo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@ExaminerViewerP.lo `test -f $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp || echo '$(srcdir)/'`$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp
-
-@meta_prefix@So@Gui@PlaneViewerP.o: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp' object='@meta_prefix@So@Gui@PlaneViewerP.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@PlaneViewerP.Po' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@PlaneViewerP.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@PlaneViewerP.o `test -f $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp || echo '$(srcdir)/'`$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp
-
-@meta_prefix@So@Gui@PlaneViewerP.obj: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp' object='@meta_prefix@So@Gui@PlaneViewerP.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@PlaneViewerP.Po' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@PlaneViewerP.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@PlaneViewerP.obj `cygpath -w $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp`
-
-@meta_prefix@So@Gui@PlaneViewerP.lo: $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp
-@AMDEP_TRUE@	source='$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp' object='@meta_prefix@So@Gui@PlaneViewerP.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@	depfile='$(DEPDIR)/@meta_prefix@So@Gui@PlaneViewerP.Plo' tmpdepfile='$(DEPDIR)/@meta_prefix@So@Gui@PlaneViewerP.TPlo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o @meta_prefix@So@Gui@PlaneViewerP.lo `test -f $(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp || echo '$(srcdir)/'`$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp
 CXXDEPMODE = @CXXDEPMODE@
 uninstall-info-am:
 install-SoGtkViewersincHEADERS: $(SoGtkViewersinc_HEADERS)
@@ -938,7 +972,10 @@ uninstall-am: uninstall-SoGtkViewersincHEADERS uninstall-info-am \
 ############################################################################
 
 $(top_builddir)/sogui.doxygen: $(top_srcdir)/src/Inventor/@Gui@/common/sogui.doxygen.in $(top_builddir)/config.status
-	@( cd $(top_builddir); $(SHELL) config.status --file=sogui.doxygen:src/Inventor/@Gui@/common/sogui.doxygen.in )
+	@cd $(top_builddir); \
+	$(SHELL) config.status --file=sogui.doxygen:src/Inventor/@Gui@/common/sogui.doxygen.in; \
+	$(top_srcdir)/cfg/doxy4win.pl sogui.doxygen; \
+	rm -f sogui.doxygen.bak;
 
 $(top_builddir)/so@gui@-config: $(top_srcdir)/src/Inventor/@Gui@/common/sogui-config.in $(top_builddir)/config.status
 	@( cd $(top_builddir); $(SHELL) config.status --file=so@gui@-config:src/Inventor/@Gui@/common/sogui-config.in && chmod +x so@gui@-config )
@@ -1008,6 +1045,12 @@ $(top_builddir)/src/Inventor/@Gui@/So@Gui@RenderArea.h: $(top_srcdir)/src/Invent
 $(top_builddir)/src/Inventor/@Gui@/So@Gui@RenderArea.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/SoGuiRenderArea.cpp.in $(top_builddir)/config.status
 	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/So@Gui@RenderArea.cpp:src/Inventor/@Gui@/common/SoGuiRenderArea.cpp.in )
 
+$(top_builddir)/src/Inventor/@Gui@/So@Gui@ColorEditor.h: $(top_srcdir)/src/Inventor/@Gui@/common/SoGuiColorEditor.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/So@Gui@ColorEditor.h:src/Inventor/@Gui@/common/SoGuiColorEditor.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/So@Gui@MaterialEditor.h: $(top_srcdir)/src/Inventor/@Gui@/common/SoGuiMaterialEditor.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/So@Gui@MaterialEditor.h:src/Inventor/@Gui@/common/SoGuiMaterialEditor.h.in )
+
 $(top_builddir)/src/Inventor/@Gui@/common/gl.h: $(top_srcdir)/src/Inventor/@Gui@/common/gl.h.in $(top_builddir)/config.status
 	@( cd $(top_builddir); \
 	if test -d src/Inventor/@Gui@/common; then :; else \
@@ -1066,6 +1109,132 @@ $(top_builddir)/src/Inventor/@Gui@/devices/spwinput.h: $(top_srcdir)/src/Invento
 
 $(top_builddir)/src/Inventor/@Gui@/devices/spwinput_x11.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/spwinput_x11.cpp.in $(top_builddir)/config.status
 	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/devices/spwinput_x11.cpp:src/Inventor/@Gui@/common/spwinput_x11.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/editors/So@Gui@ColorEditor.h: $(top_srcdir)/src/Inventor/@Gui@/common/editors/ColorEditor.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/editors/So@Gui@ColorEditor.h:src/Inventor/@Gui@/common/editors/ColorEditor.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/editors/ColorEditor.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/editors/ColorEditor.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/editors/ColorEditor.cpp:src/Inventor/@Gui@/common/editors/ColorEditor.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/editors/So@Gui@MaterialEditor.h: $(top_srcdir)/src/Inventor/@Gui@/common/editors/MaterialEditor.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/editors/So@Gui@MaterialEditor.h:src/Inventor/@Gui@/common/editors/MaterialEditor.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/editors/MaterialEditor.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/editors/MaterialEditor.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/editors/MaterialEditor.cpp:src/Inventor/@Gui@/common/editors/MaterialEditor.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/engines/SoGuiEngines.h: $(top_srcdir)/src/Inventor/@Gui@/common/engines/Engines.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/engines/SoGuiEngines.h:src/Inventor/@Gui@/common/engines/Engines.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/engines/Engines.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/engines/Engines.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/engines/Engines.cpp:src/Inventor/@Gui@/common/engines/Engines.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/engines/SoGuiRadioGroup.h: $(top_srcdir)/src/Inventor/@Gui@/common/engines/RadioGroup.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/engines/SoGuiRadioGroup.h:src/Inventor/@Gui@/common/engines/RadioGroup.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/engines/RadioGroup.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/engines/RadioGroup.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/engines/RadioGroup.cpp:src/Inventor/@Gui@/common/engines/RadioGroup.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/engines/SoGuiFormat.h: $(top_srcdir)/src/Inventor/@Gui@/common/engines/Format.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/engines/SoGuiFormat.h:src/Inventor/@Gui@/common/engines/Format.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/engines/Format.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/engines/Format.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/engines/Format.cpp:src/Inventor/@Gui@/common/engines/Format.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiNodes.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Nodes.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiNodes.h:src/Inventor/@Gui@/common/nodes/Nodes.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Nodes.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Nodes.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Nodes.cpp:src/Inventor/@Gui@/common/nodes/Nodes.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiSceneTexture2.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/SceneTexture2.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiSceneTexture2.h:src/Inventor/@Gui@/common/nodes/SceneTexture2.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SceneTexture2.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/SceneTexture2.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SceneTexture2.cpp:src/Inventor/@Gui@/common/nodes/SceneTexture2.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiViewportFix.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/ViewportFix.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiViewportFix.h:src/Inventor/@Gui@/common/nodes/ViewportFix.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/ViewportFix.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/ViewportFix.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/ViewportFix.cpp:src/Inventor/@Gui@/common/nodes/ViewportFix.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiPane.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Pane.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiPane.h:src/Inventor/@Gui@/common/nodes/Pane.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Pane.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Pane.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Pane.cpp:src/Inventor/@Gui@/common/nodes/Pane.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiPosition.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Position.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiPosition.h:src/Inventor/@Gui@/common/nodes/Position.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Position.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Position.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Position.cpp:src/Inventor/@Gui@/common/nodes/Position.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiTranslation.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Translation.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiTranslation.h:src/Inventor/@Gui@/common/nodes/Translation.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Translation.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Translation.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Translation.cpp:src/Inventor/@Gui@/common/nodes/Translation.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiFrame.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Frame.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiFrame.h:src/Inventor/@Gui@/common/nodes/Frame.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Frame.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Frame.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Frame.cpp:src/Inventor/@Gui@/common/nodes/Frame.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiImage.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Image.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiImage.h:src/Inventor/@Gui@/common/nodes/Image.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Image.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Image.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Image.cpp:src/Inventor/@Gui@/common/nodes/Image.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiLabel.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Label.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiLabel.h:src/Inventor/@Gui@/common/nodes/Label.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Label.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Label.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Label.cpp:src/Inventor/@Gui@/common/nodes/Label.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiToggleButton.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/ToggleButton.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiToggleButton.h:src/Inventor/@Gui@/common/nodes/ToggleButton.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/ToggleButton.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/ToggleButton.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/ToggleButton.cpp:src/Inventor/@Gui@/common/nodes/ToggleButton.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiRadioButton.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/RadioButton.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiRadioButton.h:src/Inventor/@Gui@/common/nodes/RadioButton.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/RadioButton.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/RadioButton.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/RadioButton.cpp:src/Inventor/@Gui@/common/nodes/RadioButton.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiClickCounter.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/ClickCounter.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiClickCounter.h:src/Inventor/@Gui@/common/nodes/ClickCounter.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/ClickCounter.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/ClickCounter.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/ClickCounter.cpp:src/Inventor/@Gui@/common/nodes/ClickCounter.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiSlider1.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Slider1.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiSlider1.h:src/Inventor/@Gui@/common/nodes/Slider1.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Slider1.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Slider1.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Slider1.cpp:src/Inventor/@Gui@/common/nodes/Slider1.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiSlider2.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Slider2.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiSlider2.h:src/Inventor/@Gui@/common/nodes/Slider2.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/Slider2.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/Slider2.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/Slider2.cpp:src/Inventor/@Gui@/common/nodes/Slider2.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiColorEditor.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/ColorEditor.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiColorEditor.h:src/Inventor/@Gui@/common/nodes/ColorEditor.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/ColorEditor.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/ColorEditor.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/ColorEditor.cpp:src/Inventor/@Gui@/common/nodes/ColorEditor.cpp.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/SoGuiMaterialEditor.h: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/MaterialEditor.h.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/SoGuiMaterialEditor.h:src/Inventor/@Gui@/common/nodes/MaterialEditor.h.in )
+
+$(top_builddir)/src/Inventor/@Gui@/nodes/MaterialEditor.cpp: $(top_srcdir)/src/Inventor/@Gui@/common/nodes/MaterialEditor.cpp.in $(top_builddir)/config.status
+	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/nodes/MaterialEditor.cpp:src/Inventor/@Gui@/common/nodes/MaterialEditor.cpp.in )
 
 $(top_builddir)/src/Inventor/@Gui@/viewers/So@Gui@Viewer.h: $(top_srcdir)/src/Inventor/@Gui@/common/viewers/SoGuiViewer.h.in $(top_builddir)/config.status
 	@( cd $(top_builddir); $(SHELL) config.status --file=src/Inventor/@Gui@/viewers/So@Gui@Viewer.h:src/Inventor/@Gui@/common/viewers/SoGuiViewer.h.in )
@@ -1130,55 +1299,55 @@ $(top_builddir)/man/man1/so@gui@-config.1: $(top_srcdir)/src/Inventor/@Gui@/comm
 # **************************************************************************
 # auto-generated Qt moc files.
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@P.cpp: $(top_srcdir)/src/Inventor/@Gui@/So@Gui@P.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@P.icc: $(top_srcdir)/src/Inventor/@Gui@/So@Gui@P.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/@meta_prefix@So@Gui@P.cpp $(top_srcdir)/src/Inventor/@Gui@/So@Gui@P.h"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/@meta_prefix@So@Gui@P.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/So@Gui@P.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/@meta_prefix@So@Gui@P.icc $(top_srcdir)/src/Inventor/@Gui@/So@Gui@P.h"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/@meta_prefix@So@Gui@P.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/So@Gui@P.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@ComponentP.cpp: $(top_srcdir)/src/Inventor/@Gui@/So@Gui@ComponentP.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@ComponentP.icc: $(top_srcdir)/src/Inventor/@Gui@/So@Gui@ComponentP.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/@meta_prefix@So@Gui@ComponentP.cpp src/Inventor/@Gui@/So@Gui@ComponentP.h"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/@meta_prefix@So@Gui@ComponentP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/So@Gui@ComponentP.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/@meta_prefix@So@Gui@ComponentP.icc src/Inventor/@Gui@/So@Gui@ComponentP.h"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/@meta_prefix@So@Gui@ComponentP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/So@Gui@ComponentP.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@GLWidgetP.cpp: $(top_srcdir)/src/Inventor/@Gui@/So@Gui@GLWidgetP.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/@meta_prefix@So@Gui@GLWidgetP.icc: $(top_srcdir)/src/Inventor/@Gui@/So@Gui@GLWidgetP.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/@meta_prefix@So@Gui@GLWidgetP.cpp src/Inventor/@Gui@/So@Gui@GLWidgetP.h"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/@meta_prefix@So@Gui@GLWidgetP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/So@Gui@GLWidgetP.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/@meta_prefix@So@Gui@GLWidgetP.icc src/Inventor/@Gui@/So@Gui@GLWidgetP.h"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/@meta_prefix@So@Gui@GLWidgetP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/So@Gui@GLWidgetP.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/devices/@meta_prefix@So@Gui@LinuxJoystickP.cpp: $(top_srcdir)/src/Inventor/@Gui@/devices/So@Gui@LinuxJoystickP.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/devices/@meta_prefix@So@Gui@LinuxJoystickP.icc: $(top_srcdir)/src/Inventor/@Gui@/devices/So@Gui@LinuxJoystickP.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/devices/@meta_prefix@So@Gui@LinuxJoystickP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/devices/So@Gui@LinuxJoystickP.h`"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/devices/@meta_prefix@So@Gui@LinuxJoystickP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/devices/So@Gui@LinuxJoystickP.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/devices/@meta_prefix@So@Gui@LinuxJoystickP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/devices/So@Gui@LinuxJoystickP.h`"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/devices/@meta_prefix@So@Gui@LinuxJoystickP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/devices/So@Gui@LinuxJoystickP.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp: $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.icc: $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h`"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h`"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@FullViewerP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@FullViewerP.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp: $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewerP.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.icc: $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewerP.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewerP.h`"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewerP.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewerP.h`"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@ExaminerViewerP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@ExaminerViewerP.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp: $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewerP.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.icc: $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewerP.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewerP.h`"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewerP.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewerP.h`"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/viewers/@meta_prefix@So@Gui@PlaneViewerP.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/viewers/So@Gui@PlaneViewerP.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@ThumbWheel.cpp: $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@ThumbWheel.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@ThumbWheel.icc: $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@ThumbWheel.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@ThumbWheel.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@ThumbWheel.h`"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@ThumbWheel.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@ThumbWheel.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@ThumbWheel.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@ThumbWheel.h`"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@ThumbWheel.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@ThumbWheel.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@GLArea.cpp: $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@GLArea.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@GLArea.icc: $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@GLArea.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@GLArea.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@GLArea.h`"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@GLArea.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@GLArea.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@GLArea.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@GLArea.h`"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/widgets/@meta_prefix@So@Gui@GLArea.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/So@Gui@GLArea.h` )
 
-@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@@Gui@NativePopupMenu.cpp: $(top_srcdir)/src/Inventor/@Gui@/widgets/@Gui@NativePopupMenu.h $(top_builddir)/config.status
+@BUILD_METAFILES_TRUE@$(top_builddir)/src/Inventor/@Gui@/widgets/@meta_prefix@@Gui@NativePopupMenu.icc: $(top_srcdir)/src/Inventor/@Gui@/widgets/@Gui@NativePopupMenu.h $(top_builddir)/config.status
 @BUILD_METAFILES_TRUE@	@( cd $(top_builddir); \
-@BUILD_METAFILES_TRUE@	echo "$(MOC) -o src/Inventor/@Gui@/widgets/@meta_prefix@@Gui@NativePopupMenu.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/@Gui@NativePopupMenu.h`"; \
-@BUILD_METAFILES_TRUE@	$(MOC) -o src/Inventor/@Gui@/widgets/@meta_prefix@@Gui@NativePopupMenu.cpp `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/@Gui@NativePopupMenu.h` )
+@BUILD_METAFILES_TRUE@	echo " $(MOC) -i -o src/Inventor/@Gui@/widgets/@meta_prefix@@Gui@NativePopupMenu.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/@Gui@NativePopupMenu.h`"; \
+@BUILD_METAFILES_TRUE@	$(MOC) -i -o src/Inventor/@Gui@/widgets/@meta_prefix@@Gui@NativePopupMenu.icc `$(UNIX2WINPATH) $(top_srcdir)/src/Inventor/@Gui@/widgets/@Gui@NativePopupMenu.h` )
 
 ############################################################################
 
