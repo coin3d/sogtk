@@ -23,7 +23,7 @@
 #define SOGTK_TYPEDOBJECT_H
 
 #include <Inventor/SbBasic.h>
-#include <Inventor/SbName.h>
+#include <Inventor/SbString.h>
 #include <Inventor/SoType.h>
 
 #include <Inventor/Gtk/SoGtkBasic.h>
