@@ -31,6 +31,7 @@ static const char rcsid[] =
 #include <sogtkdefs.h>
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 #include <Inventor/Gtk/viewers/SoGtkWalkViewer.h>
+#include <Inventor/Gtk/viewers/SoGuiWalkViewerP.h>
 
 // ************************************************************************
 
@@ -42,22 +43,14 @@ static const char rcsid[] =
 
 // ************************************************************************
 
-// ************************************************************************
-
-class SoGtkWalkViewerP {
+class SoGtkWalkViewerP : public SoGuiWalkViewerP {
 public:
   SoGtkWalkViewerP(SoGtkWalkViewer * publ);
-  ~SoGtkWalkViewerP(void);
-
-private:
-  SoGtkWalkViewer * pub;
-
-}; // SoGtkWalkViewerP
+  ~SoGtkWalkViewerP();
+};
 
 #define PUBLIC(ptr) (ptr->pub)
 #define PRIVATE(ptr) (ptr->pimpl)
-
-#define THIS (PRIVATE(this))
 
 // ************************************************************************
 
@@ -69,32 +62,30 @@ SOGTK_OBJECT_SOURCE(SoGtkWalkViewer);
   The public constructor.
 */
 
-SoGtkWalkViewer::SoGtkWalkViewer(
-  GtkWidget * parent,
-  const char * name,
-  SbBool embed,
-  SoGtkFullViewer::BuildFlag flag,
-  SoGtkViewer::Type type)
-: inherited(parent, name, embed, flag, type, FALSE)
+SoGtkWalkViewer::SoGtkWalkViewer(GtkWidget * parent,
+                                 const char * name,
+                                 SbBool embed,
+                                 SoGtkFullViewer::BuildFlag flag,
+                                 SoGtkViewer::Type type)
+  : inherited(parent, name, embed, flag, type, FALSE)
 {
   this->constructor(TRUE);
-} // SoGtkWalkViewer()
+}
 
 /*!
   A protected constructor.
 */
 
-SoGtkWalkViewer::SoGtkWalkViewer(// protected
-  GtkWidget * parent,
-  const char * name,
-  SbBool embed,
-  SoGtkFullViewer::BuildFlag flag,
-  SoGtkViewer::Type type,
-  SbBool build)
-: inherited(parent, name, embed, flag, type, FALSE)
+SoGtkWalkViewer::SoGtkWalkViewer(GtkWidget * parent,
+                                 const char * name,
+                                 SbBool embed,
+                                 SoGtkFullViewer::BuildFlag flag,
+                                 SoGtkViewer::Type type,
+                                 SbBool build)
+  : inherited(parent, name, embed, flag, type, FALSE)
 {
   this->constructor(build);
-} // SoGtkWalkViewer()
+}
 
 /*!
   \internal
@@ -104,10 +95,9 @@ SoGtkWalkViewer::SoGtkWalkViewer(// protected
 */
 
 void
-SoGtkWalkViewer::constructor(// private
-  const SbBool build)
+SoGtkWalkViewer::constructor(const SbBool build)
 {
-  this->pimpl = new SoGtkWalkViewerP(this);
+  PRIVATE(this) = new SoGtkWalkViewerP(this);
 
 #if NOTYET
   GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
@@ -131,17 +121,16 @@ SoGtkWalkViewer::constructor(// private
   if (! build) return;
   GtkWidget * viewer = this->buildWidget(this->getParentWidget());
   this->setBaseWidget(viewer);
-} // constructor()
+}
 
 /*!
   The destructor.
 */
 
-SoGtkWalkViewer::~SoGtkWalkViewer(
-  void)
+SoGtkWalkViewer::~SoGtkWalkViewer()
 {
-  delete this->pimpl;
-} // ~SoGtkWalkViewer()
+  delete PRIVATE(this);
+}
 
 // ************************************************************************
 
@@ -150,11 +139,10 @@ SoGtkWalkViewer::~SoGtkWalkViewer(
 */
 
 void
-SoGtkWalkViewer::setViewing(// virtual
-  SbBool enable)
+SoGtkWalkViewer::setViewing(SbBool enable)
 {
   inherited::setViewing(enable);
-} // setViewing()
+}
 
 // ************************************************************************
 
@@ -172,10 +160,9 @@ SoGtkWalkViewer::setCamera(SoCamera * camera)
 */
 
 void
-SoGtkWalkViewer::setCursorEnabled(// virtual
-  SbBool enable)
+SoGtkWalkViewer::setCursorEnabled(SbBool enable)
 {
-} // setCursorEnabled()
+}
 
 // ************************************************************************
 
@@ -184,10 +171,9 @@ SoGtkWalkViewer::setCursorEnabled(// virtual
 */
 
 void
-SoGtkWalkViewer::setCameraType(// virtual
-  SoType type)
+SoGtkWalkViewer::setCameraType(SoType type)
 {
-} // setCameraType()
+}
 
 // ************************************************************************
 
@@ -196,12 +182,11 @@ SoGtkWalkViewer::setCameraType(// virtual
 */
 
 const char *
-SoGtkWalkViewer::getDefaultWidgetName(// virtual
-  void) const
+SoGtkWalkViewer::getDefaultWidgetName(void) const
 {
   static const char defaultWidgetName[] = N_("Walk Viewer");
   return _(defaultWidgetName);
-} // getDefaultWidgetName()
+}
 
 // ************************************************************************
 
@@ -210,12 +195,11 @@ SoGtkWalkViewer::getDefaultWidgetName(// virtual
 */
 
 const char *
-SoGtkWalkViewer::getDefaultTitle(// virtual
-  void) const
+SoGtkWalkViewer::getDefaultTitle(void) const
 {
   static const char defaultTitle[] = N_("Walk Viewer");
   return _(defaultTitle);
-} // getDefaultTitle()
+}
 
 // ************************************************************************
 
@@ -224,12 +208,11 @@ SoGtkWalkViewer::getDefaultTitle(// virtual
 */
 
 const char *
-SoGtkWalkViewer::getDefaultIconTitle(// virtual
-  void) const
+SoGtkWalkViewer::getDefaultIconTitle(void) const
 {
   static const char defaultIconTitle[] = N_("Walk Viewer");
   return _(defaultIconTitle);
-} // getDefaultIconTitle()
+}
 
 // ************************************************************************
 
@@ -238,11 +221,10 @@ SoGtkWalkViewer::getDefaultIconTitle(// virtual
 */
 
 void
-SoGtkWalkViewer::processEvent(// virtual, protected
-  GdkEvent * event)
+SoGtkWalkViewer::processEvent(GdkEvent * event)
 {
   inherited::processEvent(event);
-} // processEvent()
+}
 
 // ************************************************************************
 
@@ -251,10 +233,9 @@ SoGtkWalkViewer::processEvent(// virtual, protected
 */
 
 void
-SoGtkWalkViewer::setSeekMode(// virtual
-  SbBool enable)
+SoGtkWalkViewer::setSeekMode(SbBool enable)
 {
-} // setSeekMode()
+}
 
 // ************************************************************************
 
@@ -263,10 +244,9 @@ SoGtkWalkViewer::setSeekMode(// virtual
 */
 
 void
-SoGtkWalkViewer::actualRedraw(// virtual
-  void)
+SoGtkWalkViewer::actualRedraw(void)
 {
-} // actualRedraw()
+}
 
 // ************************************************************************
 
@@ -275,10 +255,9 @@ SoGtkWalkViewer::actualRedraw(// virtual
 */
 
 void
-SoGtkWalkViewer::rightWheelMotion(// virtual
-  float value)
+SoGtkWalkViewer::rightWheelMotion(float value)
 {
-} // rightWheelMotion()
+}
 
 // ************************************************************************
 
@@ -287,8 +266,7 @@ SoGtkWalkViewer::rightWheelMotion(// virtual
 */
 
 GtkWidget *
-SoGtkWalkViewer::buildLeftTrim(// virtual
-  GtkWidget * parent)
+SoGtkWalkViewer::buildLeftTrim(GtkWidget * parent)
 {
   // get the examiner viewer's left vbox
   GtkWidget *trim = inherited::buildLeftTrim(parent);
@@ -314,7 +292,7 @@ SoGtkWalkViewer::buildLeftTrim(// virtual
   gtk_box_reorder_child(GTK_BOX(trim), this->leftWheel, INT_MAX);
 
   return trim ;
-} // buildLeftTrim()
+}
 
 // ************************************************************************
 
@@ -323,10 +301,9 @@ SoGtkWalkViewer::buildLeftTrim(// virtual
 */
 
 void
-SoGtkWalkViewer::createPrefSheet(// virtual
-  void)
+SoGtkWalkViewer::createPrefSheet(void)
 {
-} // createPrefSheet()
+}
 
 // ************************************************************************
 
@@ -335,11 +312,10 @@ SoGtkWalkViewer::createPrefSheet(// virtual
 */
 
 void
-SoGtkWalkViewer::openViewerHelpCard(// virtual, protected
-  void)
+SoGtkWalkViewer::openViewerHelpCard(void)
 {
   this->openHelpCard("SoGtkWalkViewer.help");
-} // openViewerHelpCard()
+}
 
 // ************************************************************************
 
@@ -349,8 +325,7 @@ SoGtkWalkViewer::openViewerHelpCard(// virtual, protected
 */
 
 GtkWidget *
-SoGtkWalkViewer::makeSubPreferences(
-  GtkWidget * parent)
+SoGtkWalkViewer::makeSubPreferences(GtkWidget * parent)
 {
   GtkWidget* hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (parent), hbox);
@@ -374,23 +349,21 @@ SoGtkWalkViewer::makeSubPreferences(
   gtk_widget_show_all(hbox);
 
   return hbox;
-} // makeSubPreferences()
+}
 
 // *************************************************************************
 //
 //  Private implementation
 //
 
-SoGtkWalkViewerP::SoGtkWalkViewerP(
-  SoGtkWalkViewer * publ)
+SoGtkWalkViewerP::SoGtkWalkViewerP(SoGtkWalkViewer * publ)
+  : SoGuiWalkViewerP(publ)
 {
-  this->pub = publ;
-} // SoGtkWalkViewerP()
+}
 
-SoGtkWalkViewerP::~SoGtkWalkViewerP(
-  void)
+SoGtkWalkViewerP::~SoGtkWalkViewerP()
 {
-} // ~SoGtkWalkViewerP()
+}
 
 // *************************************************************************
 
