@@ -4153,8 +4153,8 @@ else
 fi
 
 
-if test "x$enable_warnings" = "xyes"; then
-  if test "x$GXX" = "xyes" || test "x$GCC" = "xyes"; then
+if test x"$enable_warnings" = xyes; then
+  if test x"$GXX" = xyes || test x"$GCC" = xyes; then
     
 
 echo $ac_n "checking whether $CXX accepts -Wno-multichar... $ac_c" 1>&6
@@ -4187,11 +4187,78 @@ unset _accept_result _save_cxxflags
 
     CFLAGS="$CFLAGS $_warn_flags"
     CXXFLAGS="$CXXFLAGS $_warn_flags"
+  else
+    case $host in
+    *-*-irix*) 
+      if test x"$CC" = xcc || test x"$CXX" = xCC; then
+        _warn_flags=
+        # Turn on all warnings.
+        
 
-    unset _warn_flags
+echo $ac_n "checking whether $CXX accepts -fullwarn... $ac_c" 1>&6
+echo "configure:4200: checking whether $CXX accepts -fullwarn" 1>&5
+_save_cxxflags=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS -fullwarn"
+cat >conftest.$ac_ext <<EOF
+#line 4204 "configure"
+#include "confdefs.h"
+
+int main() {
+
+; return 0; }
+EOF
+if { (eval echo configure:4211: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  _accept_result=yes _warn_flags="$_warn_flags -fullwarn"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  _accept_result=no 
+fi
+rm -f conftest*
+echo "$ac_t""$_accept_result" 1>&6
+CXXFLAGS=$_save_cxxflags
+unset _accept_result _save_cxxflags
+
+        # Turn off warnings on unused variables.
+        
+
+echo $ac_n "checking whether $CXX accepts -woff 3262... $ac_c" 1>&6
+echo "configure:4229: checking whether $CXX accepts -woff 3262" 1>&5
+_save_cxxflags=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS -woff 3262"
+cat >conftest.$ac_ext <<EOF
+#line 4233 "configure"
+#include "confdefs.h"
+
+int main() {
+
+; return 0; }
+EOF
+if { (eval echo configure:4240: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  _accept_result=yes _warn_flags="$_warn_flags -woff 3262"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  _accept_result=no 
+fi
+rm -f conftest*
+echo "$ac_t""$_accept_result" 1>&6
+CXXFLAGS=$_save_cxxflags
+unset _accept_result _save_cxxflags
+
+
+        CFLAGS="$CFLAGS $_warn_flags"
+        CXXFLAGS="$CXXFLAGS $_warn_flags"
+      fi
+    ;;
+    esac
   fi
 else
-  if test "x$GXX" != "xyes" && test "x$GCC" != "xyes"; then
+  if test x"$GXX" != xyes && test x"$GCC" != xyes; then
     echo "configure: warning: --enable-warnings only has effect when using GNU gcc or g++" 1>&2
   fi
 fi
@@ -4228,6 +4295,34 @@ if test "x$want_examples" = "xyes"; then
 else
   BUILD_EXAMPLES_TRUE='#'
   BUILD_EXAMPLES_FALSE=
+fi
+
+
+GUI=Gtk
+WIDGET="GtkWidget *"
+COMPONENTLIBS="-lgtkgl `gtk-config --libs`"
+
+
+
+
+
+
+
+if true; then
+  HAVE_RENDERAREA_TRUE=
+  HAVE_RENDERAREA_FALSE='#'
+else
+  HAVE_RENDERAREA_TRUE='#'
+  HAVE_RENDERAREA_FALSE=
+fi
+
+
+if false; then
+  HAVE_EXAMINERVIEWER_TRUE=
+  HAVE_EXAMINERVIEWER_FALSE='#'
+else
+  HAVE_EXAMINERVIEWER_TRUE='#'
+  HAVE_EXAMINERVIEWER_FALSE=
 fi
 
 
@@ -4321,7 +4416,8 @@ config_files="\\
     sogtk-config Makefile src/Inventor/Gtk/Makefile
     src/Inventor/Gtk/common/Makefile src/Inventor/Gtk/devices/Makefile
     src/Inventor/Gtk/viewers/Makefile src/Inventor/Gtk/widgets/Makefile
-    examples/Makefile examples/widgets/Makefile examples/viewers/Makefile"
+    examples/Makefile examples/widgets/Makefile examples/components/Makefile
+    examples/components/renderarea.cpp"
 config_headers="\\
     config.h"
 
@@ -4374,7 +4470,8 @@ do
   'src/Inventor/Gtk/widgets/Makefile' ) CONFIG_FILES="\$CONFIG_FILES src/Inventor/Gtk/widgets/Makefile" ;;
   'examples/Makefile' ) CONFIG_FILES="\$CONFIG_FILES examples/Makefile" ;;
   'examples/widgets/Makefile' ) CONFIG_FILES="\$CONFIG_FILES examples/widgets/Makefile" ;;
-  'examples/viewers/Makefile' ) CONFIG_FILES="\$CONFIG_FILES examples/viewers/Makefile" ;;
+  'examples/components/Makefile' ) CONFIG_FILES="\$CONFIG_FILES examples/components/Makefile" ;;
+  'examples/components/renderarea.cpp' ) CONFIG_FILES="\$CONFIG_FILES examples/components/renderarea.cpp" ;;
   'config.h' ) CONFIG_HEADERS="\$CONFIG_HEADERS config.h" ;;
   # This is an error.
   *) echo "$CONFIG_STATUS: invalid argument: \$ac_option"; exit 1 ;;
@@ -4496,6 +4593,13 @@ s%@GTKGL_CFLAGS@%$GTKGL_CFLAGS%;t t
 s%@GTKGL_LIBS@%$GTKGL_LIBS%;t t
 s%@BUILD_EXAMPLES_TRUE@%$BUILD_EXAMPLES_TRUE%;t t
 s%@BUILD_EXAMPLES_FALSE@%$BUILD_EXAMPLES_FALSE%;t t
+s%@GUI@%$GUI%;t t
+s%@WIDGET@%$WIDGET%;t t
+s%@COMPONENTLIBS@%$COMPONENTLIBS%;t t
+s%@HAVE_RENDERAREA_TRUE@%$HAVE_RENDERAREA_TRUE%;t t
+s%@HAVE_RENDERAREA_FALSE@%$HAVE_RENDERAREA_FALSE%;t t
+s%@HAVE_EXAMINERVIEWER_TRUE@%$HAVE_EXAMINERVIEWER_TRUE%;t t
+s%@HAVE_EXAMINERVIEWER_FALSE@%$HAVE_EXAMINERVIEWER_FALSE%;t t
 CEOF
 
 EOF

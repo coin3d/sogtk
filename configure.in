@@ -202,6 +202,19 @@ fi
 AM_CONDITIONAL(BUILD_EXAMPLES, test "x$want_examples" = "xyes")
 
 dnl *******************************************************************
+
+GUI=Gtk
+WIDGET="GtkWidget *"
+COMPONENTLIBS="-lgtkgl `gtk-config --libs`"
+
+AC_SUBST(GUI)
+AC_SUBST(WIDGET)
+AC_SUBST(COMPONENTLIBS)
+
+AM_CONDITIONAL(HAVE_RENDERAREA, true)
+AM_CONDITIONAL(HAVE_EXAMINERVIEWER, false)
+
+dnl *******************************************************************
 dnl * List all makefiles configure must automatically generate.
 dnl *******************************************************************
 dnl * while running autogen, $EXAMPLEMAKEFILES must be substituted for
@@ -221,7 +234,8 @@ AC_OUTPUT([
 	src/Inventor/Gtk/widgets/Makefile
 	examples/Makefile
 	examples/widgets/Makefile
-	examples/viewers/Makefile
+	examples/components/Makefile
+	examples/components/renderarea.cpp
 ],[
 	chmod a+x sogtk-config
 ])

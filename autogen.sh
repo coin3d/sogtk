@@ -10,11 +10,11 @@
 DIE=0
 
 GUI=Gtk
-
-PROJECT=So$GUI
+PROJECT=So${GUI}
 
 MACRODIR=conf-macros
-SUBPROJECTS="$MACRODIR src/Inventor/$GUI/common"
+SUBPROJECTS="$MACRODIR src/Inventor/${GUI}/common examples/components"
+SUBPROJECTNAMES="$MACRODIR So${GUI}Common So${GUI}Components"
 
 echo "Checking the installed configuration tools..."
 
@@ -50,17 +50,26 @@ if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
 fi
 
 
+set $SUBPROJECTNAMES
+num=1
 for project in $SUBPROJECTS; do
   test -d $project || {
     echo
-    echo "The CVS sub-project '$project' was not found."
-    echo "It was probably added after you initially checked out $PROJECT."
-    echo "Do a fresh 'cvs checkout' to correct this problem - the $PROJECT build system"
-    echo "will probably not work properly otherwise.  For a fresh 'cvs checkout',"
-    echo "run 'cvs -d :pserver:cvs@cvs.sim.no:/export/cvsroot co -P $PROJECT'."
-    echo
+    echo "Could not find subdirectory '$project'."
+    echo "It was probably added after you initially fetched $PROJECT."
+    echo "To add the missing module, run 'cvs co $1' from the $PROJECT"
+    echo "base directory."
+    echo ""
+    echo "To do a completely fresh cvs checkout of the whole $PROJECT module,"
+    echo "(if all else fails), remove $PROJECT and run:"
+    echo "  cvs -z3 -d :pserver:cvs@cvs.sim.no:/export/cvsroot co -P $PROJECT"
+    echo ""
+    DIE=1
   }
+  num=`expr $num + 1`
+  shift
 done
+
 
 if test "$DIE" -eq 1; then
         exit 1
