@@ -28,7 +28,7 @@ static const char rcsid[] =
 
 #include <Inventor/errors/SoDebugError.h>
 #include <Inventor/misc/SoChildList.h>
-#include <Inventor/lists/SoFieldList.h>
+#include <Inventor/SoLists.h>
 #include <Inventor/fields/SoField.h>
 #include <Inventor/nodes/SoNode.h>
 
