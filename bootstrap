@@ -132,6 +132,9 @@ ${DIE=false} && echo "" && echo >&2 "$me: aborting..." && exit 1
 # generate gettext support
 echo "Running gettextize..."
 ( ( $verbose && set -x;
+  bakdir=intl-bak.$$
+  mkdir $bakdir || exit 1
+  cp intl/.cvsignore intl/CVS/* $bakdir
   gettextize -f -c 1>&3 && \
   cp po/Makefile.in.in po/Makefile.in.in~ && \
   sed \
@@ -141,6 +144,12 @@ echo "Running gettextize..."
       -e 's%--files-from%-C --files-from%' \
 	< po/Makefile.in.in > po/Makefile.in.in~ && \
   mv po/Makefile.in.in~ po/Makefile.in.in
+  cp $bakdir/.cvsignore intl/
+  rm $bakdir/.cvsignore
+  mkdir intl/CVS
+  cp $bakdir/* intl/CVS/
+  rm $bakdir/*
+  rmdir $bakdir
 ) 3>&1 1>&2 2>&3 | \
   grep -v 'adding the necessary$' | \
   grep -v 'progtest.m4 from$' | \
