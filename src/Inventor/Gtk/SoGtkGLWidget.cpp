@@ -60,8 +60,20 @@ static const char rcsid[] =
 */
 
 /*!
-  \fn GtkWidget * SoGtkGLWidget::getGLWidget(void)
+  \fn GtkWidget * SoGtkGLWidget::getGLWidget(void) const
   FIXME: write doc
+*/
+
+/*!
+  \fn void SoGtkGLWidget::setStereoBuffer(SbBool flag)
+  
+  Sets whether OpenGL stereo buffers (quad buffer stereo) should be used.
+*/
+
+/*!
+  \fn SbBool SoGtkGLWidget::isStereoBuffer(void) const
+
+  Returns whether OpenGL stereo buffers are being used.
 */
 
 static const int SO_BORDER_THICKNESS = 2;
@@ -657,6 +669,9 @@ SoGtkGLWidget::afterRealizeHook( // virtual, protected
 
 // *************************************************************************
 
+/*!
+  Redraws overlay scene graph. Default method is empty.
+*/
 void 
 SoGtkGLWidget::redrawOverlay(void)
 {
