@@ -163,19 +163,30 @@ if test x"$with_inventor" = xyes; then
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_gl_cppflags"
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_gl_ldflags"
     SOGTK_EXTRA_LIBS="$sim_ac_gl_libs $SOGTK_EXTRA_LIBS"
-  ],AC_MSG_ERROR(needs an OpenGL-compatible development system installation))
+  ], [AC_MSG_ERROR(needs an OpenGL-compatible development system installation)])
 
   SIM_AC_CHECK_GLU([
     SOGTK_EXTRA_CPPFLAGS="$SOGTK_EXTRA_CPPFLAGS $sim_ac_glu_cppflags"
     SOGTK_EXTRA_LDFLAGS="$SOGTK_EXTRA_LDFLAGS $sim_ac_glu_ldflags"
     SOGTK_EXTRA_LIBS="$sim_ac_glu_libs $SOGTK_EXTRA_LIBS"
-  ], AC_MSG_ERROR(needs the OpenGL utility library))
+  ], [AC_MSG_ERROR(needs the OpenGL utility library)])
+
+  SIM_AC_HAVE_INVENTOR_IMAGE_IFELSE([
+    SOGTK_EXTRA_CPPFLAGS="$sim_ac_oiv_image_cppflags $SOGTK_EXTRA_CPPFLAGS"
+    SOGTK_EXTRA_LDFLAGS="$sim_ac_oiv_image_ldflags $SOGTK_EXTRA_LDFLAGS"
+    SOGTK_EXTRA_LIBS="$sim_ac_oiv_image_libs $SOGTK_EXTRA_LIBS"
+    CPPFLAGS="$sim_ac_oiv_image_cppflags $CPPFLAGS"
+    LDFLAGS="$sim_ac_oiv_image_ldflags $LDFLAGS"
+    LIBS="$sim_ac_oiv_image_libs $LIBS"
+  ], [
+    AC_MSG_WARN([didn't find Inventor's libimage (which may mean nothing).])
+  ])
 
   SIM_CHECK_INVENTOR([
     SOGTK_EXTRA_CPPFLAGS="$sim_ac_oiv_cppflags $SOGTK_EXTRA_CPPFLAGS"
     SOGTK_EXTRA_LDFLAGS="$sim_ac_oiv_ldflags $SOGTK_EXTRA_LDFLAGS"
     SOGTK_EXTRA_LIBS="$sim_ac_oiv_libs $SOGTK_EXTRA_LIBS"
-  ],AC_MSG_ERROR(couldn't compile and link against Open Inventor))
+  ], [AC_MSG_ERROR([couldn't compile and link against Open Inventor])])
 
 else
 
