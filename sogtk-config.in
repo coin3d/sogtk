@@ -46,7 +46,6 @@ do
     gui)              echo "@gui@" ;;
     EVENT)            echo "@EVENT@" ;;
     WIDGET)           echo "@WIDGET@" ;;
-    WINWIDGET)        echo "@WINWIDGET@" ;;
     COMPONENTHEADER)  echo "@COMPONENTHEADER@" ;;
     *)
       echo >&2 "$me: Invalid AC_SUBST: \"$1\""
