@@ -5,6 +5,8 @@ INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src -I$(top_builddir)/data
 
 BUILT_SOURCES = \
 	SoGtkBasic.h \
+	SoGtkObject.h \
+	SoGtkObject.cpp \
 	SoGtkCursors.h \
 	SoGtkCursors.cpp \
 	SoGtkRenderArea.h \
@@ -19,8 +21,6 @@ libSoGtk_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	SoGtk.h \
 	SoGtk.cpp \
-	SoGtkObject.h \
-	SoGtkObject.cpp \
 	SoGtkComponent.h \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.h \
@@ -55,6 +55,14 @@ libSoGtkinc_HEADERS = \
 SoGtkBasic.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkBasic.h )
+
+SoGtkObject.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiObject.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkObject.h )
+
+SoGtkObject.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiObject.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkObject.cpp )
 
 SoGtkCursors.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in

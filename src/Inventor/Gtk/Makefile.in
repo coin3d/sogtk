@@ -117,6 +117,8 @@ INCLUDES = -I$(top_builddir)/src -I$(top_srcdir)/src -I$(top_builddir)/data
 
 BUILT_SOURCES = \
 	SoGtkBasic.h \
+	SoGtkObject.h \
+	SoGtkObject.cpp \
 	SoGtkCursors.h \
 	SoGtkCursors.cpp \
 	SoGtkRenderArea.h \
@@ -132,8 +134,6 @@ libSoGtk_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	SoGtk.h \
 	SoGtk.cpp \
-	SoGtkObject.h \
-	SoGtkObject.cpp \
 	SoGtkComponent.h \
 	SoGtkComponent.cpp \
 	SoGtkGLWidget.h \
@@ -183,9 +183,9 @@ X_PRE_LIBS = @X_PRE_LIBS@
 libSoGtk_la_LDFLAGS = 
 libSoGtk_la_DEPENDENCIES =  devices/libSoGtkDevices.la \
 viewers/libSoGtkViewers.la widgets/libSoGtkWidgets.la
-am_libSoGtk_la_OBJECTS =  SoGtkCursors.lo SoGtkRenderArea.lo \
-SoAnyMaterialList.lo SoAnyMaterialListBuiltins.lo SoGtk.lo \
-SoGtkObject.lo SoGtkComponent.lo SoGtkGLWidget.lo SoGtkMaterialList.lo \
+am_libSoGtk_la_OBJECTS =  SoGtkObject.lo SoGtkCursors.lo \
+SoGtkRenderArea.lo SoAnyMaterialList.lo SoAnyMaterialListBuiltins.lo \
+SoGtk.lo SoGtkComponent.lo SoGtkGLWidget.lo SoGtkMaterialList.lo \
 SoGtkGraphEditor.lo SoGtkRoster.lo
 libSoGtk_la_OBJECTS =  $(am_libSoGtk_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -541,6 +541,14 @@ maintainer-clean
 SoGtkBasic.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiBasic.h.in
 	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkBasic.h )
+
+SoGtkObject.h: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiObject.h.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkObject.h )
+
+SoGtkObject.cpp: \
+  $(top_srcdir)/src/Inventor/Gtk/common/SoGuiObject.cpp.in
+	@( cd $(top_builddir); $(MAKE) src/Inventor/Gtk/SoGtkObject.cpp )
 
 SoGtkCursors.h: \
   $(top_srcdir)/src/Inventor/Gtk/common/SoGuiCursors.h.in
