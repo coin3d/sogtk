@@ -52,9 +52,6 @@ private:
   sogtkEventMask eventmask;
   SoKeyboardEvent * kbdevent;
 
-  static void makeTranslationTable(void);
-  static SbDict * translatetable;
-
 }; // class SoGtkKeyboard
 
 // *************************************************************************
