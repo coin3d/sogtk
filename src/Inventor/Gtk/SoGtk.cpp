@@ -61,8 +61,8 @@ static const char rcsid[] =
   For more information on the GTK+ toolkit, see the project's web site
   at <http://www.gtk.org>.
 
-  The corresponding documentation for Coin is located at
-  <URL:http://doc.coin3d.org/Coin/>.
+  The corresponding documentation for Coin is located 
+  <a href="http://doc.coin3d.org/Coin/">here</a>.
 */
 
 // *************************************************************************
