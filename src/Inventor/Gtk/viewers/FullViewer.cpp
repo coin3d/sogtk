@@ -550,19 +550,6 @@ SoGtkFullViewer::setViewing(SbBool enable)
 // *************************************************************************
 
 // Documented in superclass.
-void
-SoGtkFullViewer::setCamera(SoCamera * camera)
-{
-  // Overridden from parent to make sure the user interface indicators
-  // on the camera features in the preferences sheet are updated
-  // correctly.
-
-  inherited::setCamera(camera);
-}
-
-// *************************************************************************
-
-// Documented in superclass.
 GtkWidget *
 SoGtkFullViewer::buildWidget(GtkWidget * parent)
 {
