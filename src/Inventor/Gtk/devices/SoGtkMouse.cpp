@@ -139,31 +139,32 @@ SoGtkMouse::translateEvent(
   case GDK_BUTTON_PRESS:
     do {
       GdkEventButton * event = (GdkEventButton *) ev;
-      this->buttonevent->setState(SoButtonEvent::DOWN);
+      this->buttonevent->setState( SoButtonEvent::DOWN );
       this->buttonevent->setShiftDown( event->state & GDK_SHIFT_MASK );
       this->buttonevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
       this->buttonevent->setAltDown( event->state & GDK_MOD1_MASK );
-      SoGtkDevice::setEventPosition( this->buttonevent, event->x, event->y );
+      SoGtkDevice::setEventPosition( this->buttonevent,
+        (int) event->x, (int) event->y );
       switch ( event->button ) {
       case 1:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON1 );
         break;
       case 2:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON3 );
         break;
       case 3:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON2 );
         break;
 #ifdef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
       case 4:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON4);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON4 );
         break;
       case 5:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON5);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON5 );
         break;
 #endif // HAVE_SOMOUSEBUTTONEVENT_BUTTONS
       default:
-        this->buttonevent->setButton(SoMouseButtonEvent::ANY);
+        this->buttonevent->setButton( SoMouseButtonEvent::ANY );
         break;
       }
     } while ( FALSE );
@@ -173,31 +174,32 @@ SoGtkMouse::translateEvent(
   case GDK_BUTTON_RELEASE:
     do {
       GdkEventButton * event = (GdkEventButton *) ev;
-      this->buttonevent->setState(SoButtonEvent::UP);
+      this->buttonevent->setState( SoButtonEvent::UP);
       this->buttonevent->setShiftDown( event->state & GDK_SHIFT_MASK );
       this->buttonevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
       this->buttonevent->setAltDown( event->state & GDK_MOD1_MASK );
-      SoGtkDevice::setEventPosition( this->buttonevent, event->x, event->y );
+      SoGtkDevice::setEventPosition( this->buttonevent,
+        (int) event->x, (int) event->y );
       switch ( event->button ) {
       case 1:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON1);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON1 );
         break;
       case 2:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON3);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON3 );
         break;
       case 3:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON2);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON2 );
         break;
 #ifdef HAVE_SOMOUSEBUTTONEVENT_BUTTONS
       case 4:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON4);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON4 );
         break;
       case 5:
-        this->buttonevent->setButton(SoMouseButtonEvent::BUTTON5);
+        this->buttonevent->setButton( SoMouseButtonEvent::BUTTON5 );
         break;
 #endif // HAVE_SOMOUSEBUTTONEVENT_BUTTONS
       default:
-        this->buttonevent->setButton(SoMouseButtonEvent::ANY);
+        this->buttonevent->setButton( SoMouseButtonEvent::ANY );
         break;
       }
     } while ( FALSE );
@@ -210,7 +212,8 @@ SoGtkMouse::translateEvent(
       this->locationevent->setShiftDown( event->state & GDK_SHIFT_MASK );
       this->locationevent->setCtrlDown( event->state & GDK_CONTROL_MASK );
       this->locationevent->setAltDown( event->state & GDK_MOD1_MASK );
-      SoGtkDevice::setEventPosition( this->locationevent, event->x, event->y );
+      SoGtkDevice::setEventPosition( this->locationevent,
+        (int) event->x, (int) event->y );
     } while ( 0 );
     super = this->locationevent;
     break;
@@ -222,6 +225,7 @@ SoGtkMouse::translateEvent(
 
   if ( super )
     super->setTime(SbTime::getTimeOfDay());
+
   return super;
 } // translateEvent()
 

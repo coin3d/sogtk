@@ -28,6 +28,8 @@ static const char rcsid[] =
   FIXME: write class doc
 */
 
+#include <Inventor/errors/SoDebugError.h>
+
 #include <Inventor/events/SoEvent.h>
 
 #include <sogtkdefs.h>
