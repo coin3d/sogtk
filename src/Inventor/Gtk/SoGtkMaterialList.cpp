@@ -55,10 +55,9 @@ SoGtkMaterialList::SoGtkMaterialList(
   const char * const name,
   const SbBool embed,
   const char * const dir)
-: inherited(parent, name, embed)
-, common(new SoAnyMaterialList(dir))
+  : inherited(parent, name, embed)
 {
-  this->constructor(TRUE);
+  this->constructor(dir, TRUE);
 } // SoGtkMaterialList()
 
 SoGtkMaterialList::SoGtkMaterialList(// protected
@@ -67,17 +66,19 @@ SoGtkMaterialList::SoGtkMaterialList(// protected
   const SbBool embed,
   const char * const dir,
   const SbBool build )
-: inherited(parent, name, embed)
-, common(new SoAnyMaterialList(dir))
+  : inherited(parent, name, embed)
 {
-  this->constructor(build);
+  this->constructor(dir, build);
 } // SoGtkMaterialList()
 
 void
 SoGtkMaterialList::constructor(// private
+  const char * const dir,
   const SbBool build)
 {
-  this->materiallist = NULL;
+  this->common = new SoAnyMaterialList(dir);
+
+  this->listwidget = NULL;
   this->setClassName("SoGtkMaterialList");
   this->setSize(SbVec2s(200, 300));
   if (! build) return;
@@ -123,18 +124,18 @@ SoGtkMaterialList::buildWidget(// protected
     GTK_SCROLLED_WINDOW(scrolled), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
   gtk_widget_show(scrolled);
 
-  this->materiallist = GTK_WIDGET(gtk_clist_new(1));
-  gtk_widget_show(this->materiallist);
-  gtk_signal_connect(GTK_OBJECT(this->materiallist), "select_row",
+  this->listwidget = GTK_WIDGET(gtk_clist_new(1));
+  gtk_widget_show(this->listwidget);
+  gtk_signal_connect(GTK_OBJECT(this->listwidget), "select_row",
     GTK_SIGNAL_FUNC(SoGtkMaterialList::itemactivationCB), (gpointer) this);
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled), this->materiallist);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled), this->listwidget);
 
   SoGtkMaterialDirectory * dir = common->getMaterialDirectory();
   if (dir && dir->numGroups > 0) {
     SoGtkMaterialGroup * group = dir->groups[dir->current];
     for (int i = 0; i < group->numMaterials; i++) {
       const char ** ptr = &(group->materials[i]->name);
-      gtk_clist_append(GTK_CLIST(this->materiallist), (char **) ptr);
+      gtk_clist_append(GTK_CLIST(this->listwidget), (char **) ptr);
     }
   }
 
@@ -197,10 +198,10 @@ SoGtkMaterialList::menuactivation(// private
     for (int i = 0; i < dir->numGroups; i++) {
       SoGtkMaterialGroup * group = dir->groups[i];
       if (group->menuitem == menuitem) {
-        gtk_clist_clear(GTK_CLIST(this->materiallist));
+        gtk_clist_clear(GTK_CLIST(this->listwidget));
         for (int j = 0; j < group->numMaterials; j++) {
           const char ** ptr = &(group->materials[j]->name);
-          gtk_clist_append(GTK_CLIST(this->materiallist), (char **) ptr);
+          gtk_clist_append(GTK_CLIST(this->listwidget), (char **) ptr);
         }
         dir->current = i;
         return;
