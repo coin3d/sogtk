@@ -66,10 +66,6 @@ public:
   };
   NonFull nonfull;
 
-  // List of all SoGtkComponent instances. Needed for the
-  // SoGtkComponent::getComponent() function.
-  static SbPList * soGtkCompList;
-
 private:
   static SbDict * cursordict;
 };

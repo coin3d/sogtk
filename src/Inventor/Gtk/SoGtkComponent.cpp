@@ -54,7 +54,6 @@ GdkCursor * SoGtkComponentP::arrowcursor = NULL;
 GdkCursor * SoGtkComponentP::crosscursor = NULL;
 GdkCursor * SoGtkComponentP::uparrowcursor = NULL;
 SbDict * SoGtkComponentP::cursordict = NULL;
-SbPList * SoGtkComponentP::soGtkCompList = NULL;
 
 // *************************************************************************
 
@@ -132,9 +131,9 @@ SoGtkComponent::SoGtkComponent(GtkWidget * const parent,
 */
 SoGtkComponent::~SoGtkComponent()
 {
-  int idx = SoGtkComponentP::soGtkCompList->find((void *) this);
-  assert(idx != -1);
-  SoGtkComponentP::soGtkCompList->remove(idx);
+  if (PRIVATE(this)->widget) {
+    this->unregisterWidget(PRIVATE(this)->widget);
+  }
 
   SoGtk::componentDestruction(this);
 
@@ -235,6 +234,7 @@ SoGtkComponent::setBaseWidget(GtkWidget * widget)
     gtk_signal_disconnect_by_func(GTK_OBJECT(PRIVATE(this)->widget),
                                   GTK_SIGNAL_FUNC(SoGtkComponentP::realizeHandlerCB),
                                   (gpointer) this);
+    this->unregisterWidget(PRIVATE(this)->widget);
   }
 
   PRIVATE(this)->widget = NULL;
@@ -256,6 +256,7 @@ SoGtkComponent::setBaseWidget(GtkWidget * widget)
     gtk_signal_connect(GTK_OBJECT(PRIVATE(this)->widget), "map",
                        GTK_SIGNAL_FUNC(SoGtkComponentP::realizeHandlerCB),
                        (gpointer) this);
+    this->registerWidget(PRIVATE(this)->widget);
   }
 }
 
@@ -710,26 +711,6 @@ SoGtkComponent::setWindowCloseCallback(SoGtkComponentCB * const func,
 
 // *************************************************************************
 
-/*!
-  Finds and returns the SoGtkComponent corresponding to the given
-  GtkWidget, if any. If no SoGtkComponent is the "owner" of the
-  widget, \c NULL will be returned.
-*/
-
-SoGtkComponent *
-SoGtkComponent::getComponent(GtkWidget * const widget)
-{
-
-  for (int i = 0; i < SoGtkComponentP::soGtkCompList->getLength(); i++) {
-    SoGtkComponent * c = (SoGtkComponent *)((*SoGtkComponentP::soGtkCompList)[i]);
-    if (c->getWidget() == widget) return c;
-  }
-
-  return NULL;
-}
-
-// *************************************************************************
-
 // Documented in common/SoGuiComponentCommon.cpp.in.
 void
 SoGtkComponent::afterRealizeHook(void)
@@ -772,10 +753,6 @@ SoGtkComponentP::SoGtkComponentP(SoGtkComponent * owner)
   this->widgetName = NULL;
   this->captionText = NULL;
   this->iconText = NULL;
-
-  if (!SoGtkComponentP::soGtkCompList)
-    SoGtkComponentP::soGtkCompList = new SbPList;
-  SoGtkComponentP::soGtkCompList->append((void *) owner);
 }
 
 /*
@@ -783,10 +760,6 @@ SoGtkComponentP::SoGtkComponentP(SoGtkComponent * owner)
 */
 SoGtkComponentP::~SoGtkComponentP()
 {
-  if (SoGtkComponentP::soGtkCompList->getLength() == 0) {
-    delete SoGtkComponentP::soGtkCompList;
-    SoGtkComponentP::soGtkCompList = NULL;
-  }
   delete this->visibilityChangeCBs;
   delete [] this->widgetName;
   delete [] this->className;
