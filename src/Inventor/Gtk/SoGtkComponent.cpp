@@ -748,8 +748,8 @@ SoGtkComponent::setSize(
 
   this->storeSize = size;
   if ( this->widget ) {
-    GtkRequisition req = { size[0], size[1] };
-    gtk_widget_size_request( GTK_WIDGET(this->widget), &req );
+    GtkWidget * window = gtk_widget_get_toplevel( GTK_WIDGET(this->widget) );
+    gtk_window_set_default_size( GTK_WINDOW(window), size[0], size[1] );
     this->sizeChanged( size );
   }
 } // setSize()

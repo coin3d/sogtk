@@ -121,6 +121,11 @@ SoGtkRenderArea::buildWidget(
   if (this->getSize()[0] == -1)
     this->setSize(SbVec2s(400, 400));
 
+  GtkWidget * glWidget = this->getGtkGLArea();
+  assert( glWidget != NULL );
+  gtk_signal_connect( GTK_OBJECT(glWidget), "configure_event",
+    GTK_SIGNAL_FUNC(SoGtkRenderArea::sGLReshape), (void *) this );
+
   return w;
 } // buildWidget()
 
@@ -1016,5 +1021,40 @@ SoGtkRenderArea::processEvent(
     }
   }
 } // processDevice()
+
+// *************************************************************************
+
+/*!
+  FIXME: write doc
+*/
+
+gint
+SoGtkRenderArea::glReshape(
+  GtkWidget * widget,
+  GdkEventConfigure * event )
+{
+  GtkWidget * glWidget = this->getGtkGLArea();
+  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(glWidget) ) )
+    return TRUE;
+
+  this->setViewportRegion( SbViewportRegion(
+    glWidget->allocation.width, glWidget->allocation.height ) );
+
+  return TRUE;
+} // glReshape()
+
+/*!
+  FIXME: write doc
+*/
+
+gint
+SoGtkRenderArea::sGLReshape( // static
+  GtkWidget * widget,
+  GdkEventConfigure * event,
+  void * user)
+{
+  SoGtkRenderArea * that = (SoGtkRenderArea *) user;
+  return that->glReshape( widget, event );
+} // sGLReshape()
 
 // *************************************************************************

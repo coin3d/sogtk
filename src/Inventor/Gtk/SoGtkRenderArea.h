@@ -155,6 +155,10 @@ private:
   SoGtkMouse * mousedevice;
   SoGtkKeyboard * kbddevice;
 
+  gint glReshape( GtkWidget * widget, GdkEventConfigure * event );
+  static gint sGLReshape( GtkWidget * widget, GdkEventConfigure * event,
+    void * userData );
+
 }; // class SoGtkRenderArea
 
 // *************************************************************************

@@ -120,8 +120,6 @@ SoGtkGLWidget::buildWidget(
   /* configure_event should probably be moved to SoGtkRenderArea? */
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "expose_event",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLDraw), (void *) this );
-  gtk_signal_connect( GTK_OBJECT(this->glWidget), "configure_event",
-    GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLReshape), (void *) this );
   gtk_signal_connect( GTK_OBJECT(this->glWidget), "realize",
     GTK_SIGNAL_FUNC(SoGtkGLWidget::sGLInit), (void *) this );
 
@@ -498,44 +496,6 @@ SoGtkGLWidget::sGLInit( // static
   SoGtkGLWidget * that = (SoGtkGLWidget *) userData;
   return that->glInit( widget );
 } // sGLInit()
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-gint
-SoGtkGLWidget::glReshape(
-  GtkWidget * widget,
-  GdkEventConfigure * event )
-{
-  if ( ! gtk_gl_area_make_current( GTK_GL_AREA(this->glWidget) ) )
-    return TRUE;
-
-// FIXME: get viewport set/updated on resizes!
-
-/*
-  glViewport( 0, 0,
-    this->glWidget->allocation.width, this->glWidget->allocation.height );
-*/
-
-  return TRUE;
-} // glReshape()
-
-/*!
-  FIXME: write doc
-*/
-
-gint
-SoGtkGLWidget::sGLReshape( // static
-  GtkWidget * widget,
-  GdkEventConfigure * event,
-  void * userData )
-{
-  SoGtkGLWidget * that = (SoGtkGLWidget *) userData;
-  return that->glReshape( widget, event );
-} // sGLReshape()
 
 // *************************************************************************
 

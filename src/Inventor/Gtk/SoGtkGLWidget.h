@@ -89,9 +89,6 @@ private:
 
   gint glInit( GtkWidget * widget );
   static gint sGLInit( GtkWidget * widget, void * userData );
-  gint glReshape( GtkWidget * widget, GdkEventConfigure * event );
-  static gint sGLReshape( GtkWidget * widget, GdkEventConfigure * event,
-    void * userData );
   gint glDraw( GtkWidget * widget, GdkEventExpose * event );
   static gint sGLDraw( GtkWidget * widget, GdkEventExpose * event,
     void * userData );
