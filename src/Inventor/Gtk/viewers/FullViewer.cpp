@@ -2340,6 +2340,12 @@ SoGtkFullViewerP::rightwheelReleasedCB(GtkWidget *, gpointer closure)
   viewer->rightWheelFinish();
 }
 
+void
+SoGtkFullViewerP::setThumbWheelValue(void * wheel, float val)
+{
+  gtk_thumbwheel_set_value(GTK_THUMBWHEEL(wheel), val);
+}
+
 // *************************************************************************
 
 // Documented in superclass.

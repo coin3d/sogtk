@@ -42,6 +42,8 @@ public:
   SoGtkFullViewerP(SoGtkFullViewer * publ);
   ~SoGtkFullViewerP();
 
+  static void setThumbWheelValue(void * wheel, float val);
+
   GtkWidget * makePreferencesWindow(void);
   GtkWidget * makeSeekPreferences(GtkWidget * parent);
   GtkWidget * makeSeekDistancePreferences(GtkWidget * parent);
