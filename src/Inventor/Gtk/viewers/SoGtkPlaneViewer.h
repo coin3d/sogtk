@@ -22,6 +22,8 @@
 #ifndef SOGTK_PLANEVIEWER_H
 #define SOGTK_PLANEVIEWER_H
 
+class SbPlaneProjector;
+
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 
 // *************************************************************************
@@ -66,17 +68,19 @@ protected:
   virtual void leftWheelMotion( float value );
   virtual void rightWheelMotion( float value );
 
-  virtual void createPrefSheet(void);
-
   virtual void createViewerButtons( GtkWidget * parent, SbPList * buttons );
   virtual void openViewerHelpCard(void);
 
 private:
   void constructor( const SbBool build );
-  void zoom( const float difference );
+  SbPlaneProjector * projector;
+  static void visibilityCB( void * data, SbBool visible );
+  
+  static SoGtkViewerButton SoGtkPlaneViewerButtons[];
+  GdkPixmap * orthopixmap, * perspectivepixmap;
+  GdkBitmap * orthomask, * perspectivemask;
 
-  static struct SoGtkViewerButton SoGtkPlaneViewerButtons[];
-
+  GtkWidget * cameratogglebutton;
   static void xbuttonCB( GtkWidget *, gpointer );
   static void ybuttonCB( GtkWidget *, gpointer );
   static void zbuttonCB( GtkWidget *, gpointer );

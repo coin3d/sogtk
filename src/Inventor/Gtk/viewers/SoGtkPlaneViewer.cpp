@@ -27,6 +27,7 @@ static const char rcsid[] =
 #endif
 
 #include <Inventor/errors/SoDebugError.h>
+#include <Inventor/projectors/SbPlaneProjector.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
 
@@ -54,6 +55,18 @@ static const char rcsid[] =
 */
 
 SOGTK_OBJECT_SOURCE(SoGtkPlaneViewer);
+
+// *************************************************************************
+
+enum {
+  X_BUTTON = 0,
+  Y_BUTTON = 1,
+  Z_BUTTON = 2,
+  CAMERA_BUTTON = 3,
+
+  FIRST_BUTTON = 0,
+  LAST_BUTTON = CAMERA_BUTTON
+};
 
 // *************************************************************************
 
@@ -124,19 +137,38 @@ void
 SoGtkPlaneViewer::constructor( // private
   const SbBool build )
 {
-  const int buttons = sizeof(SoGtkPlaneViewerButtons) / sizeof(SoGtkViewerButton);
+  this->common->mode = SoAnyPlaneViewer::IDLE_MODE;
+
+  this->projector = new SbPlaneProjector;
+  SbViewVolume vv;
+  vv.ortho(-1, 1, -1, 1, -1, 1);
+  this->projector->setViewVolume(vv);
+
+  this->addVisibilityChangeCallback( SoGtkPlaneViewer::visibilityCB, this );
+
+  GdkColormap *colormap = gtk_widget_get_colormap (this->getParentWidget());
+
+  this->orthopixmap =
+      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
+        &this->orthomask, (GdkColor *) 0, ortho_xpm );
+
+  this->perspectivepixmap =
+      gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
+        &this->perspectivemask, (GdkColor *) 0, perspective_xpm );
+
+  this->setClassName( "SoGtkPlaneViewer" );
+
+  this->setPopupMenuString( _( "Plane Viewer" ) );
+  this->setPrefSheetString( _( "Plane Viewer Preference Sheet" ) ); 
 
   this->setLeftWheelString( _( "Translate Y" ) );
   this->setBottomWheelString( _( "Translate X" ) );
   this->setRightWheelString( _( "Zoom" ) );
 
-  this->setClassName( "SoGtkPlaneViewer" );
-
   if ( ! build ) return;
-  GtkWidget * parent = this->getParentWidget();
-  GtkWidget * viewerbase = this->buildWidget( parent );
-  this->setBaseWidget( viewerbase );
-  this->setSize( SbVec2s( 500, 460 ) );
+  GtkWidget * viewer = this->buildWidget( this->getParentWidget() );
+  this->setBaseWidget( viewer );
+//  this->setSize( SbVec2s( 500, 460 ) );
 } // constructor()
 
 /*!
@@ -146,6 +178,15 @@ SoGtkPlaneViewer::constructor( // private
 SoGtkPlaneViewer::~SoGtkPlaneViewer(
   void )
 {
+  // Button pixmaps.
+  gdk_pixmap_unref( this->orthopixmap );
+  gdk_bitmap_unref( this->orthomask );  
+
+  gdk_pixmap_unref( this->perspectivepixmap );
+  gdk_bitmap_unref( this->perspectivemask );  
+
+  delete this->projector;
+  delete this->common ;
 } // ~SoGtkPlaneViewer()
 
 // *************************************************************************
@@ -167,10 +208,22 @@ SoGtkPlaneViewer::setViewing( // virtual
 
 void
 SoGtkPlaneViewer::setCamera( // virtual
-  SoCamera * camera )
+  SoCamera * newCamera )
 {
-  inherited::setCamera( camera );
-  // switch camera button pixmap
+  if ( newCamera ) {
+    const SoType camtype = newCamera->getTypeId() ;
+    const SbBool orthotype =
+      camtype.isDerivedFrom( SoOrthographicCamera::getClassTypeId() );
+
+    this->setRightWheelString( orthotype ? _( "Zoom" ) : _( "Dolly" ));
+    if (this->cameratogglebutton) {
+      GtkWidget *label = GTK_BIN(this->cameratogglebutton)->child;
+      gtk_pixmap_set( GTK_PIXMAP(label),
+        (orthotype ? this->orthopixmap : this->perspectivepixmap),
+        (orthotype ? this->orthomask : this->perspectivemask) );
+    }
+  }
+  inherited::setCamera( newCamera );
 } // setCamera()
 
 /*!
@@ -195,8 +248,11 @@ SoGtkPlaneViewer::buildWidget( // protected
   GtkWidget * parent )
 {
   GtkWidget * viewer = inherited::buildWidget( parent );
-  // this->leftWheel->setRangeBoundaryHandling( SoGtkThumbWheel::ACCUMULATE );
-  // this->bottomWheel->setRangeBoundaryHandling( SoGtkThumbWheel::ACCUMULATE );
+  gtk_thumbwheel_set_range_boundary_handling(
+     GTK_THUMBWHEEL(this->leftWheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE );
+  gtk_thumbwheel_set_range_boundary_handling(
+     GTK_THUMBWHEEL(this->rightWheel), GTK_THUMBWHEEL_BOUNDARY_ACCUMULATE );
+  
   return viewer;
 } // buildWidget()
 
@@ -272,39 +328,9 @@ void
 SoGtkPlaneViewer::rightWheelMotion( // virtual, protected
   float value )
 {
-  this->zoom( this->getRightWheelValue() - value );
+  common->zoom( this->getRightWheelValue() - value );
   inherited::rightWheelMotion( value );
 } // rightWheelMotion()
-
-/*!
-  This method moves the camera inwards and outwards.  It will be moved to
-  common code soon.
-*/
-
-void
-SoGtkPlaneViewer::zoom(
-  const float difference )
-{
-  SoCamera * camera = this->getCamera();
-  assert( camera != NULL );
-
-  SoType type = camera->getTypeId();
-  float multiplicator = exp( difference ); // in the range of <0, ->>
-
-  if ( type.isDerivedFrom( SoOrthographicCamera::getClassTypeId() ) ) {
-    SoOrthographicCamera * orthocam = (SoOrthographicCamera *) camera;
-    orthocam->height = orthocam->height.getValue() * multiplicator;
-  } else if ( type.isDerivedFrom( SoPerspectiveCamera::getClassTypeId() ) ) {
-    float oldfocaldist = camera->focalDistance.getValue();
-    camera->focalDistance = oldfocaldist * multiplicator;
-    SbVec3f direction;
-    camera->orientation.getValue().multVec( SbVec3f( 0, 0, -1 ), direction );
-    camera->position = camera->position.getValue() +
-      (camera->focalDistance.getValue() - oldfocaldist) * -direction;
-  } else {
-    assert( 0 && "impossible" );
-  }
-} // zoom()
 
 // *************************************************************************
 
@@ -359,17 +385,6 @@ SoGtkPlaneViewer::actualRedraw( // virtual, protected
   inherited::actualRedraw();
 } // actualRedraw()
 
-/*!
-  FIXME: write doc
-*/
-
-void
-SoGtkPlaneViewer::createPrefSheet( // virtual, protected
-  void )
-{
-//  inherited::createPrefSheet();
-} // createPrefSheet()
-
 // *************************************************************************
 
 /*!
@@ -385,24 +400,66 @@ SoGtkPlaneViewer::createViewerButtons( // virtual, protected
 
   GtkTooltips * tooltips = gtk_tooltips_new();
   GdkColormap * colormap = gtk_widget_get_colormap( parent );
-  GdkBitmap * mask;
 
   const size_t buttons = sizeof(SoGtkPlaneViewerButtons) / sizeof(SoGtkViewerButton);
   for ( size_t button = 0; button < buttons; button++ ) {
-    GtkWidget * widget = GTK_WIDGET(gtk_button_new());
+    GtkWidget * widget = (GtkWidget*) 0 ;
+
+    switch(button)
+    {
+    case CAMERA_BUTTON :
+      this->cameratogglebutton = widget = gtk_button_new();
+      break ;
+    default: 
+      widget = gtk_button_new();
+      break ;
+    }
+
     gtk_tooltips_set_tip( tooltips, widget, 
       _( SoGtkPlaneViewerButtons[button].keyword ), NULL );
 
-    GdkPixmap * gdk_pixmap =
-      gdk_pixmap_colormap_create_from_xpm_d( NULL, colormap,
-        &mask, NULL,
-        SoGtkPlaneViewerButtons[button].xpm_data );
+    GdkPixmap * gdk_pixmap = (GdkPixmap *) 0;
+    GdkBitmap * gdk_mask   = (GdkBitmap *) 0;
 
-    GtkWidget * label = gtk_pixmap_new( gdk_pixmap, mask );
+    switch(button)
+    {
+    case CAMERA_BUTTON :
+      {
+        SoType t = this->getCameraType();
+        if (t.isDerivedFrom(SoOrthographicCamera::getClassTypeId()))
+        {
+          gdk_pixmap = this->orthopixmap;
+          gdk_mask   = this->orthomask;
+        }
+        else if (t.isDerivedFrom(SoPerspectiveCamera::getClassTypeId()))
+        {
+          gdk_pixmap = this->perspectivepixmap;
+          gdk_mask   = this->perspectivemask;
+        }
+        else assert(0 && "unsupported cameratype");
+      }
+      break ;
+    default:
+      gdk_pixmap =
+        gdk_pixmap_colormap_create_from_xpm_d( (GdkWindow *) 0, colormap,
+          &gdk_mask, (GdkColor *) 0,
+          SoGtkPlaneViewerButtons[button].xpm_data );
+      break ;
+    }
+
+
+    GtkWidget * label = gtk_pixmap_new( gdk_pixmap, gdk_mask );
     gtk_widget_show( label );
 
-    gdk_pixmap_unref( gdk_pixmap );
-    gdk_bitmap_unref( mask );
+    switch( button )
+    {
+    case CAMERA_BUTTON:
+      break ;
+    default :
+      gdk_pixmap_unref( gdk_pixmap );
+      gdk_bitmap_unref( gdk_mask );
+      break ;
+    };
 
     gtk_container_add( GTK_CONTAINER(widget), GTK_WIDGET(label) );
     if ( SoGtkPlaneViewerButtons[button].pressed != NULL ) {
@@ -486,10 +543,34 @@ SoGtkPlaneViewer::camerabuttonCB(
   assert( closure != NULL );
   SoGtkPlaneViewer * viewer = (SoGtkPlaneViewer *) closure;
 
-  viewer->toggleCameraType();
+  if ( viewer->getCamera() ) viewer->toggleCameraType();
 } // camerabuttonCB()
 
-// *************************************************************************
+// ************************************************************************
+
+/*!
+  \internal
+*/
+
+void
+SoGtkPlaneViewer::visibilityCB( // static
+  void * data,
+  SbBool visible )
+{
+  SoGtkPlaneViewer * thisp = (SoGtkPlaneViewer *) data;
+
+/*
+  examiner viewer does this, we don't have to...
+  if ( thisp->isAnimating() ) {
+    if ( visible )
+      thisp->timerTrigger->schedule();
+    else
+      thisp->timerTrigger->unschedule();
+  }
+*/
+} // visibilityCB()
+
+// ************************************************************************
 
 #if SOGTK_DEBUG
 static const char * getSoGtkPlaneViewerRCSId(void) { return rcsid; }
