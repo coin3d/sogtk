@@ -139,31 +139,6 @@ SoGtkExaminerViewer::~SoGtkExaminerViewer()
 
 // *************************************************************************
 
-/*!
-  FIXME: write doc
-*/
-void
-SoGtkExaminerViewer::setAnimationEnabled(const SbBool enable)
-{ // FIXME: make this virtual?  20001230 larsa
-  PRIVATE(this)->setGenericAnimationEnabled(enable);
-}
- 
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-// make this virtual?  20001230 larsa
-void
-SoGtkExaminerViewer::setFeedbackSize(const int size)
-{
-  PRIVATE(this)->setGenericFeedbackSize(size);
-}
-
-// *************************************************************************
-
 // Documented in superclass.
 void
 SoGtkExaminerViewer::setCamera(SoCamera * newCamera)
