@@ -9,9 +9,11 @@
 #   Morten Eriksen <mortene@sim.no>
 #
 
-directory=`echo "$0" | sed -e 's/[^\/]*$//g'`;
-cd $directory
-if test ! -f ./autogen.sh; then
+wd=`echo "$0" | sed 's,[^/]*$,,g'`
+me=`echo "$0" | sed 's,.*/,,g'`
+
+cd $wd
+if test ! -f ./$me; then
   echo "unexpected problem with your shell - bailing out"
   exit 1
 fi
@@ -20,8 +22,8 @@ PROJECT=SoGtk
 
 MACRODIR=cfg/m4
 
-SUBPROJECTS="$MACRODIR"
-SUBPROJECTNAMES="SoGtkMacros"
+SUBPROJECTS="$MACRODIR data"
+SUBPROJECTNAMES="SoGtkMacros SoGtkData"
 
 AUTOMAKE_ADD=
 if test "$1" = "--clean"; then
@@ -32,11 +34,11 @@ elif test "$1" = "--add"; then
   AUTOMAKE_ADD=""
 fi
 
-echo "Checking the installed configuration tools..."
-
-AUTOCONF_VER=2.49b
-AUTOMAKE_VER=1.4a
+AUTOCONF_VER=2.49b   # Autoconf from CVS
+AUTOMAKE_VER=1.4a    # Automake from CVS
 LIBTOOL_VER=1.3.5
+
+echo "Checking the installed configuration tools..."
 
 if test -z "`autoconf --version | grep \" $AUTOCONF_VER\" 2> /dev/null`"; then
   cat <<END
@@ -57,7 +59,6 @@ if test -z "`automake --version | grep \" $AUTOMAKE_VER\" 2> /dev/null`"; then
   "frozen" from the CVS repository at 2000-01-13. You can get
   it here:"
 
-     ftp://ftp.sim.no/pub/coin/automake-1.4a-coin.tar.gz
 END
     DIE=true
 fi
@@ -96,50 +97,24 @@ END
 done
 
 # abnormal exit?
-${DIE=false} && echo "" && echo "Aborted." && exit 1
+${DIE=false} && echo "" && echo "Aborting..." && exit 1
 
-# generate cfg/aclocal.m4
+# **************************************************************************
+
+# generate aclocal.m4
 echo "Running aclocal..."
 aclocal -I $MACRODIR
 
-# generate config.h.in
+# generate config.h.in template
 echo "Running autoheader..."
 autoheader
-
-# find directory where the automake macros reside...
-pathdirs=`IFS=:; for entry in $PATH; do echo $entry; done`
-for dir in $pathdirs; do
-  if test -f $dir/automake; then
-    automakedir=$dir;
-    break;
-  fi
-done
-automakedir=`echo $automakedir | sed 's:/*$::g;s:/[^/]*$::'`/share/automake
-
-# set up automake template symlinks
-#echo "Setting up automake customizations..."
-#cd cfg/am
-#for file in $automakedir/*; do
-#  base=`basename $file`
-#  test -f $base || ln -s $file .
-#done
-#cd ../..
 
 # generate Makefile.in templates
 echo "Running automake..."
 echo "[ignore any \"directory should not contain '/'\" warning]"
 automake # --amdir=cfg/am
 
-# remove symlinks
-#echo "Clearing away automake customizations..."
-#cd cfg/am
-#for file in *; do
-#  test -L $file && rm $file
-#done
-#cd ../..
-
-# generate configure
+# generate configure script
 echo "Running autoconf..."
 autoconf
-
 
