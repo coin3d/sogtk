@@ -20,21 +20,6 @@ DISTCLEANFILES = \
 EXTRA_DIST = \
 	SoNativeFlyViewer.cpp
 
-#	SoGtkViewer.cpp \
-#	SoGtkViewer.h \
-#	SoAnyFullViewer.cpp \
-#	SoAnyFullViewer.h \
-#	SoAnyExaminerViewer.cpp \
-#	SoAnyExaminerViewer.h \
-#	SoAnyPlaneViewer.cpp \
-#	SoAnyPlaneViewer.h \
-#	SoAnyConstrainedViewer.cpp \
-#	SoAnyConstrainedViewer.h \
-#	SoAnyFlyViewer.cpp \
-#	SoAnyFlyViewer.h \
-#	SoAnyWalkViewer.cpp \
-#	SoAnyWalkViewer.h
-
 libSoGtkViewers_la_SOURCES = \
 	SoGtkFullViewer.cpp \
 	SoGtkFullViewer.h \
