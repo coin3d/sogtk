@@ -20,11 +20,6 @@
 // this stops IRIX build from crashing
 // #define NO_THUMBWHEELS
 
-#if SOGTK_DEBUG
-static const char rcsid[] =
-  "$Id$";
-#endif // SOGTK_DEBUG
-
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -47,7 +42,6 @@ static const char rcsid[] =
 #include <Inventor/Gtk/widgets/gtkthumbwheel.h>
 #include <Inventor/Gtk/widgets/SoGtkPopupMenu.h>
 
-#include <Inventor/Gtk/viewers/SoAnyFullViewer.h>
 #include <Inventor/Gtk/viewers/SoGtkFullViewer.h>
 #include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 
@@ -411,10 +405,9 @@ SoGtkFullViewer::SoGtkFullViewer(
   SoGtkFullViewer::BuildFlag buildFlag,
   SoGtkViewer::Type type,
   SbBool build)
-: inherited(parent, name, embed, type, FALSE)
+  : inherited(parent, name, embed, type, FALSE)
 {
   this->pimpl = new SoGtkFullViewerP(this);
-  this->common = new SoAnyFullViewer(this);
 
   this->leftDecoration = (GtkWidget *) NULL;
   this->leftWheel = (GtkWidget *) NULL;
@@ -459,7 +452,6 @@ SoGtkFullViewer::~SoGtkFullViewer(
   delete [] this->leftWheelStr;
   delete [] this->bottomWheelStr;
   delete [] this->rightWheelStr;
-  delete this->common;
   delete this->pimpl;
 } // ~SoGtkFullViewer()
 
@@ -1083,21 +1075,8 @@ void
 SoGtkFullViewer::buildPopupMenu(
   void)
 {
-  this->prefmenu = common->setupStandardPopupMenu();
+  this->prefmenu = this->setupStandardPopupMenu();
 } // buildPopupMenu()
-
-// *************************************************************************
-
-/*!
-  Set title of popup menu.
-*/
-
-void
-SoGtkFullViewer::setPopupMenuString(
-  const char * str)
-{
-  this->common->setPopupMenuString(str);
-}
 
 // *************************************************************************
 
@@ -1112,7 +1091,7 @@ SoGtkFullViewer::openPopupMenu(
   if (! this->prefmenu && PRIVATE(this)->menuEnabled)
     this->buildPopupMenu();
   if (this->prefmenu) {
-    this->common->prepareMenu(this->prefmenu);
+    this->prepareMenu(this->prefmenu);
     this->prefmenu->popUp(this->getGLWidget(), position[0], position[1]);
   }
 } // openPopupMenu()
@@ -1435,20 +1414,6 @@ SoGtkFullViewer::openViewerHelpCard(// virtual
   if (classname && strlen(classname) > 0)
     SoGtkComponent::openHelpCard(classname);
 } // openViewerHelpCard()
-
-// *************************************************************************
-
-/*!
-  FIXME: write doc
-*/
-
-SbBool
-SoGtkFullViewer::processSoEvent(
-  const SoEvent * const event)
-{
-  if (common->processSoEvent(event)) return TRUE;
-  return inherited::processSoEvent(event);
-} // processSoEvent()
 
 // *************************************************************************
 // menu selections
@@ -2948,8 +2913,3 @@ SoGtkFullViewer::sizeChanged(const SbVec2s & size)
 }
 
 // *************************************************************************
-
-#if SOGTK_DEBUG
-static const char * getSoGtkFullViewerRCSId(void) { return rcsid; }
-#endif // SOGTK_DEBUG
-
