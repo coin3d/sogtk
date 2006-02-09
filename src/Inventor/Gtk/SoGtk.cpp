@@ -112,11 +112,10 @@ SoGtk::init(GtkWidget * toplevelwidget)
     return;
   }
 
-  SoGtkObject::init();
+  SoAny::init();
 
   SoDB::getSensorManager()->setChangedCallback(SoGuiP::sensorQueueChanged,
                                                NULL);
-  SoGtk::mainWidget = toplevelwidget;
 #if defined(ENABLE_NLS)
   char *txt = bindtextdomain(PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
