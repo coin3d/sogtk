@@ -25,7 +25,7 @@ Summary: GTK+ GUI widgets for Coin / Open Inventor.
 Name: SoGtk
 Version: @VERSION@
 Release: @sogtk_configure_date@
-Copyright: GNU Lesser General Public License (LGPL)
+Copyright: BSD
 Group: Development/Libraries
 URL: http://www.coin3d.org/
 Vendor: Systems in Motion
