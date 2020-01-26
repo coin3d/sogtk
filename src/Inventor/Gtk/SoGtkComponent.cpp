@@ -97,11 +97,11 @@ SoGtkComponent::initClasses(void)
   Constructor.
 
   \a parent is the widget we'll build this component inside.  If \a
-  parent is \a NULL, make a new toplevel window.
+  parent is \a NULL, make a new top level window.
 
   \a name is mostly interesting for debugging purposes.
 
-  \a embed specifies whether or not we should make a new toplevel
+  \a embed specifies whether or not we should make a new top level
   window for the component even when we've got a non-NULL \a parent.
 */
 SoGtkComponent::SoGtkComponent(GtkWidget * const parent,
@@ -396,7 +396,7 @@ SoGtkComponent::isVisible(void)
 }
 
 /*!
-  This will show the widget, deiconifiying and raising it if
+  This will show the widget, deiconifying and raising it if
   necessary.
 
   \sa hide(), isVisible()
@@ -492,7 +492,7 @@ SoGtkComponent::getBaseWidget(void) const
 // *************************************************************************
 
 /*!
-  Returns \c TRUE if this component is a toplevel shell, i.e. it has a
+  Returns \c TRUE if this component is a top level shell, i.e. it has a
   window representation on the desktop.
 
   \sa getShellWidget()
@@ -528,7 +528,7 @@ SoGtkComponent::isTopLevelShell(void) const
 // *************************************************************************
 
 /*!
-  Returns the widget which is the parent (i.e. contains) this
+  Returns the widget which is the parent of (i.e. contains) this
   component's base widget.
 
   \sa getWidget(), baseWidget(), isTopLevelShell()
@@ -543,7 +543,7 @@ SoGtkComponent::getParentWidget(void) const
 
 /*!
   Set the window title of this component. This will not work unless
-  the component is a toplevel shell.
+  the component is a top level shell.
 
   \sa getTitle(), setIconTitle(), isTopLevelShell()
 */
@@ -564,7 +564,7 @@ SoGtkComponent::setTitle(const char * const title)
 }
 
 /*!
-  Returns the window title. The component should be a toplevel shell
+  Returns the window title. The component should be a top level shell
   if you call this method.
 
   \sa setTitle(), isTopLevelShell()
@@ -581,8 +581,8 @@ SoGtkComponent::getTitle(void) const
 // *************************************************************************
 
 /*!
-  Sets the window's title when it is iconfied. The component you use
-  this method on should be a toplevel shell.
+  Sets the window's title when it is iconified. The component you use
+  this method on should be a top level shell.
 
   \sa getIconTitle(), setTitle(), isTopLevelShell()
 */
@@ -607,8 +607,8 @@ SoGtkComponent::setIconTitle(const char * const title)
 }
 
 /*!
-  Returns the title the window has when iconfied. The component should
-  be a toplevel shell if you use this method.
+  Returns the title the window has when iconified. The component should
+  be a top level shell if you use this method.
 
   \sa setIconTitle(), isTopLevelShell()
 */
@@ -700,10 +700,10 @@ SoGtkComponent::sizeChanged(const SbVec2s & size)
 // *************************************************************************
 
 /*!
-  Set up a callback function to use when the component gets closed. A
-  component must be a toplevel shell for this to have any effect.
+  Set up a callback function to use when the component is closed. A
+  component must be a top level shell for this to have any effect.
 
-  For toplevel shells with no close callback set, the window will
+  For top level shells with no close callback set, the window will
   simply be hidden. The typical action to take in the callback would
   be to delete the component.
 
@@ -810,7 +810,7 @@ SoGtkComponentP::realizeHandlerCB(GtkObject * object,
 
   Returns \c FALSE if operation failed.  This might happen if the
   toolkit doesn't support attempts at making the component cover the
-  complete screen or if the component is not a toplevel window.
+  complete screen or if the component is not a top level window.
 */
 SbBool
 SoGtkComponent::setFullScreen(const SbBool onoff)
