@@ -157,7 +157,7 @@
 /*!
   \var GtkWidget * SoGtkFullViewer::rightDecoration
 
-  This is the form containing the buttons and the wheel on the right
+  This is the form containing the buttons and the thumbwheel on the right
   side of the GL canvas.
 */
 
@@ -179,9 +179,8 @@
 /*!
   \var float SoGtkFullViewer::rightWheelVal
 
-  This variable contains the value of the thumb wheel on the right hand side
-  of the GL canvas.  The value represents accumulated radians for the thumb
-  wheel.
+  This variable contains the value of the thumbwheel on the right hand side
+  of the GL canvas.  The value represents accumulated radians for the thumbwheel.
 
   This variable should only be accessed for reading the value, not for setting
   it.
@@ -192,7 +191,7 @@
 /*!
   \var SoGtkPopupMenu * SoGtkFullViewer::prefmenu
 
-  This variable contains the popup menu object or NULL if it has not been
+  This variable contains the pop-up menu object or NULL if it has not been
   created yet.
 */
 
@@ -369,7 +368,7 @@ SoGtkFullViewer::isDecoration(void) const
 
 /*!
   Decide whether or not if clicking with the right mouse button on the
-  OpenGL canvas should reveal a preferences popup menu when in viewing
+  OpenGL canvas should reveal a preferences pop-up menu when in viewing
   mode.
 
   \sa isPopupMenuEnabled()
@@ -391,7 +390,7 @@ SoGtkFullViewer::setPopupMenuEnabled(const SbBool on)
 }
 
 /*!
-  Return \c TRUE if the popup preferences menu is enabled,
+  Return \c TRUE if the pop-up preferences menu is enabled,
   otherwise \c FALSE.
 
   \sa setPopupMenuEnabled()
@@ -472,7 +471,7 @@ SoGtkFullViewer::removeAppPushButton(GtkWidget * oldButton)
 #if SOGTK_DEBUG
   if (idx == -1) {
     SoDebugError::postWarning("SoGtkFullViewer::removeAppPushButton",
-                              "tried to remove non-existant button");
+                              "tried to remove non-existent button");
     return;
   }
 #endif // SOGTK_DEBUG
@@ -527,7 +526,7 @@ SoGtkFullViewer::getRenderAreaWidget(void) const
 // Documented in superclass. Overridden to correctly set the user
 // interface indicators on the current state, namely the upper right
 // push buttons indicating interact or view mode, the respective item
-// on the popup menu and to grey out the seek mode activation button
+// on the pop-up menu and to gray out the seek mode activation button
 // while in interact mode.
 void
 SoGtkFullViewer::setViewing(SbBool enable)
@@ -545,7 +544,7 @@ SoGtkFullViewer::setViewing(SbBool enable)
   // FIXME: I believe we need to check that buttons have been built
   // before we attempt this. 20010821 mortene.
   // FIXME: shouldn't we change the state of the "view" and "pick"
-  // buttons aswell? 20010821 mortene.
+  // buttons as well? 20010821 mortene.
   gtk_widget_set_sensitive(PRIVATE(this)->seekbutton, enable ? TRUE : FALSE);
 }
 
@@ -855,7 +854,7 @@ SoGtkFullViewer::createViewerButtons(GtkWidget * parent,
 // *************************************************************************
 
 /*!
-  Make a popup menu with preferences settings.
+  Make a pop-up menu with preferences settings.
 */
 
 void
@@ -1089,7 +1088,7 @@ SoGtkFullViewerP::layoutAppButtons(GtkWidget * form)
 
 /*!
   \internal
-  Gtk Signal Handler.
+  GTK Signal Handler.
 */
 
 void
@@ -1104,7 +1103,7 @@ SoGtkFullViewerP::increaseInteractiveCount(GtkWidget * w,
 
 /*!
   \internal
-  Gtk Signal Handler.
+  GTK Signal Handler.
 */
 
 void

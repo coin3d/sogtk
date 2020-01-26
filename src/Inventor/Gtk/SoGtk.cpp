@@ -71,7 +71,7 @@
   at <http://www.gtk.org>.
 
   The corresponding documentation for Coin is located 
-  <a href="http://doc.coin3d.org/Coin/">here</a>.
+  <a href="http://coin3d.github.io/Coin/">here</a>.
 */
 
 // *************************************************************************
@@ -263,7 +263,7 @@ SoGtk::exitMainLoop(void)
 void
 SoGtk::done(void)
 {
-  // FIXME: should clean up all resources stlil dangling
+  // FIXME: should clean up all resources still dangling
   // about. 20020624 mortene.
 }
 
@@ -271,7 +271,7 @@ SoGtk::done(void)
 
 /*!
   Returns a pointer to the GtkWidget which is the main widget for the
-  application. When this widget gets closed, SoGtk::mainLoop() will
+  application. When this widget is closed, SoGtk::mainLoop() will
   return (unless the close event is caught by the user).
 
   \sa getShellWidget()
@@ -289,7 +289,7 @@ SoGtk::getTopLevelWidget(void)
   for the given GtkWidget \a w. This is just a convenience function
   provided for easier porting of Open Inventor applications based on
   SoXt components, as you can do the same thing by calling the a
-  native Gtk method.
+  native GTK method.
 
   \sa getTopLevelWidget()
 */
