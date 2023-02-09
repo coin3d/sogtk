@@ -38,6 +38,9 @@
 #include <Inventor/Gtk/devices/SoGtkDevice.h>
 #include <Inventor/Gtk/devices/SoGtkDeviceP.h>
 
+#define PRIVATE(obj) ((obj)->pimpl)
+#define PUBLIC(obj) ((obj)->pub)
+
 // *************************************************************************
 
 /*!

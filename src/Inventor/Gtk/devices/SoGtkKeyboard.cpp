@@ -45,6 +45,9 @@
 #include <Inventor/Gtk/devices/SoGuiKeyboardP.h>
 #include <Inventor/Gtk/devices/SoGtkInputFocus.h>
 
+#define PRIVATE(obj) ((obj)->pimpl)
+#define PUBLIC(obj) ((obj)->pub)
+
 // *************************************************************************
 
 class SoGtkKeyboardP : public SoGuiKeyboardP {

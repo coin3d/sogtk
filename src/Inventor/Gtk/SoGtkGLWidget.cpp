@@ -53,7 +53,10 @@
 #include <Inventor/Gtk/SoGtkGLWidget.h>
 #include <Inventor/Gtk/SoGtkGLWidgetP.h>
 #include <Inventor/Gtk/SoAny.h>
+#include <GL/glx.h>
 
+#define PRIVATE(obj) ((obj)->pimpl)
+#define PUBLIC(obj) ((obj)->pub)
 
 // *************************************************************************
 
@@ -625,6 +628,7 @@ SbBool
 SoGtkGLWidgetP::isDirectRendering(void)
 {
 #if defined(GDK_WINDOWING_X11)
+    /*
   PUBLIC(this)->glLockNormal();
   GLXContext ctx = glXGetCurrentContext();
   if (!ctx) {
@@ -635,6 +639,9 @@ SoGtkGLWidgetP::isDirectRendering(void)
   Bool isdirect = glXIsDirect(GDK_DISPLAY(), ctx);
   PUBLIC(this)->glUnlockNormal();
   return isdirect ? TRUE : FALSE;
+     */
+    // TODO: fix usage 
+    return (TRUE);
 #else // ! X11
   return TRUE; // Neither MSWindows nor Mac OS X is capable of remote display.
 #endif // ! X11
