@@ -11,7 +11,6 @@ endfunction(executable)
 
 dump_variable(
         Coin_LIBRARY
-        WXWIDGETS_LIBRARIES
 )
 
 include_directories(

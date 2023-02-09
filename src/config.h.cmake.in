@@ -164,19 +164,19 @@
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "@PACKAGE_VERSION@"
 
-/* define this to the SoWx beta version letter */
+/* define this to the SoGtk beta version letter */
 #define SOGTK_BETA_VERSION @SOGTK_BETA_VERSION@
 
-/* Define to the major version of SoWx */
+/* Define to the major version of SoGtk */
 #define SOGTK_MAJOR_VERSION @SOGTK_MAJOR_VERSION@
 
-/* Define to the micro version of SoWx */
+/* Define to the micro version of SoGtk */
 #define SOGTK_MICRO_VERSION @SOGTK_MICRO_VERSION@
 
-/* Define to the minor version of SoWx */
+/* Define to the minor version of SoGtk */
 #define SOGTK_MINOR_VERSION @SOGTK_MINOR_VERSION@
 
-/* Version string for SoWx */
+/* Version string for SoGtk */
 #define SOGTK_VERSION "@SOGTK_VERSION@"
 
 /* Define to 1 if you have the ANSI C header files. */

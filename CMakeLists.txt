@@ -48,7 +48,7 @@ string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 
 # ############################################################################
 # these will be removed after upgrading CMake minimum version to 3.9.6
-set(PROJECT_DESCRIPTION   "SoWx is a wxWidgets Gui-toolkit binding for Coin")
+set(PROJECT_DESCRIPTION   "SoGtk is a GTK2 Gui-toolkit binding for Coin")
 # ############################################################################
  
 string(TIMESTAMP SO${GUI}_BUILD_YEAR "%Y")
@@ -122,7 +122,7 @@ report_prepare(
 )
 
 # ############################################################################
-# Find all necessary and optional SoWx dependencies
+# Find all necessary and optional SoGtk dependencies
 # ############################################################################
 
 # Fail early if one of the required packages cannot be found
@@ -158,11 +158,11 @@ if (X11_FOUND)
     if (NOT X11_GLU_LIB)
       message(FATAL_ERROR "Could not find libGLU.dylib")
     endif()
-    set(SOWX_OPENGL_INCLUDE_DIRECTORIES ${X11_INCLUDE_DIR} ${X11_GL_INCLUDE_PATH})
-    set(SOWX_OPENGL_LIBRARIES ${X11_GL_LIB} ${X11_GLU_LIB})
+    set(SOGTK_OPENGL_INCLUDE_DIRECTORIES ${X11_INCLUDE_DIR} ${X11_GL_INCLUDE_PATH})
+    set(SOGTK_OPENGL_LIBRARIES ${X11_GL_LIB} ${X11_GLU_LIB})
   else ()
-    set(SOWX_OPENGL_INCLUDE_DIRECTORIES ${X11_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
-    set(SOWX_OPENGL_LIBRARIES ${OPENGL_LIBRARIES})
+    set(SOGTK_OPENGL_INCLUDE_DIRECTORIES ${X11_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+    set(SOGTK_OPENGL_LIBRARIES ${OPENGL_LIBRARIES})
   endif ()
 endif()
 
@@ -171,7 +171,7 @@ if(NOT Coin_FOUND)
   MESSAGE(FATAL_ERROR "Found Coin")
 endif()
 
-set(SO${GUI}_PKG_DEPS "Coin wxWidgets OpenGL")
+set(SO${GUI}_PKG_DEPS "Coin GTK OpenGL")
 
 # ##########################################################################
 # Setup build environment
@@ -203,7 +203,7 @@ foreach (_config ${CMAKE_CONFIGURATION_TYPES})
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${_config} "${CMAKE_BINARY_DIR}/bin")
 endforeach()
 
-set(GUI_TOOLKIT_VERSION ${wxWidgets_VERSION_MAJOR}.${wxWidgets_VERSION_MINOR}.${wxWidgets_VERSION_PATCH})
+set(GUI_TOOLKIT_VERSION ${GTKWidgets_VERSION_MAJOR}.${GTKWidgets_VERSION_MINOR}.${GTKWidgets_VERSION_PATCH})
 
 if(WIN32)
   if(MINGW)
@@ -216,7 +216,7 @@ if(WIN32)
   endif()
   if(SO${GUI}_BUILD_SHARED_LIBS)
     set(SO${GUI}_DEFAULT_POSTFIX ${SO${GUI}_DEFAULT_SHARED_POSTFIX})
-    set(SO${GUI}_PKG_FLAGS "-DSOWX_DLL")
+    set(SO${GUI}_PKG_FLAGS "-DSOGTK_DLL")
   else()
     set(SO${GUI}_DEFAULT_POSTFIX ${SO${GUI}_DEFAULT_STATIC_POSTFIX})
     set(SO${GUI}_PKG_FLAGS "-DSOWX_NOT_DLL")
@@ -251,9 +251,9 @@ elseif(APPLE)
 
   if(SO${GUI}_BUILD_MAC_FRAMEWORK)
     set(SO${GUI}_MAC_FRAMEWORK ${SO${GUI}_BUILD_MAC_FRAMEWORK})
-    set(SO${GUI}_MAC_FRAMEWORK_NAME "SoWx")
+    set(SO${GUI}_MAC_FRAMEWORK_NAME "SoGtk")
     set(SO${GUI}_MAC_FRAMEWORK_PREFIX "${CMAKE_INSTALL_PREFIX}")
-    set(SO${GUI}_MAC_FRAMEWORK_VERSION "A") # SoWx2 will be "B", to allow parallel installations of SoWx1
+    set(SO${GUI}_MAC_FRAMEWORK_VERSION "A") # SoGTK2 will be "B", to allow parallel installations of SoGtk1
     set(PACKAGING_FRAMEWORK_NAME "${SO${GUI}_MAC_FRAMEWORK_NAME}")
 
     # package config *.pc entries
@@ -289,8 +289,8 @@ elseif(FUNCTION)
   set(HAVE_CPP_COMPILER_FUNCTION_NAME_VAR __FUNCTION__)
 endif()
 
-set(CMAKE_REQUIRED_INCLUDES ${SOWX_OPENGL_INCLUDE_DIRECTORIES})
-set(CMAKE_REQUIRED_LIBRARIES Coin::Coin ${SOWX_OPENGL_LIBRARIES})
+set(CMAKE_REQUIRED_INCLUDES ${SOGTK_OPENGL_INCLUDE_DIRECTORIES})
+set(CMAKE_REQUIRED_LIBRARIES Coin::Coin ${SOGTK_OPENGL_LIBRARIES})
 
 check_include_files(windows.h HAVE_WINDOWS_H)
 if(HAVE_WINDOWS_H)
@@ -417,7 +417,7 @@ set(USE_EXCEPTIONS ON)
 unset(CMAKE_REQUIRED_INCLUDES)
 
 set(PACKAGE ${PROJECT_NAME})
-set(PACKAGE_DESCRIPTION "A wxWidgets Gui-toolkit binding for Coin")
+set(PACKAGE_DESCRIPTION "A GTK Gui-toolkit binding for Coin")
 set(PACKAGE_BUGREPORT "https://github.com/coin3d/${PROJECT_NAME_LOWER}/issues")
 set(PACKAGE_NAME ${PROJECT_NAME})
 set(PACKAGE_STRING "${PROJECT_NAME} ${PROJECT_VERSION}")
@@ -426,7 +426,7 @@ set(PACKAGE_URL "https://github.com/coin3d/${PROJECT_NAME_LOWER}")
 set(PACKAGE_VERSION ${PROJECT_VERSION})
 set(PACKAGE_HOST ${CMAKE_HOST_SYSTEM_PROCESSOR}-${CMAKE_HOST_SYSTEM_NAME})
 set(PACKAGE_COMPILER ${CMAKE_CXX_COMPILER})
-set(PACKAGE_REQUIREMENTS "${SOWX_PKG_DEPS}")
+set(PACKAGE_REQUIREMENTS "${SOGTK_PKG_DEPS}")
 
 # ############################################################################
 # Setup targets in subdirectories
