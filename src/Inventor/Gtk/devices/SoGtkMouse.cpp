@@ -45,6 +45,9 @@
 #include <Inventor/Gtk/devices/SoGtkMouse.h>
 #include <Inventor/Gtk/devices/SoGuiMouseP.h>
 
+#define PRIVATE(obj) ((obj)->pimpl)
+#define PUBLIC(obj) ((obj)->pub)
+
 // *************************************************************************
 
 class SoGtkMouseP : public SoGuiMouseP {

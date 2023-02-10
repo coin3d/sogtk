@@ -32,6 +32,7 @@
 
 #include <stdio.h>
 
+#define GTK_ENABLE_BROKEN 1
 #include <gtk/gtkmain.h>
 #include <gtk/gtksignal.h>
 
@@ -155,7 +156,7 @@ gtk_thumbwheel_class_init(
   thumbwheel_signals[ ATTACHED ] =
     gtk_signal_new("attached",
       GTK_RUN_FIRST,
-      object_class->type,
+      GTK_CLASS_TYPE (object_class),
       GTK_SIGNAL_OFFSET(GtkThumbWheelClass, attached),
       gtk_signal_default_marshaller,
       GTK_TYPE_NONE, 0);
@@ -163,7 +164,7 @@ gtk_thumbwheel_class_init(
   thumbwheel_signals[ VALUE_CHANGED ] =
     gtk_signal_new("value_changed",
       GTK_RUN_FIRST,
-      object_class->type,
+                   GTK_CLASS_TYPE (object_class),
       GTK_SIGNAL_OFFSET(GtkThumbWheelClass, value_changed),
       gtk_signal_default_marshaller,
       GTK_TYPE_NONE, 0);
@@ -171,12 +172,12 @@ gtk_thumbwheel_class_init(
   thumbwheel_signals[ RELEASED ] =
     gtk_signal_new("released",
       GTK_RUN_FIRST,
-      object_class->type,
+                   GTK_CLASS_TYPE (object_class),
       GTK_SIGNAL_OFFSET(GtkThumbWheelClass, released),
       gtk_signal_default_marshaller,
       GTK_TYPE_NONE, 0);
 
-  gtk_object_class_add_signals(object_class, thumbwheel_signals, NUM_SIGNALS);
+  // TODO: gtk_object_class_add_signals(object_class, thumbwheel_signals, NUM_SIGNALS);
 
   cclass->attached      = NULL;
   cclass->value_changed = NULL;

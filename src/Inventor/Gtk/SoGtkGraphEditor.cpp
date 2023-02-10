@@ -34,6 +34,7 @@
 #include <config.h>
 #endif
 
+#define GTK_ENABLE_BROKEN 1
 #include <gtk/gtk.h>
 
 #include <Inventor/SoOutput.h>

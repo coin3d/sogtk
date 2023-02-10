@@ -33,7 +33,7 @@
 #ifndef SOGTKPLANEVIEWERP_H
 #define SOGTKPLANEVIEWERP_H
 
-#include <SoGuiPlaneViewerP.h>
+#include <Inventor/Gtk/viewers/SoGuiPlaneViewerP.h>
 
 // ************************************************************************
 

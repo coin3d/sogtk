@@ -60,6 +60,9 @@
 #include <Inventor/errors/SoDebugError.h>
 #include <sogtkdefs.h>
 
+#define PRIVATE(obj) ((obj)->pimpl)
+#define PUBLIC(obj) ((obj)->pub)
+
 // *************************************************************************
 
 GdkCursor * SoGtkComponentP::arrowcursor = NULL;

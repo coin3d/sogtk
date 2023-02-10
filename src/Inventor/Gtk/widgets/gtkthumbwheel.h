@@ -105,7 +105,7 @@ struct _GtkThumbWheelClass {
 /* ********************************************************************** */
 
 GtkWidget *  gtk_thumbwheel_new               (gint vertical);
-guint        gtk_thumbwheel_get_type          (void);
+GtkType      gtk_thumbwheel_get_type          (void);
 void         gtk_thumbwheel_set_update_policy (GtkThumbWheel * thumbwheel,
                                                GtkUpdateType policy);
 

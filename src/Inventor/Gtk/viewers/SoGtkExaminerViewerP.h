@@ -33,7 +33,7 @@
 #ifndef SOGTKEXAMINERVIEWERP_H
 #define SOGTKEXAMINERVIEWERP_H
 
-#include <SoGuiExaminerViewerP.h>
+#include <Inventor/Gtk/viewers/SoGuiExaminerViewerP.h>
 
 class SoGtkExaminerViewer;
 

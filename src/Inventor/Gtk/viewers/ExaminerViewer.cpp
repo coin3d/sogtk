@@ -56,6 +56,9 @@
 #include <Inventor/Gtk/common/pixmaps/ortho.xpm>
 #include <Inventor/Gtk/common/pixmaps/perspective.xpm>
 
+#define PRIVATE(obj) ((obj)->pimpl)
+#define PUBLIC(obj) ((obj)->pub)
+
 // *************************************************************************
 
 SOGTK_OBJECT_SOURCE(SoGtkExaminerViewer);

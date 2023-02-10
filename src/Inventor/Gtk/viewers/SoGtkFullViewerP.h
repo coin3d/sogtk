@@ -35,7 +35,8 @@
 
 #include <Inventor/Gtk/widgets/SoGtkViewerButtonP.h>
 #include <Inventor/SbBasic.h>
-#include <SoGuiFullViewerP.h>
+#include <Inventor/Gtk/viewers/SoGuiFullViewerP.h>
+
 #include <gtk/gtk.h>
 
 class SoGtkFullViewer;

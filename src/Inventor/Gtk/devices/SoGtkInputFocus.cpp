@@ -38,6 +38,8 @@
 #include <Inventor/Gtk/devices/SoGtkInputFocus.h>
 #include <Inventor/Gtk/devices/SoGuiInputFocusP.h>
 
+#define PRIVATE(obj) ((obj)->pimpl)
+#define PUBLIC(obj) ((obj)->pub)
 // *************************************************************************
 
 class SoGtkInputFocusP : public SoGuiInputFocusP {
