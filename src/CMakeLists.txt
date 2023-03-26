@@ -4,8 +4,17 @@ configure_file(config.h.cmake.in config.h)
 # This is pulled from the subrepo SoGui.
 add_subdirectory(Inventor/${Gui}/common)
 
+set(COMMON_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Inventor/${Gui}/common)
+
+configure_file(${COMMON_DIR}/SoAnyMaterialList.cpp.in ${CMAKE_BINARY_DIR}/src/Inventor/${Gui}/SoAnyMaterialList.cpp)
+configure_file(${COMMON_DIR}/SoAnyMaterialList.h.in ${CMAKE_BINARY_DIR}/src/Inventor/${Gui}/SoAnyMaterialList.h)
+configure_file(${COMMON_DIR}/SoGuiMaterialList.h.in ${CMAKE_BINARY_DIR}/src/Inventor/${Gui}/So${Gui}MaterialList.h)
+configure_file(${COMMON_DIR}/SoAnyMaterialListBuiltins.cpp.in ${CMAKE_BINARY_DIR}/src/Inventor/${Gui}/SoAnyMaterialListBuiltins.cpp)
+
+
 file(GLOB_RECURSE COMMON_HDRS ${CMAKE_CURRENT_BINARY_DIR}/*.h)
 file(GLOB_RECURSE COMMON_SRCS ${CMAKE_CURRENT_BINARY_DIR}/*.cpp)
+
 
 set(HDRS
   #Inventor/${Gui}/So${Gui}Clipboard.h               # added
@@ -28,7 +37,7 @@ set(SRCS
   Inventor/${Gui}/So${Gui}Component.cpp
   Inventor/${Gui}/So${Gui}GLWidget.cpp
   Inventor/${Gui}/So${Gui}GraphEditor.cpp #added
-  # Inventor/${Gui}/So${Gui}MaterialList.cpp #added
+  Inventor/${Gui}/So${Gui}MaterialList.cpp #added
   Inventor/${Gui}/So${Gui}Roster.cpp #added
   Inventor/${Gui}/devices/So${Gui}Device.cpp
   Inventor/${Gui}/devices/So${Gui}InputFocus.cpp
@@ -44,9 +53,10 @@ set(SRCS
 )
 
 file(GLOB_RECURSE COMMON_RESOURCES ${CMAKE_BINARY_DIR}/data/materials/*.h)
-
+include_directories(AFTER ${CMAKE_BINARY_DIR}/data)
 include_directories(${GTK2_INCLUDE_DIRS})
 include_directories(${GTK_GL2_INCLUDE_DIRS})
+
 
 if(HAVE_JOYSTICK_LINUX)
   list(APPEND HDRS Inventor/${Gui}/devices/So${Gui}LinuxJoystick.h)
