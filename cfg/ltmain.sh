@@ -1718,7 +1718,7 @@ EOF
 
     case $host in
     *cygwin* | *mingw* | *pw32*)
-      # don't eliminate duplcations in $postdeps and $predeps
+      # don't eliminate duplications in $postdeps and $predeps
       duplicate_compiler_generated_deps=yes
       ;;
     *)

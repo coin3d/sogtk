@@ -1519,7 +1519,7 @@ CVS_CHANGE_EOF
     $sim_ac_cvs_problem || {
     cat <<"CVS_CHANGE_EOF"
 
-The configure script has detected source hierachy inconsistencies between
+The configure script has detected source hierarchy inconsistencies between
 your source repository and the master source repository.  This needs to be
 fixed before you can proceed.
 
@@ -4129,8 +4129,8 @@ else
 echo "${ECHO_T}no, using $LN_S" >&6
 fi
 
-echo "$as_me:$LINENO: checking how to recognise dependant libraries" >&5
-echo $ECHO_N "checking how to recognise dependant libraries... $ECHO_C" >&6
+echo "$as_me:$LINENO: checking how to recognise dependent libraries" >&5
+echo $ECHO_N "checking how to recognise dependent libraries... $ECHO_C" >&6
 if test "${lt_cv_deplibs_check_method+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -6555,7 +6555,7 @@ hardcode_action=
 if test -n "$hardcode_libdir_flag_spec" || \
    test -n "$runpath_var"; then
 
-  # We can hardcode non-existant directories.
+  # We can hardcode non-existent directories.
   if test "$hardcode_direct" != no &&
      # If the only mechanism to avoid hardcoding is shlibpath_var, we
      # have to relink, otherwise we might link with an installed library
@@ -10676,7 +10676,7 @@ if test x"$with_pthread" != xno; then
   # FIXME: should investigate and document the exact meaning of
   # the _REENTRANT flag. larsa's commit message mentions
   # "glibc-doc/FAQ.threads.html". Also, kintel points to the
-  # comp.programming.thrads FAQ, which has an entry on the
+  # comp.programming.threads FAQ, which has an entry on the
   # _REENTRANT define.
   #
   # Preferably, it should only be set up when really needed
@@ -12405,7 +12405,7 @@ main ()
              gtk_major_version, gtk_minor_version, gtk_micro_version);
       printf ("*** was found! If gtk-config was correct, then it is best\n");
       printf ("*** to remove the old version of GTK+. You may also be able to fix the error\n");
-      printf("*** by modifying your LD_LIBRARY_PATH enviroment variable, or by editing\n");
+      printf("*** by modifying your LD_LIBRARY_PATH environment variable, or by editing\n");
       printf("*** /etc/ld.so.conf. Make sure you have run ldconfig if that is\n");
       printf("*** required on your system.\n");
       printf("*** If gtk-config was wrong, set the environment variable GTK_CONFIG\n");
@@ -12444,7 +12444,7 @@ main ()
         printf("*** being found. The easiest way to fix this is to remove the old version\n");
         printf("*** of GTK+, but you can also set the GTK_CONFIG environment to point to the\n");
         printf("*** correct copy of gtk-config. (In this case, you will have to\n");
-        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
+        printf("*** modify your LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf\n");
         printf("*** so that the correct libraries are found at run-time))\n");
       }
     }
@@ -12548,7 +12548,7 @@ else
   echo "$as_me: failed program was:" >&5
 cat conftest.$ac_ext >&5
  echo "*** The test program failed to compile or link. See the file config.log for the"
-          echo "*** exact error that occured. This usually means GTK was incorrectly installed"
+          echo "*** exact error that occurred. This usually means GTK was incorrectly installed"
           echo "*** or that you have moved GTK since it was installed. In the latter case, you"
           echo "*** may want to edit the gtk-config script: $GTK_CONFIG"
 fi

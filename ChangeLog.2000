@@ -233,7 +233,7 @@ Entries are in reversed chronological order.
 
 	* bootstrap, intl/.cvsignore, intl/po2tbl.sed.in:
 	
-	Hack boostrap to handle keeping intl/ part of the CVS repository.
+	Hack bootstrap to handle keeping intl/ part of the CVS repository.
 
 2000-12-18 16:13  larsa
 
@@ -380,7 +380,7 @@ Entries are in reversed chronological order.
 
 	* bootstrap:
 	
-	Bootstrap supportes now both Autoconf 2.49b and 2.49c. 
+	Bootstrap supports now both Autoconf 2.49b and 2.49c. 
 	Regeneration of configure script.
 
 2000-12-05 18:48  larsa
@@ -680,7 +680,7 @@ Entries are in reversed chronological order.
 
 	* src/Inventor/Gtk/widgets/gtkthumbwheel.h:
 	
-	Made some C++ coments into C comments.
+	Made some C++ comments into C comments.
 
 2000-10-25 23:41  larsa
 
@@ -868,7 +868,7 @@ Entries are in reversed chronological order.
 
 	* src/Inventor/Gtk/widgets/gtkthumbwheel.cpp:
 	
-	Accomodations for the SoAnyThumbWheel API change.
+	Accommodations for the SoAnyThumbWheel API change.
 
 2000-10-18 14:05  larsa
 
@@ -925,7 +925,7 @@ Entries are in reversed chronological order.
 
 	* src/Inventor/Gtk/SoGtkComponent.cpp:
 	
-	Removed uncommited include.
+	Removed uncommitted include.
 
 2000-10-12 20:55  larsa
 
@@ -1564,7 +1564,7 @@ Entries are in reversed chronological order.
 
 	* sogtk-config.in:
 	
-	"Secured" format of --cppflags output by adding a comment to te
+	"Secured" format of --cppflags output by adding a comment to the
 	relevant portion of the script.
 
 2000-05-11 16:48  mortene
@@ -1653,7 +1653,7 @@ Entries are in reversed chronological order.
 	src/Inventor/Gtk/widgets/gtkthumbwheel.cpp,
 	src/Inventor/Gtk/widgets/gtkthumbwheel.h:
 	
-	Various accomodations to changes under src/Inventor/Gtk/common
+	Various accommodations to changes under src/Inventor/Gtk/common
 
 2000-03-29 17:03  larsa
 

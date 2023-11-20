@@ -16,7 +16,7 @@
 #
 # This macro is just an envelope macro for SIM_AC_CVS_CHANGE invokations.
 # It performs necessary initializations and finalizing.  All the
-# SIM_AC_CVS_CHANGE invokations should be preformed inside the same
+# SIM_AC_CVS_CHANGE invokations should be performed inside the same
 # SIM_AC_CVS_CHANGES macro.
 #
 # Authors:
@@ -112,7 +112,7 @@ CVS_CHANGE_EOF
     $sim_ac_cvs_problem || {
     cat <<"CVS_CHANGE_EOF"
 
-The configure script has detected source hierachy inconsistencies between
+The configure script has detected source hierarchy inconsistencies between
 your source repository and the master source repository.  This needs to be
 fixed before you can proceed.
 
@@ -2143,7 +2143,7 @@ if test -n "$_LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)" || \
    test -n "$_LT_AC_TAGVAR(runpath_var $1)" || \
    test "X$_LT_AC_TAGVAR(hardcode_automatic, $1)"="Xyes" ; then
 
-  # We can hardcode non-existant directories.
+  # We can hardcode non-existent directories.
   if test "$_LT_AC_TAGVAR(hardcode_direct, $1)" != no &&
      # If the only mechanism to avoid hardcoding is shlibpath_var, we
      # have to relink, otherwise we might link with an installed library
@@ -3640,7 +3640,7 @@ AC_LIBTOOL_SYS_LIB_STRIP
 AC_LIBTOOL_SYS_DYNAMIC_LINKER($1)
 AC_LIBTOOL_DLOPEN_SELF($1)
 
-# Report which librarie types wil actually be built
+# Report which library types will actually be built
 AC_MSG_CHECKING([if libtool supports shared libraries])
 AC_MSG_RESULT([$can_build_shared])
 
@@ -8726,7 +8726,7 @@ if test x"$with_pthread" != xno; then
   # FIXME: should investigate and document the exact meaning of
   # the _REENTRANT flag. larsa's commit message mentions
   # "glibc-doc/FAQ.threads.html". Also, kintel points to the
-  # comp.programming.thrads FAQ, which has an entry on the
+  # comp.programming.threads FAQ, which has an entry on the
   # _REENTRANT define.
   #
   # Preferably, it should only be set up when really needed
@@ -9110,7 +9110,7 @@ m4_do([popdef([cache_variable])],
 # SIM_AC_INVENTOR_EXTENSIONS( ACTION )
 #
 # This macro adds an "--with-iv-extensions=..." option to configure, that
-# enabes the configurer to enable extensions in third-party libraries to
+# enables the configurer to enable extensions in third-party libraries to
 # be initialized by the library by default.  The configure-option argument
 # must be a comma-separated list of link library path options, link library
 # options and class-names.
@@ -9349,7 +9349,7 @@ fi
 # **************************************************************************
 # SIM_AC_CHECK_JOYSTICK_LINUX( SUCCESS-ACTION, FAILURE-ACTION )
 #
-# This macro checks wether the system has the Linux Joystick driver or not.
+# This macro checks whether the system has the Linux Joystick driver or not.
 #
 # Authors:
 #   Lars J. Aas <larsa@sim.no>
@@ -9476,7 +9476,7 @@ main ()
              gtk_major_version, gtk_minor_version, gtk_micro_version);
       printf ("*** was found! If gtk-config was correct, then it is best\n");
       printf ("*** to remove the old version of GTK+. You may also be able to fix the error\n");
-      printf("*** by modifying your LD_LIBRARY_PATH enviroment variable, or by editing\n");
+      printf("*** by modifying your LD_LIBRARY_PATH environment variable, or by editing\n");
       printf("*** /etc/ld.so.conf. Make sure you have run ldconfig if that is\n");
       printf("*** required on your system.\n");
       printf("*** If gtk-config was wrong, set the environment variable GTK_CONFIG\n");
@@ -9515,7 +9515,7 @@ main ()
         printf("*** being found. The easiest way to fix this is to remove the old version\n");
         printf("*** of GTK+, but you can also set the GTK_CONFIG environment to point to the\n");
         printf("*** correct copy of gtk-config. (In this case, you will have to\n");
-        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
+        printf("*** modify your LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf\n");
         printf("*** so that the correct libraries are found at run-time))\n");
       }
     }
@@ -9562,7 +9562,7 @@ main ()
           echo "***"
           echo "***    rpm --erase --nodeps gtk gtk-devel" ],
         [ echo "*** The test program failed to compile or link. See the file config.log for the"
-          echo "*** exact error that occured. This usually means GTK was incorrectly installed"
+          echo "*** exact error that occurred. This usually means GTK was incorrectly installed"
           echo "*** or that you have moved GTK since it was installed. In the latter case, you"
           echo "*** may want to edit the gtk-config script: $GTK_CONFIG" ])
           CFLAGS="$ac_save_CFLAGS"

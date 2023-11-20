@@ -207,7 +207,7 @@ SoGtkComponent::removeVisibilityChangeCallback(SoGtkComponentVisibilityCB * cons
 #if SOGTK_DEBUG
   if (idx == -1) {
     SoDebugError::postWarning("SoGtkComponent::removeVisibilityChangeCallback",
-                              "tried to remove non-existant callback");
+                              "tried to remove non-existent callback");
     return;
   }
 #endif // SOGTK_DEBUG
