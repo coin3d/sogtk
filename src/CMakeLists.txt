@@ -236,7 +236,6 @@ set(INST_HDRS
   "${CMAKE_CURRENT_BINARY_DIR}/Inventor/${Gui}/So${Gui}MaterialEditor.h"
   "${CMAKE_CURRENT_BINARY_DIR}/Inventor/${Gui}/So${Gui}Object.h"
   "${CMAKE_CURRENT_BINARY_DIR}/Inventor/${Gui}/So${Gui}RenderArea.h"
-  Inventor/${Gui}/So${Gui}Clipboard.h
   Inventor/${Gui}/So${Gui}DirectionalLightEditor.h
   Inventor/${Gui}/So${Gui}LightSliderSet.h
   Inventor/${Gui}/So${Gui}MaterialSliderSet.h
