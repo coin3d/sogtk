@@ -275,8 +275,8 @@ set(INST_VIEWERS_HDRS
 )
 
 set(INST_WIDGETS_HDRS
-  "${CMAKE_CURRENT_BINARY_DIR}/Inventor/${Gui}/widgets/So${Gui}PopupMenu.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/Inventor/${Gui}/widgets/So${Gui}ThumbWheel.h"
+  #"${CMAKE_CURRENT_BINARY_DIR}/Inventor/${Gui}/widgets/So${Gui}PopupMenu.h"   #missing
+  #"${CMAKE_CURRENT_SOURCE_DIR}/Inventor/${Gui}/widgets/So${Gui}ThumbWheel.h"  #missing
 )
 
 # Setting up a framework means adding all the files and links under a framework
