@@ -21,9 +21,10 @@ set(HDRS
   Inventor/${Gui}/So${Gui}ComponentP.h
   #Inventor/${Gui}/So${Gui}DirectionalLightEditor.h  # added
   Inventor/${Gui}/So${Gui}GLWidgetP.h
-  #Inventor/${Gui}/So${Gui}ImageReader.h            # missing
-  Inventor/${Gui}/So${Gui}GraphEditor.h       # added
-  #Inventor/${Gui}/So${Gui}SignalThread.h           # missing
+  #Inventor/${Gui}/So${Gui}ImageReader.h             # missing
+  Inventor/${Gui}/So${Gui}GraphEditor.h              # added
+  Inventor/${Gui}/So${Gui}Roster.h                   # added
+  #Inventor/${Gui}/So${Gui}SignalThread.h            # missing
   Inventor/${Gui}/devices/So${Gui}DeviceP.h
   Inventor/${Gui}/devices/So${Gui}SpacenavDevice.h
   Inventor/${Gui}/viewers/So${Gui}ExaminerViewerP.h
@@ -36,9 +37,9 @@ set(SRCS
   Inventor/${Gui}/So${Gui}.cpp
   Inventor/${Gui}/So${Gui}Component.cpp
   Inventor/${Gui}/So${Gui}GLWidget.cpp
-  Inventor/${Gui}/So${Gui}GraphEditor.cpp #added
+  Inventor/${Gui}/So${Gui}GraphEditor.cpp  #added
   Inventor/${Gui}/So${Gui}MaterialList.cpp #added
-  Inventor/${Gui}/So${Gui}Roster.cpp #added
+  Inventor/${Gui}/So${Gui}Roster.cpp       #added
   Inventor/${Gui}/devices/So${Gui}Device.cpp
   Inventor/${Gui}/devices/So${Gui}InputFocus.cpp
   Inventor/${Gui}/devices/So${Gui}Keyboard.cpp
@@ -236,14 +237,8 @@ set(INST_HDRS
   "${CMAKE_CURRENT_BINARY_DIR}/Inventor/${Gui}/So${Gui}MaterialEditor.h"
   "${CMAKE_CURRENT_BINARY_DIR}/Inventor/${Gui}/So${Gui}Object.h"
   "${CMAKE_CURRENT_BINARY_DIR}/Inventor/${Gui}/So${Gui}RenderArea.h"
-  Inventor/${Gui}/So${Gui}DirectionalLightEditor.h
-  Inventor/${Gui}/So${Gui}LightSliderSet.h
-  Inventor/${Gui}/So${Gui}MaterialSliderSet.h
-  # Inventor/${Gui}/So${Gui}PrintDialog.h
-  Inventor/${Gui}/So${Gui}Resource.h
-  Inventor/${Gui}/So${Gui}SliderSet.h
-  Inventor/${Gui}/So${Gui}SliderSetBase.h
-  Inventor/${Gui}/So${Gui}TransformSliderSet.h
+  Inventor/${Gui}/So${Gui}GraphEditor.h
+  Inventor/${Gui}/So${Gui}Roster.h
 )
 
 set(INST_DEVICES_HDRS
