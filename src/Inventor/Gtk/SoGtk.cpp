@@ -71,7 +71,7 @@
   at <http://www.gtk.org>.
 
   The corresponding documentation for Coin is located 
-  <a href="http://coin3d.github.io/Coin/">here</a>.
+  <a href="https://coin3d.github.io/coin/">here</a>.
 */
 
 // *************************************************************************
