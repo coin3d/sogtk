@@ -1,0 +1,1236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.10.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Doxygen Awesome" />
+<meta property="og:image" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
+<meta property="og:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
+<meta property="og:url" content="https://jothepro.github.io/doxygen-awesome-css/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://repository-images.githubusercontent.com/348492097/4f16df80-88fb-11eb-9d31-4015ff22c452" />
+<meta name="twitter:title" content="Doxygen Awesome" />
+<meta name="twitter:description" content="Custom CSS theme for doxygen html-documentation with lots of customization parameters." />
+<!-- END twitter metadata -->
+<title>SoGtk: SoGtkComponent Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://tholman.com/github-corners/ -->
+<a href="https://github.com/coin3d/sogtk" class="github-corner" title="View source on GitHub" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="Coin_logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">SoGtk
+   &#160;<span id="projectnumber">0.1.0</span>
+   </div>
+   <div id="projectbrief">Coin3D GUI toolkit binding</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.10.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('classSoGtkComponent.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="classSoGtkComponent-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">SoGtkComponent Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>The <a class="el" href="classSoGtkComponent.html" title="The SoGtkComponent class is the base class for all GUI components.">SoGtkComponent</a> class is the base class for all GUI components.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="SoGtkComponent_8h_source.html">Inventor/Gtk/SoGtkComponent.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for SoGtkComponent:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classSoGtkComponent.png" usemap="#SoGtkComponent_map" alt=""/>
+  <map id="SoGtkComponent_map" name="SoGtkComponent_map">
+<area href="classSoGtkObject.html" title="The SoGtkObject class is the common superclass for all SoGtk component classes." alt="SoGtkObject" shape="rect" coords="163,0,316,24"/>
+<area href="classSoGtkGLWidget.html" title="The SoGtkGLWidget class manages OpenGL contexts." alt="SoGtkGLWidget" shape="rect" coords="163,112,316,136"/>
+<area href="classSoGtkRenderArea.html" title="The SoGtkRenderArea class adds scene graph handling and event management." alt="SoGtkRenderArea" shape="rect" coords="163,168,316,192"/>
+<area href="classSoGtkViewer.html" title="The SoGtkViewer class is the top level base viewer class." alt="SoGtkViewer" shape="rect" coords="163,224,316,248"/>
+<area href="classSoGtkFullViewer.html" title="The SoGtkFullViewer class adds some user interface components to the viewer canvas." alt="SoGtkFullViewer" shape="rect" coords="163,280,316,304"/>
+<area href="classSoGtkConstrainedViewer.html" title="The SoGtkConstrainedViewer class is the superclass for viewers with constrains on the viewpoint." alt="SoGtkConstrainedViewer" shape="rect" coords="0,336,153,360"/>
+<area href="classSoGtkExaminerViewer.html" title="The SoGtkExaminerViewer class is a 3D-model examination viewer." alt="SoGtkExaminerViewer" shape="rect" coords="163,336,316,360"/>
+<area href="classSoGtkPlaneViewer.html" title="The SoGtkPlaneViewer class is for examining 3D models by moving the camera in orthogonal planes." alt="SoGtkPlaneViewer" shape="rect" coords="326,336,479,360"/>
+<area href="classSoGtkFlyViewer.html" title="The SoGtkFlyViewer class implements controls for moving the camera in a &quot;flying&quot; motion." alt="SoGtkFlyViewer" shape="rect" coords="0,392,153,416"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a001a2f9e8dd61f2dbaf6afe548308c94" id="r_a001a2f9e8dd61f2dbaf6afe548308c94"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a001a2f9e8dd61f2dbaf6afe548308c94">~SoGtkComponent</a> ()</td></tr>
+<tr class="separator:a001a2f9e8dd61f2dbaf6afe548308c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27aa8accac306bc4ef2ea54f3c16b6a1" id="r_a27aa8accac306bc4ef2ea54f3c16b6a1"><td class="memItemLeft" align="right" valign="top">GtkWidget *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27aa8accac306bc4ef2ea54f3c16b6a1">getBaseWidget</a> (void) const</td></tr>
+<tr class="separator:a27aa8accac306bc4ef2ea54f3c16b6a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ac36ddfe2a60a7e11d91b09dc2aedac" id="r_a4ac36ddfe2a60a7e11d91b09dc2aedac"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ac36ddfe2a60a7e11d91b09dc2aedac">getClassName</a> (void) const</td></tr>
+<tr class="separator:a4ac36ddfe2a60a7e11d91b09dc2aedac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93976805348935200b3e342bbc6e49e0" id="r_a93976805348935200b3e342bbc6e49e0"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93976805348935200b3e342bbc6e49e0">getIconTitle</a> (void) const</td></tr>
+<tr class="separator:a93976805348935200b3e342bbc6e49e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ff32d47fd2f3830402bff9f5385bb70" id="r_a1ff32d47fd2f3830402bff9f5385bb70"><td class="memItemLeft" align="right" valign="top">GtkWidget *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ff32d47fd2f3830402bff9f5385bb70">getParentWidget</a> (void) const</td></tr>
+<tr class="separator:a1ff32d47fd2f3830402bff9f5385bb70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2acfba8dad9324c8f73426c0ab8b5ed6" id="r_a2acfba8dad9324c8f73426c0ab8b5ed6"><td class="memItemLeft" align="right" valign="top">GtkWidget *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2acfba8dad9324c8f73426c0ab8b5ed6">getShellWidget</a> (void) const</td></tr>
+<tr class="separator:a2acfba8dad9324c8f73426c0ab8b5ed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5780f57d25e2f340efbf4bb71659b360" id="r_a5780f57d25e2f340efbf4bb71659b360"><td class="memItemLeft" align="right" valign="top">SbVec2s&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5780f57d25e2f340efbf4bb71659b360">getSize</a> (void) const</td></tr>
+<tr class="separator:a5780f57d25e2f340efbf4bb71659b360"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf81a9ac413b30c685a3824ab6db9a36" id="r_abf81a9ac413b30c685a3824ab6db9a36"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf81a9ac413b30c685a3824ab6db9a36">getTitle</a> (void) const</td></tr>
+<tr class="separator:abf81a9ac413b30c685a3824ab6db9a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d61ff877d0b19bb5bb376274e9be53" id="r_a76d61ff877d0b19bb5bb376274e9be53"><td class="memItemLeft" align="right" valign="top">GtkWidget *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76d61ff877d0b19bb5bb376274e9be53">getWidget</a> (void) const</td></tr>
+<tr class="separator:a76d61ff877d0b19bb5bb376274e9be53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5844f65072a255fe36f35d442c1e2fee" id="r_a5844f65072a255fe36f35d442c1e2fee"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5844f65072a255fe36f35d442c1e2fee">getWidgetName</a> (void) const</td></tr>
+<tr class="separator:a5844f65072a255fe36f35d442c1e2fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d12a7b312bc92255e1ab9cb200beaef" id="r_a4d12a7b312bc92255e1ab9cb200beaef"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d12a7b312bc92255e1ab9cb200beaef">hide</a> (void)</td></tr>
+<tr class="separator:a4d12a7b312bc92255e1ab9cb200beaef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21926e4e583f471f9a1f30223c3a6d57" id="r_a21926e4e583f471f9a1f30223c3a6d57"><td class="memItemLeft" align="right" valign="top">SbBool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21926e4e583f471f9a1f30223c3a6d57">isFullScreen</a> (void) const</td></tr>
+<tr class="separator:a21926e4e583f471f9a1f30223c3a6d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6117ba8fb55d6dde685a62e21f21f0bc" id="r_a6117ba8fb55d6dde685a62e21f21f0bc"><td class="memItemLeft" align="right" valign="top">SbBool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell</a> (void) const</td></tr>
+<tr class="separator:a6117ba8fb55d6dde685a62e21f21f0bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2197bfd16e2be26ae2720ad8483c175" id="r_ae2197bfd16e2be26ae2720ad8483c175"><td class="memItemLeft" align="right" valign="top">SbBool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2197bfd16e2be26ae2720ad8483c175">isVisible</a> (void)</td></tr>
+<tr class="separator:ae2197bfd16e2be26ae2720ad8483c175"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f37949f879bca1b6bdc2d02d12b0e57" id="r_a0f37949f879bca1b6bdc2d02d12b0e57"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f37949f879bca1b6bdc2d02d12b0e57">setComponentCursor</a> (const <a class="el" href="classSoGtkCursor.html">SoGtkCursor</a> &amp;cursor)</td></tr>
+<tr class="separator:a0f37949f879bca1b6bdc2d02d12b0e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8df42fcde7e8bfbb25d2831aedcb083e" id="r_a8df42fcde7e8bfbb25d2831aedcb083e"><td class="memItemLeft" align="right" valign="top">SbBool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8df42fcde7e8bfbb25d2831aedcb083e">setFullScreen</a> (const SbBool onoff)</td></tr>
+<tr class="separator:a8df42fcde7e8bfbb25d2831aedcb083e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06075cd867b33899b21a0d36dd30e800" id="r_a06075cd867b33899b21a0d36dd30e800"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06075cd867b33899b21a0d36dd30e800">setIconTitle</a> (const char *const title)</td></tr>
+<tr class="separator:a06075cd867b33899b21a0d36dd30e800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa9e094ec6ca708d30ee03c46f9a884f" id="r_afa9e094ec6ca708d30ee03c46f9a884f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa9e094ec6ca708d30ee03c46f9a884f">setSize</a> (const SbVec2s size)</td></tr>
+<tr class="separator:afa9e094ec6ca708d30ee03c46f9a884f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaa0d0dc06cb5d81a503ab92fa059249" id="r_aeaa0d0dc06cb5d81a503ab92fa059249"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeaa0d0dc06cb5d81a503ab92fa059249">setTitle</a> (const char *const title)</td></tr>
+<tr class="separator:aeaa0d0dc06cb5d81a503ab92fa059249"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa418ed14a61ca081c9417d65cafe919c" id="r_aa418ed14a61ca081c9417d65cafe919c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa418ed14a61ca081c9417d65cafe919c">setWindowCloseCallback</a> (SoGtkComponentCB *const func, void *const user=NULL)</td></tr>
+<tr class="separator:aa418ed14a61ca081c9417d65cafe919c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc06e8090760282b9f1957bea0bf2f83" id="r_acc06e8090760282b9f1957bea0bf2f83"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc06e8090760282b9f1957bea0bf2f83">show</a> (void)</td></tr>
+<tr class="separator:acc06e8090760282b9f1957bea0bf2f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classSoGtkObject"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classSoGtkObject')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classSoGtkObject.html">SoGtkObject</a></td></tr>
+<tr class="memitem:aac6f2ba9b9e2c242ee4da154025f50b8 inherit pub_methods_classSoGtkObject" id="r_aac6f2ba9b9e2c242ee4da154025f50b8"><td class="memItemLeft" align="right" valign="top">virtual SoType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSoGtkObject.html#aac6f2ba9b9e2c242ee4da154025f50b8">getTypeId</a> (void) const =0</td></tr>
+<tr class="separator:aac6f2ba9b9e2c242ee4da154025f50b8 inherit pub_methods_classSoGtkObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bd0b5c1c61a4ebeb4eae0ea2d2b404a inherit pub_methods_classSoGtkObject" id="r_a6bd0b5c1c61a4ebeb4eae0ea2d2b404a"><td class="memItemLeft" align="right" valign="top">SbBool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSoGtkObject.html#a6bd0b5c1c61a4ebeb4eae0ea2d2b404a">isOfType</a> (SoType type) const</td></tr>
+<tr class="separator:a6bd0b5c1c61a4ebeb4eae0ea2d2b404a inherit pub_methods_classSoGtkObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ac115eca50b299d332d1bd03ebbb54f5b" id="r_ac115eca50b299d332d1bd03ebbb54f5b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSoGtkComponent.html">SoGtkComponent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac115eca50b299d332d1bd03ebbb54f5b">getComponent</a> (GtkWidget *widget)</td></tr>
+<tr class="separator:ac115eca50b299d332d1bd03ebbb54f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadd074f1b4668d9b06bcc5a8a1957d32" id="r_aadd074f1b4668d9b06bcc5a8a1957d32"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadd074f1b4668d9b06bcc5a8a1957d32">initClasses</a> (void)</td></tr>
+<tr class="separator:aadd074f1b4668d9b06bcc5a8a1957d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0492815e372a9712bafb40952da39bd" id="r_af0492815e372a9712bafb40952da39bd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0492815e372a9712bafb40952da39bd">setWidgetCursor</a> (GtkWidget *w, const <a class="el" href="classSoGtkCursor.html">SoGtkCursor</a> &amp;cursor)</td></tr>
+<tr class="separator:af0492815e372a9712bafb40952da39bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_methods_classSoGtkObject"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_methods_classSoGtkObject')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classSoGtkObject.html">SoGtkObject</a></td></tr>
+<tr class="memitem:a95b4d4d563ba00b11c10dc3d04b0d8cb inherit pub_static_methods_classSoGtkObject" id="r_a95b4d4d563ba00b11c10dc3d04b0d8cb"><td class="memItemLeft" align="right" valign="top">static SoType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSoGtkObject.html#a95b4d4d563ba00b11c10dc3d04b0d8cb">getClassTypeId</a> (void)</td></tr>
+<tr class="separator:a95b4d4d563ba00b11c10dc3d04b0d8cb inherit pub_static_methods_classSoGtkObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad54e3fbac40dad6e707bc7660df640c6 inherit pub_static_methods_classSoGtkObject" id="r_ad54e3fbac40dad6e707bc7660df640c6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSoGtkObject.html#ad54e3fbac40dad6e707bc7660df640c6">init</a> (void)</td></tr>
+<tr class="separator:ad54e3fbac40dad6e707bc7660df640c6 inherit pub_static_methods_classSoGtkObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa73751ec96036045c6520346276eefc2 inherit pub_static_methods_classSoGtkObject" id="r_aa73751ec96036045c6520346276eefc2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSoGtkObject.html#aa73751ec96036045c6520346276eefc2">initClass</a> (void)</td></tr>
+<tr class="separator:aa73751ec96036045c6520346276eefc2 inherit pub_static_methods_classSoGtkObject"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a20564f7e561d24a7f10bddc72c0b7851" id="r_a20564f7e561d24a7f10bddc72c0b7851"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20564f7e561d24a7f10bddc72c0b7851">SoGtkComponent</a> (GtkWidget *const parent=NULL, const char *const name=NULL, const SbBool embed=TRUE)</td></tr>
+<tr class="separator:a20564f7e561d24a7f10bddc72c0b7851"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a205812288ef6ceb7df628c36a22e2efd" id="r_a205812288ef6ceb7df628c36a22e2efd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a205812288ef6ceb7df628c36a22e2efd">addVisibilityChangeCallback</a> (SoGtkComponentVisibilityCB *const func, void *const user=NULL)</td></tr>
+<tr class="separator:a205812288ef6ceb7df628c36a22e2efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae35bf2319739aed049ea9cc6e5282a42" id="r_ae35bf2319739aed049ea9cc6e5282a42"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae35bf2319739aed049ea9cc6e5282a42">afterRealizeHook</a> (void)</td></tr>
+<tr class="separator:ae35bf2319739aed049ea9cc6e5282a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad313e33e26bf8515737aca63cf97851e" id="r_ad313e33e26bf8515737aca63cf97851e"><td class="memItemLeft" align="right" valign="top">virtual SbBool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad313e33e26bf8515737aca63cf97851e">eventFilter</a> (GtkWidget *object, GdkEvent *event)</td></tr>
+<tr class="separator:ad313e33e26bf8515737aca63cf97851e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4871ce9ec34d5b00e625ad63308a697" id="r_ad4871ce9ec34d5b00e625ad63308a697"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4871ce9ec34d5b00e625ad63308a697">getDefaultIconTitle</a> (void) const</td></tr>
+<tr class="separator:ad4871ce9ec34d5b00e625ad63308a697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa164c9409ba0a25ade6cea41fb0fb7ba" id="r_aa164c9409ba0a25ade6cea41fb0fb7ba"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa164c9409ba0a25ade6cea41fb0fb7ba">getDefaultTitle</a> (void) const</td></tr>
+<tr class="separator:aa164c9409ba0a25ade6cea41fb0fb7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c3209fe5aba8eb708eb9316d7ecbc0a" id="r_a2c3209fe5aba8eb708eb9316d7ecbc0a"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c3209fe5aba8eb708eb9316d7ecbc0a">getDefaultWidgetName</a> (void) const</td></tr>
+<tr class="separator:a2c3209fe5aba8eb708eb9316d7ecbc0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8342a6f7759231b82f0ba4f28b66504f" id="r_a8342a6f7759231b82f0ba4f28b66504f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8342a6f7759231b82f0ba4f28b66504f">registerWidget</a> (GtkWidget *widget)</td></tr>
+<tr class="separator:a8342a6f7759231b82f0ba4f28b66504f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ea1c96c19b6cc44e8fd90ac62903383" id="r_a2ea1c96c19b6cc44e8fd90ac62903383"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ea1c96c19b6cc44e8fd90ac62903383">removeVisibilityChangeCallback</a> (SoGtkComponentVisibilityCB *const func, void *const user=NULL)</td></tr>
+<tr class="separator:a2ea1c96c19b6cc44e8fd90ac62903383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadee3fddc3837a94e81ff92de8adce8a" id="r_aadee3fddc3837a94e81ff92de8adce8a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadee3fddc3837a94e81ff92de8adce8a">setBaseWidget</a> (GtkWidget *widget)</td></tr>
+<tr class="separator:aadee3fddc3837a94e81ff92de8adce8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a319438c7cabc37405c8bba3fb6b1df9d" id="r_a319438c7cabc37405c8bba3fb6b1df9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a319438c7cabc37405c8bba3fb6b1df9d">setClassName</a> (const char *const name)</td></tr>
+<tr class="separator:a319438c7cabc37405c8bba3fb6b1df9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4cf16fe3b3ba1e16bbee2bb4a490470" id="r_ae4cf16fe3b3ba1e16bbee2bb4a490470"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4cf16fe3b3ba1e16bbee2bb4a490470">sizeChanged</a> (const SbVec2s &amp;size)</td></tr>
+<tr class="separator:ae4cf16fe3b3ba1e16bbee2bb4a490470"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a742c8fac0b2c0af1073b19c26c67d90a" id="r_a742c8fac0b2c0af1073b19c26c67d90a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a742c8fac0b2c0af1073b19c26c67d90a">unregisterWidget</a> (GtkWidget *widget)</td></tr>
+<tr class="separator:a742c8fac0b2c0af1073b19c26c67d90a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:aa227ac1c0be4eb4695a37609c2088b67" id="r_aa227ac1c0be4eb4695a37609c2088b67"><td class="memItemLeft" align="right" valign="top"><a id="aa227ac1c0be4eb4695a37609c2088b67" name="aa227ac1c0be4eb4695a37609c2088b67"></a>
+SbBool&#160;</td><td class="memItemRight" valign="bottom"><b>firstRealize</b></td></tr>
+<tr class="separator:aa227ac1c0be4eb4695a37609c2088b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="classSoGtkComponent.html" title="The SoGtkComponent class is the base class for all GUI components.">SoGtkComponent</a> class is the base class for all GUI components. </p>
+<p>Components in the <a class="el" href="classSoGtk.html" title="The SoGtk class takes care of Gtk initialization and event dispatching.">SoGtk</a> component library all inherit this abstract base class. It provides basic methods for setting and querying about the relationship between the component object and its underlying Gtk object(s).</p>
+<p>Application programmers should not need to interface any code against this class, unless they want to extend the <a class="el" href="classSoGtk.html" title="The SoGtk class takes care of Gtk initialization and event dispatching.">SoGtk</a> library in entirely new directions. For making new viewer components, for instance, other classes further down the inheritance hierarchy would be better suited for subclassing.</p>
+<p>Note that the relationship between all <a class="el" href="classSoGtkComponent.html" title="The SoGtkComponent class is the base class for all GUI components.">SoGtkComponent</a> derived classes and Gtk widgets is one of "has-A", <em>not</em> "is-A" &ndash; i.e. <a class="el" href="classSoGtkComponent.html" title="The SoGtkComponent class is the base class for all GUI components.">SoGtkComponent</a> <em>contains</em> a GtkWidget*, it doesn't derive from or subclass it. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a001a2f9e8dd61f2dbaf6afe548308c94" name="a001a2f9e8dd61f2dbaf6afe548308c94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a001a2f9e8dd61f2dbaf6afe548308c94">&#9670;&#160;</a></span>~SoGtkComponent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SoGtkComponent::~SoGtkComponent </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Destructor. </p>
+
+</div>
+</div>
+<a id="a20564f7e561d24a7f10bddc72c0b7851" name="a20564f7e561d24a7f10bddc72c0b7851"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20564f7e561d24a7f10bddc72c0b7851">&#9670;&#160;</a></span>SoGtkComponent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SoGtkComponent::SoGtkComponent </td>
+          <td>(</td>
+          <td class="paramtype">GtkWidget *const</td>          <td class="paramname"><span class="paramname"><em>parent</em><span class="paramdefsep"> = </span><span class="paramdefval">NULL</span>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *const</td>          <td class="paramname"><span class="paramname"><em>name</em><span class="paramdefsep"> = </span><span class="paramdefval">NULL</span>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const SbBool</td>          <td class="paramname"><span class="paramname"><em>embed</em><span class="paramdefsep"> = </span><span class="paramdefval">TRUE</span></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This is a protected constructor, used only by derived classes.</p>
+<p>The <em>parent</em> argument is the parent widget of the component. If you don't supply a parent, the main window (the one given to or returned from <a class="el" href="classSoGtk.html#a5ebd5de300b6b7f56256979654f6ac18">SoGtk::init()</a>) is used (and the <em>embed</em> argument is considered to be <code>FALSE</code>).</p>
+<p>The <em>name</em> argument is the name of the component. If you don't supply one, the name will default to something, depending on the inheritance hierarchy.</p>
+<p>The <em>embed</em> argument tells whether the component should be embedded in the <em>parent</em> widget or should create its own shell. This flag is only checked if the <em>parent</em> widget argument is specified (not <code>NULL</code>).</p>
+<p>If you create a non-embedded component, the component will create its own shell, which will be a top level shell type. If you embed the component, the component will create a form widget type widget inside the <em>parent</em> widget, which you can get the handle of by calling <a class="el" href="#a27aa8accac306bc4ef2ea54f3c16b6a1">SoGtkComponent::getBaseWidget()</a>.</p>
+<p>Constructor.</p>
+<p><em>parent</em> is the widget we'll build this component inside. If <em>parent</em> is <em>NULL</em>, make a new top level window.</p>
+<p><em>name</em> is mostly interesting for debugging purposes.</p>
+<p><em>embed</em> specifies whether or not we should make a new top level window for the component even when we've got a non-NULL <em>parent</em>. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a205812288ef6ceb7df628c36a22e2efd" name="a205812288ef6ceb7df628c36a22e2efd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a205812288ef6ceb7df628c36a22e2efd">&#9670;&#160;</a></span>addVisibilityChangeCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::addVisibilityChangeCallback </td>
+          <td>(</td>
+          <td class="paramtype">SoGtkComponentVisibilityCB *const</td>          <td class="paramname"><span class="paramname"><em>func</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *const</td>          <td class="paramname"><span class="paramname"><em>userData</em><span class="paramdefsep"> = </span><span class="paramdefval">NULL</span></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Add a callback which will be called whenever the widget component changes visibility status (because of iconification or deiconification, for instance).</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a2ea1c96c19b6cc44e8fd90ac62903383">removeVisibilityChangeCallback()</a>, <a class="el" href="#ae2197bfd16e2be26ae2720ad8483c175">isVisible()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ae35bf2319739aed049ea9cc6e5282a42" name="ae35bf2319739aed049ea9cc6e5282a42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae35bf2319739aed049ea9cc6e5282a42">&#9670;&#160;</a></span>afterRealizeHook()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::afterRealizeHook </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>A function "hook" / callback invoked just after the window for the component has been realized.</p>
+<p>Override this if you need specific initialization for your own component or viewer class to happen right after it has been made visible, but remember to call upwards in the inheritance hierarchy:</p>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span></div>
+<div class="line">MyLittleViewer::afterRealizeHook(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">  &lt;superclass&gt;<a class="code hl_function" href="#ae35bf2319739aed049ea9cc6e5282a42">::afterRealizeHook</a>();</div>
+<div class="line">  <span class="comment">// [own initialization here]</span></div>
+<div class="line">}</div>
+<div class="ttc" id="aclassSoGtkComponent_html_ae35bf2319739aed049ea9cc6e5282a42"><div class="ttname"><a href="#ae35bf2319739aed049ea9cc6e5282a42">SoGtkComponent::afterRealizeHook</a></div><div class="ttdeci">virtual void afterRealizeHook(void)</div><div class="ttdef"><b>Definition</b> SoGtkComponent.cpp:730</div></div>
+</div><!-- fragment --> 
+<p>Reimplemented in <a class="el" href="classSoGtkRenderArea.html#ad7a08dbba523296786fc03a93fcc89f5">SoGtkRenderArea</a>, <a class="el" href="classSoGtkExaminerViewer.html#a8c65352949c43066a3060941438e24f6">SoGtkExaminerViewer</a>, <a class="el" href="classSoGtkFlyViewer.html#a3af52d9ce513e757aec44f357f71b031">SoGtkFlyViewer</a>, and <a class="el" href="classSoGtkPlaneViewer.html#a1c792822676c0ed176e5c15dae9f7674">SoGtkPlaneViewer</a>.</p>
+
+</div>
+</div>
+<a id="ad313e33e26bf8515737aca63cf97851e" name="ad313e33e26bf8515737aca63cf97851e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad313e33e26bf8515737aca63cf97851e">&#9670;&#160;</a></span>eventFilter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SbBool SoGtkComponent::eventFilter </td>
+          <td>(</td>
+          <td class="paramtype">GtkWidget *</td>          <td class="paramname"><span class="paramname"><em>object</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GdkEvent *</td>          <td class="paramname"><span class="paramname"><em>event</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classSoGtkGLWidget.html#aef406470f8f2acbe1730d178785ec2ef">SoGtkGLWidget</a>.</p>
+
+</div>
+</div>
+<a id="a27aa8accac306bc4ef2ea54f3c16b6a1" name="a27aa8accac306bc4ef2ea54f3c16b6a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27aa8accac306bc4ef2ea54f3c16b6a1">&#9670;&#160;</a></span>getBaseWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GtkWidget * SoGtkComponent::getBaseWidget </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>An <a class="el" href="classSoGtkComponent.html" title="The SoGtkComponent class is the base class for all GUI components.">SoGtkComponent</a> may be composed of any number of widgets in parent-children relationships in a tree structure with any depth. This method will return the root widget in that tree.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aadee3fddc3837a94e81ff92de8adce8a">setBaseWidget()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a4ac36ddfe2a60a7e11d91b09dc2aedac" name="a4ac36ddfe2a60a7e11d91b09dc2aedac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ac36ddfe2a60a7e11d91b09dc2aedac">&#9670;&#160;</a></span>getClassName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SoGtkComponent::getClassName </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns class name of widget. </p>
+
+</div>
+</div>
+<a id="ac115eca50b299d332d1bd03ebbb54f5b" name="ac115eca50b299d332d1bd03ebbb54f5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac115eca50b299d332d1bd03ebbb54f5b">&#9670;&#160;</a></span>getComponent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSoGtkComponent.html">SoGtkComponent</a> * SoGtkComponent::getComponent </td>
+          <td>(</td>
+          <td class="paramtype">GtkWidget *</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Finds and returns the <a class="el" href="classSoGtkComponent.html" title="The SoGtkComponent class is the base class for all GUI components.">SoGtkComponent</a> corresponding to the given GtkWidget*, if any. If the widget does not seem to belong to any <a class="el" href="classSoGtkComponent.html" title="The SoGtkComponent class is the base class for all GUI components.">SoGtkComponent</a>, <code>NULL</code> will be returned. </p>
+
+</div>
+</div>
+<a id="ad4871ce9ec34d5b00e625ad63308a697" name="ad4871ce9ec34d5b00e625ad63308a697"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4871ce9ec34d5b00e625ad63308a697">&#9670;&#160;</a></span>getDefaultIconTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SoGtkComponent::getDefaultIconTitle </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method returns the default icon title of the component.</p>
+<p>It should be overridden by derived non-abstract classes so icons will get proper titles. </p>
+
+<p>Reimplemented in <a class="el" href="classSoGtkRenderArea.html#adc471d051421867cf3d1725928ac8fe1">SoGtkRenderArea</a>, <a class="el" href="classSoGtkExaminerViewer.html#a44accdc8f6a033aeedaf477a29826ede">SoGtkExaminerViewer</a>, <a class="el" href="classSoGtkFlyViewer.html#aebbf3aec844e2bef80f60b38b5bd60ad">SoGtkFlyViewer</a>, and <a class="el" href="classSoGtkPlaneViewer.html#a3fee067c393e1765ab481f002969379a">SoGtkPlaneViewer</a>.</p>
+
+</div>
+</div>
+<a id="aa164c9409ba0a25ade6cea41fb0fb7ba" name="aa164c9409ba0a25ade6cea41fb0fb7ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa164c9409ba0a25ade6cea41fb0fb7ba">&#9670;&#160;</a></span>getDefaultTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SoGtkComponent::getDefaultTitle </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method returns the default window caption string of the component.</p>
+<p>It should be overridden by derived non-abstract classes so the window and pop-up menu will get a proper title. </p>
+
+<p>Reimplemented in <a class="el" href="classSoGtkRenderArea.html#a7902d705451c0bfdf934696144d83027">SoGtkRenderArea</a>, <a class="el" href="classSoGtkExaminerViewer.html#a1b0a9120b77685298b5a990eee1bda75">SoGtkExaminerViewer</a>, <a class="el" href="classSoGtkFlyViewer.html#aba8ba9ff35f6f7931385598adf079217">SoGtkFlyViewer</a>, and <a class="el" href="classSoGtkPlaneViewer.html#a2d4113008c31e26c48aee07caf13faf0">SoGtkPlaneViewer</a>.</p>
+
+</div>
+</div>
+<a id="a2c3209fe5aba8eb708eb9316d7ecbc0a" name="a2c3209fe5aba8eb708eb9316d7ecbc0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c3209fe5aba8eb708eb9316d7ecbc0a">&#9670;&#160;</a></span>getDefaultWidgetName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SoGtkComponent::getDefaultWidgetName </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method returns the default name of a component widget class.</p>
+<p>It should be overridden by derived non-abstract classes for the topmost widget in the component to have a proper name. </p>
+
+<p>Reimplemented in <a class="el" href="classSoGtkRenderArea.html#acfdf162d4a5b3828308c56de4b72fb1e">SoGtkRenderArea</a>, <a class="el" href="classSoGtkExaminerViewer.html#a38c6dc0266d5840c08a6479f2fed7402">SoGtkExaminerViewer</a>, <a class="el" href="classSoGtkFlyViewer.html#a6b40d7eb3fd8ca3f37a340b2ea38b2b6">SoGtkFlyViewer</a>, and <a class="el" href="classSoGtkPlaneViewer.html#a189fb25edd490f5143e86e2fb72cc757">SoGtkPlaneViewer</a>.</p>
+
+</div>
+</div>
+<a id="a93976805348935200b3e342bbc6e49e0" name="a93976805348935200b3e342bbc6e49e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93976805348935200b3e342bbc6e49e0">&#9670;&#160;</a></span>getIconTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SoGtkComponent::getIconTitle </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the title the window has when iconified.</p>
+<p>If an icon title has been set, that icon title is returned. If no icon title has been set, the default icon title is returned.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a06075cd867b33899b21a0d36dd30e800">setIconTitle()</a>, <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a></dd></dl>
+<p>Returns the title the window has when iconified. The component should be a top level shell if you use this method.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a06075cd867b33899b21a0d36dd30e800">setIconTitle()</a>, <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a1ff32d47fd2f3830402bff9f5385bb70" name="a1ff32d47fd2f3830402bff9f5385bb70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ff32d47fd2f3830402bff9f5385bb70">&#9670;&#160;</a></span>getParentWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GtkWidget * SoGtkComponent::getParentWidget </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the widget which is the parent of (i.e. contains) this component's base widget.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a76d61ff877d0b19bb5bb376274e9be53">getWidget()</a>, baseWidget(), <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a2acfba8dad9324c8f73426c0ab8b5ed6" name="a2acfba8dad9324c8f73426c0ab8b5ed6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2acfba8dad9324c8f73426c0ab8b5ed6">&#9670;&#160;</a></span>getShellWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GtkWidget * SoGtkComponent::getShellWidget </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This method returns the shell widget of the component, but only if it was created as a top level shell. <code>NULL</code> will be returned for embedded components.</p>
+<p>(The top level shell is the desktop window which contains the component.)</p>
+<p>To get the top level shell of embedded components, you can use the <a class="el" href="classSoGtk.html#ac3c93a1c16e054c4ea1b3a3c861515fd">SoGtk::getShellWidget()</a> method.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a>, <a class="el" href="#a76d61ff877d0b19bb5bb376274e9be53">getWidget()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a5780f57d25e2f340efbf4bb71659b360" name="a5780f57d25e2f340efbf4bb71659b360"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5780f57d25e2f340efbf4bb71659b360">&#9670;&#160;</a></span>getSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SbVec2s SoGtkComponent::getSize </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the component widget size.</p>
+<p>The size that is returned is a cached size value, not a value fetched from the GUI system.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#afa9e094ec6ca708d30ee03c46f9a884f">setSize()</a></dd></dl>
+<p>Returns the component widget size.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#afa9e094ec6ca708d30ee03c46f9a884f">setSize()</a> </dd></dl>
+
+</div>
+</div>
+<a id="abf81a9ac413b30c685a3824ab6db9a36" name="abf81a9ac413b30c685a3824ab6db9a36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf81a9ac413b30c685a3824ab6db9a36">&#9670;&#160;</a></span>getTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SoGtkComponent::getTitle </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the window title.</p>
+<p>If a title has been set, that title will be returned. If no title has been set, the default title is returned.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aeaa0d0dc06cb5d81a503ab92fa059249">setTitle()</a>, <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a></dd></dl>
+<p>Returns the window title. The component should be a top level shell if you call this method.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aeaa0d0dc06cb5d81a503ab92fa059249">setTitle()</a>, <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a76d61ff877d0b19bb5bb376274e9be53" name="a76d61ff877d0b19bb5bb376274e9be53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76d61ff877d0b19bb5bb376274e9be53">&#9670;&#160;</a></span>getWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GtkWidget * SoGtkComponent::getWidget </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns a pointer to the component's window system widget.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a2acfba8dad9324c8f73426c0ab8b5ed6">getShellWidget()</a>, <a class="el" href="#a1ff32d47fd2f3830402bff9f5385bb70">getParentWidget()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a5844f65072a255fe36f35d442c1e2fee" name="a5844f65072a255fe36f35d442c1e2fee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5844f65072a255fe36f35d442c1e2fee">&#9670;&#160;</a></span>getWidgetName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SoGtkComponent::getWidgetName </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns name of the widget. </p>
+
+</div>
+</div>
+<a id="a4d12a7b312bc92255e1ab9cb200beaef" name="a4d12a7b312bc92255e1ab9cb200beaef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d12a7b312bc92255e1ab9cb200beaef">&#9670;&#160;</a></span>hide()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::hide </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This will hide the widget.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#acc06e8090760282b9f1957bea0bf2f83">show()</a>, <a class="el" href="#ae2197bfd16e2be26ae2720ad8483c175">isVisible()</a></dd></dl>
+<p>This will hide the component.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#acc06e8090760282b9f1957bea0bf2f83">show()</a>, <a class="el" href="#ae2197bfd16e2be26ae2720ad8483c175">isVisible()</a> </dd></dl>
+
+</div>
+</div>
+<a id="aadd074f1b4668d9b06bcc5a8a1957d32" name="aadd074f1b4668d9b06bcc5a8a1957d32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadd074f1b4668d9b06bcc5a8a1957d32">&#9670;&#160;</a></span>initClasses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::initClasses </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This function initializes the type system for all the component classes. It is called indirectly for you when you call <a class="el" href="classSoGtk.html#a5ebd5de300b6b7f56256979654f6ac18">SoGtk::init()</a>.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classSoGtk.html#a5ebd5de300b6b7f56256979654f6ac18">SoGtk::init()</a>, <a class="el" href="classSoGtkDevice.html#a0d871a8968df9c2a83cfab385e73d73e">SoGtkDevice::initClasses()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a21926e4e583f471f9a1f30223c3a6d57" name="a21926e4e583f471f9a1f30223c3a6d57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21926e4e583f471f9a1f30223c3a6d57">&#9670;&#160;</a></span>isFullScreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SbBool SoGtkComponent::isFullScreen </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns whether this widget/component is in full screen mode or not.</p>
+<p>Returns flag indicated whether or not this widget / component is currently in full screen mode. </p>
+
+</div>
+</div>
+<a id="a6117ba8fb55d6dde685a62e21f21f0bc" name="a6117ba8fb55d6dde685a62e21f21f0bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6117ba8fb55d6dde685a62e21f21f0bc">&#9670;&#160;</a></span>isTopLevelShell()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SbBool SoGtkComponent::isTopLevelShell </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns <code>TRUE</code> if this component is a top level shell, i.e. it has a window representation on the desktop.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a2acfba8dad9324c8f73426c0ab8b5ed6">getShellWidget()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ae2197bfd16e2be26ae2720ad8483c175" name="ae2197bfd16e2be26ae2720ad8483c175"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2197bfd16e2be26ae2720ad8483c175">&#9670;&#160;</a></span>isVisible()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SbBool SoGtkComponent::isVisible </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns visibility status on the widget. If any parents of this widget or this widget itself is hidden, returns <code>FALSE</code>.</p>
+<p>Note that a widget which is just obscured by other windows on the desktop is not hidden in this sense, and <code>TRUE</code> will be returned.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#acc06e8090760282b9f1957bea0bf2f83">show()</a>, <a class="el" href="#a4d12a7b312bc92255e1ab9cb200beaef">hide()</a></dd></dl>
+<p>Returns the visibility status of the component. If any parent widgets of this component is hidden, returns <code>FALSE</code>.</p>
+<p>Note that a widget which is just obscured by other windows on the desktop is not hidden in this sense, and <code>TRUE</code> will be returned.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#acc06e8090760282b9f1957bea0bf2f83">show()</a>, <a class="el" href="#a4d12a7b312bc92255e1ab9cb200beaef">hide()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a8342a6f7759231b82f0ba4f28b66504f" name="a8342a6f7759231b82f0ba4f28b66504f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8342a6f7759231b82f0ba4f28b66504f">&#9670;&#160;</a></span>registerWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::registerWidget </td>
+          <td>(</td>
+          <td class="paramtype">GtkWidget *</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method should be used by subclasses to register the widgets they set up from the underlying native toolkit, so they can be "reverse" mapped to the owner component.</p>
+<p>Subclasses failing to register the widgets they use will cause the <a class="el" href="#ac115eca50b299d332d1bd03ebbb54f5b">SoGtkComponent::getComponent()</a> method to fail with those widgets.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a742c8fac0b2c0af1073b19c26c67d90a">unregisterWidget()</a>, <a class="el" href="#ac115eca50b299d332d1bd03ebbb54f5b">getComponent()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a2ea1c96c19b6cc44e8fd90ac62903383" name="a2ea1c96c19b6cc44e8fd90ac62903383"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ea1c96c19b6cc44e8fd90ac62903383">&#9670;&#160;</a></span>removeVisibilityChangeCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::removeVisibilityChangeCallback </td>
+          <td>(</td>
+          <td class="paramtype">SoGtkComponentVisibilityCB *const</td>          <td class="paramname"><span class="paramname"><em>func</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *const</td>          <td class="paramname"><span class="paramname"><em>userData</em><span class="paramdefsep"> = </span><span class="paramdefval">NULL</span></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Remove one of the callbacks from the list of visibility notification callbacks.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a205812288ef6ceb7df628c36a22e2efd">addVisibilityChangeCallback()</a>, <a class="el" href="#ae2197bfd16e2be26ae2720ad8483c175">isVisible()</a> </dd></dl>
+
+</div>
+</div>
+<a id="aadee3fddc3837a94e81ff92de8adce8a" name="aadee3fddc3837a94e81ff92de8adce8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadee3fddc3837a94e81ff92de8adce8a">&#9670;&#160;</a></span>setBaseWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::setBaseWidget </td>
+          <td>(</td>
+          <td class="paramtype">GtkWidget *</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Set the core widget for this <a class="el" href="classSoGtk.html" title="The SoGtk class takes care of Gtk initialization and event dispatching.">SoGtk</a> component. It is important that subclasses get this correct, as the widget set here will be the widget returned from query methods.</p>
+<dl class="section see"><dt>See also</dt><dd>baseWidget() </dd></dl>
+
+</div>
+</div>
+<a id="a319438c7cabc37405c8bba3fb6b1df9d" name="a319438c7cabc37405c8bba3fb6b1df9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a319438c7cabc37405c8bba3fb6b1df9d">&#9670;&#160;</a></span>setClassName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::setClassName </td>
+          <td>(</td>
+          <td class="paramtype">const char *const</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Set class name of component.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a4ac36ddfe2a60a7e11d91b09dc2aedac">getClassName()</a>, componentClassName()</dd></dl>
+<p>Set class name of widget.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a4ac36ddfe2a60a7e11d91b09dc2aedac">getClassName()</a>, componentClassName() </dd></dl>
+
+</div>
+</div>
+<a id="a0f37949f879bca1b6bdc2d02d12b0e57" name="a0f37949f879bca1b6bdc2d02d12b0e57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f37949f879bca1b6bdc2d02d12b0e57">&#9670;&#160;</a></span>setComponentCursor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::setComponentCursor </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSoGtkCursor.html">SoGtkCursor</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>cursor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sets the cursor for this component.</p>
+<p>Note: not part of the original SGI InventorXt API.</p>
+<p>Sets the cursor for this component. </p>
+
+<p>Reimplemented in <a class="el" href="classSoGtkFullViewer.html#a4b205f14030d1ffc52e72f258d10d2c4">SoGtkFullViewer</a>.</p>
+
+</div>
+</div>
+<a id="a8df42fcde7e8bfbb25d2831aedcb083e" name="a8df42fcde7e8bfbb25d2831aedcb083e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8df42fcde7e8bfbb25d2831aedcb083e">&#9670;&#160;</a></span>setFullScreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SbBool SoGtkComponent::setFullScreen </td>
+          <td>(</td>
+          <td class="paramtype">const SbBool</td>          <td class="paramname"><span class="paramname"><em>onoff</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Toggle full screen mode for this component, if possible.</p>
+<p>Returns <code>FALSE</code> if operation failed. This might happen if the toolkit doesn't support attempts at making the component cover the complete screen or if the component is not a top level window. </p>
+
+</div>
+</div>
+<a id="a06075cd867b33899b21a0d36dd30e800" name="a06075cd867b33899b21a0d36dd30e800"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06075cd867b33899b21a0d36dd30e800">&#9670;&#160;</a></span>setIconTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::setIconTitle </td>
+          <td>(</td>
+          <td class="paramtype">const char *const</td>          <td class="paramname"><span class="paramname"><em>title</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This method sets the title of the icon representation of the window.</p>
+<p>The title will appear on the window icon, if the component manages its own window.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a93976805348935200b3e342bbc6e49e0">getIconTitle()</a>, <a class="el" href="#aeaa0d0dc06cb5d81a503ab92fa059249">setTitle()</a>, <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a></dd></dl>
+<p>Sets the window's title when it is iconified. The component you use this method on should be a top level shell.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a93976805348935200b3e342bbc6e49e0">getIconTitle()</a>, <a class="el" href="#aeaa0d0dc06cb5d81a503ab92fa059249">setTitle()</a>, <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a> </dd></dl>
+
+</div>
+</div>
+<a id="afa9e094ec6ca708d30ee03c46f9a884f" name="afa9e094ec6ca708d30ee03c46f9a884f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa9e094ec6ca708d30ee03c46f9a884f">&#9670;&#160;</a></span>setSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::setSize </td>
+          <td>(</td>
+          <td class="paramtype">const SbVec2s</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Resize the component widget.</p>
+<p>The method assumes the caller knows what he is doing.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a5780f57d25e2f340efbf4bb71659b360">getSize()</a></dd></dl>
+<p>Resize the component widget.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a5780f57d25e2f340efbf4bb71659b360">getSize()</a> </dd></dl>
+
+</div>
+</div>
+<a id="aeaa0d0dc06cb5d81a503ab92fa059249" name="aeaa0d0dc06cb5d81a503ab92fa059249"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeaa0d0dc06cb5d81a503ab92fa059249">&#9670;&#160;</a></span>setTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::setTitle </td>
+          <td>(</td>
+          <td class="paramtype">const char *const</td>          <td class="paramname"><span class="paramname"><em>title</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set the window title of this component. The title will appear on the window title bar, if the component manages its own window.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#abf81a9ac413b30c685a3824ab6db9a36">getTitle()</a>, <a class="el" href="#a06075cd867b33899b21a0d36dd30e800">setIconTitle()</a>, <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a></dd></dl>
+<p>Set the window title of this component. This will not work unless the component is a top level shell.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#abf81a9ac413b30c685a3824ab6db9a36">getTitle()</a>, <a class="el" href="#a06075cd867b33899b21a0d36dd30e800">setIconTitle()</a>, <a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a> </dd></dl>
+
+</div>
+</div>
+<a id="af0492815e372a9712bafb40952da39bd" name="af0492815e372a9712bafb40952da39bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0492815e372a9712bafb40952da39bd">&#9670;&#160;</a></span>setWidgetCursor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::setWidgetCursor </td>
+          <td>(</td>
+          <td class="paramtype">GtkWidget *</td>          <td class="paramname"><span class="paramname"><em>w</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSoGtkCursor.html">SoGtkCursor</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>cursor</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Set cursor for a native widget in the underlying toolkit.</p>
+<p>Note: not part of the original SGI InventorXt API.</p>
+<p>Set cursor for a native widget in the underlying toolkit. </p>
+
+</div>
+</div>
+<a id="aa418ed14a61ca081c9417d65cafe919c" name="aa418ed14a61ca081c9417d65cafe919c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa418ed14a61ca081c9417d65cafe919c">&#9670;&#160;</a></span>setWindowCloseCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::setWindowCloseCallback </td>
+          <td>(</td>
+          <td class="paramtype">SoGtkComponentCB *const</td>          <td class="paramname"><span class="paramname"><em>func</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *const</td>          <td class="paramname"><span class="paramname"><em>data</em><span class="paramdefsep"> = </span><span class="paramdefval">NULL</span></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set up a callback function to use when the component gets closed. A component must be a top level shell for this to have any effect.</p>
+<p>For top level shells with no close callback set, the window will simply be hidden. The typical action to take in the callback would be to delete the component.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a></dd></dl>
+<p>Set up a callback function to use when the component is closed. A component must be a top level shell for this to have any effect.</p>
+<p>For top level shells with no close callback set, the window will simply be hidden. The typical action to take in the callback would be to delete the component.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a6117ba8fb55d6dde685a62e21f21f0bc">isTopLevelShell()</a> </dd></dl>
+
+</div>
+</div>
+<a id="acc06e8090760282b9f1957bea0bf2f83" name="acc06e8090760282b9f1957bea0bf2f83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc06e8090760282b9f1957bea0bf2f83">&#9670;&#160;</a></span>show()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::show </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This will show the widget, de-iconifying and raising it if necessary.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a4d12a7b312bc92255e1ab9cb200beaef">hide()</a>, <a class="el" href="#ae2197bfd16e2be26ae2720ad8483c175">isVisible()</a></dd></dl>
+<p>This will show the widget, deiconifying and raising it if necessary.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a4d12a7b312bc92255e1ab9cb200beaef">hide()</a>, <a class="el" href="#ae2197bfd16e2be26ae2720ad8483c175">isVisible()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ae4cf16fe3b3ba1e16bbee2bb4a490470" name="ae4cf16fe3b3ba1e16bbee2bb4a490470"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4cf16fe3b3ba1e16bbee2bb4a490470">&#9670;&#160;</a></span>sizeChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::sizeChanged </td>
+          <td>(</td>
+          <td class="paramtype">const SbVec2s &amp;</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Called internally from within the <a class="el" href="classSoGtk.html" title="The SoGtk class takes care of Gtk initialization and event dispatching.">SoGtk</a> library when the widget embedded in a component changes its size, which is usually triggered by end-user interaction.</p>
+<p>This method is then invoked to notify the component that the size has changed. It is called from the top and all the way down to the bottom, the size being adjusted to take into account extra decorations having been added at each level in the component class hierarchy.</p>
+<p>Override to detect when the base widget in the component changes its dimensions (an operation which is usually triggered by the user). </p>
+
+<p>Reimplemented in <a class="el" href="classSoGtkGLWidget.html#abf0f805e824a2d5862fc5ebca1d3d632">SoGtkGLWidget</a>, <a class="el" href="classSoGtkRenderArea.html#ab4ab614b2f1fa9f7c14a9c1a9e314400">SoGtkRenderArea</a>, <a class="el" href="classSoGtkFullViewer.html#aeac4e2b9867f4db7bca113d8a9e60497">SoGtkFullViewer</a>, and <a class="el" href="classSoGtkViewer.html#a2e7493fe6d75069fefb7c0281ad590d3">SoGtkViewer</a>.</p>
+
+</div>
+</div>
+<a id="a742c8fac0b2c0af1073b19c26c67d90a" name="a742c8fac0b2c0af1073b19c26c67d90a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a742c8fac0b2c0af1073b19c26c67d90a">&#9670;&#160;</a></span>unregisterWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SoGtkComponent::unregisterWidget </td>
+          <td>(</td>
+          <td class="paramtype">GtkWidget *</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Remove a previously registered native toolkit widget from the widget-to-component mappings used by <a class="el" href="#ac115eca50b299d332d1bd03ebbb54f5b">SoGtkComponent::getComponent()</a>.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a8342a6f7759231b82f0ba4f28b66504f">registerWidget()</a> </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li><a class="el" href="SoGtkComponent_8h_source.html">SoGtkComponent.h</a></li>
+<li><b>SoGtkComponentCommon.cpp</b></li>
+<li><b>SoGtkComponent.cpp</b></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="classSoGtkComponent.html">SoGtkComponent</a></li>
+    <li class="footer">Generated on Mon May 13 2024 20:02:49 for SoGtk by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.10.0 </li>
+  </ul>
+</div>
+</body>
+</html>
